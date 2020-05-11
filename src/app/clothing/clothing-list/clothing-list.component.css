@@ -1,0 +1,16 @@
+img.displayed{
+  display: block;
+  margin:0 auto;
+}
+
+
+.img-fluid, .img-thumbnail {
+  max-width: 77%;
+  height: auto;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  margin-left: 42px;
+}

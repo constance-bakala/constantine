@@ -1,0 +1,15 @@
+<header [ngClass]="{'masthead': displayHtml, 'adjust': !displayHtml}"  class="bg-primary text-white text-center">
+  <div class="container d-flex align-items-center flex-column" *ngIf="displayHtml">
+    <!-- Masthead Avatar Image--><img class="masthead-avatar mb-5" src="assets/photo_maman2-removebg-preview.png" alt="">
+    <!-- Masthead Heading-->
+    <h1 class="masthead-heading mb-0">GAGNEZ DU TEMPS, COMMANDEZ!</h1>
+    <!-- Icon Divider-->
+    <div class="divider-custom divider-light">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+      <div class="divider-custom-line"></div>
+    </div>
+    <!-- Masthead Subheading-->
+    <p class="pre-wrap masthead-subheading font-weight-light mb-0">Masques grand public - Bijoux - Vêtements <br/> <span class="atelier">Conçus dans nos ateliers</span></p>
+  </div>
+</header>
