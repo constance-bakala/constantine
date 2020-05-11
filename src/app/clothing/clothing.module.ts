@@ -1,14 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ClothingListComponent } from './clothing-list/clothing-list.component';
+import {NgModule} from '@angular/core';
+import {DressListComponent} from './dress-list/dress-list.component';
 import {ClothingRoutingModule} from './clothing-routing.module';
-
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
-  declarations: [ClothingListComponent],
+  declarations: [DressListComponent],
   imports: [
-    CommonModule,
+    SharedModule,
     ClothingRoutingModule,
   ]
 })

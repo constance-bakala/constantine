@@ -1,9 +1,9 @@
 import {Routes} from '@angular/router';
-import {ClothingListComponent} from './clothing-list/clothing-list.component';
+import {DressListComponent} from './dress-list/dress-list.component';
 
 export const clothingRoutes: Routes = [
   {
     path: '',
-    component: ClothingListComponent,
+    component: DressListComponent,
   },
 ];

@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { JewelleryListComponent } from './jewellery-list/jewellery-list.component';
+import { EarringListComponent } from './earring-list/earring-list.component';
 import {JewelleryRoutingModule} from './jewellery-routing.module';
+import {SharedModule} from '../shared/shared.module';
 
 
 
 @NgModule({
-  declarations: [JewelleryListComponent],
+  declarations: [EarringListComponent],
   imports: [
-    CommonModule,
     JewelleryRoutingModule,
+    SharedModule,
   ]
 })
 export class JewelleryModule { }
