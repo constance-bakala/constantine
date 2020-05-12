@@ -33,8 +33,8 @@ export const routes: Routes = [
     path: 'dresses',
     loadChildren: () => import('./clothing/clothing.module').then(m => m.ClothingModule)
   },
-   {
+  {
     path: '**',
-    component: NotFoundComponent
+    redirectTo: 'home',
   }
 ];
