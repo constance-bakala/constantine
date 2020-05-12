@@ -22,7 +22,7 @@ export const routes: Routes = [
     component: NotFoundComponent,
   },
   {
-    path: 'earrings',
+    path: 'earings',
     loadChildren: () => import('./jewellery/jewellery.module').then(m => m.JewelleryModule)
   },
   {

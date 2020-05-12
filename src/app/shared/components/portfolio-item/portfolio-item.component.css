@@ -2,6 +2,8 @@ p {
   font-weight: bold;
 }
 
-
+.displayed {
+  text-align: center;
+}
 
 
