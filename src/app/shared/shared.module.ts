@@ -11,6 +11,8 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {NotFoundComponent} from './components/not-found/not-found.component';
 import {PortfolioListComponent} from './components/portfolio-list/portfolio-list.component';
+import { PortfolioItemComponent } from './components/portfolio-item/portfolio-item.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -18,6 +20,7 @@ import {PortfolioListComponent} from './components/portfolio-list/portfolio-list
     NgbTooltipModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
   ],
   declarations: [
     ContactComponent,
@@ -29,11 +32,13 @@ import {PortfolioListComponent} from './components/portfolio-list/portfolio-list
     FooterComponent,
     NotFoundComponent,
     PortfolioListComponent,
+    PortfolioItemComponent,
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RouterModule,
     NgbTooltipModule,
     ContactComponent,
     AboutComponent,
@@ -44,6 +49,7 @@ import {PortfolioListComponent} from './components/portfolio-list/portfolio-list
     FooterComponent,
     NotFoundComponent,
     PortfolioListComponent,
+    PortfolioItemComponent,
   ],
   providers: [
   ],

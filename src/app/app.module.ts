@@ -9,6 +9,10 @@ import {JewelleryModule} from './jewellery/jewellery.module';
 import {MasksModule} from './masks/masks.module';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {SharedModule} from './shared/shared.module';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     declarations: [

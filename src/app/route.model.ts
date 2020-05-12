@@ -22,7 +22,7 @@ export const routes: Routes = [
     component: NotFoundComponent,
   },
   {
-    path: 'jewellery',
+    path: 'earrings',
     loadChildren: () => import('./jewellery/jewellery.module').then(m => m.JewelleryModule)
   },
   {
@@ -30,7 +30,7 @@ export const routes: Routes = [
     loadChildren: () => import('./masks/masks.module').then(m => m.MasksModule)
   },
   {
-    path: 'clothing',
+    path: 'dresses',
     loadChildren: () => import('./clothing/clothing.module').then(m => m.ClothingModule)
   },
    {
