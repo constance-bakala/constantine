@@ -13,8 +13,30 @@
     <!-- Portfolio Grid Items-->
     <div class="row justify-content-center">
       <!-- Portfolio Items-->
+      <!--
+      <app-portfolio-item
+        [portfolioLink]="'/masks'"
+        [portfolioImage]="'mask-45-removebg-preview.png'"
+        [portfolioName]="'Masques'">
+      </app-portfolio-item>
+
+      <app-portfolio-item
+        [portfolioLink]="'/earings'"
+        [portfolioImage]="'boucle_oreille_sans_arriere_plan.png'"
+        [portfolioName]="'Boucles d\'oreille'">
+      </app-portfolio-item>
+
+      <app-portfolio-item
+        [portfolioLink]="'/dresses'"
+        [portfolioImage]="'dress-36-removebg-preview.png'"
+        [portfolioName]="'Robes'">
+      </app-portfolio-item>
+-->
+
+
       <div class="col-md-6 col-lg-4 mb-5">
-        <div [routerLink]="['/masks']" class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
+        <div [routerLink]="['/masks']" class="portfolio-item mx-auto" data-toggle="modal"
+             data-target="#portfolioModal2">
           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
             <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
           </div>
@@ -23,7 +45,8 @@
         </div>
       </div>
       <div class="col-md-6 col-lg-4 mb-5">
-        <div [routerLink]="['/earrings']" class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal0">
+        <div [routerLink]="['/earrings']" class="portfolio-item mx-auto" data-toggle="modal"
+             data-target="#portfolioModal0">
           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
             <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
           </div>
@@ -32,12 +55,13 @@
         </div>
       </div>
       <div class="col-md-6 col-lg-4 mb-5">
-        <div [routerLink]="['/dresses']" class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal1">
+        <div [routerLink]="['/dresses']" class="portfolio-item mx-auto" data-toggle="modal"
+             data-target="#portfolioModal1">
           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
             <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
           </div>
-            <img class="img-fluid" src="assets/portfolio/dress-36-removebg-preview.png" alt="Tasty Cake" height="10"/>
-            <p> Robes</p>
+          <img class="img-fluid" src="assets/portfolio/dress-36-removebg-preview.png" alt="Tasty Cake" height="10"/>
+          <p> Robes</p>
         </div>
       </div>
     </div>
