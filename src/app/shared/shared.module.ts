@@ -13,6 +13,7 @@ import {NotFoundComponent} from './components/not-found/not-found.component';
 import {PortfolioListComponent} from './components/portfolio-list/portfolio-list.component';
 import { PortfolioItemComponent } from './components/portfolio-item/portfolio-item.component';
 import {RouterModule} from '@angular/router';
+import {GoogleMapsModule} from '@angular/google-maps';
 
 @NgModule({
   imports: [
@@ -21,6 +22,7 @@ import {RouterModule} from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    GoogleMapsModule,
   ],
   declarations: [
     ContactComponent,
