@@ -17,11 +17,10 @@ import {GoogleMapsModule} from '@angular/google-maps';
 import {MapTemplateComponent} from './components/map-template/map-template.component';
 import {AdBannerComponent} from './components/advertisements/ad-banner/ad-banner.component';
 import {AdDirective} from './directives/ad.directive';
-import {AdItemComponent} from './components/advertisements/ad-item/ad-item.component';
 import {HeroJobAdComponent} from './components/advertisements/details/hero-job-add/hero-job-ad.component';
 import {HeroProfileComponent} from './components/advertisements/details/hero-profile/hero-profile.component';
 import {AdService} from './services/ad.service';
-import { AdHeaderComponent } from './components/advertisements/details/ad-header/ad-header.component';
+import {AdHeaderComponent} from './components/advertisements/details/ad-header/ad-header.component';
 
 @NgModule({
   imports: [
@@ -46,7 +45,6 @@ import { AdHeaderComponent } from './components/advertisements/details/ad-header
     MapTemplateComponent,
     AdBannerComponent,
     AdDirective,
-    AdItemComponent,
     HeroJobAdComponent,
     HeroProfileComponent,
     AdHeaderComponent,
@@ -74,7 +72,6 @@ import { AdHeaderComponent } from './components/advertisements/details/ad-header
     MapTemplateComponent,
     AdBannerComponent,
     AdDirective,
-    AdItemComponent,
     HeroJobAdComponent,
     HeroProfileComponent,
     AdHeaderComponent,

@@ -10,7 +10,7 @@ export class PortfolioItemComponent implements OnInit, OnDestroy {
 
   @Input() data: PortfolioData;
   interval: any;
-  photoIndexToPrint = 0;
+  photoIndexToPrint = 1;
 
   constructor() { }
 

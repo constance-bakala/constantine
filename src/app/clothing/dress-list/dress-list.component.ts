@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dress-list.component.css']
 })
 export class DressListComponent implements OnInit {
-  nbDresses = 38;
+  nbDresses = 29;
 
   constructor() {
 
