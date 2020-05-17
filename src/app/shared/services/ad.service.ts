@@ -1,5 +1,5 @@
 import { Injectable }           from '@angular/core';
-import {AdItemComponent} from '../components/advertisements/ad-item/ad-item.component';
+import {AdItemComponent2} from '../components/advertisements/ad-item/ad-item-component2.component';
 import {HeroProfileComponent} from '../components/advertisements/details/hero-profile/hero-profile.component';
 import {HeroJobAdComponent} from '../components/advertisements/details/hero-job-add/hero-job-ad.component';
 
@@ -12,12 +12,14 @@ export class AdService {
 
   getAds() {
     return [
-      new AdItemComponent(HeroProfileComponent, {name: 'Bombasto', bio: 'Brave as they come', headerImg: 'assets/dresses/dress-'+ this.getRandomNumber()+'.jpeg'}),
+      /*new AdItemComponent2(HeroProfileComponent, {name: 'Bombasto', bio: 'Brave as they come', headerImg: 'assets/dresses/dress-'+ this.getRandomNumber()+'.jpeg'}),
 
-      new AdItemComponent(HeroProfileComponent, {name: 'Dr IQ', bio: 'Smart as they come', headerImg: 'assets/jewellery/jewellery-'+ this.getRandomNumber()+'.jpeg'}),
+      new AdItemComponent2(HeroProfileComponent, {name: 'Dr IQ', bio: 'Smart as they come', headerImg: 'assets/jewellery/jewellery-'+ this.getRandomNumber()+'.jpeg'}),
 
-      new AdItemComponent(HeroJobAdComponent,   {headline: 'Hiring for several positions', headerImg: 'assets/masks/mask-'+ this.getRandomNumber()+'.jpeg',
+      new AdItemComponent2(HeroJobAdComponent,   {headline: 'Hiring for several positions', headerImg: 'assets/masks/mask-'+ this.getRandomNumber()+'.jpeg',
         body: 'Submit your resume today!'}),
+
+       */
     ];
   }
 }

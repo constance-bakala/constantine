@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
 import {GoogleMapConfig} from '../../models/map.models';
-import {AdItemComponent} from '../advertisements/ad-item/ad-item.component';
+import {AdItemComponent2} from '../advertisements/ad-item/ad-item-component2.component';
 import {AdService} from '../../services/ad.service';
 
 @Component({

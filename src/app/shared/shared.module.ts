@@ -21,6 +21,7 @@ import {HeroJobAdComponent} from './components/advertisements/details/hero-job-a
 import {HeroProfileComponent} from './components/advertisements/details/hero-profile/hero-profile.component';
 import {AdService} from './services/ad.service';
 import {AdHeaderComponent} from './components/advertisements/details/ad-header/ad-header.component';
+import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-component2.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import {AdHeaderComponent} from './components/advertisements/details/ad-header/a
     HeroJobAdComponent,
     HeroProfileComponent,
     AdHeaderComponent,
+    AdItemComponent2
   ],
   exports: [
     CommonModule,

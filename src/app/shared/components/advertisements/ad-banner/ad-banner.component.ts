@@ -1,8 +1,7 @@
-import { Component, Input, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy } from '@angular/core';
+import {Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 
 import {AdDirective} from '../../../directives/ad.directive';
-import {AdItemComponent} from '../ad-item/ad-item.component';
-import {AdComponent} from '../../../models/advertissement.models';
+import {AdItemComponent2} from '../ad-item/ad-item-component2.component';
 
 @Component({
   selector: 'app-ad-banner',
@@ -10,7 +9,7 @@ import {AdComponent} from '../../../models/advertissement.models';
   styleUrls: ['./ad-banner.component.scss']
 })
 export class AdBannerComponent implements OnInit, OnDestroy {
-  @Input() ads: AdItemComponent[];
+  @Input() ads: AdItemComponent2[];
   currentAdIndex = -1;
   @ViewChild(AdDirective, {static: true}) adHost: AdDirective;
   interval: any;
@@ -27,7 +26,7 @@ export class AdBannerComponent implements OnInit, OnDestroy {
   }
 
   loadComponent() {
-    this.currentAdIndex = (this.currentAdIndex + 1) % this.ads.length;
+    /*this.currentAdIndex = (this.currentAdIndex + 1) % this.ads.length;
     const adItem = this.ads[this.currentAdIndex];
 
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(adItem.component);
@@ -37,6 +36,8 @@ export class AdBannerComponent implements OnInit, OnDestroy {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (<AdComponent>componentRef.instance).data = adItem.data;
+    *
+     */
   }
 
   getAds() {
