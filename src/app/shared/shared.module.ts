@@ -11,9 +11,17 @@ import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
 import {NotFoundComponent} from './components/not-found/not-found.component';
 import {PortfolioListComponent} from './components/portfolio-list/portfolio-list.component';
-import { PortfolioItemComponent } from './components/portfolio-item/portfolio-item.component';
+import {PortfolioItemComponent} from './components/portfolio-item/portfolio-item.component';
 import {RouterModule} from '@angular/router';
 import {GoogleMapsModule} from '@angular/google-maps';
+import {MapTemplateComponent} from './components/map-template/map-template.component';
+import {AdBannerComponent} from './components/advertisements/ad-banner/ad-banner.component';
+import {AdDirective} from './directives/ad.directive';
+import {AdItemComponent} from './components/advertisements/ad-item/ad-item.component';
+import {HeroJobAdComponent} from './components/advertisements/details/hero-job-add/hero-job-ad.component';
+import {HeroProfileComponent} from './components/advertisements/details/hero-profile/hero-profile.component';
+import {AdService} from './services/ad.service';
+import { AdHeaderComponent } from './components/advertisements/details/ad-header/ad-header.component';
 
 @NgModule({
   imports: [
@@ -35,6 +43,13 @@ import {GoogleMapsModule} from '@angular/google-maps';
     NotFoundComponent,
     PortfolioListComponent,
     PortfolioItemComponent,
+    MapTemplateComponent,
+    AdBannerComponent,
+    AdDirective,
+    AdItemComponent,
+    HeroJobAdComponent,
+    HeroProfileComponent,
+    AdHeaderComponent,
   ],
   exports: [
     CommonModule,
@@ -52,8 +67,20 @@ import {GoogleMapsModule} from '@angular/google-maps';
     NotFoundComponent,
     PortfolioListComponent,
     PortfolioItemComponent,
+    FooterComponent,
+    NotFoundComponent,
+    PortfolioListComponent,
+    PortfolioItemComponent,
+    MapTemplateComponent,
+    AdBannerComponent,
+    AdDirective,
+    AdItemComponent,
+    HeroJobAdComponent,
+    HeroProfileComponent,
+    AdHeaderComponent,
   ],
   providers: [
+    AdService
   ],
   entryComponents: []
 })

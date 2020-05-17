@@ -1,0 +1,20 @@
+<google-map
+  height="{{mapConfig.size.height}}"
+  width="{{mapConfig.size.width}}"
+  [zoom]="mapConfig.zoom.initialValue"
+  [center]="center"
+  [options]="options"
+>
+  <map-marker
+    #markerElem
+    *ngFor="let marker of markers"
+    [position]="marker.position"
+    [label]="marker.label"
+    [title]="marker.title"
+    [options]="marker.options"
+    (mapClick)="openInfo(markerElem, marker.info)"
+  >
+    <!-- set label(label: string | google.maps.MarkerLabel); -->
+  </map-marker>
+  <map-info-window>{{ infoContent }}</map-info-window>
+</google-map>

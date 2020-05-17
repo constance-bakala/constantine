@@ -1,8 +1,8 @@
-  <div [routerLink]="[portfolioLink]" class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
+  <div [routerLink]="[data.portfolioLink]" class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
     <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
       <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
     </div>
-    <img class="img-fluid" src="assets/portfolio/{{portfolioImage}}" alt="{{portfolioName}}" height="50%" />
-    <p class="displayed"> {{portfolioName}}</p>
+    <img class="img-fluid" src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}.png" alt="{{data.portfolioName}}" height="50%" />
+    <p class="displayed"> {{data.portfolioName}}</p>
   </div>
 

@@ -14,28 +14,18 @@
     <div class="row justify-content-center text-center">
       <!-- Portfolio Items-->
       <div class="{{disposition}}">
-        <app-portfolio-item
-          [portfolioLink]="'/masks'"
-          [portfolioImage]="'mask-45-removebg-preview.png'"
-          [portfolioName]="'Masques'">
+        <app-portfolio-item [data]="dataMasks">
         </app-portfolio-item>
       </div>
       <div class="{{disposition}}">
-        <app-portfolio-item
-          [portfolioLink]="'/earings'"
-          [portfolioImage]="'boucle_oreille_sans_arriere_plan.png'"
-          [portfolioName]="'Boucles d\'oreille'">
+        <app-portfolio-item [data]="dataEarings">
         </app-portfolio-item>
       </div>
 
       <div class="{{disposition}}">
-        <app-portfolio-item
-          [portfolioLink]="'/dresses'"
-          [portfolioImage]="'dress-36-removebg-preview.png'"
-          [portfolioName]="'Robes'">
+        <app-portfolio-item [data]="dataDresses">
         </app-portfolio-item>
       </div>
     </div>
   </div>
-
 </section>

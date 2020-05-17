@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./masks-list.component.css']
 })
 export class MasksListComponent implements OnInit {
-  nbMask = 70;
+  nbMask = 62;
 
   constructor() {
   }

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {GoogleMapConfig, GooglemapZoom} from '../../models/map.models';
 
 @Component({
   selector: 'app-contact',
@@ -7,9 +8,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ContactComponent implements OnInit {
 
-  constructor() { }
+  mapConfig: GoogleMapConfig;
 
+  constructor() {
+  }
   ngOnInit() {
+    this.mapConfig = {
+      lat: 0.388537,
+      lng: 9.447901,
+      zoom: {
+        initialValue: 15,
+        maxZoom: 18,
+        minZoom: 4,
+      },
+      companyMarkerColor: 'red',
+      companyTitle: 'Délice éternel',
+      companyInfo: 'Prêt à porter, vente de bijoux, masques grand public, robes ...  ',
+      size: {
+        height: 400,
+        width: 400
+      }
+    }
   }
 
 }
