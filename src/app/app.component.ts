@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
+import {AngularFirestore} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +11,12 @@ export class AppComponent {
   title = 'test-angular';
 
   constructor(
-    private router: Router,
-  ) {
-  }
-
-  navigateToPortFolio() {
-    this.router.navigate(['/root/child/child']);
+    private router: Router, private db: AngularFirestore) {
+    const users$ = this.db.collection('users').valueChanges();
+    users$.subscribe(users => {
+        console.log(users);
+      });
+    users$.pipe(
+    )
   }
 }
