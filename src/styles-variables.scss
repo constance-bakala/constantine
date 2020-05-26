@@ -1,0 +1,221 @@
+
+$fa-font-path: '../node_modules/font-awesome/fonts';
+
+/* SIZE */
+$size-zero: 0;
+$size-1px: 0.0625rem;
+$size-2px: 0.125rem;
+$size-3px: 0.1875rem;
+$size-4px: 0.25rem;
+$size-5px: 0.3125rem;
+$size-6px: 0.375rem;
+$size-7px: 0.4375rem;
+$size-8px: 0.5rem;
+$size-9px: 0.5625rem;
+$size-10px: 0.625rem;
+$size-11px: 0.6875rem;
+$size-12px: 0.75rem;
+$size-13px: 0.8125rem;
+$size-14px: 0.875rem;
+$size-15px: 0.9375rem;
+$size-16px: 1rem;
+$size-17px: 1.0625rem;
+$size-18px: 1.125rem;
+$size-19px: 1.1875rem;
+$size-20px: 1.25rem;
+$size-21px: 1.3125rem;
+$size-22px: 1.375rem;
+$size-24px: 1.5rem;
+$size-25px: 1.5625rem;
+$size-26px: 1.625rem;
+$size-27px: 1.6875rem;
+$size-28px: 1.75rem;
+$size-30px: 1.875rem;
+$size-32px: 2rem;
+$size-33px: 2.0625rem;
+$size-34px: 2.125rem;
+$size-35px: 2.1875rem;
+$size-36px: 2.25rem;
+$size-38px: 2.375rem;
+$size-39px: 2.4375rem;
+$size-40px: 2.5rem;
+$size-41px: 2.5625rem;
+$size-45px: 2.8125rem;
+$size-46px: 2.875rem;
+$size-48px: 3rem;
+$size-50px: 3.125rem;
+$size-53px: 3.3125rem;
+$size-55px: 3.4375rem;
+$size-56px: 3.5rem;
+$size-60px: 3.75rem;
+$size-64px: 4rem;
+$size-65px: 4.0625rem;
+$size-70px: 4.375rem;
+$size-72px: 4.5rem;
+$size-74px: 4.625rem;
+$size-75px: 4.6875rem;
+$size-78px: 4.875rem;
+$size-80px: 5rem;
+$size-88px: 5.5rem;
+$size-98px: 6.125rem;
+$size-99px: 6.1875rem;
+
+$size-100px: 6.25rem;
+$size-101px: 6.3125rem;
+$size-128px: 8rem;
+$size-132px: 8.25rem;
+$size-136px: 8.5rem;
+$size-140px: 8.75rem;
+$size-144px: 9rem;
+$size-152px: 9.5rem;
+$size-160px: 10rem;
+$size-165px: 10.3125rem;
+$size-170px: 10.625rem;
+$size-190px: 11.875rem;
+$size-195px: 12.1875rem;
+$size-200px: 12.5rem;
+$size-212px: 13.25rem;
+$size-235px: 14.6875rem;
+$size-240px: 15rem;
+$size-250px: 15.625rem;
+$size-256px: 16rem;
+$size-266px: 16.625rem;
+$size-272px: 17rem;
+$size-291px: 18.1875rem;
+$size-300px: 18.75rem;
+$size-330px: 20.625rem;
+$size-350px: 21.875rem;
+$size-436px: 27.25rem;
+$size-450px: 28.125rem;
+$size-700px: 43.75rem;
+$size-1080px: 67.5rem;
+$size-1216px: 76rem;
+$size-1280px: 80rem;
+
+$font-size-xs: $size-10px;
+$font-size-s: $size-12px;
+$font-size-m: $size-14px;
+$font-size-l: $size-16px;
+$font-size-xl: $size-22px;
+$font-size-xxl: $size-28px;
+
+$grid-breakpoints-xs: 0;
+$grid-breakpoints-sm: 36rem;
+$grid-breakpoints-md: 47.9375rem; //767px;
+$grid-breakpoints-lg: 62rem;
+$grid-breakpoints-xl: 75rem;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 36rem,
+  md: 47.9375rem,
+  lg: 62rem,
+  xl: 75rem
+);
+
+$container-menu-min-width: 15.875rem;
+$container-max-width: 79.375rem;
+$homepage-container-max-width: 56.25rem;
+$toolbar-min-width: 48rem;
+$toolbar-max-width: 80rem;
+
+/* COLOR */
+$noir_op50: rgba(34, 34, 34, 0.5);
+$bleu_texte_op15: #e0ebf7;
+$rouge_negatif_op15: #fdd9d9;
+$jaune_dark_op15: #fff6d9;
+$bleu_turquoise_light_op15: #e7f9fA;
+
+$blanc: #ffffff;
+$blanc_op59: rgba(255, 255, 255, 0.59);
+$blanc_op85: rgba(255, 255, 255, 0.85);
+$light_gray: #f4f6f9;
+$jaune_ocre: #ebaa28;
+$jaune_ocre_clair: #fdf6e9;
+$jaune_ocre_mm_op59: rgba(235, 170, 40, 1);
+$jaune_alert: #fadcb4;
+$jaune_alert_content: #ebaa28;
+$bleu_tooltip: #C1D5EE;
+$pink_tooltip: #F9B2B2;
+
+$green: #99f19e;
+$green_alert_content: #19c56e;
+$green_alert_valid: #f1f9e7;
+
+$bleu: blue;
+$bleu_clair: #0087d7;
+$bleu_clair_alert: rgba(0, 80, 170, 0.1);
+$bleu_info: #f6f8fa;
+$bleu_infobulle: #3175c9;
+$bleu_alert_content: #141e6e;
+$bleu_median: #0050aa;
+$bleu_median_op59: rgba(0, 80, 170, 0.59);
+$bleu_nuit: #141e6e;
+$bleu_nuit_op20: rgba(20, 30, 10, 0.2);
+$bleu_nuit_op59: rgba(20, 30, 10, 0.59);
+$blue-badge: #0F48B3;
+$blue-dark: #2b3d5b;
+
+$orange: #f08c05;
+$orange_alert: #fdf3e6;
+$orange_alert_border: #f3a946;
+$rouge_orange_alert: #fcede6;
+
+$rouge_alert: #fcede6;
+$rouge_alert_content: #c41a1a;
+$rouge_error: rgb(244, 67, 54);
+$rouge_orange: #e65005;
+
+$gris_op0: rgba(238, 238, 238, 0);
+$gris_froid_hyper_clair: #fbfbff;
+$gris_froid_tres_clair: #f1f1f8;
+$gris_tres_clair: #efeff4;
+$gris_clair: #dddddd;
+$gris_median: #bfbfbf;
+$gris_soutenu: #888888;
+$gris_desactive: lighten(#6c757d, 30%);
+$gris_fonce: #444444;
+$gris_bleu: #eaeef3;
+$gris_bleu_fonce: #0050aa;
+
+$noir_op59: rgba(0, 0, 0, 0.05);
+$noir_op80: rgba(0, 0, 0, 0.8);
+
+$vert: green;
+$rouge: red;
+$gris: gray;
+$gris-clair-moyen: #888888;
+$gris-sombre: #404040;
+$gris-clair-eleve: #F2F2F2;
+
+$tab_border_top: #dfe2e5;
+$popin_red: #be6464;
+$popin_orange: #f0ad4e;
+
+// Dimensions
+$border-radius: 0.25em;
+// Shadows
+$shadow-big: 0 2.0625em 2.375em -1.375em rgba(0, 0, 0, 0.37);
+
+@mixin sticky-footer-block() {
+  z-index: 1;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: $size-88px;
+  background-color: $blanc;
+  box-shadow: 0 3px 6px 0 rgba(34, 34, 34, 0.3);
+}
+
+@mixin stop-sticky() {
+  box-shadow: none !important;
+  position: relative !important;
+  .row-actions {
+    padding-left: $size-zero !important;
+    padding-bottom: $size-zero !important;
+  }
+}

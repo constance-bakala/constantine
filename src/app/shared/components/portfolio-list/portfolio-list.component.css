@@ -4,12 +4,16 @@ img.displayed{
 }
 
 .img-fluid, .img-thumbnail {
-  max-width: 77%;
+  max-width: 40%;
   height: auto;
 }
 
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  margin-left: 42px;
+.display {
+  display: flex;
+  justify-content: center;
+}
+
+.selected {
+  border: 5px double rgba(28,110,164,0.27);
+  border-radius: 6px 6px 6px 6px;
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {GoogleMapConfig, GooglemapZoom} from '../../models/map.models';
+import {GoogleMapConfig, GooglemapZoom} from '../../interfaces/map.interfaces';
 
 @Component({
   selector: 'app-contact',

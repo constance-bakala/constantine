@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import {GoogleMapConfig} from '../../models/map.models';
+import {GoogleMapConfig} from '../../interfaces/map.interfaces';
 
 @Component({
   selector: 'app-map-template',

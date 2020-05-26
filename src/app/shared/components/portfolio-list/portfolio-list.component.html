@@ -1,12 +1,12 @@
 <div class="row justify-content-center">
   <!-- Portfolio Items-->
-  <div class="col-md-6 col-lg-4 mb-5" *ngFor="let i of indexes">
+  <div class="col-md-6 col-lg-4 mb-5" *ngFor="let item of items">
     <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModa15">
       <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
         <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
       </div>
-      <img class="img-fluid displayed" src="assets/{{directoryName}}/{{refPrefix}}-{{i+1}}.png" alt="{{refPrefix}}-{{i}}"/>
-      <p>REF: {{refPrefix | uppercase}}-{{i+1}}</p>
+      <img class="img-fluid displayed" src="{{item.payload.path}}" alt="{{item.payload.reference}}" [ngClass]="item.payload.selected? 'selected': ''"/>
+      <p class="display">REF: {{item.payload.reference}} &nbsp;&nbsp;<mat-checkbox [checked]="item.payload.selected" class="aria-label" (change)="toogleSelect(item)"></mat-checkbox></p>
     </div>
   </div>
 </div>

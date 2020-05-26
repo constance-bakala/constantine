@@ -1,23 +1,24 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ItemInfos} from '@shared/interfaces/image.interfaces';
 
 @Component({
   selector: 'app-portfolio-list',
   templateUrl: './portfolio-list.component.html',
-  styleUrls: ['./portfolio-list.component.css']
+  styleUrls: ['./portfolio-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PortfolioListComponent implements OnInit {
 
-  @Input() size: number;
-  @Input() refPrefix: string;
-  @Input() directoryName: string;
-
-  indexes: number[];
-
+  @Input() items: ItemInfos[];
+  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
-    this.indexes = Array(this.size).fill(0).map((x, i) => i); // [0,1,2,3,4];
+  }
+
+  toogleSelect(selectedImage: ItemInfos) {
+    this.onToogleSelect.emit(selectedImage);
   }
 
 }

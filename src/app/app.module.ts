@@ -4,15 +4,18 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
-import {ClothingModule} from './clothing/clothing.module';
-import {JewelleryModule} from './jewellery/jewellery.module';
-import {MasksModule} from './masks/masks.module';
-import {WelcomeComponent} from './welcome/welcome.component';
-import {SharedModule} from './shared/shared.module';
+import {SharedModule} from '@shared/shared.module';
 import {AngularFireModule} from '@angular/fire';
-import {AngularFireStorage, AngularFireStorageModule} from '@angular/fire/storage';
+import {AngularFireStorageModule} from '@angular/fire/storage';
 import {AngularFirestoreModule} from '@angular/fire/firestore';
 import {AngularFireAuthModule} from '@angular/fire/auth';
+import {AuthModule} from '@app/auth/auth.module';
+import {CoreModule} from '@app/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {CacheService} from '@shared/services';
+import {WelcomeModule} from '@app/features/welcome/welcome.module';
+import {FeaturesModule} from '@app/features/features.module';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBLCfZxzkybYbWJSrJGllI3X9sYtS6VZgw",
@@ -28,22 +31,24 @@ const firebaseConfig = {
 @NgModule({
   declarations: [
     AppComponent,
-    WelcomeComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     SharedModule,
     AppRoutingModule,
-    ClothingModule,
-    JewelleryModule,
-    MasksModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    AuthModule,
+    CoreModule,
+    FeaturesModule,
+    BrowserAnimationsModule,
+    FontAwesomeModule,
+    WelcomeModule,
   ],
-  providers: [],
+  providers: [ CacheService],
   exports: [],
   bootstrap: [AppComponent]
 })

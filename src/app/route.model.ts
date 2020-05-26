@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {AppComponent} from './app.component';
-import {WelcomeComponent} from './welcome/welcome.component';
+import {WelcomeComponent} from './features/welcome/welcome.component';
 
 export const routes: Routes = [
   {
@@ -23,15 +23,19 @@ export const routes: Routes = [
   },
   {
     path: 'earings',
-    loadChildren: () => import('./jewellery/jewellery.module').then(m => m.JewelleryModule)
+    loadChildren: () => import('./features/jewellery/jewellery.module').then(m => m.JewelleryModule)
   },
   {
     path: 'masks',
-    loadChildren: () => import('./masks/masks.module').then(m => m.MasksModule)
+    loadChildren: () => import('./features/masks/masks.module').then(m => m.MasksModule)
   },
   {
     path: 'dresses',
-    loadChildren: () => import('./clothing/clothing.module').then(m => m.ClothingModule)
+    loadChildren: () => import('./features/clothing/clothing.module').then(m => m.ClothingModule)
+  },
+  {
+    path: 'shoping-cart',
+    loadChildren: () => import('./features/shopping-cart/shopping-cart.module').then(m => m.ShoppingCartModule)
   },
   {
     path: '**',

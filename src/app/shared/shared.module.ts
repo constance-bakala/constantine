@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModule, NgbTooltipModule} from '@ng-bootstrap/ng-bootstrap';
 import {ContactComponent} from './components/contact/contact.component';
 import {AboutComponent} from './components/about/about.component';
 import {Portfolio16Component} from './components/modal/portfolio16/portfolio16.component';
@@ -22,6 +22,10 @@ import {HeroProfileComponent} from './components/advertisements/details/hero-pro
 import {AdService} from './services/ad.service';
 import {AdHeaderComponent} from './components/advertisements/details/ad-header/ad-header.component';
 import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-component2.component';
+import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import {IconeDividerComponent} from './components/icone-divider/icone-divider.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { NavigationComponent } from './components/navigation/navigation.component';
 
 @NgModule({
   imports: [
@@ -31,6 +35,9 @@ import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-comp
     ReactiveFormsModule,
     RouterModule,
     GoogleMapsModule,
+    NgbModule,
+    MDBBootstrapModule.forRoot(),
+    MatCheckboxModule,
   ],
   declarations: [
     ContactComponent,
@@ -49,7 +56,9 @@ import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-comp
     HeroJobAdComponent,
     HeroProfileComponent,
     AdHeaderComponent,
-    AdItemComponent2
+    AdItemComponent2,
+    IconeDividerComponent,
+    NavigationComponent,
   ],
   exports: [
     CommonModule,
@@ -70,13 +79,14 @@ import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-comp
     FooterComponent,
     NotFoundComponent,
     PortfolioListComponent,
-    PortfolioItemComponent,
     MapTemplateComponent,
     AdBannerComponent,
     AdDirective,
     HeroJobAdComponent,
     HeroProfileComponent,
     AdHeaderComponent,
+    IconeDividerComponent,
+    NavigationComponent,
   ],
   providers: [
     AdService

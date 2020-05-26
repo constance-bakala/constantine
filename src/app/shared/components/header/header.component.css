@@ -1,12 +1,11 @@
 .adjust {
-  margin-top: 70px ;
+  margin-top: 100px ;
 }
 
 .bg-primary {
-  background-image: url('/assets/facade_magasin_v1.jpeg');
+  background-image: url('/assets/----/delice_eternel.png');
   background-color: #17a2b8 !important;
   background-repeat: no-repeat;
-  background-size: contain;
   background-position: 50% 50%;
 }
 

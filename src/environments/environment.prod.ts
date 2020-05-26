@@ -1,3 +1,9 @@
+import {ENV_TYPES, environment as env, URLS} from './environment.common';
+
+
 export const environment = {
-  production: true
+  ...env,
+  envName: ENV_TYPES.PROD,
+  production: true,
+  urls: URLS
 };
