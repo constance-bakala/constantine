@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {PortfolioData} from '../../interfaces/portfolio.interfaces';
+import {PortfolioData} from '@shared/interfaces';
 
 @Component({
   selector: 'app-portfolio-item',
