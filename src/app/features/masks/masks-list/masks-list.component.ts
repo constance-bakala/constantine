@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
 import {ActionItemsRetrieve, ActionItemToogleSelect, selectEarings, selectMasks} from '@app/features/store';
 
@@ -10,7 +10,7 @@ import {ActionItemsRetrieve, ActionItemToogleSelect, selectEarings, selectMasks}
   styleUrls: ['./masks-list.component.css']
 })
 export class MasksListComponent implements OnInit {
-  masks$: Observable<ItemInfos[]>;
+  masks$: Observable<Category>;
   constructor(private store: Store<any>) {
   }
 

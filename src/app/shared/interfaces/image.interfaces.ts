@@ -3,6 +3,13 @@ export interface ImageMetaData {
   suffix: string;
 }
 
+export class Category {
+  name: ItemsCategoriesEnum;
+  title: string;
+  summary: string;
+  items: ItemInfos[]
+}
+
 export class ItemInfos {
   constructor(public payload: {
     path: string,
@@ -16,5 +23,6 @@ export class ItemInfos {
 export enum ItemsCategoriesEnum {
   EARINGS = 'EARINGS',
   MASKS = 'MASKS',
-  DRESSES = 'DRESSES'
+  DRESSES = 'DRESSES',
+  UNKNOWN = 'UNKNOWN',
 }

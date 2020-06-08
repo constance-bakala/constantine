@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {ActionItemsRetrieve, ActionItemToogleSelect, selectDresses, selectEarings} from '@app/features/store';
@@ -10,7 +10,7 @@ import {ActionItemsRetrieve, ActionItemToogleSelect, selectDresses, selectEaring
   styleUrls: ['./dress-list.component.css']
 })
 export class DressListComponent implements OnInit {
-  dresses$: Observable<ItemInfos[]>;
+  dresses$: Observable<Category>;
   constructor(private store: Store<any>) {
   }
 

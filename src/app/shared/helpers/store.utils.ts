@@ -1,6 +1,6 @@
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {ItemsState} from '@app/features/store';
-import {IBasketState} from '@app/features/basket/store';
+import * as _ from 'lodash'
 
 export function findItemByReference(items: ItemInfos[], reference: string): ItemInfos {
   return items.find(e => e.payload.reference === reference);
@@ -23,59 +23,59 @@ export function toogleBasketItem(items: ItemInfos[], newItem: ItemInfos): ItemIn
   return itemsCopy;
 }
 
-export function getItemsByCategory(state, category: ItemsCategoriesEnum): ItemInfos[] {
-  let items: ItemInfos[];
-  switch (category) {
+export function getCategoryByName(state, categoryName: ItemsCategoriesEnum): Category {
+  let category: Category;
+  switch (categoryName) {
     case ItemsCategoriesEnum.EARINGS:
-      items = [...state.earings];
+      category = _.cloneDeep(state.earings);
       break;
     case ItemsCategoriesEnum.MASKS:
-      items = [...state.masks];
+      category = _.cloneDeep(state.masks);
       break;
     case ItemsCategoriesEnum.DRESSES:
-      items = [...state.dresses];
+      category = _.cloneDeep(state.dresses);
       break;
     default:
-      items = [];
+      category = undefined;
   }
 
-  return items;
+  return category;
 }
 
 export function toogleSelectItem(state: ItemsState, anItem: ItemInfos): ItemsState {
-  let items = getItemsByCategory(state, anItem.payload.category);
-  let foundItem: ItemInfos = findItemByReference(items, anItem.payload.reference);
+  let category = getCategoryByName(state, anItem.payload.category);
+  let foundItem: ItemInfos = findItemByReference(category.items, anItem.payload.reference);
   if (!!foundItem) {
     foundItem.payload.selected = !foundItem.payload.selected;
   }
-  return updateItemState(state, items, anItem.payload.category)
+  return updateItemState(state, category)
 }
 
-export function updateItemState(state: ItemsState, items: ItemInfos[], category: ItemsCategoriesEnum, overrideExisting: boolean = true): ItemsState {
-  switch (category) {
+export function updateItemState(state: ItemsState, category: Category, overrideExisting: boolean = true): ItemsState {
+  switch (category.name) {
     case ItemsCategoriesEnum.EARINGS:
-      if (canOverride(state.earings, overrideExisting)) {
+      if (canOverride(state.earings.items, overrideExisting)) {
         return {
           ...state,
-          earings: items
+          earings: category
         };
       } else {
         return state;
       }
     case ItemsCategoriesEnum.MASKS:
-      if (canOverride(state.masks, overrideExisting)) {
+      if (canOverride(state.masks.items, overrideExisting)) {
         return {
           ...state,
-          masks: items
+          masks: category
         };
       } else {
         return state;
       }
     case ItemsCategoriesEnum.DRESSES:
-      if (canOverride(state.dresses, overrideExisting)) {
+      if (canOverride(state.dresses.items, overrideExisting)) {
         return {
           ...state,
-          dresses: items
+          dresses: category
         };
       } else {
         return state;

@@ -8,6 +8,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {ItemsEffects, itemsReducer} from '@app/features/store';
 import {BasketComponent} from './basket/basket.component';
 import {basketReducer} from '@app/features/basket/store';
+import {ShoppingCartModule} from '@app/features/shopping-cart/shopping-cart.module';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {basketReducer} from '@app/features/basket/store';
     ClothingModule,
     JewelleryModule,
     MasksModule,
+    ShoppingCartModule,
     StoreModule.forFeature(
       'constantine',
       { items: itemsReducer, basket: basketReducer},

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ItemInfos} from '@shared/interfaces/image.interfaces';
+import {Category, ItemInfos} from '@shared/interfaces/image.interfaces';
 
 @Component({
   selector: 'app-portfolio-list',
@@ -9,7 +9,7 @@ import {ItemInfos} from '@shared/interfaces/image.interfaces';
 })
 export class PortfolioListComponent implements OnInit {
 
-  @Input() items: ItemInfos[];
+  @Input() category: Category;
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
 
   constructor() { }

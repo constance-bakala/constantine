@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{Vffl:function(n,o,t){"use strict";t.r(o),t.d(o,"ShoppingCartModule",(function(){return c}));var r=t("ofXK"),e=t("fXoL");let c=(()=>{class n{}return n.\u0275mod=e.Rb({type:n}),n.\u0275inj=e.Qb({factory:function(o){return new(o||n)},imports:[[r.c]]}),n})()}}]);

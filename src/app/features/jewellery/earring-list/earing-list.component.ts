@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
 import {ActionItemsRetrieve, ActionItemToogleSelect, selectEarings} from '@app/features/store';
 import {Observable} from 'rxjs';
@@ -10,7 +10,7 @@ import {Observable} from 'rxjs';
   styleUrls: ['./earing-list.component.css']
 })
 export class EaringListComponent implements OnInit {
-  earings$: Observable<ItemInfos[]>;
+  earings$: Observable<Category>;
   constructor(private store: Store<any>) {
   }
 

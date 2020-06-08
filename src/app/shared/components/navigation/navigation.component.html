@@ -4,7 +4,9 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto smooth-scroll">
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="[ '/shopping-cart' ]">
-          <i class="fa fa-shopping-cart"></i><span class="nbItems">{{nbSelectedItems$ | async}}</span>
+          <i class="fa fa-shopping-cart"></i>
+          <span class="nbItems"></span>
+          <span class="badge badge-pill red">{{nbSelectedItems$ | async}}</span>
         </a>
         </li>
         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">PORTFOLIO</a>

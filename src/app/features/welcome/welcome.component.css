@@ -3,7 +3,10 @@ p {
   margin-left: 121px;
 }
 
-.displayed{
-  display: block;
-  margin:0 auto;
+
+
+.skin-light .badge-news {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }

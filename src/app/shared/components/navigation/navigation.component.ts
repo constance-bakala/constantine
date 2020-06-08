@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AuthState, selectorAuth} from '@app/auth/store';
-import {selectNbChosenItem} from '@app/features/store';
+import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
 declare var $: any;
 
@@ -78,7 +78,7 @@ export class NavigationComponent implements OnInit {
     });
 
     this.nbSelectedItems$ = this.store.pipe(
-      select(selectNbChosenItem)
+      select(selectNbChosenItems)
     );
   }
 

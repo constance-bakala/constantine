@@ -34,7 +34,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/clothing/clothing.module').then(m => m.ClothingModule)
   },
   {
-    path: 'shoping-cart',
+    path: 'shopping-cart',
     loadChildren: () => import('./features/shopping-cart/shopping-cart.module').then(m => m.ShoppingCartModule)
   },
   {

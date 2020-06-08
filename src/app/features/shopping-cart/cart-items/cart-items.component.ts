@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import {ActionItemsRetrieve, selectChosenItems, selectDresses} from '@app/features/store';
+import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-cart-items',
@@ -7,9 +11,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartItemsComponent implements OnInit {
 
-  constructor() { }
+  selectedItems$: Observable<ItemInfos[]>;
+
+  constructor(private store: Store<any>) { }
 
   ngOnInit(): void {
+    this.store.dispatch(new ActionItemsRetrieve({category: ItemsCategoriesEnum.DRESSES}));
+    this.selectedItems$ = this.store.pipe(select(selectChosenItems));
   }
 
 }

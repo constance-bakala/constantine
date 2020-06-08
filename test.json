@@ -1,0 +1,5116 @@
+{
+  "defaultWarrantyGroupList": [
+    {
+      "code": "AS_GAR_GROUP",
+      "label": "Assiette de garanties",
+      "icon": "gar-assiettegaranties.svg",
+      "warranties": [
+        {
+          "code": "TA",
+          "label": "TA",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "TB",
+          "label": "TA / TB",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "TB_50",
+          "label": "TA / TB <br/> (réduction des garanties décès de 50 % sur le TB)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "TC",
+          "label": "TA / TB / TC <br/> (réduction des garanties de 20% sur la TC)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "DC_PTIA_GROUP",
+      "label": "Décès / PTIA",
+      "icon": "gar-decesptia.svg",
+      "warranties": [
+        {
+          "code": "DC_PTIA",
+          "label": "Capital Décès / PTIA toutes causes en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_10",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "150 %",
+                  "originalValues": [
+                    {
+                      "libelle": "150 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "120 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_3"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_10",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_10",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_10",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "200 %",
+                  "originalValues": [
+                    {
+                      "libelle": "200 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "160 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_12",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "150 %",
+                  "originalValues": [
+                    {
+                      "libelle": "150 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "120 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_3"
+                  ]
+                },
+                {
+                  "value": "250 %",
+                  "originalValues": [
+                    {
+                      "libelle": "250 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "125 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_5"
+                  ]
+                },
+                {
+                  "value": "300 %",
+                  "originalValues": [
+                    {
+                      "libelle": "300 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "300 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "240 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_14",
+                    "NIVEAU_6"
+                  ]
+                },
+                {
+                  "value": "150 %",
+                  "originalValues": [
+                    {
+                      "libelle": "150 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "120 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_3"
+                  ]
+                },
+                {
+                  "value": "150 %",
+                  "originalValues": [
+                    {
+                      "libelle": "150 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "120 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_3"
+                  ]
+                },
+                {
+                  "value": "200 %",
+                  "originalValues": [
+                    {
+                      "libelle": "200 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "160 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_12",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "400 %",
+                  "originalValues": [
+                    {
+                      "libelle": "400 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "320 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "250 %",
+                  "originalValues": [
+                    {
+                      "libelle": "250 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "125 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_5"
+                  ]
+                },
+                {
+                  "value": "200 %",
+                  "originalValues": [
+                    {
+                      "libelle": "200 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "160 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_12",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "200 %",
+                  "originalValues": [
+                    {
+                      "libelle": "200 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "160 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_12",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "300 %",
+                  "originalValues": [
+                    {
+                      "libelle": "300 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "300 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "240 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_14",
+                    "NIVEAU_6"
+                  ]
+                },
+                {
+                  "value": "250 %",
+                  "originalValues": [
+                    {
+                      "libelle": "250 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "125 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_5"
+                  ]
+                },
+                {
+                  "value": "250 %",
+                  "originalValues": [
+                    {
+                      "libelle": "250 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "125 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_5"
+                  ]
+                },
+                {
+                  "value": "500 %",
+                  "originalValues": [
+                    {
+                      "libelle": "500 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "500 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "300 %",
+                  "originalValues": [
+                    {
+                      "libelle": "300 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "300 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "240 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_14",
+                    "NIVEAU_6"
+                  ]
+                },
+                {
+                  "value": "300 %",
+                  "originalValues": [
+                    {
+                      "libelle": "300 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "300 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "150 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "240 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_14",
+                    "NIVEAU_6"
+                  ]
+                },
+                {
+                  "value": "400 %",
+                  "originalValues": [
+                    {
+                      "libelle": "400 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "320 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "400 %",
+                  "originalValues": [
+                    {
+                      "libelle": "400 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "320 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "400 %",
+                  "originalValues": [
+                    {
+                      "libelle": "400 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "200 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "320 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "500 %",
+                  "originalValues": [
+                    {
+                      "libelle": "500 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "500 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "500 %",
+                  "originalValues": [
+                    {
+                      "libelle": "500 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "500 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "500 %",
+                  "originalValues": [
+                    {
+                      "libelle": "500 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "500 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "250 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "400 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_8"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "MAJO_CPL",
+          "label": "Majoration couple en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "0 %",
+                  "originalValues": [
+                    {
+                      "libelle": "0 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "0 %",
+                  "originalValues": [
+                    {
+                      "libelle": "0 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "0 %",
+                  "originalValues": [
+                    {
+                      "libelle": "0 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "0 %",
+                  "originalValues": [
+                    {
+                      "libelle": "0 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "0 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_7"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_7"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "MAJO_ENF",
+          "label": "Majoration par enfant à charge en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "25 %",
+                  "originalValues": [
+                    {
+                      "libelle": "25 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "12.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "20 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_9",
+                    "NIVEAU_1"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_3",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_14",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_3",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_3",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "50 %",
+                  "originalValues": [
+                    {
+                      "libelle": "50 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "25 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "40 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_3",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_14",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_14",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": [
+                    {
+                      "libelle": "75 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "75 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "37.5 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "60 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_14",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_4"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7",
+                    "NIVEAU_8"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "50 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "80 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_15",
+                    "NIVEAU_7",
+                    "NIVEAU_8"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "DC_CJT",
+          "label": "Décès du conjoint survivant (double effet) <br/> En % du capital Décès toutes causes",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TC",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_7",
+                    "NIVEAU_8",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4",
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_7",
+                    "NIVEAU_8",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4",
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TB_50",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_7",
+                    "NIVEAU_8",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4",
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": [
+                    {
+                      "libelle": "100 %",
+                      "code": "TA"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TB_50"
+                    },
+                    {
+                      "libelle": "100 %",
+                      "code": "TC"
+                    }
+                  ],
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "NIVEAU_11",
+                    "NIVEAU_10",
+                    "NIVEAU_13",
+                    "NIVEAU_12",
+                    "NIVEAU_15",
+                    "NIVEAU_14",
+                    "NIVEAU_9",
+                    "NIVEAU_7",
+                    "NIVEAU_8",
+                    "NIVEAU_5",
+                    "NIVEAU_6",
+                    "NIVEAU_3",
+                    "NIVEAU_4",
+                    "NIVEAU_1",
+                    "NIVEAU_2"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "OBSEQUES",
+          "label": "Allocation Obsèques",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "1 PMSS"
+            }
+          }
+        },
+        {
+          "code": "MAJO_DC_ACC",
+          "label": "Majoration Décès / PTIA accidentel, <br/> 100 % du capital Décès / PTIA toutes causes",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 6,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "RT_CJT_GROUP",
+      "label": "Rente de conjoint",
+      "icon": "gar-renteconjoint.svg",
+      "warranties": [
+        {
+          "code": "AUCUNE",
+          "label": "Aucune rente de conjoint",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT_TEMPORAIRE",
+          "label": "Rente temporaire: % du salaire * (âge au décès - 25) + Rente viagère: % du salaire * (65 - âge au décès)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT_VIAGERE",
+          "label": "Rente temporaire + Rente viagère (en % du salaire)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT",
+          "label": "-",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "CAPITAL_SUBSTITUTIF",
+          "label": "Capital complémentaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "RT_EDU_GROUP",
+      "label": "Rente éducation",
+      "icon": "gar-renteeducation.svg",
+      "warranties": [
+        {
+          "code": "AUCUNE",
+          "label": "Aucune rente éducation",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_EDU_FIXE",
+          "label": "Rente fixe",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_EDU_PALIER",
+          "label": "Rente par palier <12 ans, 12-17 ans, 17-21 ans",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "MONTANT_EDU_PALIER",
+          "label": "Montant rente par palier",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "ITT_GROUP",
+      "label": "Arrêt de travail",
+      "icon": "gar-arrettravail.svg",
+      "warranties": [
+        {
+          "code": "ITT",
+          "label": "Incapacité / invalidité en % du salaire annuel brut (y compris SS)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "IPT",
+          "label": "Si l'invalidité est de 2e ou 3e catégorie ou si le taux d'incapacité est permanente >= 66%",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "IPP",
+          "label": "Si l'invalidité est de 1ère catégorie ou si le taux d'incapacité est permanente >= 33% et <66%",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "FRANCHISE_REDUITE",
+          "label": "Franchise réduite à 3 jours en cas d'hospitalisation ou d'accident",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "FRANCHISE_TOUTE_CAUSE",
+          "label": "Franchise toute autre cause",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "defaultWarrantyGroupListPack150": [
+    {
+      "code": "AS_GAR_GROUP",
+      "label": "Assiette de garanties",
+      "icon": "gar-assiettegaranties.svg",
+      "warranties": [
+        {
+          "code": "TA",
+          "label": "TA",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "TB",
+          "label": "TA / TB",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "DC_PTIA_GROUP",
+      "label": "Décès / PTIA",
+      "icon": "gar-decesptia.svg",
+      "warranties": [
+        {
+          "code": "DC_PTIA",
+          "label": "Capital Décès / PTIA toutes causes en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "300 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "300 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "MAJO_CPL",
+          "label": "Majoration couple en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "75 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "MAJO_ENF",
+          "label": "Majoration par enfant à charge en % du salaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "75 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "75 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "DC_CJT",
+          "label": "Décès du conjoint survivant (double effet) <br/> En % du capital Décès toutes causes",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "100 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "OBSEQUES",
+          "label": "Allocation Obsèques",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": []
+            }
+          }
+        },
+        {
+          "code": "MAJO_DC_ACC",
+          "label": "Majoration Décès / PTIA accidentel, <br/> 100 % du capital Décès / PTIA toutes causes",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 6,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "100 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "100 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "RT_CJT_GROUP",
+      "label": "Rente de conjoint",
+      "icon": "gar-renteconjoint.svg",
+      "warranties": [
+        {
+          "code": "AUCUNE",
+          "label": "Aucune rente de conjoint",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT_TEMPORAIRE",
+          "label": "Rente temporaire: % du salaire * (âge au décès - 25) + Rente viagère: % du salaire * (65 - âge au décès)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT_VIAGERE",
+          "label": "Rente temporaire + Rente viagère (en % du salaire)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_CJT",
+          "label": "-",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "CAPITAL_SUBSTITUTIF",
+          "label": "Capital complémentaire",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "RT_EDU_GROUP",
+      "label": "Rente éducation",
+      "icon": "gar-renteeducation.svg",
+      "warranties": [
+        {
+          "code": "AUCUNE",
+          "label": "Aucune rente éducation",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_EDU_FIXE",
+          "label": "Rente fixe",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "RT_EDU_PALIER",
+          "label": "Rente par palier <12 ans, 12-17 ans, 17-21 ans",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "MONTANT_EDU_PALIER",
+          "label": "Montant rente par palier",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "code": "ITT_GROUP",
+      "label": "Arrêt de travail",
+      "icon": "gar-arrettravail.svg",
+      "warranties": [
+        {
+          "code": "ITT",
+          "label": "Incapacité / invalidité en % du salaire annuel brut (y compris SS)",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 1,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "80 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "80 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "IPT",
+          "label": "Si l'invalidité est de 2e ou 3e catégorie ou si le taux d'incapacité est permanente >= 66%",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 2,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "80 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "80 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "IPP",
+          "label": "Si l'invalidité est de 1ère catégorie ou si le taux d'incapacité est permanente >= 33% et <66%",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 3,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": [
+                {
+                  "value": "48 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TA",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                },
+                {
+                  "value": "48 %",
+                  "originalValues": null,
+                  "membershipFeeCode": "TB",
+                  "levels": [
+                    "PACK_150_LEVEL"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "code": "FRANCHISE_REDUITE",
+          "label": "Franchise réduite à 3 jours en cas d'hospitalisation ou d'accident",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 4,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        },
+        {
+          "code": "FRANCHISE_TOUTE_CAUSE",
+          "label": "Franchise toute autre cause",
+          "minimaCcn": {
+            "value": "-",
+            "description": null,
+            "warning": false
+          },
+          "information": null,
+          "order": 5,
+          "possibleMinimasScenario": {
+            "prestation": {
+              "contributionBases": "-"
+            }
+          }
+        }
+      ],
+      "franchises": [
+        {
+          "libelle": "30 jours"
+        }
+      ],
+      "functionalErrors": []
+    }
+  ],
+  "projectId": "5ed3b8a582274c67fc3692d2",
+  "collegeId": 925,
+  "ccn": null,
+  "typeCollege": "C",
+  "scenarios": [
+    {
+      "id": 751,
+      "pack": "PACK_DE_BASE",
+      "warrantyGroupListFiltred": {
+        "warrantyGroupByAsGar": [
+          {
+            "code": "AS_GAR_GROUP",
+            "label": "Assiette de garanties",
+            "icon": "gar-assiettegaranties.svg",
+            "warranties": [
+              {
+                "code": "TA",
+                "label": "TA",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 1,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "TB",
+                "label": "TA / TB",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 2,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "TB_50",
+                "label": "TA / TB <br/> (réduction des garanties décès de 50 % sur le TB)",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 3,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "TC",
+                "label": "TA / TB / TC <br/> (réduction des garanties de 20% sur la TC)",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 4,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "code": "DC_PTIA_GROUP",
+            "label": "Décès / PTIA",
+            "icon": "gar-decesptia.svg",
+            "warranties": [
+              {
+                "code": "DC_PTIA",
+                "label": "Capital Décès / PTIA toutes causes en % du salaire",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 1,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "75 %",
+                        "originalValues": [
+                          {
+                            "libelle": "75 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "37.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_9",
+                          "NIVEAU_1"
+                        ]
+                      },
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_10",
+                          "NIVEAU_2"
+                        ]
+                      },
+                      {
+                        "value": "150 %",
+                        "originalValues": [
+                          {
+                            "libelle": "150 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "150 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "120 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_11",
+                          "NIVEAU_3"
+                        ]
+                      },
+                      {
+                        "value": "200 %",
+                        "originalValues": [
+                          {
+                            "libelle": "200 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "200 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "160 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_12",
+                          "NIVEAU_4"
+                        ]
+                      },
+                      {
+                        "value": "250 %",
+                        "originalValues": [
+                          {
+                            "libelle": "250 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "250 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "125 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "200 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_13",
+                          "NIVEAU_5"
+                        ]
+                      },
+                      {
+                        "value": "300 %",
+                        "originalValues": [
+                          {
+                            "libelle": "300 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "300 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "150 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "240 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_14",
+                          "NIVEAU_6"
+                        ]
+                      },
+                      {
+                        "value": "400 %",
+                        "originalValues": [
+                          {
+                            "libelle": "400 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "400 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "200 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "320 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_15",
+                          "NIVEAU_7"
+                        ]
+                      },
+                      {
+                        "value": "500 %",
+                        "originalValues": [
+                          {
+                            "libelle": "500 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "500 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "250 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "400 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_8"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "MAJO_CPL",
+                "label": "Majoration couple en % du salaire",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 2,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "0 %",
+                        "originalValues": [
+                          {
+                            "libelle": "0 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "0 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "0 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "0 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_11",
+                          "NIVEAU_10",
+                          "NIVEAU_13",
+                          "NIVEAU_12",
+                          "NIVEAU_15",
+                          "NIVEAU_14",
+                          "NIVEAU_9",
+                          "NIVEAU_8"
+                        ]
+                      },
+                      {
+                        "value": "25 %",
+                        "originalValues": [
+                          {
+                            "libelle": "25 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "25 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "12.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "20 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_1",
+                          "NIVEAU_2"
+                        ]
+                      },
+                      {
+                        "value": "50 %",
+                        "originalValues": [
+                          {
+                            "libelle": "50 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "25 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "40 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_5",
+                          "NIVEAU_6",
+                          "NIVEAU_3",
+                          "NIVEAU_4"
+                        ]
+                      },
+                      {
+                        "value": "75 %",
+                        "originalValues": [
+                          {
+                            "libelle": "75 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "37.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_7"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "MAJO_ENF",
+                "label": "Majoration par enfant à charge en % du salaire",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 3,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "25 %",
+                        "originalValues": [
+                          {
+                            "libelle": "25 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "25 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "12.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "20 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_9",
+                          "NIVEAU_1"
+                        ]
+                      },
+                      {
+                        "value": "50 %",
+                        "originalValues": [
+                          {
+                            "libelle": "50 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "25 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "40 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_11",
+                          "NIVEAU_10",
+                          "NIVEAU_3",
+                          "NIVEAU_2"
+                        ]
+                      },
+                      {
+                        "value": "75 %",
+                        "originalValues": [
+                          {
+                            "libelle": "75 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "37.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_13",
+                          "NIVEAU_12",
+                          "NIVEAU_14",
+                          "NIVEAU_5",
+                          "NIVEAU_6",
+                          "NIVEAU_4"
+                        ]
+                      },
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_15",
+                          "NIVEAU_7",
+                          "NIVEAU_8"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "DC_CJT",
+                "label": "Décès du conjoint survivant (double effet) <br/> En % du capital Décès toutes causes",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 4,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_11",
+                          "NIVEAU_10",
+                          "NIVEAU_13",
+                          "NIVEAU_12",
+                          "NIVEAU_15",
+                          "NIVEAU_14",
+                          "NIVEAU_9",
+                          "NIVEAU_7",
+                          "NIVEAU_8",
+                          "NIVEAU_5",
+                          "NIVEAU_6",
+                          "NIVEAU_3",
+                          "NIVEAU_4",
+                          "NIVEAU_1",
+                          "NIVEAU_2"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "OBSEQUES",
+                "label": "Allocation Obsèques",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 5,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "1 PMSS"
+                  }
+                }
+              },
+              {
+                "code": "MAJO_DC_ACC",
+                "label": "Majoration Décès / PTIA accidentel, <br/> 100 % du capital Décès / PTIA toutes causes",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 6,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "code": "RT_CJT_GROUP",
+            "label": "Rente de conjoint",
+            "icon": "gar-renteconjoint.svg",
+            "warranties": [
+              {
+                "code": "AUCUNE",
+                "label": "Aucune rente de conjoint",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 1,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "RT_CJT_TEMPORAIRE",
+                "label": "Rente temporaire: % du salaire * (âge au décès - 25) + Rente viagère: % du salaire * (65 - âge au décès)",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 2,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "RT 0.5 % / RV 1 %",
+                        "originalValues": [
+                          {
+                            "libelle": "RT 0.5 % / RV 1 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "RT 0.5 % / RV 1 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "RT 0.5 % / RV 1 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "RT 0.4 % / RV 0.8 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "RT_0.5_RV_1"
+                        ]
+                      },
+                      {
+                        "value": "RT 0.25 % / RV 0.5 %",
+                        "originalValues": [
+                          {
+                            "libelle": "RT 0.25 % / RV 0.5 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "RT 0.25 % / RV 0.5 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "RT 0.25 % / RV 0.5 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "RT 0.2 % / RV 0.4 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "RT_0.25_RV_0.5"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "RT_CJT_VIAGERE",
+                "label": "Rente temporaire + Rente viagère (en % du salaire)",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 3,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "RT 5 % / RV 10 %",
+                        "originalValues": [
+                          {
+                            "libelle": "RT 5 % / RV 10 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "RT 5 % / RV 10 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "RT 5 % / RV 10 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "RT 4 % / RV 8 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "RT_5_RV_10"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "RT_CJT",
+                "label": "-",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 4,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "CAPITAL_SUBSTITUTIF",
+                "label": "Capital complémentaire",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 5,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "50 %",
+                        "originalValues": [
+                          {
+                            "libelle": "50 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "50 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "40 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "RT_0.25_RV_0.5"
+                        ]
+                      },
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "RT_0.5_RV_1",
+                          "RT_5_RV_10"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "code": "RT_EDU_GROUP",
+            "label": "Rente éducation",
+            "icon": "gar-renteeducation.svg",
+            "warranties": [
+              {
+                "code": "AUCUNE",
+                "label": "Aucune rente éducation",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 1,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "RT_EDU_FIXE",
+                "label": "Rente fixe",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 2,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "4 %",
+                        "originalValues": [
+                          {
+                            "libelle": "4 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "4 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "4 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "3.2 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_RTE_FIXE_4"
+                        ]
+                      },
+                      {
+                        "value": "8 %",
+                        "originalValues": [
+                          {
+                            "libelle": "8 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "8 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "8 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "6.4 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_RTE_FIXE_8"
+                        ]
+                      },
+                      {
+                        "value": "12 %",
+                        "originalValues": [
+                          {
+                            "libelle": "12 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "12 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "12 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "9.6 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_RTE_FIXE_12"
+                        ]
+                      },
+                      {
+                        "value": "16 %",
+                        "originalValues": [
+                          {
+                            "libelle": "16 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "16 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "16 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "12.8 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_RTE_FIXE_16"
+                        ]
+                      },
+                      {
+                        "value": "20 %",
+                        "originalValues": [
+                          {
+                            "libelle": "20 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "20 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "20 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "16 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_RTE_FIXE_20"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "RT_EDU_PALIER",
+                "label": "Rente par palier <12 ans, 12-17 ans, 17-21 ans",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 3,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "5% / 10% / 15% ",
+                        "originalValues": [
+                          {
+                            "libelle": "5% / 10% / 15% ",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "5% / 10% / 15% ",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "5% / 10% / 15% ",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "4% / 8% / 12% ",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_5_10_15"
+                        ]
+                      },
+                      {
+                        "value": "8% / 12% / 15% ",
+                        "originalValues": [
+                          {
+                            "libelle": "8% / 12% / 15% ",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "8% / 12% / 15% ",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "8% / 12% / 15% ",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "6.4% / 9.6% / 12% ",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_8_12_15"
+                        ]
+                      },
+                      {
+                        "value": "10% / 15% / 20% ",
+                        "originalValues": [
+                          {
+                            "libelle": "10% / 15% / 20% ",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "10% / 15% / 20% ",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "10% / 15% / 20% ",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "8% / 12% / 16% ",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "NIVEAU_10_15_20"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "MONTANT_EDU_PALIER",
+                "label": "Montant rente par palier",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 4,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "code": "ITT_GROUP",
+            "label": "Arrêt de travail",
+            "icon": "gar-arrettravail.svg",
+            "warranties": [
+              {
+                "code": "ITT",
+                "label": "Incapacité / invalidité en % du salaire annuel brut (y compris SS)",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 1,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "75 %",
+                        "originalValues": [
+                          {
+                            "libelle": "75 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_75"
+                        ]
+                      },
+                      {
+                        "value": "80 %",
+                        "originalValues": [
+                          {
+                            "libelle": "80 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "64 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_80"
+                        ]
+                      },
+                      {
+                        "value": "85 %",
+                        "originalValues": [
+                          {
+                            "libelle": "85 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "85 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "85 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "68 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_85"
+                        ]
+                      },
+                      {
+                        "value": "90 %",
+                        "originalValues": [
+                          {
+                            "libelle": "90 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "90 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "90 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "72 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_90"
+                        ]
+                      },
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_100"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "IPT",
+                "label": "Si l'invalidité est de 2e ou 3e catégorie ou si le taux d'incapacité est permanente >= 66%",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 2,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "75 %",
+                        "originalValues": [
+                          {
+                            "libelle": "75 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "75 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_75"
+                        ]
+                      },
+                      {
+                        "value": "80 %",
+                        "originalValues": [
+                          {
+                            "libelle": "80 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "64 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_80"
+                        ]
+                      },
+                      {
+                        "value": "85 %",
+                        "originalValues": [
+                          {
+                            "libelle": "85 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "85 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "85 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "68 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_85"
+                        ]
+                      },
+                      {
+                        "value": "90 %",
+                        "originalValues": [
+                          {
+                            "libelle": "90 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "90 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "90 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "72 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_90"
+                        ]
+                      },
+                      {
+                        "value": "100 %",
+                        "originalValues": [
+                          {
+                            "libelle": "100 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "100 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "80 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_100"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "IPP",
+                "label": "Si l'invalidité est de 1ère catégorie ou si le taux d'incapacité est permanente >= 33% et <66%",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 3,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": [
+                      {
+                        "value": "45 %",
+                        "originalValues": [
+                          {
+                            "libelle": "45 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "45 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "45 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "36 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_75"
+                        ]
+                      },
+                      {
+                        "value": "48 %",
+                        "originalValues": [
+                          {
+                            "libelle": "48 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "48 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "48 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "38.4 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_80"
+                        ]
+                      },
+                      {
+                        "value": "51 %",
+                        "originalValues": [
+                          {
+                            "libelle": "51 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "51 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "51 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "40.8 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_85"
+                        ]
+                      },
+                      {
+                        "value": "54 %",
+                        "originalValues": [
+                          {
+                            "libelle": "54 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "54 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "54 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "43.2 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_90"
+                        ]
+                      },
+                      {
+                        "value": "60 %",
+                        "originalValues": [
+                          {
+                            "libelle": "60 %",
+                            "code": "TA"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TB"
+                          },
+                          {
+                            "libelle": "60 %",
+                            "code": "TB_50"
+                          },
+                          {
+                            "libelle": "48 %",
+                            "code": "TC"
+                          }
+                        ],
+                        "membershipFeeCode": "TC",
+                        "levels": [
+                          "ITT_100"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "code": "FRANCHISE_REDUITE",
+                "label": "Franchise réduite à 3 jours en cas d'hospitalisation ou d'accident",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 4,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              },
+              {
+                "code": "FRANCHISE_TOUTE_CAUSE",
+                "label": "Franchise toute autre cause",
+                "minimaCcn": {
+                  "value": "-",
+                  "description": null,
+                  "warning": false
+                },
+                "information": null,
+                "order": 5,
+                "possibleMinimasScenario": {
+                  "prestation": {
+                    "contributionBases": "-"
+                  }
+                }
+              }
+            ],
+            "franchises": [
+              {
+                "libelle": "15 jours",
+                "code": "FR_15"
+              },
+              {
+                "libelle": "30 jours",
+                "code": "FR_30"
+              },
+              {
+                "libelle": "45 jours",
+                "code": "FR_45"
+              },
+              {
+                "libelle": "60 jours",
+                "code": "FR_60"
+              },
+              {
+                "libelle": "90 jours",
+                "code": "FR_90"
+              },
+              {
+                "libelle": "120 jours",
+                "code": "FR_120"
+              }
+            ]
+          }
+        ],
+        "dcPtiaGroup": {
+          "majoCplByDcPtiaLevel": [],
+          "majoEnfByMajoCplLevel": []
+        },
+        "rtCjtGroup": {
+          "RT_CJT_TEMPORAIRE": [
+            {
+              "value": "RT 0.5 % / RV 1 %",
+              "originalValues": [
+                {
+                  "libelle": "RT 0.5 % / RV 1 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "RT 0.5 % / RV 1 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "RT 0.5 % / RV 1 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "RT 0.4 % / RV 0.8 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "RT_0.5_RV_1"
+              ]
+            },
+            {
+              "value": "RT 0.25 % / RV 0.5 %",
+              "originalValues": [
+                {
+                  "libelle": "RT 0.25 % / RV 0.5 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "RT 0.25 % / RV 0.5 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "RT 0.25 % / RV 0.5 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "RT 0.2 % / RV 0.4 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "RT_0.25_RV_0.5"
+              ]
+            }
+          ],
+          "RT_CJT_VIAGERE": [
+            {
+              "value": "RT 5 % / RV 10 %",
+              "originalValues": [
+                {
+                  "libelle": "RT 5 % / RV 10 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "RT 5 % / RV 10 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "RT 5 % / RV 10 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "RT 4 % / RV 8 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "RT_5_RV_10"
+              ]
+            }
+          ]
+        },
+        "rtEduGroup": {
+          "RT_EDU_FIXE": [
+            {
+              "value": "4 %",
+              "originalValues": [
+                {
+                  "libelle": "4 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "4 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "4 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "3.2 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_RTE_FIXE_4"
+              ]
+            },
+            {
+              "value": "8 %",
+              "originalValues": [
+                {
+                  "libelle": "8 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "8 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "8 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "6.4 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_RTE_FIXE_8"
+              ]
+            },
+            {
+              "value": "12 %",
+              "originalValues": [
+                {
+                  "libelle": "12 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "12 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "12 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "9.6 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_RTE_FIXE_12"
+              ]
+            },
+            {
+              "value": "16 %",
+              "originalValues": [
+                {
+                  "libelle": "16 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "16 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "16 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "12.8 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_RTE_FIXE_16"
+              ]
+            },
+            {
+              "value": "20 %",
+              "originalValues": [
+                {
+                  "libelle": "20 %",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "20 %",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "20 %",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "16 %",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_RTE_FIXE_20"
+              ]
+            }
+          ],
+          "RT_EDU_PALIER": [
+            {
+              "value": "5% / 10% / 15% ",
+              "originalValues": [
+                {
+                  "libelle": "5% / 10% / 15% ",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "5% / 10% / 15% ",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "5% / 10% / 15% ",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "4% / 8% / 12% ",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_5_10_15"
+              ]
+            },
+            {
+              "value": "8% / 12% / 15% ",
+              "originalValues": [
+                {
+                  "libelle": "8% / 12% / 15% ",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "8% / 12% / 15% ",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "8% / 12% / 15% ",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "6.4% / 9.6% / 12% ",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_8_12_15"
+              ]
+            },
+            {
+              "value": "10% / 15% / 20% ",
+              "originalValues": [
+                {
+                  "libelle": "10% / 15% / 20% ",
+                  "code": "TA"
+                },
+                {
+                  "libelle": "10% / 15% / 20% ",
+                  "code": "TB"
+                },
+                {
+                  "libelle": "10% / 15% / 20% ",
+                  "code": "TB_50"
+                },
+                {
+                  "libelle": "8% / 12% / 16% ",
+                  "code": "TC"
+                }
+              ],
+              "membershipFeeCode": "TC",
+              "levels": [
+                "NIVEAU_10_15_20"
+              ]
+            }
+          ]
+        }
+      },
+      "asGar": "TC",
+      "dcPtiaGroup": {
+        "dcPtia": {
+          "value": "200 %",
+          "originalValues": [
+            {
+              "libelle": "200 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "200 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "160 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "NIVEAU_12",
+            "NIVEAU_4"
+          ]
+        },
+        "majoCpl": {
+          "value": "0 %",
+          "originalValues": [
+            {
+              "libelle": "0 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "0 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "0 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "0 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "NIVEAU_11",
+            "NIVEAU_10",
+            "NIVEAU_13",
+            "NIVEAU_12",
+            "NIVEAU_15",
+            "NIVEAU_14",
+            "NIVEAU_9",
+            "NIVEAU_8"
+          ]
+        },
+        "majoEnf": {
+          "value": "75 %",
+          "originalValues": [
+            {
+              "libelle": "75 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "75 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "37.5 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "60 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "NIVEAU_13",
+            "NIVEAU_12",
+            "NIVEAU_14",
+            "NIVEAU_5",
+            "NIVEAU_6",
+            "NIVEAU_4"
+          ]
+        },
+        "dcCjt": {
+          "value": "100 %",
+          "originalValues": [
+            {
+              "libelle": "100 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "NIVEAU_11",
+            "NIVEAU_10",
+            "NIVEAU_13",
+            "NIVEAU_12",
+            "NIVEAU_15",
+            "NIVEAU_14",
+            "NIVEAU_9",
+            "NIVEAU_7",
+            "NIVEAU_8",
+            "NIVEAU_5",
+            "NIVEAU_6",
+            "NIVEAU_3",
+            "NIVEAU_4",
+            "NIVEAU_1",
+            "NIVEAU_2"
+          ]
+        },
+        "majoDcAcc": true,
+        "obseques": "1 PMSS",
+        "level": "NIVEAU_12"
+      },
+      "rtCjtGroup": {
+        "rtCjtOption": "RT_CJT_VIAGERE",
+        "rtCjt": {
+          "value": "RT 5 % / RV 10 %",
+          "originalValues": [
+            {
+              "libelle": "RT 5 % / RV 10 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "RT 5 % / RV 10 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "RT 5 % / RV 10 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "RT 4 % / RV 8 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "RT_5_RV_10"
+          ]
+        },
+        "rtCjtCc": {
+          "value": "100 %",
+          "originalValues": [
+            {
+              "libelle": "100 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "100 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "80 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "RT_0.5_RV_1",
+            "RT_5_RV_10"
+          ]
+        }
+      },
+      "rtEduGroup": {
+        "rtEduOption": "RT_EDU_PALIER",
+        "rtEdu": {
+          "value": "10% / 15% / 20% ",
+          "originalValues": [
+            {
+              "libelle": "10% / 15% / 20% ",
+              "code": "TA"
+            },
+            {
+              "libelle": "10% / 15% / 20% ",
+              "code": "TB"
+            },
+            {
+              "libelle": "10% / 15% / 20% ",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "8% / 12% / 16% ",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "NIVEAU_10_15_20"
+          ]
+        }
+      },
+      "ittGroup": {
+        "itt": {
+          "value": "80 %",
+          "originalValues": [
+            {
+              "libelle": "80 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "80 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "80 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "64 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "ITT_80"
+          ]
+        },
+        "ipt": {
+          "value": "80 %",
+          "originalValues": [
+            {
+              "libelle": "80 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "80 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "80 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "64 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "ITT_80"
+          ]
+        },
+        "ipp": {
+          "value": "48 %",
+          "originalValues": [
+            {
+              "libelle": "48 %",
+              "code": "TA"
+            },
+            {
+              "libelle": "48 %",
+              "code": "TB"
+            },
+            {
+              "libelle": "48 %",
+              "code": "TB_50"
+            },
+            {
+              "libelle": "38.4 %",
+              "code": "TC"
+            }
+          ],
+          "membershipFeeCode": "TC",
+          "levels": [
+            "ITT_80"
+          ]
+        },
+        "fr": false,
+        "ftc": {
+          "libelle": "90 jours",
+          "code": "FR_90"
+        }
+      },
+      "ittRequest": {
+        "deathBenefitLevel": "NIVEAU_12",
+        "educationAllowanceLevel": "NIVEAU_10_15_20",
+        "survivingSpousePensionLevel": "RT_0.5_RV_1"
+      },
+      "pricesRequest": {
+        "options": {
+          "majoDcAcc": true,
+          "educationPensionOption": {
+            "type": "RT_EDU_PALIER",
+            "level": "NIVEAU_10_15_20"
+          },
+          "workStoppageOption": {
+            "franchise": "FR_90",
+            "level": "ITT_80"
+          },
+          "survivingSpouseLevel": "RT_0.5_RV_1"
+        },
+        "commission": "COMMISSION_A_7",
+        "deathWarrantyLevel": "NIVEAU_12"
+      },
+      "prices": {
+        "isWarningDisplayed": true,
+        "membershipFeePrices": [
+          {
+            "membershipFeeCode": "TA",
+            "price": "2.03 %",
+            "budgetTotal": "-"
+          },
+          {
+            "membershipFeeCode": "TB",
+            "price": "2.56 %",
+            "budgetTotal": "-"
+          },
+          {
+            "membershipFeeCode": "TB_50",
+            "price": "2.31 %",
+            "budgetTotal": "-"
+          },
+          {
+            "membershipFeeCode": "TC",
+            "price": "2.56 %",
+            "budgetTotal": "-"
+          }
+        ]
+      },
+      "medicalFormalities": {
+        "code": "MHC-1087-1912",
+        "libelle": "Questionnaire de Santé Complet",
+        "infoMessage": "Aucune sélection médicale",
+        "extension": "pdf"
+      },
+      "patchStates": {
+        "ittPatched": true,
+        "rtCjtPatched": true,
+        "rtCjtCcPatched": true,
+        "rtEduPatched": true
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 
 export enum ItemsActionTypes {
   RETRIEVE_ITEMS = '[PORTFOLIO] Retrieve items',
@@ -29,10 +29,7 @@ export class ActionItemsRetrieve implements Action {
 export class ActionItemsRetrieveSuccess implements Action {
   readonly type = ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS;
 
-  constructor(public payload: {
-    category: ItemsCategoriesEnum
-    items: ItemInfos[],
-  }) {
+  constructor(public payload: Category) {
   }
 }
 

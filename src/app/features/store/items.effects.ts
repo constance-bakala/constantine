@@ -30,7 +30,7 @@ export class ItemsEffects {
           this.itemsService
             .findAllFromAssets(action.payload.category)
             .pipe(
-              map(items => new ActionItemsRetrieveSuccess({items, category: action.payload.category})),
+              map(response => new ActionItemsRetrieveSuccess(response)),
               catchError(error =>
                 of(new ActionItemsRetrieveError({error}))
               )
@@ -50,7 +50,4 @@ export class ItemsEffects {
         })
       );
   }
-
-
-
 }
