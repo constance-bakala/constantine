@@ -17,35 +17,35 @@
           <!-- Grid row -->
           <div class="row">
             <!-- Grid column -->
-            <div class="col-md-4 mb-4 col-sm-auto mb-sm-auto" *ngFor="let item of category.items" [ngClass]="item.payload.selected? 'selected': ''"
+            <div class="col-md-4 mb-4 col-sm-auto mb-sm-auto" *ngFor="let item of category.items" [ngClass]="item.selected? 'selected': ''"
                  (change)="toogleSelect(item)">
               <!-- Card -->
               <div class="">
                 <div class="view zoom overlay z-depth-2 rounded">
                   <img class="img-fluid w-100"
-                       src="{{item.payload.path}}" alt="Sample">
+                       src="{{item.path}}" alt="Sample">
                   <a href="#!">
                     <div class="mask">
                       <img class="img-fluid w-100"
-                           src="{{item.payload.path}}">
+                           src="{{item.path}}">
                       <div class="mask rgba-black-slight"></div>
                     </div>
                   </a>
                 </div>
                 <div class="text-center pt-4">
-                  <h5>REF: {{item.payload.reference}}</h5>
+                  <h5>REF: {{item.reference}}</h5>
                   <!--h6 class="mb-3">12.99 $</h6-->
                   <p class="mb-2 text-muted text-uppercase small">
                   <button type="button" class="btn btn-light btn-sm mr-1 mb-2" (click)="toogleSelect(item)"><i
                     class="fas fa-shopping-cart pr-2"></i>
-                    <span *ngIf="item.payload.selected">Annuler</span>
-                    <span *ngIf="!item.payload.selected">Sélectionner</span>
+                    <span *ngIf="item.selected">Annuler</span>
+                    <span *ngIf="!item.selected">Sélectionner</span>
                   </button>
                   <button type="button" class="btn btn-light btn-sm mr-1 mb-2"><i
                     class="fas fa-info-circle pr-2"></i>Détails
                   </button>
                   </p>
-                  <hr *ngIf="!item.payload.selected">
+                  <hr *ngIf="!item.selected">
                 </div>
               </div>
               <!-- Card -->

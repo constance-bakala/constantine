@@ -18,61 +18,89 @@
           <div class="col-lg-8">
             <!-- Card -->
             <div class="card wish-list mb-4">
-              <div class="card-body" *ngIf="selectedItems$ | async as items">
-                <h5 class="mb-4">Cart (<span>{{items.length}}</span> items)</h5>
-                <div class="row mb-4" *ngFor="let item of items">
-                  <div class="col-md-5 col-lg-3 col-xl-3">
-                    <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
-                      <img class="img-fluid w-100"
-                           src="{{item.payload.path}}" alt="{{item.payload.reference}}">
-                      <a href="#!">
-                        <div class="mask">
-                          <img class="img-fluid w-100"
-                               src="{{item.payload.path}}">
-                          <div class="mask rgba-black-slight"></div>
-                        </div>
-                      </a>
+              <div [formGroup]="basketFormGroup" class="card-body" *ngIf="basketFormGroup">
+                <h5 class="mb-4">Cart (<span>{{nbSelectedItems$ | async }}</span>
+                  <span *ngIf="(nbSelectedItems$ | async)  === 1">&nbsp;article</span>
+                  <span *ngIf="(nbSelectedItems$ | async) > 1">&nbsp;articles</span>)
+                </h5>
+
+                <ng-container formArrayName="basketItems">
+                  <div class="row mb-4" *ngFor="let itemGroup of basketItemsArray['controls']; let i=index"
+                       [formGroupName]="i">
+                    <div class="col-md-5 col-lg-3 col-xl-3">
+                      <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
+                        <img class="img-fluid w-100"
+                             src="{{itemGroup.get('path').value}}" alt="{{itemGroup.get('reference').value}}">
+                        <a href="#!">
+                          <div class="mask">
+                            <img class="img-fluid w-100" src="{{itemGroup.get('path').value}}">
+                            <div class="mask rgba-black-slight"></div>
+                          </div>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-7 col-lg-9 col-xl-9">
-                    <div>
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <h5>{{item.payload.reference}}</h5>
-                          <p class="mb-3 text-muted text-uppercase small"><strong>Catégorie:</strong>{{item.payload.category}}</p>
-                          <p class="mb-2 text-muted text-uppercase small"><strong>Couleur:</strong>&nbsp;modèle unique</p>
-                          <p class="mb-3 text-muted text-uppercase small"><strong>Tailles:</strong>&nbsp;S/M/L/XL</p>
-                        </div>
-                        <div>
-                          <div class="def-number-input number-input safari_only mb-0 w-100">
-                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                                    class="minus"></button>
-                            <input class="quantity" min="0" name="quantity" value="1" type="number">
-                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                                    class="plus"></button>
+                    <div class="col-md-7 col-lg-9 col-xl-9">
+                      <div>
+                        <div class="d-flex justify-content-between">
+                          <div>
+                            <h5>{{itemGroup.get('reference').value}}</h5>
+                            <p class="mb-3 text-muted text-uppercase small"><strong>Catégorie:</strong>&nbsp;
+                              {{itemGroup.get('category').value}}
+                            </p>
+                            <p class="mb-2 text-muted text-uppercase small"><strong>Couleur:</strong>&nbsp;
+                              <select type="text"
+                                      id="model{{i}}"
+                                      name="model{{i}}"
+                                      formControlName="model"
+                                      class="form-control">
+                                <option value="MODEL_UNIQUE" selected>Modèle unique</option>
+                              </select>
+                            </p>
+                            <p class="mb-3 text-muted text-uppercase small"><strong>Tailles:</strong>&nbsp;
+                              <select id="size{{i}}"
+                                      name="size{{i}}"
+                                      formControlName="size"
+                                      class="form-control"
+                                      tabindex="2">
+                                <option disabled selected value="">Choisissez</option>
+                                <option *ngFor="let s of sizes" [value]="s.value">{{ s.label }}</option>
+                              </select>
+                            </p>
+                          </div>
+                          <div>
+                            <div class="def-number-input number-input safari_only mb-0 w-100">
+                              <button (click)="stepDown(i)"
+                                      class="minus"></button>
+                              <input class="quantity" name="quantity" value="1" type="number"
+                                     formControlName="quantity">
+                              <button (click)="stepUp(i)"
+                                      class="plus"></button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <a href="#!" type="button" class="card-link-secondary small text-uppercase mr-3"><i
-                            class="fas fa-trash-alt mr-1"></i> Supprimer </a>
-                          <!--a href="#!" type="button" class="card-link-secondary small text-uppercase"><i
-                            class="fas fa-heart mr-1"></i> Move to wish list </a-->
-                        </div>
-                        <p class="mb-0"><span><strong><i>0</i></strong></span></p>
-                      </div>
-                    </div>
-                    <hr class="mb-4">
-                  </div>
-                </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div>
+                            <a (click)="onToogleSelect(itemGroup.value)" type="button"
+                               class="card-link-secondary small text-uppercase btn btn-light btn-sm">
+                              <i class="fas fa-trash-alt mr-1"></i> Supprimer </a>
+                            <!--a href="#!" type="button" class="card-link-secondary small text-uppercase">
+                            <i class="fas fa-heart mr-1"></i> Move to wish list </a-->
 
-                <p class="text-primary mb-0"><i class="fas fa-info-circle mr-1"></i>
-                  N'hésitez pas à choisir des articles. Vous pourrez acheter ou annuler ces articles à tout moment!</p>
+                          </div>
+                          <p class="mb-0"><span><strong><i>0</i></strong></span></p>
+                        </div>
+                      </div>
+                      <hr class="mb-4">
+                    </div>
+                  </div>
+                </ng-container>
+                <p class="text-primary mb-0" *ngIf="basketItemsArray['controls'].length == 0"><i
+                  class="fas fa-info-circle mr-1"></i>
+                  N'hésitez pas à choisir des articles. Vous pourrez acheter ou annuler ces articles à tout moment!
+                </p>
               </div>
             </div>
             <!-- Card -->
-
             <!-- Card -->
             <div class="card mb-4">
               <div class="card-body">

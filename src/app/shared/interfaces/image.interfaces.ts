@@ -1,8 +1,3 @@
-export interface ImageMetaData {
-  index: number;
-  suffix: string;
-}
-
 export class Category {
   name: ItemsCategoriesEnum;
   title: string;
@@ -10,14 +5,29 @@ export class Category {
   items: ItemInfos[]
 }
 
+export enum ItemSizeEnum {
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+  O = 'O',
+}
+
+export interface IBasketInfos {
+  selectedQuantity: number;
+  selectedSize: ItemSizeEnum;
+  selectedModel: string;
+}
+
 export class ItemInfos {
-  constructor(public payload: {
-    path: string,
-    selected: boolean,
-    reference: string,
-    index: number,
-    category: ItemsCategoriesEnum,
-    loading:boolean}){}
+  constructor(
+    public path: string,
+    public selected: boolean,
+    public reference: string,
+    public index: number,
+    public category: ItemsCategoriesEnum,
+    public loading:boolean,
+    public basketInfos: IBasketInfos){}
 }
 
 export enum ItemsCategoriesEnum {
@@ -25,4 +35,10 @@ export enum ItemsCategoriesEnum {
   MASKS = 'MASKS',
   DRESSES = 'DRESSES',
   UNKNOWN = 'UNKNOWN',
+}
+
+export interface ItemsState {
+  earings: Category;
+  dresses: Category;
+  masks: Category;
 }

@@ -18,20 +18,26 @@ export const selectNbChosenItems = createSelector(
   selectDresses,
   selectMasks,
   (earings: Category, dresses: Category, masks: Category) => {
-    return earings.items.filter(earing => earing.payload.selected).length +
-      dresses.items.filter(dress => dress.payload.selected).length +
-      masks.items.filter(mask => mask.payload.selected).length
+    return computeTotalQuantity(earings.items.filter(earing => earing.selected)) +
+      computeTotalQuantity(dresses.items.filter(dress => dress.selected)) +
+      computeTotalQuantity(masks.items.filter(mask => mask.selected))
   }
 );
+
+export function computeTotalQuantity(items: ItemInfos[]): number {
+  return items.map(item => item.basketInfos?.selectedQuantity ?? 1)
+    .reduce((sum, current) => sum + current, 0);
+}
 
 export const selectChosenItems = createSelector(
   selectEarings,
   selectDresses,
   selectMasks,
   (earings: Category, dresses: Category, masks: Category) => {
-    return earings.items.filter(earing => earing.payload.selected)
-      .concat(dresses.items.filter(dress => dress.payload.selected))
-      .concat(masks.items.filter(mask => mask.payload.selected));
+    return earings.items
+      .filter(earing => earing.selected)
+      .concat(dresses.items.filter(dress => dress.selected))
+      .concat(masks.items.filter(mask => mask.selected));
   }
 );
 

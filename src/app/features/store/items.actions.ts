@@ -14,6 +14,15 @@ export enum ItemsActionTypes {
   TOOGLE_SELECT_ITEM = '[PORTFOLIO] Select item',
   TOOGLE_SELECT_ITEM_SUCCESS = '[PORTFOLIO] Item selected successfully',
   TOOGLE_SELECT_ITEM_ERROR = '[PORTFOLIO] Fail selected item',
+
+  UPDATE_BASKET_ITEM = '[BASKET] Changing basket item'
+}
+
+export class ActionUpdateBasketItem implements Action {
+  readonly type = ItemsActionTypes.UPDATE_BASKET_ITEM;
+
+  constructor(public payload: ItemInfos) {
+  }
 }
 
 ///////////////////////// RETRIEVE OPERATION ///////////////////
@@ -90,6 +99,7 @@ export type ItemsActions =
   | ActionItemsRetrieveError
   | ActionItemToogleSelect
   | ActionItemToogleSelectSuccess
-  | ActionItemToogleSelectError;
+  | ActionItemToogleSelectError
+  | ActionUpdateBasketItem;
 
 

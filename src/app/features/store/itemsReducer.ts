@@ -1,13 +1,6 @@
-import {Category, ItemsCategoriesEnum} from '@shared/interfaces';
+import {ItemsCategoriesEnum, ItemsState} from '@shared/interfaces';
 import {ItemsActions, ItemsActionTypes} from '@app/features/store/items.actions';
-import {toogleSelectItem, updateItemState} from '@helpers/store.utils';
-
-
-export interface ItemsState {
-  earings: Category;
-  dresses: Category;
-  masks: Category;
-}
+import {toogleSelectItem, updateItemBasketInfos, updateItemState} from '@helpers/store.utils';
 
 const intialState: ItemsState = {
   earings: {
@@ -37,6 +30,8 @@ export function itemsReducer(state: ItemsState = intialState,
       return toogleSelectItem(state, action.payload);
     case ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS:
       return updateItemState(state, action.payload, false);
+    case ItemsActionTypes.UPDATE_BASKET_ITEM:
+      return updateItemBasketInfos(state, action.payload);
     default:
       return state;
   }

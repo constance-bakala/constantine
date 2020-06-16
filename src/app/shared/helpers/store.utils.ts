@@ -1,26 +1,20 @@
-import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
-import {ItemsState} from '@app/features/store';
+import {Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum, ItemsState} from '@shared/interfaces';
 import * as _ from 'lodash'
 
 export function findItemByReference(items: ItemInfos[], reference: string): ItemInfos {
-  return items.find(e => e.payload.reference === reference);
+  return items.find(e => e.reference === reference);
 }
 
-export function addItem(items: ItemInfos[], newItem: ItemInfos): ItemInfos[] {
-  if (!findItemByReference(items, newItem.payload.reference)) {
-    items.push(newItem);
+export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue): ItemsState {
+  let itemsStateCopy = _.cloneDeep(state);
+  let category = itemsStateCopy[itemToUpdateRawValue.category.toLowerCase()];
+  let foundItem: ItemInfos = category.items[itemToUpdateRawValue.index - 1];
+  if (!!foundItem && foundItem.selected) {
+    foundItem.basketInfos.selectedQuantity = itemToUpdateRawValue.quantity;
+    foundItem.basketInfos.selectedModel = itemToUpdateRawValue.model;
+    foundItem.basketInfos.selectedSize = ItemSizeEnum[itemToUpdateRawValue.size];
   }
-  return items;
-}
-
-export function toogleBasketItem(items: ItemInfos[], newItem: ItemInfos): ItemInfos[] {
-  let itemsCopy = [...items];
-  if (!findItemByReference(itemsCopy, newItem.payload.reference)) {
-    itemsCopy = addItem(itemsCopy, newItem);
-  } else {
-    itemsCopy = removeItem(itemsCopy, newItem.payload.reference)
-  }
-  return itemsCopy;
+  return itemsStateCopy;
 }
 
 export function getCategoryByName(state, categoryName: ItemsCategoriesEnum): Category {
@@ -39,14 +33,14 @@ export function getCategoryByName(state, categoryName: ItemsCategoriesEnum): Cat
       category = undefined;
   }
 
-  return category;
+  return category as Category;
 }
 
 export function toogleSelectItem(state: ItemsState, anItem: ItemInfos): ItemsState {
-  let category = getCategoryByName(state, anItem.payload.category);
-  let foundItem: ItemInfos = findItemByReference(category.items, anItem.payload.reference);
+  let category = getCategoryByName(state, anItem.category);
+  let foundItem: ItemInfos = findItemByReference(category.items, anItem.reference);
   if (!!foundItem) {
-    foundItem.payload.selected = !foundItem.payload.selected;
+    foundItem.selected = !foundItem.selected;
   }
   return updateItemState(state, category)
 }
@@ -86,16 +80,8 @@ export function updateItemState(state: ItemsState, category: Category, overrideE
 }
 
 export function canOverride(items: ItemInfos[], overrideExisting: boolean = true): boolean {
-  if(items.length == 0){
+  if (items.length == 0) {
     return true;
   }
   return overrideExisting;
-}
-
-export function removeItem(items: ItemInfos[], reference: string): ItemInfos[] {
-  let item = findItemByReference(items, reference);
-  if (!!item) {
-    items.splice(items.indexOf(item), 1);
-  }
-  return items;
 }

@@ -12,7 +12,6 @@ import {
   ActionItemToogleSelectSuccess,
   ItemsActionTypes
 } from '@app/features/store/items.actions';
-import {ActionBasketToogleItem} from '@app/features/basket/store';
 
 @Injectable()
 export class ItemsEffects {
@@ -45,7 +44,6 @@ export class ItemsEffects {
       .pipe(
         ofType(ItemsActionTypes.TOOGLE_SELECT_ITEM),
         map((action: ActionItemToogleSelect) => {
-          this.store$.dispatch(new ActionBasketToogleItem(action.payload));
           return new ActionItemToogleSelectSuccess(action.payload);
         })
       );

@@ -6,13 +6,11 @@ import {StoreModule} from '@ngrx/store';
 import {clearState} from '@app/auth/store';
 import {EffectsModule} from '@ngrx/effects';
 import {ItemsEffects, itemsReducer} from '@app/features/store';
-import {BasketComponent} from './basket/basket.component';
-import {basketReducer} from '@app/features/basket/store';
 import {ShoppingCartModule} from '@app/features/shopping-cart/shopping-cart.module';
 
 
 @NgModule({
-  declarations: [BasketComponent],
+  declarations: [],
   imports: [
     ClothingModule,
     JewelleryModule,
@@ -20,7 +18,7 @@ import {ShoppingCartModule} from '@app/features/shopping-cart/shopping-cart.modu
     ShoppingCartModule,
     StoreModule.forFeature(
       'constantine',
-      { items: itemsReducer, basket: basketReducer},
+      { items: itemsReducer},
       { metaReducers: [clearState]}
     ),
     EffectsModule.forFeature([ItemsEffects])
