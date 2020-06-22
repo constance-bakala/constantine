@@ -6,6 +6,46 @@
 @import 'globalStyles/heading.scss';
 @import 'globalStyles/body.scss';
 
+.user-avatar {
+  max-height: 55px;
+  border-radius: 4px;
+}
+
+.align-top {
+  vertical-align: top !important
+}
+
+.align-middle {
+  vertical-align: middle !important
+}
+
+.align-bottom {
+  vertical-align: bottom !important
+}
+
+.align-text-bottom {
+  vertical-align: text-bottom !important
+}
+
+.align-text-top {
+  vertical-align: text-top !important
+}
+
+.bg-primary {
+  background-color: #1abc9c !important
+}
+
+a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-primary:hover {
+  background-color: #148f77 !important
+}
+
+.bg-secondary {
+  background-color: #2c3e50 !important
+}
+
+a.bg-secondary:focus, a.bg-secondary:hover, button.bg-secondary:focus, button.bg-secondary:hover {
+  background-color: #1a252f !important
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
