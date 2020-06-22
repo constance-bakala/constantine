@@ -115,4 +115,8 @@ export class CartItemsComponent implements OnInit {
     return this.basketItemsArray.controls[index].get('quantity') as FormControl;
 
   }
+
+  sendCommand() {
+
+  }
 }
