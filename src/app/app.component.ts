@@ -18,7 +18,7 @@ export class AppComponent {
     private router: Router, private db: AngularFirestore, private store: Store<any>) {
     const users$ = this.db.collection('users').valueChanges();
     users$.subscribe(users => {
-        console.log(users);
+        //console.log(users);
       });
     users$.pipe();
 
