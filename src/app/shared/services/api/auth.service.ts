@@ -3,9 +3,9 @@ import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
-import {selectorAuth} from '@app/auth/store/auth.reducer';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {filter} from 'rxjs/internal/operators';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {

@@ -1,0 +1,76 @@
+.app-auth-page {
+  min-height: 100vh;
+  margin: 0;
+
+  .col-form {
+    padding: 32px;
+
+    .app-auth-container {
+      width: 100%;
+      max-width: 436px;
+
+      .app-logo {
+        margin-bottom: 32px;
+        height: 56px;
+
+        img {
+          width: 250px;
+          cursor: pointer;
+        }
+      }
+
+      .app-auth-footer {
+        margin-top: 48px;
+
+        img {
+          width: 128px;
+          margin-bottom: 8px;
+        }
+
+        .app-version {
+          color: grey;
+          font-size: x-small;
+          line-height: 12px;
+        }
+      }
+    }
+  }
+
+
+
+
+  .app-carousel-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    ngb-carousel {
+
+      ::ng-deep.carousel-indicators {
+        display: none;
+      }
+
+      .carousel-bg {
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: cover;
+
+        &.img-1 {
+          background-color: deepskyblue;
+          background-image: url("/assets/presentation_bijoux.jpg");
+        }
+
+        &.img-2 {
+          background-color: dimgrey;
+          background-image: url("/assets/presentation_masks.jpg");
+        }
+
+        &.img-3 {
+          background-color: yellowgreen;
+          background-image: url("/assets/presentation_robes.jpg");
+        }
+      }
+
+    }
+  }
+}

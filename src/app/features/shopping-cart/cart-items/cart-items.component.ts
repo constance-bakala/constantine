@@ -80,7 +80,7 @@ export class CartItemsComponent implements OnInit {
     });
 
     group.valueChanges.pipe(
-      debounceTime(500),
+      debounceTime(200),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ).subscribe(() => {
       this.store.dispatch(new ActionUpdateBasketItem(group.getRawValue()))

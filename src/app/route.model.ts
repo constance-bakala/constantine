@@ -38,6 +38,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/shopping-cart/shopping-cart.module').then(m => m.ShoppingCartModule)
   },
   {
+    path: 'auth',
+    loadChildren: () => import('@app/auth/auth.module').then(m => m.AuthModule),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   }

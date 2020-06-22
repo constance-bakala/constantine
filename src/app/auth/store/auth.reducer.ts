@@ -1,58 +1,20 @@
-import {Action} from '@ngrx/store';
+import {createSelector} from '@ngrx/store';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
+import {AuthActions, AuthActionTypes} from '@app/auth/store/auth.actions';
 
-export const AUTH_KEY = 'CORE:AUTH';
+export const AUTH_KEY = 'CORE:AUTH:CONSTANTINE';
 
-export enum AuthActionTypes {
-  LOGIN = '[core:auth] Login',
-  LOGGED_IN = '[core:auth] Logged in successfully',
-  LOGOUT = '[core:auth] Logout',
-  LOGGED_OUT = '[core:auth] Logged out successfully',
-  SET_IS_ADMIN = '[core:auth] Set isAdmin',
-  LOGIN_ERROR = '[core:auth] Login Error',
+
+export interface AuthState {
+  isAuthenticated: boolean;
+  isAdmin?: boolean;
+  error?: HttpErrorResponse;
+  token?: string;
+  loading: boolean;
+  user?: ILoginSuccess;
+  other?: any;
 }
-
-export class ActionAuthLogin implements Action {
-  readonly type = AuthActionTypes.LOGIN;
-
-  constructor(
-    public payload: {
-      username: string;
-      password: string;
-    }
-  ) {
-  }
-}
-
-export class ActionAuthLogout implements Action {
-  readonly type = AuthActionTypes.LOGOUT;
-}
-
-export class ActionAuthLoggedOut implements Action {
-  readonly type = AuthActionTypes.LOGGED_OUT;
-}
-
-export class ActionAuthLoggedIn implements Action {
-  readonly type = AuthActionTypes.LOGGED_IN;
-  constructor(public payload: ILoginSuccess) {}
-}
-
-export class ActionAuthSetError implements Action {
-  readonly type = AuthActionTypes.LOGIN_ERROR;
-  constructor(public payload: HttpErrorResponse) {}
-}
-
-export class ActionSetIsAdmin implements Action {
-  readonly type = AuthActionTypes.SET_IS_ADMIN;
-  constructor(public isAdmin = false) {}
-}
-
-export type AuthActions =
-  | ActionAuthLogin
-  | ActionAuthLogout
-  | ActionAuthLoggedIn
-  | ActionAuthLoggedOut;
 
 export const authInitialState: AuthState = {
   loading: false,
@@ -60,12 +22,37 @@ export const authInitialState: AuthState = {
   isAdmin: false
 };
 
-export const selectorAuth = (state): AuthState => state['core:auth'];
-
 export function authReducer(state: AuthState = authInitialState,
                             action: AuthActions): AuthState {
   switch (action.type) {
+    case AuthActionTypes.AUTH_SIGNUP:
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case AuthActionTypes.AUTH_SIGNUP_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error
+      };
+    case AuthActionTypes.AUTH_SIGNUP_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null
+      };
     case AuthActionTypes.LOGGED_IN:
+      return {
+        ...state,
+        isAuthenticated: !!action.payload?.token,
+        isAdmin: false,
+        error: undefined,
+        token: action.payload?.token,
+        loading: false,
+        user: action.payload,
+      };
     case AuthActionTypes.LOGIN:
       return {
         ...state,
@@ -75,18 +62,20 @@ export function authReducer(state: AuthState = authInitialState,
       return {
         ...state,
         isAuthenticated: false,
+        isAdmin: false,
+        token: undefined,
         loading: true,
-        user: null
+        user: undefined
       };
     case AuthActionTypes.LOGGED_OUT:
       return {
         ...state,
-        isAuthenticated: false,
-        token: null,
+        loading: false
+      };
+    case AuthActionTypes.AUTH_REFRESH_USER_TOKEN_SUCCESS:
+      return {
+        ...state,
         loading: false,
-        error: null,
-        user: null,
-        isAdmin: false
       };
     default:
       return state;
@@ -107,11 +96,3 @@ export function clearState(reducer) {
   };
 }
 
-export interface AuthState {
-  isAuthenticated: boolean;
-  isAdmin?: boolean;
-  error?: HttpErrorResponse;
-  token?: string;
-  loading: boolean;
-  user?: ILoginSuccess;
-}

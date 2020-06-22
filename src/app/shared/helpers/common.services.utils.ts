@@ -8,7 +8,7 @@ export function getAssetItems(size: number, directoryName: string, refPrefix: st
     const basketInfos =  {
       selectedQuantity: 1,
       selectedSize: ItemSizeEnum.M,
-      selectedModel: 'Modèle unique'
+      selectedModel: 'MODEL_UNIQUE'
     };
     return new ItemInfos(path, false, reference, currentIndex, category,false, basketInfos);
   });

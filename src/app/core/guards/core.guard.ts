@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, CanDeactivate, RouterStateSnapshot} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {delay, map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
 
-import {ActionDisplayFooter, ActionHideFooter, ActionHideWrapper, AuthState, Go, selectorAuth} from '../../auth/store';
+import {ActionDisplayFooter, ActionHideFooter, ActionHideWrapper, AuthState, Go} from '../../auth/store';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable()
 export class IsAuthenticatedGuard implements CanActivate {

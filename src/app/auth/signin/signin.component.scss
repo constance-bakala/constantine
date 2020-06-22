@@ -1,0 +1,255 @@
+@import '../common.scss';
+
+button.btn {
+  width: 100%;
+  margin: 16px 0;
+}
+
+h3 {
+  margin-bottom: 8px;
+  font-size: 28px;
+  line-height: 38px;
+  color: #0056b3;
+}
+
+h5 {
+  font-size: 16px;
+  color: black;
+  margin-bottom: 32px;
+}
+
+form {
+  button {
+    width: 100%;
+
+    &.btn-connexion,
+    &.btn-spinner,
+    &.btn-suivant,
+    &.btn-envoyer {
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.mx-auto {
+  width: 100%;
+}
+
+.btn-enregistrement,
+.btn-creercompte {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.app-error-link,
+.app-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.app-error-link {
+  font-weight: bold;
+  color: red;
+}
+
+.wrapper-mdp {
+  display: flex;
+  justify-content: flex-end;
+
+  .app-link {
+    display: inline-block;
+    margin-top: 8px;
+    //color: #0056b3;
+    font-size: large;
+    line-height: 22px;
+  }
+}
+
+.app-auth-error, .app-auth-success {
+  display: block;
+  font-size: medium;
+  line-height: 19px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.app-auth-error {
+  color: red;
+}
+
+.app-auth-success {
+  color: black;
+}
+
+.app-auth-divider {
+  position: relative;
+  z-index: 1;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+
+  &:after, &:before {
+    height: 2px;
+    content: "";
+    position: absolute;
+    top: 45%;
+    width: 50%;
+    z-index: -1;
+  }
+
+  &:after {
+    background-image: linear-gradient(to left, white, grey);
+    right: 0;
+  }
+
+  &:before {
+    background-image: linear-gradient(to right, white, grey);
+    left: 0;
+  }
+
+  span {
+    background: white;
+    padding: 0 16px;
+    font-size: medium;
+  }
+}
+
+//encart apparaissant sous l'input de mdp lorsqu'il est focus ou active
+.pwd-check {
+  display: none;
+  margin: 16px 0;
+  padding: 24px;
+  background-color: #e0ebf7;; //#0056b3 en opacité 0.15
+
+  .title {
+    margin: 0 0 16px 0;
+    font-size: medium;
+    line-height: 19px;
+    color: #0056b3;
+  }
+
+  .bullet {
+    display: inline-block;
+    margin: 0 8px 0 0;
+    border-radius: 100%;
+    width: 4px;
+    height: 4px;
+    background-color: #0056b3;
+  }
+
+  .criteria {
+    padding: 0 0 5px;
+    color: #0056b3;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+#password:focus ~ .pwd-check,
+#password:active ~ .pwd-check {
+  display: block;
+}
+
+
+
+.show-secret {
+  position: relative;
+  right: 10px;
+  top: 36px;
+  cursor: pointer;
+  margin: 0;
+}
+
+
+.btn-floating.btn-sm i {
+  line-height: 46.15385px;
+}
+
+.btn-floating i {
+  display: inline-block;
+  width: inherit;
+  color: #fff;
+  text-align: center;
+}
+.btn-floating i {
+  font-size: 1.25rem;
+  line-height: 47px;
+}
+.fa, .fab, .fad, .fal, .far, .fas {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+}
+
+button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
+  cursor: pointer;
+}
+
+.fa-facebook-f:before {
+  content: "\f39e";
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+.btn-floating {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 0;
+  margin: 10px;
+  overflow: hidden;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 5px 11px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15);
+  transition: all .2s ease-in-out;
+  width: 47px;
+  height: 47px;
+}
+
+a.waves-effect, a.waves-light {
+  display: inline-block;
+}
+
+.fa-github:before {
+  content: "\f09b";
+}
+
+.fa-facebook-f:before {
+  content: "\f39e";
+}
+
+.btn-fb {
+  color: #fff !important;;
+  background-color: #3b5998 !important;
+}
+.btn-tw {
+  color: #fff !important;;
+  background-color: #55acee !important;
+}
+
+.btn-git {
+  color: #fff !important;;
+  background-color: #333 !important;
+}
+
+.btn-tw {
+  color: #fff !important;;
+  background-color: #55acee !important;
+}
+
+.waves-effect {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+
+.text-center {
+  text-align: center !important;
+}

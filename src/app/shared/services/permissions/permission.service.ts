@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectorAuth } from '@app/auth/store/auth.reducer';
 
 import { PERMISSIONS } from './list';
 import {ILoginSuccess} from '@shared/interfaces';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionService {

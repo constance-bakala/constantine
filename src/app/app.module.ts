@@ -16,17 +16,12 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {CacheService} from '@shared/services';
 import {WelcomeModule} from '@app/features/welcome/welcome.module';
 import {FeaturesModule} from '@app/features/features.module';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBLCfZxzkybYbWJSrJGllI3X9sYtS6VZgw",
-  authDomain: "delice-eternel-gabon.firebaseapp.com",
-  databaseURL: "https://delice-eternel-gabon.firebaseio.com",
-  projectId: "delice-eternel-gabon",
-  storageBucket: "delice-eternel-gabon.appspot.com",
-  messagingSenderId: "528655916572",
-  appId: "1:528655916572:web:73ef9aa553b17c49bdc9d9",
-  measurementId: "G-ZWZRVSM0JL"
-};
+import {environment} from '@env/environment';
+import {AuthRoutingModule} from '@app/auth/auth-routing.module';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   declarations: [
@@ -37,7 +32,7 @@ const firebaseConfig = {
     HttpClientModule,
     SharedModule,
     AppRoutingModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
@@ -47,6 +42,11 @@ const firebaseConfig = {
     BrowserAnimationsModule,
     FontAwesomeModule,
     WelcomeModule,
+    AuthRoutingModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule
   ],
   providers: [ CacheService],
   exports: [],

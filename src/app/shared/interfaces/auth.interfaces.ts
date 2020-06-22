@@ -6,6 +6,8 @@ export interface ILoginSuccess {
   actions?: {
     [name: string]: boolean;
   };
+  other: any;
+  additionalInfos: IUser;
 }
 
 export interface IQuestion {
@@ -13,15 +15,19 @@ export interface IQuestion {
   libelle: string;
 }
 
-export interface ISignup {
+export interface IUser {
   nom: string;
   prenom: string;
   gender: number;
-  siren: string;
   email: string;
+  id?: string,
+  providerId?: string,
+  local?: string,
+  picture?: string,
+}
+
+export interface ISignup extends IUser{
   password: string;
-  questionIndex: number;
-  answer: string;
 }
 
 export interface IValidateUser {
@@ -30,8 +36,6 @@ export interface IValidateUser {
   nom: string;
   prenom: string;
   password: string;
-  questionIndex: number;
-  answer: string;
 }
 
 export interface IServerResponse {
@@ -60,11 +64,7 @@ export interface IUserForm {
   name: string;
   firstName: string;
   gender: number;
-  userHabilitations: number[];
   mainPhone: string;
-  activation: boolean;
-  dateStartActivation: number;
-  dateEndActivation: number;
   address: IUserAddress;
 }
 

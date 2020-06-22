@@ -2,3 +2,18 @@
   margin-left: 10px;
   color: greenyellow;
 }
+
+a.nav-link span {
+  //display: block;
+}
+
+#mainNav .navbar-nav li.nav-item a.nav-link span {
+  vertical-align: top;
+  font-weight: 500;
+}
+
+.user-avatar {
+  max-height: 55px;
+  border-radius: 4px;
+
+}

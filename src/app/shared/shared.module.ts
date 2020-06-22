@@ -26,6 +26,14 @@ import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {IconeDividerComponent} from './components/icone-divider/icone-divider.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import {EnumToArrayPipe} from '@shared/pipes/enum-to-array/enum-to-array.pipe';
+import {PatternTransformPipe, TextTransformPipe, TranslatePipe} from '@shared/pipes';
+import {NumberOnlyDirective} from '@shared/directives/number-only/number-only.directive';
+import {TruncatePipe} from '@shared/pipes/truncate-pipe/truncate.pipe';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 @NgModule({
   imports: [
@@ -38,6 +46,10 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     NgbModule,
     MDBBootstrapModule.forRoot(),
     MatCheckboxModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
   ],
   declarations: [
     ContactComponent,
@@ -59,6 +71,12 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     AdItemComponent2,
     IconeDividerComponent,
     NavigationComponent,
+    EnumToArrayPipe,
+    PatternTransformPipe,
+    TextTransformPipe,
+    NumberOnlyDirective,
+    TruncatePipe,
+    TranslatePipe,
   ],
   exports: [
     CommonModule,
@@ -87,6 +105,12 @@ import { NavigationComponent } from './components/navigation/navigation.componen
     AdHeaderComponent,
     IconeDividerComponent,
     NavigationComponent,
+    EnumToArrayPipe,
+    PatternTransformPipe,
+    TextTransformPipe,
+    NumberOnlyDirective,
+    TruncatePipe,
+    TranslatePipe,
   ],
   providers: [
     AdService

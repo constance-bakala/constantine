@@ -12,15 +12,15 @@ import {CacheService} from '@shared/services/cache/cache.service';
 import {
   ActionAuthLoggedIn,
   ActionAuthLoggedOut,
-  ActionAuthLogin,
+  ActionAuthLogout,
   ActionAuthSetError,
-  AUTH_KEY,
   AuthActionTypes,
-  selectorAuth
-} from './auth.reducer';
+} from './auth.actions';
 
 import {Go} from './router.actions';
 import {AuthService} from '@shared/services';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
+import {AUTH_KEY} from '@app/auth/store/auth.reducer';
 
 @Injectable()
 export class AuthEffects {
@@ -35,54 +35,45 @@ export class AuthEffects {
   }
 
   @Effect()
-  login(): Observable<Action> {
-    return this.actions$.pipe(
-      ofType(AuthActionTypes.LOGIN),
-        switchMap((action: ActionAuthLogin) =>
-          this.service
-            .login(action.payload.username, action.payload.password)
-            .pipe(
-              map(data => new ActionAuthLoggedIn(data)),
-              catchError(error => of(new ActionAuthSetError(error)))
-            )
-        )
-      );
-  }
-
-  @Effect()
   logout(): Observable<Action> {
     return this.actions$.pipe(
       ofType(AuthActionTypes.LOGOUT),
-        switchMap(() =>
-          this.service
-            .logout()
-            .pipe(
-              map(data => {
-                this.localStorageService.clearAll();
-                this.cache.clearAll();
-                return new ActionAuthLoggedOut();
-              }),
-              catchError(error => of(new ActionAuthSetError(error)))
-            )
-        )
+      map((action: ActionAuthLogout) => {
+        this.localStorageService.setItem(AUTH_KEY, {});
+        this.localStorageService.clearAll();
+        this.cache.clearAll();
+        return new ActionAuthLoggedOut();
+      }),
+      catchError(error => of(new ActionAuthSetError(error)))
+    );
+  }
+
+  @Effect({
+    dispatch: false
+  })
+  refrechUserToken(): Observable<any> {
+    return this.actions$
+      .pipe(
+        ofType(AuthActionTypes.AUTH_REFRESH_USER_TOKEN),
+        map((action: ActionAuthLogged) => {
+          // Empty localStorage if you are about to login or logout.
+          const currentUser = this.localStorageService.getItem(AUTH_KEY);
+          this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
+        })
       );
   }
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   toggleLoggedIn(): Observable<Action> {
     return this.actions$
       .pipe(
-        ofType(AuthActionTypes.LOGGED_IN, AuthActionTypes.LOGGED_OUT),
+        ofType(AuthActionTypes.LOGGED_IN),
         withLatestFrom(this.store$),
         map(([action, state]: [ActionAuthLogged, any]) => {
-
           // Empty localStorage if you are about to login or logout.
-          this.localStorageService.clearAll();
-          this.cache.clearAll();
-
           if (state) {
-            const { error, ...authState } = selectorAuth(state);
-            this.localStorageService.setItem(AUTH_KEY, authState);
+            const {error, ...authState} = selectorAuth(state);
+            this.localStorageService.setItem(AUTH_KEY, action.payload);
             if (authState.isAuthenticated) {
               return new Go({
                 path: ['/']
@@ -90,6 +81,7 @@ export class AuthEffects {
             } else if (!/^\/auth/.test(this.router.url)) {
               return new Go({
                 path: ['/auth/signin']
+               // path: ['/']
               });
             }
           }
@@ -105,5 +97,4 @@ export class AuthEffects {
 }
 
 export type ActionAuthLogged =
-  | ActionAuthLoggedIn
-  | ActionAuthLoggedOut;
+  | ActionAuthLoggedIn;

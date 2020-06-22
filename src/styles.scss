@@ -5,5 +5,7 @@
 @import 'globalStyles/body.scss';
 @import 'globalStyles/md-bootstrap';
 
+@import "~firebaseui/dist/firebaseui.css";
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

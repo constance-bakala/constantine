@@ -1,0 +1,185 @@
+button.btn {
+  width: 100%;
+  margin: 16px 0;
+}
+
+h3 {
+  margin-bottom: 8px;
+  font-size: 28px;
+  line-height: 38px;
+  color: #ff4b33;
+}
+
+h5 {
+  font-size: 16px;
+  color: #222222;
+  margin-bottom: 32px;
+}
+
+form {
+  button {
+    width: 100%;
+
+    &.btn-connexion,
+    &.btn-spinner,
+    &.btn-suivant,
+    &.btn-envoyer {
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.mx-auto {
+  width: 100%;
+}
+
+.btn-enregistrement,
+.btn-creercompte {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.app-error-link,
+.app-link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.app-error-link {
+  font-weight: bold;
+  color: #eb0000;
+}
+
+.wrapper-mdp {
+  display: flex;
+  justify-content: flex-end;
+
+  .app-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #ff4b33;
+    font-size: large;
+    line-height: 22px;
+  }
+}
+
+.app-auth-error, .app-auth-success {
+  display: block;
+  font-size: medium;
+  line-height: 19px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.app-auth-error {
+  color: #eb0000;
+}
+
+.app-auth-success {
+  color: #222222;
+}
+
+.app-auth-divider {
+  position: relative;
+  z-index: 1;
+  width: 50%;
+  margin: auto;
+  text-align: center;
+
+  &:after, &:before {
+    height: 2px;
+    content: "";
+    position: absolute;
+    top: 45%;
+    width: 50%;
+    z-index: -1;
+  }
+
+  &:after {
+    background-image: linear-gradient(to left, #ffffff, #dddddd);
+    right: 0;
+  }
+
+  &:before {
+    background-image: linear-gradient(to right, #ffffff, #dddddd);
+    left: 0;
+  }
+
+  span {
+    background: #ffffff;
+    padding: 0 16px;
+    font-size: medium;
+  }
+}
+
+//encart apparaissant sous l'input de mdp lorsqu'il est focus ou active
+.pwd-check {
+  display: none;
+  margin: 16px 0;
+  padding: 24px;
+  background-color: #e0ebf7; //#3175c9 en opacité 0.15
+
+  .title {
+    margin: 0 0 16px 0;
+    font-size: medium;
+    line-height: 19px;
+    color: #3175c9;
+  }
+
+  .bullet {
+    display: inline-block;
+    margin: 0 8px 0 0;
+    border-radius: 100%;
+    width: 4px;
+    height: 4px;
+    background-color: #3175c9;
+  }
+
+  .criteria {
+    padding: 0 0 5px;
+    color: #3175c9;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+#password:focus ~ .pwd-check,
+#password:active ~ .pwd-check {
+  display: block;
+}
+
+
+.show-secret {
+  position: relative;
+  right: 10px;
+  top: 36px;
+  cursor: pointer;
+  margin: 0;
+}
+
+//erreurs
+input,
+select {
+  &.ng-invalid {
+    &.ng-touched {
+      ~ i.bar {
+        border-bottom: 1px solid #ff4b33;
+      }
+    }
+  }
+
+  ~ .error,
+  ~ div .error {
+    display: block;
+    padding-top: 7px;
+    padding-left: 16px;
+  }
+}
+
+.error {
+  padding-left: 8px;
+  font-size: small;
+  line-height: 17px;
+  color: #ff4b33;
+}

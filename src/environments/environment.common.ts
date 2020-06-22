@@ -13,6 +13,16 @@ export const environment = {
   appName: 'Délice éternel',
   envName: 'COMMON',
   production: false,
+  firebaseConfig: {
+    apiKey: "AIzaSyBLCfZxzkybYbWJSrJGllI3X9sYtS6VZgw",
+    authDomain: "delice-eternel-gabon.firebaseapp.com",
+    databaseURL: "https://delice-eternel-gabon.firebaseio.com",
+    projectId: "delice-eternel-gabon",
+    storageBucket: "delice-eternel-gabon.appspot.com",
+    messagingSenderId: "528655916572",
+    appId: "1:528655916572:web:73ef9aa553b17c49bdc9d9",
+    measurementId: "G-ZWZRVSM0JL"
+  },
   versions: {
     app: packageJson.version,
     angular: packageJson.dependencies['@angular/core'],

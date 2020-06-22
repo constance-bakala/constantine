@@ -3,13 +3,15 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {takeUntil} from 'rxjs/operators';
 
-import {ActionAuthLogin, AuthState, selectorAuth} from '@app/auth/store';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
+import {AuthState} from '@app/auth/store';
+import {ActionAuthLogin} from '@app/auth/store/auth.actions';
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['../common.scss']
+  styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit, OnDestroy {
   logging: FormGroup;

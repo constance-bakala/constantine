@@ -1,31 +1,22 @@
-<div class="row app-auth-page">
-  <div class="col-form col-md-5 d-flex justify-content-center align-items-center">
-    <div class="app-auth-container">
-      <div class="app-logo">
-        <img [src]="logoFondClair" alt="Délice éternel" class="text-center" routerLink="/auth/signin"/>
-      </div>
-      <router-outlet></router-outlet>
-      <div class="app-auth-footer">
-        <div class="text-center">
-          <img [src]="logoGroup" alt="Délice éternel"/>
-        </div>
-        <div class="text-center app-version">
-          <span [innerHTML]="'v' + version + (isProd ? '' : '&nbsp;[' + envName+ ']')"></span>
-        </div>
+<section>
+  <div class="row app-auth-page">
+    <div class="col-form col-md-12 d-flex justify-content-center align-items-center">
+      <div class="app-auth-container">
+        <router-outlet></router-outlet>
       </div>
     </div>
+    <!--div class="col-md-7 d-none d-md-block app-carousel-container">
+      <ngb-carousel [showNavigationArrows]="false">
+        <ng-template ngbSlide>
+          <div class="carousel-bg img-1"></div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="carousel-bg img-2"></div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="carousel-bg img-3"></div>
+        </ng-template>
+      </ngb-carousel>
+    </div-->
   </div>
-  <div class="col-md-7 d-none d-md-block app-carousel-container">
-    <ngb-carousel [showNavigationArrows]="false">
-      <ng-template ngbSlide>
-        <div class="carousel-bg img-1"></div>
-      </ng-template>
-      <ng-template ngbSlide>
-        <div class="carousel-bg img-2"></div>
-      </ng-template>
-      <ng-template ngbSlide>
-        <div class="carousel-bg img-3"></div>
-      </ng-template>
-    </ngb-carousel>
-  </div>
-</div>
+</section>

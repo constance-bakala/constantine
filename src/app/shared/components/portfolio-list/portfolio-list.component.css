@@ -13,8 +13,3 @@ img.displayed{
   display: flex;
   justify-content: center;
 }
-
-.selected {
-  border: 5px double rgba(28,110,164,0.27);
-  border-radius: 6px 6px 6px 6px;
-}

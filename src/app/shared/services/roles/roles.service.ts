@@ -4,7 +4,8 @@ import {select, Store} from '@ngrx/store';
 import {IRole, ROLES} from './list';
 import {filter} from 'rxjs/internal/operators';
 import {ILoginSuccess} from '@shared/interfaces';
-import {AuthState, selectorAuth} from '@app/auth/store/auth.reducer';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
+import {AuthState} from '@app/auth/store';
 
 type UserType = ILoginSuccess;
 

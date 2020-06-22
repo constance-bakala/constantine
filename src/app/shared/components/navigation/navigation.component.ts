@@ -1,8 +1,11 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {AuthState, selectorAuth} from '@app/auth/store';
 import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
+import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {ActionAuthLoggedOut, ActionAuthLogout} from '@app/auth/store/auth.actions';
+
 declare var $: any;
 
 @Component({
@@ -13,12 +16,14 @@ declare var $: any;
 export class NavigationComponent implements OnInit {
 
   nbSelectedItems$: Observable<number>;
+  connectedUser$: Observable<any>;
 
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>, private afAuth: AngularFireAuth, private ngZone: NgZone,) {
+  }
 
   ngOnInit(): void {
-    $(document).ready(function() {
-      $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
+    $(document).ready(function () {
+      $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function () {
         if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
           var target = $(this.hash);
           target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
@@ -32,7 +37,7 @@ export class NavigationComponent implements OnInit {
       });
 
       // Scroll to top button appear
-      $(document).scroll(function() {
+      $(document).scroll(function () {
         var scrollDistance = $(this).scrollTop();
         if (scrollDistance > 100) {
           $('.scroll-to-top').fadeIn();
@@ -42,7 +47,7 @@ export class NavigationComponent implements OnInit {
       });
 
       // Closes responsive menu when a scroll trigger link is clicked
-      $('.js-scroll-trigger').click(function() {
+      $('.js-scroll-trigger').click(function () {
         $('.navbar-collapse').collapse('hide');
       });
 
@@ -53,7 +58,7 @@ export class NavigationComponent implements OnInit {
       });
 
       // Collapse Navbar
-      var navbarCollapse = function() {
+      var navbarCollapse = function () {
         if ($("#mainNav").offset().top > 100) {
           $("#mainNav").addClass("navbar-shrink");
         } else {
@@ -66,12 +71,12 @@ export class NavigationComponent implements OnInit {
       $(window).scroll(navbarCollapse);
 
       // Floating label headings for the contact form
-      $(function() {
-        $("body").on("input propertychange", ".floating-label-form-group", function(e) {
+      $(function () {
+        $("body").on("input propertychange", ".floating-label-form-group", function (e) {
           $(this).toggleClass("floating-label-form-group-with-value", !!$(e.target).val());
-        }).on("focus", ".floating-label-form-group", function() {
+        }).on("focus", ".floating-label-form-group", function () {
           $(this).addClass("floating-label-form-group-with-focus");
-        }).on("blur", ".floating-label-form-group", function() {
+        }).on("blur", ".floating-label-form-group", function () {
           $(this).removeClass("floating-label-form-group-with-focus");
         });
       });
@@ -80,6 +85,16 @@ export class NavigationComponent implements OnInit {
     this.nbSelectedItems$ = this.store.pipe(
       select(selectNbChosenItems)
     );
+
+    this.connectedUser$ = this.store.pipe(
+      select(selectorConnectedUser)
+    );
   }
 
+
+  disconnect() {
+    this.ngZone.run(() => {
+      this.afAuth.signOut().then(r => this.store.dispatch(new ActionAuthLogout()));
+    });
+  }
 }

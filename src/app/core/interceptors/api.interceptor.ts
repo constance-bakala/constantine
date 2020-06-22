@@ -3,13 +3,15 @@ import {Observable} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 
-import {ActionAuthLoggedOut, AuthState, selectorAuth} from '../../auth/store';
 import {tap} from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment as env} from '@env/environment';
 import {ENV_TYPES} from '@env/environment.common';
 import {IAppConfig} from '@shared/interfaces/app.interfaces';
 import {APP_CONFIG, TECHNICAL_EXCEPTION_MSG} from '@helpers/constants';
+import {ActionAuthLoggedOut} from '@app/auth/store/auth.actions';
+import {AuthState} from '@app/auth/store';
+import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable()
 export class XTokenInterceptor implements HttpInterceptor {

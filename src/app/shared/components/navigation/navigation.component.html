@@ -1,21 +1,64 @@
 <nav class="navbar navbar-expand-lg bg-secondary fixed-top" id="mainNav">
-  <div class="container"><a class="navbar-brand js-scroll-trigger" href="#page-top">DÉLICE ÉTERNEL</a>
-    <button class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu <i class="fas fa-bars"></i></button>
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">DÉLICE ÉTERNEL</a>
+    <button class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded" type="button"
+            data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+            aria-expanded="false" aria-label="Toggle navigation">Menu
+      <i class="fas fa-bars"></i>
+    </button>
+
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto smooth-scroll">
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="[ '/shopping-cart' ]">
-          <i class="fa fa-shopping-cart"></i>
-          <span class="nbItems"></span>
-          <span class="badge badge-pill red">{{nbSelectedItems$ | async}}</span>
-        </a>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" [routerLink]="[ '/shopping-cart' ]">
+            <mat-icon>shopping_cart</mat-icon>
+            &nbsp;<span class="badge badge-pill red">{{nbSelectedItems$ | async}}</span>
+          </a>
         </li>
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">PORTFOLIO</a>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">
+            <!--mat-icon>store</mat-icon-->
+            &nbsp;<span>PORTFOLIO</span>
+          </a>
         </li>
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">À PROPOS</a>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">
+            <!--mat-icon>question_answer</mat-icon-->
+            &nbsp;<span>À PROPOS</span>
+          </a>
         </li>
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">CONTACT</a>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">
+            <!--mat-icon>library_books</mat-icon-->
+            &nbsp;<span class="ajust">CONTACT</span>
+          </a>
+        </li>
+
+        <li class="nav-item mx-0 mx-lg-1" *ngIf="false">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#!">
+            <mat-icon>person_add</mat-icon>
+            &nbsp;<span class="ajust">Register</span>
+          </a>
+        </li>
+
+        <li class="nav-item mx-0 mx-lg-1" *ngIf="!(connectedUser$ | async)?.isAuthenticated">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" [routerLink]="['/auth/signin']">
+            <mat-icon>account_circle</mat-icon>
+            &nbsp;<span class="ajust">Connexion</span>
+          </a>
+        </li>
+
+        <li class="nav-item mx-0 mx-lg-1" *ngIf="(connectedUser$ | async)?.isAuthenticated">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" (click)="disconnect()">
+            <mat-icon>exit_to_app</mat-icon>
+            &nbsp;<span class="ajust">Déconnexion</span>
+          </a>
         </li>
       </ul>
     </div>
   </div>
+  <div class="filler"></div>
+  <ng-container *ngIf="(connectedUser$ | async) as connectedUser">
+    <img class="user-avatar" [src]="connectedUser?.user?.additionalInfos?.picture" >
+  </ng-container>
 </nav>

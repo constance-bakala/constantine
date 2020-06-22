@@ -21,3 +21,5 @@ export const EMAIL_REGEX = new RegExp(
  */
 export const APP_CONFIG = new InjectionToken<IAppConfig>('AppConfig');
 export const TECHNICAL_EXCEPTION_MSG = '[ERREUR] erreur technique, veuillez réessayer ultérieurement';
+
+export const DEFAULT_LOCALE_ID = 'fr';
