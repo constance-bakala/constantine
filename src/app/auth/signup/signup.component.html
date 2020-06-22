@@ -37,7 +37,6 @@
                name="prenom"
                [formControl]="prenom"
                appTextTransform
-               [textTransform]="'capitalize'"
                class="form-control">
         <i class="bar"></i>
         <span *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)"
