@@ -87,6 +87,25 @@
   <!-- link rel="stylesheet" href="css/body.css"-->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9GeJlgxVGzcuW75uMNDHbgueEQP7_7Jw"></script>
   <script src="https://apps.elfsight.com/p/platform.js" defer></script>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '286563862536579',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v7.0'
+      });
+      FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -112,6 +131,7 @@
   })();
 </script>
 <!-- /GetButton.io widget -->
+<a href="https://www.iubenda.com/privacy-policy/22833971" class="iubenda-white iubenda-embed" title="Privacy Policy ">Privacy Policy</a><script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
 </body>
 <app-footer></app-footer>
 </html>

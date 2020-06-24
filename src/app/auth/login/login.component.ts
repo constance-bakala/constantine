@@ -24,7 +24,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     const uiConfig = {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
       ],
       callbacks: {
         signInSuccessWithAuthResult: this
@@ -60,13 +61,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           email: result.additionalUserInfo.profile?.email,
         }
       }));
-      //this.router.navigateByUrl('/');
     });
   }
   onLogoutSuccessful(result) {
     this.ngZone.run(() => {
       this.store.dispatch(new ActionAuthLoggedOut());
-      // this.router.navigateByUrl('/');
     });
   }
 }
