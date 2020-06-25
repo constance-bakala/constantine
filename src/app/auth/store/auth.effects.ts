@@ -58,7 +58,10 @@ export class AuthEffects {
         map((action: ActionAuthLogged) => {
           // Empty localStorage if you are about to login or logout.
           const currentUser = this.localStorageService.getItem(AUTH_KEY);
-          this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
+          if(currentUser) {
+            this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
+          }
+          return of(undefined)
         })
       );
   }
