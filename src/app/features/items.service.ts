@@ -25,7 +25,7 @@ export class ItemsService {
         };
         return of(categoryInfos);
       case ItemsCategoriesEnum.DRESSES:
-        nbItems = 29;
+        nbItems = 48;
         categoryInfos = {
           name: ItemsCategoriesEnum.DRESSES,
           title: 'Vêtements',
