@@ -71,6 +71,11 @@ export class AuthEffects {
         withLatestFrom(this.store$),
         map(([action, state]: [ActionAuthLogged, any]) => {
           // Empty localStorage if you are about to login or logout.
+          if(!action) {
+            return new Go({
+              path: ['/']
+            });
+          }
           if (state) {
             const {error, ...authState} = selectorAuth(state);
             this.localStorageService.setItem(AUTH_KEY, action.payload);
@@ -81,7 +86,6 @@ export class AuthEffects {
             } else if (!/^\/auth/.test(this.router.url)) {
               return new Go({
                 path: ['/auth/signin']
-               // path: ['/']
               });
             }
           }

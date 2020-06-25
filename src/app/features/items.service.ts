@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {Observable, of} from 'rxjs';
-import {getAssetItems} from '@helpers/common.services.utils';
+import {DRESSES_SIZE, EARINGS_SIZE, getAssetItems, MASKS_SIZE} from '@helpers/common.services.utils';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ItemsService {
     let categoryInfos: Category = undefined;
     switch (category) {
       case ItemsCategoriesEnum.EARINGS:
-        nbItems = 17;
+        nbItems = EARINGS_SIZE;
         categoryInfos = {
           name: ItemsCategoriesEnum.EARINGS,
           title: 'Boubles d\'oreilles',
@@ -25,7 +25,7 @@ export class ItemsService {
         };
         return of(categoryInfos);
       case ItemsCategoriesEnum.DRESSES:
-        nbItems = 48;
+        nbItems = DRESSES_SIZE;
         categoryInfos = {
           name: ItemsCategoriesEnum.DRESSES,
           title: 'Vêtements',
@@ -34,7 +34,7 @@ export class ItemsService {
         };
         return of(categoryInfos);
       case ItemsCategoriesEnum.MASKS:
-        nbItems = 62;
+        nbItems = MASKS_SIZE;
 
         categoryInfos = {
           name: ItemsCategoriesEnum.MASKS,

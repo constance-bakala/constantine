@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PortfolioData} from '@shared/interfaces/portfolio.interfaces';
+import {DRESSES_SIZE, EARINGS_SIZE, MASKS_SIZE} from '@helpers/common.services.utils';
 
 @Component({
   selector: 'app-welcome',
@@ -22,14 +23,14 @@ export class WelcomeComponent implements OnInit {
       portfolioLink: '/dresses',
       portfolioImagePrefix: 'dress',
       portfolioName: 'Robes',
-      portfolioImagesSize: 29,
+      portfolioImagesSize: DRESSES_SIZE,
       portfolioDirectory: 'dresses'
     };
     this.dataMasks = {
       portfolioLink: '/masks',
       portfolioImagePrefix: 'mask',
       portfolioName: 'Masques',
-      portfolioImagesSize: 62,
+      portfolioImagesSize: MASKS_SIZE,
       portfolioDirectory: 'masks'
     };
 
@@ -37,7 +38,7 @@ export class WelcomeComponent implements OnInit {
       portfolioLink: '/earings',
       portfolioImagePrefix: 'earing',
       portfolioName: 'Boucles d\'oreille',
-      portfolioImagesSize: 17,
+      portfolioImagesSize: EARINGS_SIZE,
       portfolioDirectory: 'jewellery'
     }
   }
