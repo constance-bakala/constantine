@@ -20,7 +20,8 @@ export class IsAuthenticatedGuard implements CanActivate {
         if (!s.isAuthenticated) {
           this.store.dispatch(
             new Go({
-              path: ['/auth/signin']
+              // path: ['/auth/signin']
+              path: ['/']
             })
           );
         }
