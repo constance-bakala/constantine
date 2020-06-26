@@ -48,6 +48,20 @@ export class AuthEffects {
     );
   }
 
+
+  @Effect({dispatch: false})
+  loggedOut(): Observable<any> {
+    return this.actions$.pipe(
+      ofType(AuthActionTypes.LOGGED_OUT),
+      map((action: ActionAuthLoggedOut) => {
+        this.store$.dispatch( new Go({
+          path: ['/']
+        }));
+      }),
+      catchError(error => of(new ActionAuthSetError(error)))
+    );
+  }
+
   @Effect({
     dispatch: false
   })

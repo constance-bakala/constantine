@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~firebaseui/dist/firebaseui.css";
-@import 'globalStyles/md-bootstrap';
 @import 'styles-variables';
 @import 'globalStyles/custom-styles';
 @import 'globalStyles/heading.scss';
 @import 'globalStyles/body.scss';
+@import 'globalStyles/md-bootstrap';
 
 .user-avatar {
   max-height: 55px;

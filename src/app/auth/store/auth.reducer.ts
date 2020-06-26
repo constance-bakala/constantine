@@ -1,4 +1,3 @@
-import {createSelector} from '@ngrx/store';
 import {HttpErrorResponse} from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
 import {AuthActions, AuthActionTypes} from '@app/auth/store/auth.actions';

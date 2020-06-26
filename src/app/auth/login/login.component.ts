@@ -1,4 +1,4 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import * as firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
@@ -13,6 +13,8 @@ import {ActionAuthLoggedIn, ActionAuthLoggedOut} from '@app/auth/store/auth.acti
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
+  @Input()
+  signInOptions: string[];
 
   constructor(private afAuth: AngularFireAuth,
               private router: Router,
@@ -22,11 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const uiConfig = {
-      signInOptions: [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      ],
+      signInOptions: this.signInOptions,
       callbacks: {
         signInSuccessWithAuthResult: this
           .onLoginSuccessful
