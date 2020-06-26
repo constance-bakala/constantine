@@ -21,12 +21,6 @@
         </a>
       </div>
     </div>
-    <!-- Social login -->
-    <p>ou conectez-vous avec:</p>
-
-    <!-- a href="#" class="btn-floating btn-fb btn-sm waves-effect waves-light" role="button"><i class="fab fa-facebook-f"></i></a-->
-    <!-- a href="#" class="btn-floating btn-tw btn-sm waves-effect waves-light" role="button"><i class="fab fa-twitter"></i></a-->
-    <social-login></social-login>
     <button id="connextionButton" *ngIf="!loading" [disabled]="!logging?.valid" class="btn-connexion btn-primaire-h40 "
             type="submit">
       Connexion
@@ -42,7 +36,9 @@
   <div class="app-auth-divider">
     <span>ou</span>
   </div>
-  <button id="createAccountButton" routerLink="/auth/signup" class="btn-creercompte btn-secondaire-h40">Créer un
+  <!--button id="createAccountButton" routerLink="/auth/signup" class="btn-creercompte btn-secondaire-h40">Créer un
     compte
-  </button>
+  </button-->
+  <p>Identifiez vous via gmail ou créer un compte : </p>
+  <social-login [signInOptions]="signInOptions"></social-login>
 </div>

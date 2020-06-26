@@ -18,7 +18,7 @@ export interface IQuestion {
 export interface IUser {
   nom: string;
   prenom: string;
-  gender: number;
+  gender?: number;
   email: string;
   id?: string,
   providerId?: string,
