@@ -1,0 +1,124 @@
+
+.skin-light a.card-link-secondary {
+  color: #6c757d;
+}
+
+.skin-light .card-link-secondary {
+  color: #6c757d;
+  transition: all .2s ease-in-out;
+}
+
+.skin-light strong {
+  font-weight: 500;
+}
+
+.skin-light .number-input.number-input {
+  border: 1px solid #ced4da;
+  width: 8.6rem;
+  border-radius: .25rem;
+}
+
+.skin-light .number-input {
+  margin-bottom: 3rem;
+}
+
+.skin-light .number-input.number-input button.minus {
+  padding-left: 10px;
+}
+
+.skin-light .number-input.number-input button {
+  width: 2.5rem;
+  height: .7rem;
+}
+
+.skin-light .number-input button {
+  background-color: transparent;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+}
+
+.skin-light .number-input.number-input input[type=number] {
+  max-width: 3rem;
+  padding: .5rem;
+  border: 0 solid #ced4da;
+  border-right-width: 1px;
+  border-left-width: 1px;
+  font-size: 1rem;
+  height: 2rem;
+  color: #495057;
+}
+
+.skin-light .number-input input[type=number] {
+  text-align: center;
+}
+
+.skin-light .number-input button:before, .skin-light .number-input button:after {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.skin-light .number-input.number-input button:before, .skin-light .number-input.number-input button:after {
+  width: .7rem;
+  background-color: #495057;
+}
+
+.skin-light .number-input button.plus:after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.skin-light .number-input button:before, .skin-light .number-input button:after {
+  display: inline-block;
+  position: absolute;
+  content: '';
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+
+.skin-light .card .card-body h1, .skin-light .card .card-body h2, .skin-light .card .card-body h3, .skin-light .card .card-body h4, .skin-light .card .card-body h5, .skin-light .card .card-body h6 {
+  font-weight: 500;
+}
+
+.skin-light .list-group-flush .list-group-item {
+  border-color: rgba(0,0,0,0.1);
+}
+
+.list-group .list-group-item:first-child {
+  border-top-left-radius: .125rem;
+  border-top-right-radius: .125rem;
+}
+
+.skin-light .btn-primary {
+  color: #fff;
+  background-color: #1266f1 !important;
+}
+
+.skin-light .mt-70 {
+  margin-top: 70px;
+}
+
+.badge-pill {
+  padding-right: .6em;
+  padding-left: .6em;
+  border-radius: 10rem;
+}
+
+.badge {
+  border-radius: .125rem;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+}
+
+.skin-light .navbar .navbar-nav .nav-item a.waves-effect, .skin-light .navbar .navbar-nav .nav-item a.waves-light {
+  display: inherit;
+}
+
+.skin-light .navbar .navbar-nav .nav-item .nav-link {
+  font-weight: 400;
+  color: rgba(0,0,0,0.6);
+}
