@@ -9232,6 +9232,8 @@ form .row:first-child .floating-label-form-group {
 .selected {
   border: 1px double rgba(28,110,164,0.27);
   border-radius: 6px 6px 6px 6px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .rouded-form {
@@ -9244,3 +9246,5 @@ form .row:first-child .floating-label-form-group {
   display: inline-block;
   overflow: hidden;
 }
+
+
