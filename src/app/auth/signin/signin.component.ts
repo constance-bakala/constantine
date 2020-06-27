@@ -26,7 +26,6 @@ export class SigninComponent implements OnInit, OnDestroy {
   signInOptions = [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
   ];
 
   private unsubscribe$: Subject<void> = new Subject<void>();
