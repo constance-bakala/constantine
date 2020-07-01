@@ -11,6 +11,10 @@ import {select, Store} from '@ngrx/store';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {Observable} from 'rxjs';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireFunctions} from '@angular/fire/functions';
+import * as firebase from 'firebase/app';
+import {stringify} from 'querystring';
 
 @Component({
   selector: 'app-cart-items',
@@ -37,7 +41,9 @@ export class CartItemsComponent implements OnInit {
     label: 'XL'
   }];
 
-  constructor(private store: Store<any>, private fb: FormBuilder,) {
+  items = [];
+
+  constructor(private store: Store<any>, private fb: FormBuilder, public afAuth: AngularFireAuth, private fun: AngularFireFunctions) {
   }
 
   ngOnInit(): void {
@@ -48,6 +54,7 @@ export class CartItemsComponent implements OnInit {
     this.store.pipe(select(selectChosenItems))
       .subscribe((items: ItemInfos[]) => {
         if (!!items) {
+          this.items = items;
           this.initFormArray(items);
         }
       });
@@ -116,7 +123,63 @@ export class CartItemsComponent implements OnInit {
 
   }
 
-  sendCommand() {
+  /*
+    sendCommand1() {
+      this.sgMsg.setApiKey(environment.firebaseConfig.apiKey);
+      const data = {
+        from: 'delice.eternel.gabon@gmail.com',
+        templateId: 'd-0116c8e99b5d41f084d82628bec04620',
+        to: 'delice.eternel.gabon@gmail.com',
+        subject: 'Test 2',
+      };
+      this.sgMsg.send(data)
+        .then(success => console.log('sent email successfully!', success))
+        .catch(error => console.log(error))
+    }
+   */
 
+
+  sendCommand() {
+    if(!!firebase.auth().currentUser) {
+      this.fillCommendAndSend(firebase.auth().currentUser);
+    } else {
+      const auth = firebase.auth();
+      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .then(function(result) {
+          this.fillCommendAndSend(result.user);
+        }, function(error) {
+        // The provider's account email, can be used in case of
+        // auth/account-exists-with-different-credential to fetch the providers
+        // linked to the email:
+        var email = error.email;
+        // The provider's credential:
+        var credential = error.credential;
+        // In case of auth/account-exists-with-different-credential error,
+        // you can fetch the providers using this:
+        if (error.code === 'auth/account-exists-with-different-credential') {
+            auth.fetchSignInMethodsForEmail(email).then(function(providers) {
+                // The returned 'providers' is a list of the available providers
+                // linked to the email address. Please refer to the guide for a more
+                // complete explanation on how to recover from this error.
+              });
+          }
+        });
+    }
+    }
+
+  private fillCommendAndSend(user: firebase.User) {
+    const callable = this.fun.httpsCallable('genericEmail');
+    const data = {
+      text: `Commande reçue: ` + JSON.stringify(this.items),
+      displayName: user.displayName,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      phoneNumber: user.phoneNumber,
+      photoURL: user.photoURL,
+      providerId: user.providerId,
+      uid: user.uid,
+      subject: 'Nouvelle commande internet!'
+    };
+    callable(data).subscribe(result => console.log(result));
   }
 }

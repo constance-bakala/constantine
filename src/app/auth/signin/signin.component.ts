@@ -10,6 +10,7 @@ import {ActionAuthLoggedIn, ActionAuthLogin} from '@app/auth/store/auth.actions'
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
+import {AngularFireFunctions} from '@angular/fire/functions';
 
 @Component({
   selector: 'app-signin',
@@ -25,6 +26,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   };
   signInOptions = [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
   ];
 
@@ -33,7 +35,8 @@ export class SigninComponent implements OnInit, OnDestroy {
   constructor(private store: Store<any>,
               private _fb: FormBuilder,
               private afAuth: AngularFireAuth,
-              private ngZone: NgZone) {
+              private ngZone: NgZone,
+              private fun: AngularFireFunctions) {
     this.store
       .pipe(
         select(selectorAuth),
@@ -88,6 +91,11 @@ export class SigninComponent implements OnInit, OnDestroy {
               email: result.user?.email,
             }
           }));
+        const callable = this.fun.httpsCallable('genericEmail');
+        callable({
+          text: 'Sending email with Angular and SendGrid is fun, you did it will!',
+          subject: 'Email from delice eternel gabon'}
+        ).subscribe(result => console.log(result));
       })
       .catch(error => {
         this.loading = false;
