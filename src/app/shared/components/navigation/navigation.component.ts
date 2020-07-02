@@ -17,6 +17,7 @@ export class NavigationComponent implements OnInit {
 
   nbSelectedItems$: Observable<number>;
   connectedUser$: Observable<any>;
+  _displayName: string;
 
   constructor(private store: Store<any>, private afAuth: AngularFireAuth, private ngZone: NgZone,) {
   }
@@ -89,6 +90,14 @@ export class NavigationComponent implements OnInit {
     this.connectedUser$ = this.store.pipe(
       select(selectorConnectedUser)
     );
+    this.connectedUser$.subscribe(connectedUser => {
+      this._displayName = connectedUser.user?.additionalInfos?.prenom ?? "" + " " + connectedUser.user?.additionalInfos?.nom ?? "";
+      this._displayName = (this._displayName?.trim() ?? "???");
+    });
+  }
+
+  get displayName() {
+    return this._displayName;
   }
 
 

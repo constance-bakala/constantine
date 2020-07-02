@@ -6,7 +6,6 @@ export interface ILoginSuccess {
   actions?: {
     [name: string]: boolean;
   };
-  other: any;
   additionalInfos: IUser;
 }
 

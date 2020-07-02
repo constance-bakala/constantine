@@ -34,6 +34,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -50,6 +51,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatSidenavModule,
     MatListModule,
     MatToolbarModule,
+    MatDialogModule,
+
   ],
   declarations: [
     ContactComponent,
