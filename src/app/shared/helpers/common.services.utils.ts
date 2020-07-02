@@ -1,4 +1,4 @@
-import {ItemInfos, ItemsCategoriesEnum, ItemSizeEnum} from '@shared/interfaces';
+import {ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum} from '@shared/interfaces';
 
 export const DRESSES_SIZE = 48;
 export const EARINGS_SIZE = 17;
@@ -16,4 +16,24 @@ export function getAssetItems(size: number, directoryName: string, refPrefix: st
     };
     return new ItemInfos(path, false, reference, currentIndex, category,false, basketInfos);
   });
+}
+
+export function initLoginPayload(result): ILoginSuccess{
+  return {
+    ssoToken: result?.credential?.idToken,
+    token: result?.credential?.accessToken,
+    userHabilitations: [],
+    indexRole: -1,
+    actions: {},
+    additionalInfos: {
+      id: result.additionalUserInfo.profile?.id,
+      providerId: result.additionalUserInfo?.providerId,
+      local: result.additionalUserInfo.profile?.locale,
+      picture: result.additionalUserInfo.profile?.picture ?? result.additionalUserInfo.profile?.picture?.data?.url,
+      nom: result.additionalUserInfo.profile?.family_name,
+      prenom: result.additionalUserInfo.profile?.given_name,
+      gender: result.additionalUserInfo.profile?.gender,
+      email: result.additionalUserInfo.profile?.email,
+    }
+  }
 }

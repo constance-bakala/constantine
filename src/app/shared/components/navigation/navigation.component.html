@@ -55,6 +55,11 @@
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" (click)="disconnect()">
             <mat-icon>exit_to_app</mat-icon>
             &nbsp;<span class="ajust">Déconnexion</span>
+            <ng-container *ngIf="(connectedUser$ | async) as connectedUser">
+              <span *ngIf="!connectedUser?.user?.additionalInfos?.picture">
+                ({{connectedUser.user?.additionalInfos?.prenom}} {{connectedUser.user?.additionalInfos?.nom}} )
+              </span>
+            </ng-container>
           </a>
         </li>
       </ul>
@@ -62,6 +67,7 @@
   </div>
   <div class="filler"></div>
   <ng-container *ngIf="(connectedUser$ | async) as connectedUser">
-    <img class="user-avatar" [src]="connectedUser?.user?.additionalInfos?.picture" >
+    <img
+      class="user-avatar" [src]="connectedUser?.user?.additionalInfos?.picture" *ngIf="!!connectedUser?.user?.additionalInfos?.picture">
   </ng-container>
 </nav>

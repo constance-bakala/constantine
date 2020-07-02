@@ -18,35 +18,38 @@ import {LoginComponent} from '@app/auth/login/login.component';
 import {TextTransformPipe} from '@shared/pipes';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    SharedModule,
-    ReactiveFormsModule,
-    AuthRoutingModule,
-    NgbModule,
-    StoreModule.forFeature(
-      'auth',
-      {main: authReducer},
-      {metaReducers: [clearState]}
-    ),
-    EffectsModule.forFeature([AuthEffects])
-  ],
-  declarations: [
-    MainComponent,
-    SigninComponent,
-    SignupComponent,
-    LoginComponent,
-  ],
-  providers: [
-    {
-      provide: APP_PASSWORD_CONFIG,
-      useValue: {
-        minLength: 8,
-        minConstraints: 3
-      }
-    }
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        SharedModule,
+        ReactiveFormsModule,
+        AuthRoutingModule,
+        NgbModule,
+        StoreModule.forFeature(
+            'auth',
+            {main: authReducer},
+            {metaReducers: [clearState]}
+        ),
+        EffectsModule.forFeature([AuthEffects])
+    ],
+    declarations: [
+        MainComponent,
+        SigninComponent,
+        SignupComponent,
+        LoginComponent,
+    ],
+    exports: [
+        LoginComponent
+    ],
+    providers: [
+        {
+            provide: APP_PASSWORD_CONFIG,
+            useValue: {
+                minLength: 8,
+                minConstraints: 3
+            }
+        }
+    ]
 })
 export class AuthModule {
 }

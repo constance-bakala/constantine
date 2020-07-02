@@ -14,7 +14,9 @@ import {Observable} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import * as firebase from 'firebase/app';
-import {stringify} from 'querystring';
+import {MatDialog} from '@angular/material/dialog';
+import {SigninComponent} from '@app/auth/signin/signin.component';
+import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-cart-items',
@@ -41,9 +43,16 @@ export class CartItemsComponent implements OnInit {
     label: 'XL'
   }];
 
+  connectedUser$: Observable<any>;
   items = [];
+  dialogRef = undefined;
 
-  constructor(private store: Store<any>, private fb: FormBuilder, public afAuth: AngularFireAuth, private fun: AngularFireFunctions) {
+
+  constructor(private store: Store<any>,
+              private fb: FormBuilder,
+              public afAuth: AngularFireAuth,
+              private fun: AngularFireFunctions,
+              private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -58,6 +67,10 @@ export class CartItemsComponent implements OnInit {
           this.initFormArray(items);
         }
       });
+
+    this.connectedUser$ = this.store.pipe(
+      select(selectorConnectedUser)
+    );
   }
 
   get basketItemsArray(): FormArray {
@@ -140,32 +153,23 @@ export class CartItemsComponent implements OnInit {
 
 
   sendCommand() {
-    if(!!firebase.auth().currentUser) {
+    if (!!firebase.auth().currentUser) {
       this.fillCommendAndSend(firebase.auth().currentUser);
     } else {
-      const auth = firebase.auth();
-      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-        .then(function(result) {
-          this.fillCommendAndSend(result.user);
-        }, function(error) {
-        // The provider's account email, can be used in case of
-        // auth/account-exists-with-different-credential to fetch the providers
-        // linked to the email:
-        var email = error.email;
-        // The provider's credential:
-        var credential = error.credential;
-        // In case of auth/account-exists-with-different-credential error,
-        // you can fetch the providers using this:
-        if (error.code === 'auth/account-exists-with-different-credential') {
-            auth.fetchSignInMethodsForEmail(email).then(function(providers) {
-                // The returned 'providers' is a list of the available providers
-                // linked to the email address. Please refer to the guide for a more
-                // complete explanation on how to recover from this error.
-              });
-          }
-        });
+      this.dialogRef = this.dialog.open(SigninComponent, {
+        panelClass: 'signin-dialog',
+        disableClose: false,
+        maxWidth: '576px',
+        maxHeight: '576px',
+        autoFocus: true,
+      });
+      this.dialogRef.afterClose().subscribe(
+        () => {
+          this.dialogRef = undefined;
+        }
+      )
     }
-    }
+  }
 
   private fillCommendAndSend(user: firebase.User) {
     const callable = this.fun.httpsCallable('genericEmail');
@@ -182,4 +186,6 @@ export class CartItemsComponent implements OnInit {
     };
     callable(data).subscribe(result => console.log(result));
   }
+
+
 }

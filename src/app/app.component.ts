@@ -1,9 +1,11 @@
-import {Component} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {routerTransition} from '@app/core';
 import {Store} from '@ngrx/store';
-import {AuthRefreshUserToken} from '@app/auth/store/auth.actions';
+import {ActionAuthLoggedIn, ActionAuthLoggedOut, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {initLoginPayload} from '@helpers/common.services.utils';
 
 @Component({
   selector: 'app-root',

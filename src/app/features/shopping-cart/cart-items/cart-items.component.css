@@ -7,3 +7,11 @@
   color: #1266f1;
   font-weight: bold;
 }
+
+.signin-dialog {
+  z-index: 1500;
+}
+
+.social-container {
+  height: 5px;
+}

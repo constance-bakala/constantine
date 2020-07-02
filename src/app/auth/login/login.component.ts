@@ -5,6 +5,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ActionAuthLoggedIn, ActionAuthLoggedOut} from '@app/auth/store/auth.actions';
+import {initLoginPayload} from '@helpers/common.services.utils';
 
 @Component({
   selector: 'social-login',
@@ -13,8 +14,18 @@ import {ActionAuthLoggedIn, ActionAuthLoggedOut} from '@app/auth/store/auth.acti
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
-  @Input()
-  signInOptions: string[];
+  signInOptions = [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    {
+      provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      scopes: [
+        'public_profile',
+        'email',
+        'user_likes',
+      ]
+    },
+    firebase.auth.EmailAuthProvider.PROVIDER_ID
+  ];
 
   constructor(private afAuth: AngularFireAuth,
               private router: Router,
@@ -32,7 +43,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     };
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
-    this.ui.start('#firebaseui-auth-container', uiConfig);
+    this.ui.start('#firebaseui-auth-container1, #firebaseui-auth-container2', uiConfig);
   }
 
   ngOnDestroy() {
@@ -41,26 +52,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onLoginSuccessful(result) {
     this.ngZone.run(() => {
-      this.store.dispatch(new ActionAuthLoggedIn({
-        ssoToken: result?.credential?.idToken,
-        token: result?.credential?.accessToken,
-        userHabilitations: [],
-        indexRole: -1,
-        actions: {},
-        other: result,
-        additionalInfos: {
-          id: result.additionalUserInfo.profile?.id,
-          providerId: result.additionalUserInfo?.providerId,
-          local: result.additionalUserInfo.profile?.locale,
-          picture: result.additionalUserInfo.profile?.picture,
-          nom: result.additionalUserInfo.profile?.family_name,
-          prenom: result.additionalUserInfo.profile?.given_name,
-          gender: result.additionalUserInfo.profile?.gender,
-          email: result.additionalUserInfo.profile?.email,
-        }
-      }));
+      this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(result)));
     });
   }
+
   onLogoutSuccessful(result) {
     this.ngZone.run(() => {
       this.store.dispatch(new ActionAuthLoggedOut());

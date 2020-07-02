@@ -24,12 +24,6 @@ export class SigninComponent implements OnInit, OnDestroy {
     code?: string;
     message: string;
   };
-  signInOptions = [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-  ];
-
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private store: Store<any>,
@@ -73,28 +67,28 @@ export class SigninComponent implements OnInit, OnDestroy {
     this.afAuth.signInWithEmailAndPassword(this.logging.value.username.trim(), this.logging.value.password)
       .then(result => {
         this.loading = false;
-         this.store.dispatch(new ActionAuthLoggedIn({
-           ssoToken: result?.user?.refreshToken,
-            token: result?.user?.refreshToken,
-            userHabilitations: [],
-            indexRole: -1,
-            actions: {},
-            other: result,
-            additionalInfos: {
-              id: result.user?.uid,
-              providerId: result.additionalUserInfo?.providerId,
-             // local: result.user?.oa,
-              picture: result.user?.photoURL,
-              nom: result.user.displayName,
-              prenom: '',
-              //gender: result.additionalUserInfo.profile?.gender,
-              email: result.user?.email,
-            }
-          }));
+        this.store.dispatch(new ActionAuthLoggedIn({
+          ssoToken: result?.user?.refreshToken,
+          token: result?.user?.refreshToken,
+          userHabilitations: [],
+          indexRole: -1,
+          actions: {},
+          additionalInfos: {
+            id: result.user?.uid,
+            providerId: result.additionalUserInfo?.providerId,
+            // local: result.user?.oa,
+            picture: result.user?.photoURL,
+            nom: result.user.displayName,
+            prenom: '',
+            //gender: result.additionalUserInfo.profile?.gender,
+            email: result.user?.email,
+          }
+        }));
         const callable = this.fun.httpsCallable('genericEmail');
         callable({
-          text: 'Sending email with Angular and SendGrid is fun, you did it will!',
-          subject: 'Email from delice eternel gabon'}
+            text: 'Sending email with Angular and SendGrid is fun, you did it will!',
+            subject: 'Email from delice eternel gabon'
+          }
         ).subscribe(result => console.log(result));
       })
       .catch(error => {
@@ -105,12 +99,12 @@ export class SigninComponent implements OnInit, OnDestroy {
 
   sendEmailVerification() {
     firebase.auth().currentUser.sendEmailVerification({url: ''})
-         .then(function() {
-           // Verification email sent.
-         })
-         .catch(function(error) {
-           // Error occurred. Inspect error.code.
-         });
+      .then(function () {
+        // Verification email sent.
+      })
+      .catch(function (error) {
+        // Error occurred. Inspect error.code.
+      });
   }
 
   ngOnDestroy() {

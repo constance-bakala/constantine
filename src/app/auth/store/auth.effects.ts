@@ -54,9 +54,11 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActionTypes.LOGGED_OUT),
       map((action: ActionAuthLoggedOut) => {
-        this.store$.dispatch( new Go({
+        /*this.store$.dispatch( new Go({
           path: ['/']
         }));
+
+         */
       }),
       catchError(error => of(new ActionAuthSetError(error)))
     );
@@ -109,7 +111,7 @@ export class AuthEffects {
         }),
         tap(action => {
           if (action) {
-            this.store$.dispatch(action);
+           // this.store$.dispatch(action);
           }
         })
       );
