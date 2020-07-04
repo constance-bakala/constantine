@@ -57,7 +57,7 @@
             &nbsp;<span class="ajust">Déconnexion</span>
             <ng-container *ngIf="(connectedUser$ | async) as connectedUser">
               <span *ngIf="!connectedUser?.user?.additionalInfos?.picture">
-                ({{connectedUser.user?.additionalInfos?.prenom}} {{connectedUser.user?.additionalInfos?.nom}} )
+                {{displayName}}
               </span>
             </ng-container>
           </a>

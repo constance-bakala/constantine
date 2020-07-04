@@ -159,8 +159,6 @@ export class CartItemsComponent implements OnInit {
       this.dialogRef = this.dialog.open(SigninComponent, {
         panelClass: 'signin-dialog',
         disableClose: false,
-        maxWidth: '576px',
-        maxHeight: '576px',
         autoFocus: true,
       });
       this.dialogRef.afterClose().subscribe(
@@ -172,7 +170,7 @@ export class CartItemsComponent implements OnInit {
   }
 
   private fillCommendAndSend(user: firebase.User) {
-    const callable = this.fun.httpsCallable('genericEmail');
+    const callable = this.fun.httpsCallable('genericSendgridEmail');
     const data = {
       text: `Commande reçue: ` + JSON.stringify(this.items),
       displayName: user.displayName,

@@ -114,6 +114,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     NumberOnlyDirective,
     TruncatePipe,
     TranslatePipe,
+    MatDialogModule,
   ],
   providers: [
     AdService

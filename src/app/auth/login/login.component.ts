@@ -1,4 +1,4 @@
-import {Component, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import * as firebaseui from 'firebaseui';
 import * as firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
@@ -15,16 +15,35 @@ import {initLoginPayload} from '@helpers/common.services.utils';
 export class LoginComponent implements OnInit, OnDestroy {
   ui: firebaseui.auth.AuthUI;
   signInOptions = [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    {
+      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      customParameters: {
+        'lang': 'fr'
+      }
+    },
     {
       provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
       scopes: [
         'public_profile',
         'email',
         'user_likes',
-      ]
+      ],
+      customParameters: {
+        'lang': 'fr'
+      }
     },
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
+    {
+      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      customParameters: {
+        'lang': 'fr'
+      }
+    },
+    {
+      provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+      customParameters: {
+        'lang': 'fr'
+      }
+    }
   ];
 
   constructor(private afAuth: AngularFireAuth,
@@ -34,6 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    firebase.auth().languageCode = 'fr';
     const uiConfig = {
       signInOptions: this.signInOptions,
       callbacks: {
@@ -44,6 +64,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     };
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     this.ui.start('#firebaseui-auth-container1, #firebaseui-auth-container2', uiConfig);
+
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if(!firebaseUser){
+        this.store.dispatch(new ActionAuthLoggedOut())
+      }
+    })
   }
 
   ngOnDestroy() {

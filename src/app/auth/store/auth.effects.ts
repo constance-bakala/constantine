@@ -98,20 +98,18 @@ export class AuthEffects {
           if (state) {
             const {error, ...authState} = selectorAuth(state);
             this.localStorageService.setItem(AUTH_KEY, action.payload);
-            if (authState.isAuthenticated) {
+            if (/^\/auth/.test(this.router.url)) {
               return new Go({
                 path: ['/']
               });
-            } else if (!/^\/auth/.test(this.router.url)) {
-              return new Go({
-                path: ['/auth/signin']
-              });
+            } else if (authState.isAuthenticated) {
+              return null;
             }
           }
         }),
         tap(action => {
           if (action) {
-           // this.store$.dispatch(action);
+           this.store$.dispatch(action);
           }
         })
       );

@@ -1,16 +1,16 @@
-import {EMPTY, Subject} from 'rxjs';
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Subject} from 'rxjs';
+import {Component, Inject, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {takeUntil} from 'rxjs/operators';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {selectorAuth} from '@app/auth/store/auth.selectors';
+import {selectorAuth, selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AuthState} from '@app/auth/store';
-import {ActionAuthLoggedIn, ActionAuthLogin} from '@app/auth/store/auth.actions';
+import {ActionAuthLoggedIn} from '@app/auth/store/auth.actions';
 import {AngularFireAuth} from '@angular/fire/auth';
 import * as firebase from 'firebase';
-import * as firebaseui from 'firebaseui';
 import {AngularFireFunctions} from '@angular/fire/functions';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-signin',
@@ -84,7 +84,7 @@ export class SigninComponent implements OnInit, OnDestroy {
             email: result.user?.email,
           }
         }));
-        const callable = this.fun.httpsCallable('genericEmail');
+        const callable = this.fun.httpsCallable('genericSendgridEmail');
         callable({
             text: 'Sending email with Angular and SendGrid is fun, you did it will!',
             subject: 'Email from delice eternel gabon'
@@ -110,5 +110,9 @@ export class SigninComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  close() {
+
   }
 }
