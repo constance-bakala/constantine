@@ -92,7 +92,8 @@ export class NavigationComponent implements OnInit {
     );
     this.connectedUser$.subscribe(connectedUser => {
       this._displayName = connectedUser.user?.additionalInfos?.prenom ?? "" + " " + connectedUser.user?.additionalInfos?.nom ?? "";
-      this._displayName = (this._displayName?.trim() ?? "???");
+      this._displayName = (this._displayName?.trim() ?? connectedUser.user.email);
+      this._displayName = '(' + this._displayName ?? '???' + ')';
     });
   }
 

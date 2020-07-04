@@ -1,5 +1,8 @@
 <div class="rouded-form">
   <form (ngSubmit)="signIn()" [formGroup]="logging">
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true" id="closeAlert"><i class="dsicon-close"></i></span>
+    </button>
     <h3>Bienvenue</h3>
     <h5>Veuillez vous identifier</h5>
     <div class="form-group">
@@ -39,6 +42,6 @@
   <!--button id="createAccountButton" routerLink="/auth/signup" class="btn-creercompte btn-secondaire-h40">Créer un
     compte
   </button-->
-  <p>Identifiez vous via gmail ou créer un compte : </p>
+  <p>Utilisez les liens proposés. </p>
   <social-login></social-login>
 </div>

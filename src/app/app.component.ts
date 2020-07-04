@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {ActionAuthLoggedIn, ActionAuthLoggedOut, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {initLoginPayload} from '@helpers/common.services.utils';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'app-root',

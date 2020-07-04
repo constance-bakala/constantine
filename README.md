@@ -28,4 +28,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Build for production
 
- ngbuild --prod --output-path docs --base-href . 
+ng build --prod --output-path docs --base-href . 
