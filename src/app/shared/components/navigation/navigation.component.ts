@@ -20,7 +20,7 @@ export class NavigationComponent implements OnInit {
   _displayName: string;
   connectedUser: IUser;
 
-  constructor(private store: Store<any>, private afAuth: AngularFireAuth, private ngZone: NgZone,) {
+  constructor(private store: Store<any>, public afAuth: AngularFireAuth, private ngZone: NgZone,) {
   }
 
   ngOnInit(): void {
