@@ -28,7 +28,7 @@ export class XTokenInterceptor implements HttpInterceptor {
       select(selectorAuth)
     ).subscribe((state: AuthState) => {
       if (state) {
-        this.X_TOKEN = state.token;
+        this.X_TOKEN = state?.user?.token;
       } else {
         this.X_TOKEN = null;
       }

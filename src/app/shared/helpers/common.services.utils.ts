@@ -35,5 +35,18 @@ export function initLoginPayload(result): ILoginSuccess{
       gender: result.additionalUserInfo.profile?.gender,
       email: result.additionalUserInfo.profile?.email,
     }
-  }
+  };
+}
+
+export enum AlertTypeEnum {
+  WARNING = 'warning',
+  INFO = 'info',
+  STATUS = 'status',
+  VALID = 'valid',
+  ERROR = 'error',
+  FUNCTIONAL_ERROR = 'functionalError'
+}
+
+export function isNonEmptyString(str: string): boolean {
+  return !!str && str.trim().length > 0;
 }

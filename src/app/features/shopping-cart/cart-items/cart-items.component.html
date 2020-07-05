@@ -178,13 +178,10 @@
                     <span><strong>0</strong></span>
                   </li>
                 </ul>
-                <button (click)="sendCommand()" [disabled]="(nbSelectedItems$ | async) < 1" type="button"
+                <button (click)="sendCommand()" [disabled]="(nbSelectedItems$ | async) < 1 || commendAllreadySent" type="button"
                         class="btn btn-primary btn-block waves-effect waves-light">Transmettre la
                   commande
                 </button>
-                <ng-container *ngIf="!(connectedUser$ | async)?.isAuthenticated">
-                  <social-login></social-login>
-                </ng-container>
               </div>
             </div>
             <!-- Card -->

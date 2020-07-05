@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 import {Action, Store} from '@ngrx/store';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, tap, withLatestFrom} from 'rxjs/operators';
 
 import {LocalStorageService} from '../../core/local-storage/local-storage.service';
 
@@ -19,8 +19,11 @@ import {
 
 import {Go} from './router.actions';
 import {AuthService} from '@shared/services';
-import {selectorAuth} from '@app/auth/store/auth.selectors';
+import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AUTH_KEY} from '@app/auth/store/auth.reducer';
+import * as firebase from 'firebase';
+import {ItemInfos} from '@shared/interfaces';
+import {ActionItemToogleNotSelected} from '@app/features/store';
 
 @Injectable()
 export class AuthEffects {
@@ -39,7 +42,7 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActionTypes.LOGOUT),
       map((action: ActionAuthLogout) => {
-        this.localStorageService.setItem(AUTH_KEY, {});
+        this.localStorageService.setItem(AUTH_KEY, undefined);
         this.localStorageService.clearAll();
         this.cache.clearAll();
         return new ActionAuthLoggedOut();
@@ -71,11 +74,20 @@ export class AuthEffects {
     return this.actions$
       .pipe(
         ofType(AuthActionTypes.AUTH_REFRESH_USER_TOKEN),
-        map((action: ActionAuthLogged) => {
+        map((action) => {
           // Empty localStorage if you are about to login or logout.
           const currentUser = this.localStorageService.getItem(AUTH_KEY);
           if(currentUser) {
             this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
+            firebase.database().ref(`users/${currentUser.uid}/commends`).on('value', (snap) => {
+              if(snap.val()) {
+                (Object.values(snap.val())[0] as ItemInfos[]).forEach(item => {
+                  this.store$.dispatch(new ActionItemToogleNotSelected(item));
+                });
+              }
+            });
+          } else {
+            this.store$.dispatch(new ActionAuthLogout());
           }
           return of(undefined)
         })
@@ -95,17 +107,18 @@ export class AuthEffects {
               path: ['/']
             });
           }
-          if (state) {
-            const {error, ...authState} = selectorAuth(state);
+          if (state && !!state["core:auth:constantine"]) {
             this.localStorageService.setItem(AUTH_KEY, action.payload);
+            const authState = selectorConnectedUser(state);
             if (/^\/auth/.test(this.router.url)) {
               return new Go({
                 path: ['/']
               });
-            } else if (authState.isAuthenticated) {
+            } else if (!!authState) {
               return null;
             }
           }
+          return null;
         }),
         tap(action => {
           if (action) {

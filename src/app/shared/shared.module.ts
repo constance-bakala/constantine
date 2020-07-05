@@ -25,7 +25,7 @@ import {AdItemComponent2} from './components/advertisements/ad-item/ad-item-comp
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 import {IconeDividerComponent} from './components/icone-divider/icone-divider.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import { NavigationComponent } from './components/navigation/navigation.component';
+import {NavigationComponent} from './components/navigation/navigation.component';
 import {EnumToArrayPipe} from '@shared/pipes/enum-to-array/enum-to-array.pipe';
 import {PatternTransformPipe, TextTransformPipe, TranslatePipe} from '@shared/pipes';
 import {NumberOnlyDirective} from '@shared/directives/number-only/number-only.directive';
@@ -35,6 +35,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDialogModule} from '@angular/material/dialog';
+import {AlertComponent} from './components/alert/alert.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { SnackAlertComponent } from './components/snack-alert/snack-alert.component';
 
 @NgModule({
   imports: [
@@ -52,7 +55,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatListModule,
     MatToolbarModule,
     MatDialogModule,
-
+    MatSnackBarModule,
   ],
   declarations: [
     ContactComponent,
@@ -80,6 +83,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     NumberOnlyDirective,
     TruncatePipe,
     TranslatePipe,
+    AlertComponent,
+    SnackAlertComponent,
   ],
   exports: [
     CommonModule,

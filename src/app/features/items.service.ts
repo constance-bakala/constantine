@@ -19,7 +19,7 @@ export class ItemsService {
         nbItems = EARINGS_SIZE;
         categoryInfos = {
           name: ItemsCategoriesEnum.EARINGS,
-          title: 'Boubles d\'oreilles',
+          title: 'Boucles d\'oreilles',
           summary: 'Les boucles d\'oreilles ci-dessous représentent un échantillon de nos créations. Si vous avez une idée précise de ce que vous souhaitez n\'hésitez pas à nous contacter!',
           items: getAssetItems(nbItems, 'jewellery', 'earing', 'png', ItemsCategoriesEnum.EARINGS),
         };

@@ -22,6 +22,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {APP_CONFIG} from '@helpers/constants';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,14 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatIconModule,
     MatToolbarModule
   ],
-  providers: [ CacheService],
+  providers: [ CacheService,
+    {
+      provide: APP_CONFIG,
+      useValue: {
+        debounceTime: 600,
+        snackDuration: 5000
+      }
+    },],
   exports: [],
   bootstrap: [AppComponent]
 })

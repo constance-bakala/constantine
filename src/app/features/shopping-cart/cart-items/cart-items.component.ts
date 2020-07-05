@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {
+  ActionItemToogleNotSelected,
   ActionItemToogleSelect,
   ActionUpdateBasketItem,
   ItemSizeEnum,
@@ -15,8 +16,15 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import * as firebase from 'firebase/app';
 import {MatDialog} from '@angular/material/dialog';
-import {SigninComponent} from '@app/auth/signin/signin.component';
-import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
+import {AngularFireDatabase} from '@angular/fire/database';
+import {Go} from '@app/auth/store';
+import {AlertComponent} from '@shared/components/alert/alert.component';
+import {DataSnapshot} from '@angular/fire/database/interfaces';
+import {compareObjects} from '@helpers/compare.objects.utils';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {IAppConfig} from '@shared/interfaces/app.interfaces';
+import {APP_CONFIG} from '@helpers/constants';
+import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 
 @Component({
   selector: 'app-cart-items',
@@ -43,16 +51,21 @@ export class CartItemsComponent implements OnInit {
     label: 'XL'
   }];
 
-  connectedUser$: Observable<any>;
   items = [];
-  dialogRef = undefined;
+  userId = undefined;
+  commendAllreadySent = false;
+  private readonly snackDuration: number;
 
 
   constructor(private store: Store<any>,
               private fb: FormBuilder,
               public afAuth: AngularFireAuth,
               private fun: AngularFireFunctions,
-              private dialog: MatDialog) {
+              private db: AngularFireDatabase,
+              private dialog: MatDialog,
+              private snackBar: MatSnackBar,
+              @Inject(APP_CONFIG) appConfig: IAppConfig) {
+    this.snackDuration = appConfig.snackDuration;
   }
 
   ngOnInit(): void {
@@ -68,10 +81,34 @@ export class CartItemsComponent implements OnInit {
         }
       });
 
-    this.connectedUser$ = this.store.pipe(
-      select(selectorConnectedUser)
-    );
+    this.afAuth.authState.subscribe(user => {
+      if (!!user && !!user.uid) {
+        this.userId = user.uid;
+        firebase.database().ref(`users/${user.uid}/commends`).on('value', (snap) => {
+          let savedItems = this.getExistingItemsFromSnapShot(snap);
+          if (!!savedItems) {
+            savedItems.forEach(item => {
+              this.store.dispatch(new ActionItemToogleNotSelected(item));
+            });
+          }
+        });
+      }
+    });
   }
+
+  private getExistingItemsFromSnapShot(snap: DataSnapshot): ItemInfos[] {
+    let savedItems = undefined;
+    if (!!snap.val()) {
+      savedItems = Object.values(snap.val())[0] as ItemInfos[];
+      if (!!savedItems) {
+        if (!(savedItems instanceof Array)) {
+          savedItems = [savedItems];
+        }
+      }
+    }
+    return savedItems;
+  }
+
 
   get basketItemsArray(): FormArray {
     return this.basketFormGroup.get('basketItems') as FormArray;
@@ -105,7 +142,7 @@ export class CartItemsComponent implements OnInit {
     ).subscribe(() => {
       this.store.dispatch(new ActionUpdateBasketItem(group.getRawValue()))
     });
-    return group
+    return group;
   }
 
 
@@ -136,27 +173,46 @@ export class CartItemsComponent implements OnInit {
 
   }
 
-  /*
-    sendCommand1() {
-      this.sgMsg.setApiKey(environment.firebaseConfig.apiKey);
-      const data = {
-        from: 'delice.eternel.gabon@gmail.com',
-        templateId: 'd-0116c8e99b5d41f084d82628bec04620',
-        to: 'delice.eternel.gabon@gmail.com',
-        subject: 'Test 2',
-      };
-      this.sgMsg.send(data)
-        .then(success => console.log('sent email successfully!', success))
-        .catch(error => console.log(error))
-    }
-   */
-
-
   sendCommand() {
-    if (!!firebase.auth().currentUser) {
-      this.fillCommendAndSend(firebase.auth().currentUser);
+    if (!!firebase.auth().currentUser?.uid) {
+      firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).on('value', (snap) => {
+        let existingCommands = this.getExistingItemsFromSnapShot(snap);
+        if (!!existingCommands) {
+          // It is important to protect the mail option as we have a limited number of email per day!
+          // The comparison bellow also avoid sending to much request to the firebase backend!
+          if (!this.items || this.items.length < 1 || compareObjects(existingCommands, this.items)) {
+           if(!this.commendAllreadySent) {
+             let dialogRef = this.dialog.open(AlertComponent, {
+               panelClass: 'signin-dialog',
+               disableClose: false,
+               minWidth: 300,
+               autoFocus: true,
+             });
+             dialogRef.afterClosed().subscribe(
+               () => {
+                 dialogRef = undefined;
+               }
+             )
+           }
+          } else {
+
+            firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).set(null)
+              .then(() => {
+                this.commendAllreadySent = true;
+                this.db.list(`users/${firebase.auth().currentUser.uid}/commends`).push(this.items);
+                this.sendCommendNotificationMails(firebase.auth().currentUser);
+                this.snackBar.openFromComponent(SnackAlertComponent,
+                  {
+                    duration: this.snackDuration,
+                    politeness: 'polite'
+                });
+              });
+          }
+        }
+      });
     } else {
-      this.dialogRef = this.dialog.open(SigninComponent, {
+      /*
+      this.dialogRef = this.dialog.open(LoginComponent, {
         panelClass: 'signin-dialog',
         disableClose: false,
         autoFocus: true,
@@ -165,14 +221,17 @@ export class CartItemsComponent implements OnInit {
         () => {
           this.dialogRef = undefined;
         }
-      )
+      )*/
+      this.store.dispatch(new Go({
+        path: ['/auth/signin']
+      }));
     }
   }
 
-  private fillCommendAndSend(user: firebase.User) {
+  private sendCommendNotificationMails(user: firebase.User) {
     const callable = this.fun.httpsCallable('genericSendgridEmail');
     const data = {
-      text: `Commande reçue: ` + JSON.stringify(this.items),
+      text: '',
       displayName: user.displayName,
       email: user.email,
       emailVerified: user.emailVerified,
@@ -180,7 +239,8 @@ export class CartItemsComponent implements OnInit {
       photoURL: user.photoURL,
       providerId: user.providerId,
       uid: user.uid,
-      subject: 'Nouvelle commande internet!'
+      subject: 'Nouvelle commande internet!',
+      html: `Commande reçue: ` + JSON.stringify(this.items)
     };
     callable(data).subscribe(result => console.log(result));
   }

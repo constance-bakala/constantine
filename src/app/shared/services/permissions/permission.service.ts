@@ -7,17 +7,9 @@ import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionService {
-  user: ILoginSuccess;
 
   constructor(store: Store<any>) {
-    store.subscribe(state => {
-      if (state) {
-        const authState = selectorAuth(state);
-        if (authState && authState.user) {
-          this.user = authState.user;
-        }
-      }
-    });
+
   }
 
   /**
@@ -26,11 +18,7 @@ export class PermissionService {
    * Utile afin d'éviter les exceptions
    */
   private isPermissionsListEmpty() {
-    return (
-      !this.user ||
-      !Array.isArray(this.user.userHabilitations) ||
-      this.user.userHabilitations.length === 0
-    );
+    return true;
   }
 
   /**
@@ -43,9 +31,11 @@ export class PermissionService {
       return false;
     }
 
-    return (
+    return true;
+    /*return (
       PERMISSIONS[p] &&
       this.user.userHabilitations.lastIndexOf(PERMISSIONS[p].index) >= 0
     );
+    */
   }
 }
