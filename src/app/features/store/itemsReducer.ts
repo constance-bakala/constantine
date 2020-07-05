@@ -11,7 +11,7 @@ const intialState: ItemsState = {
   },
   dresses: {
     name: ItemsCategoriesEnum.DRESSES,
-    title: 'Chargement des boucles des vêtements',
+    title: 'Chargement des vêtements',
     summary: 'Veuillez patienter ...',
     items: []
   },
@@ -26,6 +26,8 @@ const intialState: ItemsState = {
 export function itemsReducer(state: ItemsState = intialState,
                              action: ItemsActions): ItemsState {
   switch (action.type) {
+    case ItemsActionTypes.TOOGLE_SELECT_ITEM_NOT_SELECTED:
+      return toogleSelectItem(state, action.payload, true);
     case ItemsActionTypes.TOOGLE_SELECT_ITEM:
       return toogleSelectItem(state, action.payload);
     case ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS:

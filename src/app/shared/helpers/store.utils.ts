@@ -36,11 +36,13 @@ export function getCategoryByName(state, categoryName: ItemsCategoriesEnum): Cat
   return category as Category;
 }
 
-export function toogleSelectItem(state: ItemsState, anItem: ItemInfos): ItemsState {
+export function toogleSelectItem(state: ItemsState, anItem: ItemInfos, forceSelect?: boolean): ItemsState {
   let category = getCategoryByName(state, anItem.category);
   let foundItem: ItemInfos = findItemByReference(category.items, anItem.reference);
-  if (!!foundItem) {
+  if (!!foundItem && !forceSelect) {
     foundItem.selected = !foundItem.selected;
+  } else {
+    foundItem.selected = true;
   }
   return updateItemState(state, category)
 }

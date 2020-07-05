@@ -15,6 +15,8 @@ export enum ItemsActionTypes {
   TOOGLE_SELECT_ITEM_SUCCESS = '[PORTFOLIO] Item selected successfully',
   TOOGLE_SELECT_ITEM_ERROR = '[PORTFOLIO] Fail selected item',
 
+  TOOGLE_SELECT_ITEM_NOT_SELECTED = '[PORTFOLIO] Toogle not selected item from firebase',
+
   UPDATE_BASKET_ITEM = '[BASKET] Changing basket item'
 }
 
@@ -50,6 +52,13 @@ export class ActionItemsRetrieveError implements Action {
 }
 
 ///////////////////////// TOOGLE SELECT ITEM ///////////////////
+export class ActionItemToogleNotSelected implements Action {
+  readonly type = ItemsActionTypes.TOOGLE_SELECT_ITEM_NOT_SELECTED;
+
+  constructor(public payload: ItemInfos) {
+  }
+}
+
 export class ActionItemToogleSelect implements Action {
   readonly type = ItemsActionTypes.TOOGLE_SELECT_ITEM;
 
@@ -98,6 +107,7 @@ export type ItemsActions =
   | ActionItemsRetrieveSuccess
   | ActionItemsRetrieveError
   | ActionItemToogleSelect
+  | ActionItemToogleNotSelected
   | ActionItemToogleSelectSuccess
   | ActionItemToogleSelectError
   | ActionUpdateBasketItem;

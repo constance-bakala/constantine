@@ -2,9 +2,9 @@ import {Component, NgZone, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
-import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {ActionAuthLoggedOut, ActionAuthLogout} from '@app/auth/store/auth.actions';
+import {ActionAuthLogout, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
+import {IUser} from '@shared/interfaces';
 
 declare var $: any;
 
@@ -18,6 +18,7 @@ export class NavigationComponent implements OnInit {
   nbSelectedItems$: Observable<number>;
   connectedUser$: Observable<any>;
   _displayName: string;
+  connectedUser: IUser;
 
   constructor(private store: Store<any>, private afAuth: AngularFireAuth, private ngZone: NgZone,) {
   }
@@ -87,24 +88,20 @@ export class NavigationComponent implements OnInit {
       select(selectNbChosenItems)
     );
 
-    this.connectedUser$ = this.store.pipe(
-      select(selectorConnectedUser)
-    );
-    this.connectedUser$.subscribe(connectedUser => {
-      this._displayName = connectedUser.user?.additionalInfos?.prenom ?? "" + " " + connectedUser.user?.additionalInfos?.nom ?? "";
-      this._displayName = (this._displayName?.trim() ?? connectedUser.user.email);
-      this._displayName = '(' + this._displayName ?? '???' + ')';
+    this.afAuth.authState.subscribe(connectedUser => {
+      // If the user is remotely connected
+      if(!this.connectedUser && !!connectedUser) {
+        this.store.dispatch(new AuthRefreshUserToken());
+      }
+      if(!connectedUser){
+       // this.store.dispatch(new ActionAuthLogout());
+      }
     });
   }
 
-  get displayName() {
-    return this._displayName;
-  }
-
-
   disconnect() {
     this.ngZone.run(() => {
-      this.afAuth.signOut().then(r => this.store.dispatch(new ActionAuthLogout()));
+      this.afAuth.signOut().then(() => this.store.dispatch(new ActionAuthLogout()));
     });
   }
 }

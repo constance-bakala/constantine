@@ -6,20 +6,17 @@ export const AUTH_KEY = 'CORE:AUTH:CONSTANTINE';
 
 
 export interface AuthState {
-  isAuthenticated: boolean;
-  isAdmin?: boolean;
   error?: HttpErrorResponse;
-  token?: string;
   loading: boolean;
   user?: ILoginSuccess;
-  other?: any;
 }
 
 export const authInitialState: AuthState = {
   loading: false,
-  isAuthenticated: false,
-  isAdmin: false
-};
+  user: undefined,
+  error: undefined
+}
+;
 
 export function authReducer(state: AuthState = authInitialState,
                             action: AuthActions): AuthState {
@@ -40,32 +37,23 @@ export function authReducer(state: AuthState = authInitialState,
       return {
         ...state,
         loading: false,
-        error: null
+        error: null,
+        user: action.payload
       };
     case AuthActionTypes.LOGGED_IN:
       return {
-        ...state,
-        isAuthenticated: !!action.payload?.token,
-        isAdmin: false,
         error: undefined,
-        token: action.payload?.token,
         loading: false,
         user: action.payload,
       };
     case AuthActionTypes.LOGIN:
       return {
-        ...state,
-        loading: true
+        ...authInitialState,
+        loading: true,
+        error: undefined
       };
     case AuthActionTypes.LOGOUT:
-      return {
-        ...state,
-        isAuthenticated: false,
-        isAdmin: false,
-        token: undefined,
-        loading: true,
-        user: undefined
-      };
+      return authInitialState;
     case AuthActionTypes.LOGGED_OUT:
       return {
         ...state,

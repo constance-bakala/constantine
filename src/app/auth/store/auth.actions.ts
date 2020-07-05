@@ -38,6 +38,10 @@ export class AuthSignup implements Action {
 
 export class AuthSignupSuccess implements Action {
   readonly type = AuthActionTypes.AUTH_SIGNUP_SUCCESS;
+
+  constructor(public payload: ILoginSuccess) {
+  }
+
 }
 
 export class AuthSignupError implements Action {
