@@ -1,4 +1,4 @@
-import {Category, ItemInfos} from '@shared/interfaces';
+import {Category, CategoryInfos, ItemInfos} from '@shared/interfaces';
 import {createSelector} from '@ngrx/store';
 
 export function selectEarings(state): Category {
@@ -24,7 +24,7 @@ export const selectNbChosenItems = createSelector(
   }
 );
 
-export function computeTotalQuantity(items: ItemInfos[]): number {
+function computeTotalQuantity(items: ItemInfos[]): number {
   return items.map(item => item.basketInfos?.selectedQuantity ?? 1)
     .reduce((sum, current) => sum + current, 0);
 }
@@ -38,6 +38,28 @@ export const selectChosenItems = createSelector(
       .filter(earing => earing.selected)
       .concat(dresses.items.filter(dress => dress.selected))
       .concat(masks.items.filter(mask => mask.selected));
+  }
+);
+
+export const selectExistingCategory = createSelector(
+  selectEarings,
+  selectDresses,
+  selectMasks,
+  (earings: Category, dresses: Category, masks: Category) => {
+    return {
+      earings: <CategoryInfos>{
+        title: earings.title,
+        name: earings.name,
+      },
+      dresses: <CategoryInfos>{
+        title: dresses.title,
+        name: dresses.name
+      },
+      masks: <CategoryInfos>{
+        title: masks.title,
+        name: masks.name
+      }
+    };
   }
 );
 

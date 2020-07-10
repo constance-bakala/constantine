@@ -4,6 +4,14 @@
       <div class="container text-center">
         <h3 class="mb-0">{{category.title}}</h3>
         <p class="mb-2 text-muted">{{category.summary}}</p>
+
+        <p class="mb-2 text-muted text-uppercase small">
+          <span class="small">Voir aussi&nbsp;:&nbsp;</span>
+            <button *ngFor="let categoryDesc of _otherCategories" type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="gotoTarget(categoryDesc.name)"><i
+              class="fas fa-shopping-cart pr-2"></i>
+              <span>{{categoryDesc.title}}</span>
+            </button>
+        </p>
       </div>
     </div>
   </div>
@@ -24,7 +32,7 @@
               <div class="">
                 <div class="view zoom overlay z-depth-2 rounded">
                   <img class="img-fluid w-100" src="{{item.path}}" alt="Sample">
-                  <a href="#!">
+                  <a>
                     <div class="mask">
                       <img class="img-fluid w-100" src="{{item.path}}">
                       <div class="mask rgba-black-slight"></div>

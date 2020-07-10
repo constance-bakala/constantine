@@ -4,6 +4,11 @@ export class Category {
   summary: string;
   items: ItemInfos[]
 }
+export class CategoryInfos {
+  name: ItemsCategoriesEnum;
+  title: string;
+
+}
 
 export enum ItemSizeEnum {
   S = 'S',
