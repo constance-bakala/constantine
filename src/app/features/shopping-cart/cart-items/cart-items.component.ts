@@ -10,8 +10,8 @@ import {
 import {ItemInfos} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {combineLatest, Observable} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireFunctions} from '@angular/fire/functions';
 import * as firebase from 'firebase/app';
@@ -25,6 +25,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {IAppConfig} from '@shared/interfaces/app.interfaces';
 import {APP_CONFIG} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
+import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 
 @Component({
   selector: 'app-cart-items',
@@ -81,19 +82,34 @@ export class CartItemsComponent implements OnInit {
         }
       });
 
-    this.afAuth.authState.subscribe(user => {
-      if (!!user && !!user.uid) {
-        this.userId = user.uid;
-        firebase.database().ref(`users/${user.uid}/commends`).on('value', (snap) => {
-          let savedItems = this.getExistingItemsFromSnapShot(snap);
-          if (!!savedItems) {
-            savedItems.forEach(item => {
-              this.store.dispatch(new ActionItemToogleNotSelected(item));
-            });
+    combineLatest([
+      this.store.select(selectorConnectedUser, this.afAuth.authState)
+        .pipe(
+          filter(old => !!old),
+          distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))),
+      this.afAuth.authState
+        .pipe(
+          filter(newConnected => !!newConnected),
+          distinctUntilChanged((a, b) => a.uid === b.uid)),
+    ])
+      .pipe(map(([oldUser, newUser]) => {
+        if (!!newUser?.uid) {
+          this.userId = newUser.uid;
+          firebase.database().ref(`users/${newUser.uid}/commends`).on('value', (snap) => {
+            let savedItems = this.getExistingItemsFromSnapShot(snap);
+            if (!!savedItems) {
+              savedItems.forEach(item => {
+                this.store.dispatch(new ActionItemToogleNotSelected(item));
+              });
+            }
+          });
+          if (newUser.uid && oldUser.additionalInfos.uid && newUser.uid !== oldUser.additionalInfos.uid && oldUser?.isAnonymous) {
+            firebase.auth().currentUser.linkWithCredential(oldUser.credential)
+              .then(userCred => console.log(userCred));
           }
-        });
-      }
-    });
+        }
+        return true
+      })).subscribe();
   }
 
   private getExistingItemsFromSnapShot(snap: DataSnapshot): ItemInfos[] {
@@ -176,60 +192,67 @@ export class CartItemsComponent implements OnInit {
   sendCommand() {
     if (!!firebase.auth().currentUser?.uid) {
       firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).on('value', (snap) => {
-        let existingCommands = this.getExistingItemsFromSnapShot(snap);
-        if (!!existingCommands) {
+        // Don't move this test away from here! because this block will be fired after each modification of the database!!!
+        if (!this.commendAllreadySent) {
+          let existingCommands = this.getExistingItemsFromSnapShot(snap);
           // It is important to protect the mail option as we have a limited number of email per day!
           // The comparison bellow also avoid sending to much request to the firebase backend!
-          if (!this.items || this.items.length < 1 || compareObjects(existingCommands, this.items)) {
-           if(!this.commendAllreadySent) {
-             let dialogRef = this.dialog.open(AlertComponent, {
-               panelClass: 'signin-dialog',
-               disableClose: false,
-               minWidth: 300,
-               autoFocus: true,
-             });
-             dialogRef.afterClosed().subscribe(
-               () => {
-                 dialogRef = undefined;
-               }
-             )
-           }
+          if (!this.items || this.items.length < 1 || (!!existingCommands && compareObjects(existingCommands, this.items))) {
+            this.alertCommandNotSent('Cette commande existe déjà! Vous devez la mettre à jour pour la transmettre de nouveau!');
           } else {
-
+            // We update commendAllreadySent to true to avoid firing the database value above a second time! => this setting should stay here!!
+            this.commendAllreadySent = true;
             firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).set(null)
               .then(() => {
-                this.commendAllreadySent = true;
                 this.db.list(`users/${firebase.auth().currentUser.uid}/commends`).push(this.items);
-                this.sendCommendNotificationMails(firebase.auth().currentUser);
-                this.snackBar.openFromComponent(SnackAlertComponent,
-                  {
-                    duration: this.snackDuration,
-                    politeness: 'polite'
-                });
+                if (!firebase.auth().currentUser?.isAnonymous) {
+                  this.sendCommendNotificationMails(firebase.auth().currentUser);
+                  this.snackBar.openFromComponent(SnackAlertComponent,
+                    {
+                      duration: this.snackDuration,
+                      politeness: 'polite',
+                    });
+                } else {
+                  this.alertCommandNotSent('Vous devez être authentifié pour envoyer une commande!');
+                }
               });
           }
         }
       });
     } else {
-      /*
-      this.dialogRef = this.dialog.open(LoginComponent, {
-        panelClass: 'signin-dialog',
-        disableClose: false,
-        autoFocus: true,
-      });
-      this.dialogRef.afterClose().subscribe(
-        () => {
-          this.dialogRef = undefined;
-        }
-      )*/
-      this.store.dispatch(new Go({
-        path: ['/auth/signin']
-      }));
+      firebase.auth().signInAnonymously()
+        .then(user => {
+          if (user) {
+            this.sendCommand();
+          } else {
+            this.store.dispatch(new Go({
+              path: ['/auth/signin']
+            }));
+          }
+        });
     }
   }
 
+  private alertCommandNotSent(message: string) {
+    let dialogRef = this.dialog.open(AlertComponent, {
+      panelClass: 'signin-dialog',
+      disableClose: false,
+      minWidth: 300,
+      autoFocus: true,
+      data: {
+        disableClose: false,
+        title: 'Commande non envoyée',
+        message: message,
+      }
+    });
+    dialogRef.afterClosed().subscribe(
+      () => {
+        dialogRef = undefined;
+      }
+    );
+  }
+
   private sendCommendNotificationMails(user: firebase.User) {
-    const callable = this.fun.httpsCallable('genericSendgridEmail');
     const data = {
       text: '',
       displayName: user.displayName,
@@ -242,7 +265,8 @@ export class CartItemsComponent implements OnInit {
       subject: 'Nouvelle commande internet!',
       html: `Commande reçue: ` + JSON.stringify(this.items)
     };
-    callable(data).subscribe(result => console.log(result));
+    this.fun.httpsCallable('genericSendgridEmail')(data)
+      .subscribe(result => console.log(result));
   }
 
 

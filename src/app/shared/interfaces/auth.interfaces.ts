@@ -1,8 +1,13 @@
+import * as firebaseui from 'firebaseui';
+import * as firebase from 'firebase';
+
 export interface ILoginSuccess {
   ssoToken?: string;
   token?: string;
   userHabilitations?: number[];
   indexRole: number;
+  isAnonymous: boolean;
+  credential: firebase.auth.AuthCredential;
   actions?: {
     [name: string]: boolean;
   };
@@ -19,7 +24,7 @@ export interface IUser {
   prenom: string;
   gender?: number;
   email: string;
-  id?: string,
+  uid?: string,
   providerId?: string,
   local?: string,
   picture?: string,

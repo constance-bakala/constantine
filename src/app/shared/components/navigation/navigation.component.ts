@@ -16,8 +16,6 @@ declare var $: any;
 export class NavigationComponent implements OnInit {
 
   nbSelectedItems$: Observable<number>;
-  connectedUser$: Observable<any>;
-  _displayName: string;
   connectedUser: IUser;
 
   constructor(private store: Store<any>, public afAuth: AngularFireAuth, private ngZone: NgZone,) {
@@ -88,6 +86,7 @@ export class NavigationComponent implements OnInit {
       select(selectNbChosenItems)
     );
 
+    // here we just refresh the token if user is authenticated
     this.afAuth.authState.subscribe(connectedUser => {
       // If the user is remotely connected
       if(!this.connectedUser && !!connectedUser) {

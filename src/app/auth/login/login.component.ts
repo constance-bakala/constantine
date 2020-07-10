@@ -23,11 +23,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     },
     {
       provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      scopes: [
-        'public_profile',
-        'email',
-        'user_likes',
-      ],
       customParameters: {
         'lang': 'fr'
       }
