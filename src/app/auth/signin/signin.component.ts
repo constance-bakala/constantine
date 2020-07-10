@@ -72,9 +72,11 @@ export class SigninComponent implements OnInit, OnDestroy {
           token: result?.user?.refreshToken,
           userHabilitations: [],
           indexRole: -1,
+          isAnonymous: result.user.isAnonymous,
+          credential: result.credential,
           actions: {},
           additionalInfos: {
-            id: result.user?.uid,
+            uid: result.user?.uid,
             providerId: result.additionalUserInfo?.providerId,
             // local: result.user?.oa,
             picture: result.user?.photoURL,

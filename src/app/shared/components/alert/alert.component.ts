@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {MatDialogRef} from '@angular/material/dialog';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-alert',
@@ -7,7 +7,14 @@ import {MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent {
-  constructor(private dialogRef: MatDialogRef<AlertComponent>) {
+
+  _data: {
+    title: string,
+    message: string
+  };
+  constructor(private dialogRef: MatDialogRef<AlertComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+    this._data = data;
   }
 
   closed() {

@@ -25,8 +25,10 @@ export function initLoginPayload(result): ILoginSuccess{
     userHabilitations: [],
     indexRole: -1,
     actions: {},
+    isAnonymous: result.user.isAnonymous,
+    credential: result.credential,
     additionalInfos: {
-      id: result.additionalUserInfo.profile?.id,
+      uid: result.additionalUserInfo.profile?.id,
       providerId: result.additionalUserInfo?.providerId,
       local: result.additionalUserInfo.profile?.locale,
       picture: result.additionalUserInfo.profile?.picture ?? result.additionalUserInfo.profile?.picture?.data?.url,

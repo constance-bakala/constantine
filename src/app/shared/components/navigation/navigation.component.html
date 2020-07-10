@@ -44,14 +44,14 @@
           </a>
         </li>
 
-        <li class="nav-item mx-0 mx-lg-1" *ngIf="!(afAuth.authState | async)">
+        <li class="nav-item mx-0 mx-lg-1" *ngIf="!(afAuth.authState | async) || (afAuth.authState | async)?.isAnonymous">
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" [routerLink]="['/auth/signin']">
             <mat-icon>account_circle</mat-icon>
             &nbsp;<span class="ajust">Connexion</span>
           </a>
         </li>
 
-        <li class="nav-item mx-0 mx-lg-1" *ngIf="!!(afAuth.authState | async)">
+        <li class="nav-item mx-0 mx-lg-1" *ngIf="!!(afAuth.authState | async) && !(afAuth.authState | async)?.isAnonymous">
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" (click)="disconnect()">
             <mat-icon>exit_to_app</mat-icon>
             &nbsp;<span class="ajust">Déconnexion</span>
@@ -64,8 +64,8 @@
     </div>
   </div>
   <div class="filler"></div>
-  <ng-container *ngIf="(afAuth.authState | async)">
+  <ng-container *ngIf="(afAuth.authState | async) && !(afAuth.authState | async)?.isAnonymous">
     <img
-      class="user-avatar" [src]="(afAuth.authState | async).photoURL" *ngIf="!!((afAuth.authState | async)?.photoURL)">
+      class="user-avatar" [src]="(afAuth.authState | async)?.photoURL" *ngIf="!!((afAuth.authState | async)?.photoURL)">
   </ng-container>
 </nav>
