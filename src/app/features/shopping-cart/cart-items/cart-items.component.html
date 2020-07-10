@@ -5,7 +5,6 @@
       <div class="d-flex align-items-center h-100">
         <div class="container text-center">
           <h3 class="mb-0">Votre panier</h3>
-
         </div>
       </div>
     </div>
@@ -32,7 +31,7 @@
                       <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
                         <img class="img-fluid w-100"
                              src="{{itemGroup.get('path').value}}" alt="{{itemGroup.get('reference').value}}">
-                        <a href="#!">
+                        <a>
                           <div class="mask">
                             <img class="img-fluid w-100" src="{{itemGroup.get('path').value}}">
                             <div class="mask rgba-black-slight"></div>
@@ -69,7 +68,7 @@
                             </p>
                           </div>
                           <div>
-                            <div class="def-number-input number-input safari_only mb-0 w-100">
+                            <div class="def-number-input number-input safari_only mb-0">
                               <button (click)="stepDown(i)"
                                       class="minus"></button>
                               <input class="quantity" name="quantity" value="1" type="number"

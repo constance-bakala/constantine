@@ -1,5 +1,11 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, ItemInfos} from '@shared/interfaces/image.interfaces';
+import {Category, CategoryInfos, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces/image.interfaces';
+
+export interface ExistingCategories {
+  earings: CategoryInfos;
+  dresses: CategoryInfos;
+  masks: CategoryInfos;
+}
 
 @Component({
   selector: 'app-portfolio-list',
@@ -10,9 +16,18 @@ import {Category, ItemInfos} from '@shared/interfaces/image.interfaces';
 export class PortfolioListComponent implements OnInit {
 
   @Input() category: Category;
-  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
 
-  constructor() { }
+  @Input()
+  set categoryInfos(categories: ExistingCategories) {
+      this._otherCategories = this.getOtherLinks(this.category?.name, categories);
+  };
+
+  _otherCategories: CategoryInfos[];
+  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
+  @Output() navigateAway: EventEmitter<string> = new EventEmitter();
+
+  constructor() {
+  }
 
   ngOnInit() {
   }
@@ -21,4 +36,13 @@ export class PortfolioListComponent implements OnInit {
     this.onToogleSelect.emit(selectedImage);
   }
 
+  gotoTarget(name: ItemsCategoriesEnum) {
+    this.navigateAway.emit(name.toLowerCase());
+  }
+
+  getOtherLinks(name: ItemsCategoriesEnum, categoryInfos: ExistingCategories): CategoryInfos[] {
+    return Object.keys(categoryInfos)
+      .filter(key => key !== name.toLowerCase())
+      .map(targetKey => categoryInfos[targetKey]);
+  }
 }

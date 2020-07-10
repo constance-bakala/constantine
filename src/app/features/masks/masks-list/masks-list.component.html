@@ -1,4 +1,6 @@
 <app-portfolio-list
-        [category]="masks$ | async"
-  (onToogleSelect)="onToogleSelect($event)">
+  [category]="masks$ | async"
+  (onToogleSelect)="onToogleSelect($event)"
+  [categoryInfos]="categoryInfos$ | async"
+  (navigateAway)="navigateToCategory($event)">
 </app-portfolio-list>

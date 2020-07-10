@@ -1,4 +1,6 @@
 <app-portfolio-list
   [category]="earings$ | async"
+  [categoryInfos]="categoryInfos$ | async"
+  (navigateAway)="navigateToCategory($event)"
   (onToogleSelect)="onToogleSelect($event)">
 </app-portfolio-list>
