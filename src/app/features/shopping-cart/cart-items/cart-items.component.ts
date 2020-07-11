@@ -256,8 +256,8 @@ export class CartItemsComponent implements OnInit {
   }
 
   private sendCommendNotificationMails(user: firebase.User) {
-
-    let prefix = window.location.host;
+    const protocol = window.location.protocol;
+    let prefix = protocol + '//' + window.location.host;
     if(prefix.indexOf('gitHub')>0) {
       prefix = prefix+'/constantine/'+environment.appId;
     }
