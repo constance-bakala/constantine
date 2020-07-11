@@ -13,12 +13,6 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto smooth-scroll">
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" [routerLink]="[ '/shopping-cart' ]">
-            <mat-icon>shopping_cart</mat-icon>
-            &nbsp;<span class="badge badge-pill red">{{nbSelectedItems$ | async}}</span>
-          </a>
-        </li>
-        <li class="nav-item mx-0 mx-lg-1">
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">
             <!--mat-icon>store</mat-icon-->
             &nbsp;<span>PORTFOLIO</span>
@@ -50,7 +44,12 @@
             &nbsp;<span class="ajust">Connexion</span>
           </a>
         </li>
-
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" [routerLink]="[ '/shopping-cart' ]">
+            <mat-icon>shopping_cart</mat-icon>
+            &nbsp;<span class="badge badge-pill red">{{nbSelectedItems$ | async}}</span>
+          </a>
+        </li>
         <li class="nav-item mx-0 mx-lg-1" *ngIf="!!(afAuth.authState | async) && !(afAuth.authState | async)?.isAnonymous">
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" (click)="disconnect()">
             <mat-icon>exit_to_app</mat-icon>

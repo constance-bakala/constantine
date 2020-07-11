@@ -87,7 +87,7 @@ export class AuthEffects {
               }
             });
           } else {
-            this.store$.dispatch(new ActionAuthLogout());
+            // this.store$.dispatch(new ActionAuthLogout());
           }
           return of(undefined)
         })

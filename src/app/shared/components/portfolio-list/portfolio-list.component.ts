@@ -16,15 +16,10 @@ export interface ExistingCategories {
 export class PortfolioListComponent implements OnInit {
 
   @Input() category: Category;
-
   @Input()
-  set categoryInfos(categories: ExistingCategories) {
-      this._otherCategories = this.getOtherLinks(this.category?.name, categories);
-  };
-
-  _otherCategories: CategoryInfos[];
-  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
+  categoryInfos : ExistingCategories;
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
+  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
 
   constructor() {
   }
@@ -36,13 +31,7 @@ export class PortfolioListComponent implements OnInit {
     this.onToogleSelect.emit(selectedImage);
   }
 
-  gotoTarget(name: ItemsCategoriesEnum) {
-    this.navigateAway.emit(name.toLowerCase());
-  }
-
-  getOtherLinks(name: ItemsCategoriesEnum, categoryInfos: ExistingCategories): CategoryInfos[] {
-    return Object.keys(categoryInfos)
-      .filter(key => key !== name.toLowerCase())
-      .map(targetKey => categoryInfos[targetKey]);
+  gotoTarget(name: string) {
+    this.navigateAway.emit(name);
   }
 }

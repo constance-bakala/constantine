@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {
   ActionItemToogleNotSelected,
@@ -6,9 +6,10 @@ import {
   ActionUpdateBasketItem,
   ItemSizeEnum,
   selectChosenItems,
+  selectExistingCategory,
   selectNbChosenItems
 } from '@app/features/store';
-import {ItemInfos} from '@shared/interfaces';
+import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
@@ -27,8 +28,8 @@ import {IAppConfig} from '@shared/interfaces/app.interfaces';
 import {APP_CONFIG} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
-import {test} from 'fuzzy';
 import {environment} from '@env/environment';
+import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 
 @Component({
   selector: 'app-cart-items',
@@ -59,7 +60,10 @@ export class CartItemsComponent implements OnInit {
   userId = undefined;
   commendAllreadySent = false;
   private readonly snackDuration: number;
+  ItemsCategoriesEnum = ItemsCategoriesEnum;
 
+  @Input()
+  categoryInfos$: Observable<ExistingCategories>;
 
   constructor(private store: Store<any>,
               private fb: FormBuilder,
@@ -73,9 +77,13 @@ export class CartItemsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
     this.nbSelectedItems$ = this.store.pipe(
       select(selectNbChosenItems)
     );
+
+    this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
 
     this.store.pipe(select(selectChosenItems))
       .subscribe((items: ItemInfos[]) => {
@@ -258,11 +266,11 @@ export class CartItemsComponent implements OnInit {
   private sendCommendNotificationMails(user: firebase.User) {
     const protocol = window.location.protocol;
     let prefix = protocol + '//' + window.location.host;
-    if(prefix.indexOf('gitHub')>0) {
-      prefix = prefix+'/constantine/'+environment.appId;
+    if (prefix.indexOf('gitHub') > 0) {
+      prefix = prefix + environment.appId;
     }
     const emailData = _.cloneDeep(this.items).map(item => {
-      item.path = prefix +'/'+ item.path;
+      item.path = prefix + '/' + item.path;
       delete item.loading;
       delete item.selected;
       delete item.index;
@@ -282,4 +290,7 @@ export class CartItemsComponent implements OnInit {
   }
 
 
+  gotoTarget(name: string) {
+    this.store.dispatch(new Go({path: ['/' + name]}));
+  }
 }

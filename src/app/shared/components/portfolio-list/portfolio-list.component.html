@@ -4,14 +4,11 @@
       <div class="container text-center">
         <h3 class="mb-0">{{category.title}}</h3>
         <p class="mb-2 text-muted">{{category.summary}}</p>
-
-        <p class="mb-2 text-muted text-uppercase small"> <!-- btn-outline-info -->
-          <span class="small alert-info">Voir aussi&nbsp;:&nbsp;</span>
-            <button *ngFor="let categoryDesc of _otherCategories" type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="gotoTarget(categoryDesc.name)"><i
-              class="fas fa-shopping-cart pr-2"></i>
-              <span>{{categoryDesc.title}}</span>
-            </button>
-        </p>
+        <app-category-buttons
+          [categoryToAvoid]="category.name"
+          [categoryInfos]="categoryInfos"
+          (navigateAway)="gotoTarget($event)">
+        </app-category-buttons>
       </div>
     </div>
   </div>
