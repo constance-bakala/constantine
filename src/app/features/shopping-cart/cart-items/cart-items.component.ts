@@ -1,4 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
+import * as _ from 'lodash';
 import {
   ActionItemToogleNotSelected,
   ActionItemToogleSelect,
@@ -26,6 +27,8 @@ import {IAppConfig} from '@shared/interfaces/app.interfaces';
 import {APP_CONFIG} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
+import {test} from 'fuzzy';
+import {environment} from '@env/environment';
 
 @Component({
   selector: 'app-cart-items',
@@ -52,7 +55,7 @@ export class CartItemsComponent implements OnInit {
     label: 'XL'
   }];
 
-  items = [];
+  items: ItemInfos[] = [];
   userId = undefined;
   commendAllreadySent = false;
   private readonly snackDuration: number;
@@ -253,20 +256,29 @@ export class CartItemsComponent implements OnInit {
   }
 
   private sendCommendNotificationMails(user: firebase.User) {
+
+    let prefix = window.location.hostname;
+    if(prefix.indexOf('gitHub')>0) {
+      prefix = prefix+'/constantine'+environment.appId;
+    }
+    const emailData = _.cloneDeep(this.items).map(item => {
+      item.path = prefix +'/'+ item.path;
+      delete item.loading;
+      delete item.selected;
+      delete item.index;
+      return item;
+    });
     const data = {
       text: '',
       displayName: user.displayName,
-      email: user.email,
-      emailVerified: user.emailVerified,
-      phoneNumber: user.phoneNumber,
-      photoURL: user.photoURL,
-      providerId: user.providerId,
+      shoppingCardLink: prefix + "/#/shopping-cart",
       uid: user.uid,
-      subject: 'Nouvelle commande internet!',
-      html: `Commande reçue: ` + JSON.stringify(this.items)
+      subject: 'Commande Délice Éternel!',
+      items: emailData
     };
     this.fun.httpsCallable('genericSendgridEmail')(data)
-      .subscribe(result => console.log(result));
+      .subscribe(result => console.log(result),
+        error => console.log(error));
   }
 
 

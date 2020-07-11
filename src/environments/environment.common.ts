@@ -13,6 +13,7 @@ export const environment = {
   appName: 'Délice éternel',
   envName: 'COMMON',
   production: false,
+  appId: packageJson.name,
   firebaseConfig: {
     apiKey: "AIzaSyBLCfZxzkybYbWJSrJGllI3X9sYtS6VZgw",
     authDomain: "delice-eternel-gabon.firebaseapp.com",

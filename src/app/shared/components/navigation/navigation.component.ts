@@ -3,8 +3,9 @@ import {select, Store} from '@ngrx/store';
 import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {ActionAuthLogout, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
+import {ActionAuthLoggedIn, ActionAuthLogout, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
 import {IUser} from '@shared/interfaces';
+import {initLoginPayload} from '@helpers/common.services.utils';
 
 declare var $: any;
 
@@ -89,11 +90,12 @@ export class NavigationComponent implements OnInit {
     // here we just refresh the token if user is authenticated
     this.afAuth.authState.subscribe(connectedUser => {
       // If the user is remotely connected
-      if(!this.connectedUser && !!connectedUser) {
-        this.store.dispatch(new AuthRefreshUserToken());
+      if(!!connectedUser) {
+        // We log the user anonymousely
+        this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(connectedUser)));
       }
       if(!connectedUser){
-       // this.store.dispatch(new ActionAuthLogout());
+       //this.store.dispatch(new ActionAuthLogout());
       }
     });
   }

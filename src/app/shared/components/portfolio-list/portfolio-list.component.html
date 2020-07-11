@@ -5,8 +5,8 @@
         <h3 class="mb-0">{{category.title}}</h3>
         <p class="mb-2 text-muted">{{category.summary}}</p>
 
-        <p class="mb-2 text-muted text-uppercase small">
-          <span class="small">Voir aussi&nbsp;:&nbsp;</span>
+        <p class="mb-2 text-muted text-uppercase small"> <!-- btn-outline-info -->
+          <span class="small alert-info">Voir aussi&nbsp;:&nbsp;</span>
             <button *ngFor="let categoryDesc of _otherCategories" type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="gotoTarget(categoryDesc.name)"><i
               class="fas fa-shopping-cart pr-2"></i>
               <span>{{categoryDesc.title}}</span>
@@ -25,7 +25,7 @@
           <!-- Grid row -->
           <div class="row">
             <!-- Grid column -->
-            <div class="col-md-4 mb-4 col-sm-auto mb-sm-auto" *ngFor="let item of category.items"
+            <div class="col-md-4 mb-4 col-sm-auto" *ngFor="let item of category.items"
                  [ngClass]="item.selected? 'selected': ''"
                  (change)="toogleSelect(item)">
               <!-- Card -->
