@@ -5,6 +5,11 @@
       <div class="d-flex align-items-center h-100">
         <div class="container text-center">
           <h3 class="mb-0">Votre panier</h3>
+          <app-category-buttons
+            [categoryToAvoid]="ItemsCategoriesEnum.UNKNOWN"
+            [categoryInfos]="categoryInfos$ | async"
+            (navigateAway)="gotoTarget($event)">
+          </app-category-buttons>
         </div>
       </div>
     </div>

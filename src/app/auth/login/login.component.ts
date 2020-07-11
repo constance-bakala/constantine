@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     };
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
-    this.ui.start('#firebaseui-auth-container1, #firebaseui-auth-container2', uiConfig);
+    this.ui.start('#firebaseui-auth-container', uiConfig);
 
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if(!firebaseUser){

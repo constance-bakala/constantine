@@ -38,6 +38,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {AlertComponent} from './components/alert/alert.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SnackAlertComponent } from './components/snack-alert/snack-alert.component';
+import { CategoryButtonsComponent } from './components/category-buttons/category-buttons.component';
 
 @NgModule({
   imports: [
@@ -85,6 +86,7 @@ import { SnackAlertComponent } from './components/snack-alert/snack-alert.compon
     TranslatePipe,
     AlertComponent,
     SnackAlertComponent,
+    CategoryButtonsComponent,
   ],
   exports: [
     CommonModule,
@@ -120,6 +122,7 @@ import { SnackAlertComponent } from './components/snack-alert/snack-alert.compon
     TruncatePipe,
     TranslatePipe,
     MatDialogModule,
+    CategoryButtonsComponent,
   ],
   providers: [
     AdService
