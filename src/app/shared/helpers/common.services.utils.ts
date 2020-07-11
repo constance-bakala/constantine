@@ -9,33 +9,33 @@ export function getAssetItems(size: number, directoryName: string, refPrefix: st
     const currentIndex = index + 1;
     const path = 'assets/' + directoryName + '/' + refPrefix + '-' + currentIndex + '.' + extension;
     const reference = refPrefix.toUpperCase() + '-' + currentIndex;
-    const basketInfos =  {
+    const basketInfos = {
       selectedQuantity: 1,
       selectedSize: ItemSizeEnum.M,
       selectedModel: 'MODEL_UNIQUE'
     };
-    return new ItemInfos(path, false, reference, currentIndex, category,false, basketInfos);
+    return new ItemInfos(path, false, reference, currentIndex, category, false, basketInfos);
   });
 }
 
-export function initLoginPayload(result): ILoginSuccess{
+export function initLoginPayload(result): ILoginSuccess {
   return {
-    ssoToken: result?.credential?.idToken,
-    token: result?.credential?.accessToken,
+    ssoToken: result?.credential?.idToken ?? result?.refreshToken,
+    token: result?.credential?.accessToken ?? result?.refreshToken,
     userHabilitations: [],
     indexRole: -1,
     actions: {},
-    isAnonymous: result.user.isAnonymous,
+    isAnonymous: result?.user?.isAnonymous ?? result?.isAnonymous,
     credential: result.credential,
     additionalInfos: {
-      uid: result.additionalUserInfo.profile?.id,
+      uid: result.additionalUserInfo?.profile?.id ?? result.uid,
       providerId: result.additionalUserInfo?.providerId,
-      local: result.additionalUserInfo.profile?.locale,
-      picture: result.additionalUserInfo.profile?.picture ?? result.additionalUserInfo.profile?.picture?.data?.url,
-      nom: result.additionalUserInfo.profile?.family_name,
-      prenom: result.additionalUserInfo.profile?.given_name,
-      gender: result.additionalUserInfo.profile?.gender,
-      email: result.additionalUserInfo.profile?.email,
+      local: result.additionalUserInfo?.profile?.locale,
+      picture: result.additionalUserInfo?.profile?.picture ?? result.additionalUserInfo?.profile?.picture?.data?.url,
+      nom: result.additionalUserInfo?.profile?.family_name,
+      prenom: result.additionalUserInfo?.profile?.given_name,
+      gender: result.additionalUserInfo?.profile?.gender,
+      email: result.additionalUserInfo?.profile?.email,
     }
   };
 }

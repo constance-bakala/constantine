@@ -38,7 +38,8 @@ export const genericSendgridEmail = functions.https.onCall(async (data, context)
     templateId: TEMPLATE_ID_COMMEND,
     dynamic_template_data: {
       subject: data.subject,
-      name: data.text,
+      name: data.displayName,
+      items: data.items,
     },
   };
   console.log(msg);

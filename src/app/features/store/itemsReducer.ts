@@ -5,19 +5,19 @@ import {toogleSelectItem, updateItemBasketInfos, updateItemState} from '@helpers
 const intialState: ItemsState = {
   earings: {
     name: ItemsCategoriesEnum.EARINGS,
-    title: 'Chargement des boucles d\'oreilles',
+    title: 'Boucles d\'oreilles',
     summary: 'Veuillez patienter ...',
     items: []
   },
   dresses: {
     name: ItemsCategoriesEnum.DRESSES,
-    title: 'Chargement des vêtements',
+    title: 'Vêtements',
     summary: 'Veuillez patienter ...',
     items: []
   },
   masks: {
     name: ItemsCategoriesEnum.MASKS,
-    title: 'Chargement des masques',
+    title: 'Masques',
     summary: 'Veuillez patienter ...',
     items: []
   }
