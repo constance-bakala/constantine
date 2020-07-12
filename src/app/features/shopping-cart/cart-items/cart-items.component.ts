@@ -9,7 +9,7 @@ import {
   selectExistingCategory,
   selectNbChosenItems
 } from '@app/features/store';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {ITEM_SIZES, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
@@ -39,22 +39,7 @@ import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-li
 export class CartItemsComponent implements OnInit {
   basketFormGroup: FormGroup;
   nbSelectedItems$: Observable<number>;
-  sizes: {
-    value: ItemSizeEnum;
-    label: string;
-  }[] = [{
-    value: ItemSizeEnum.S,
-    label: 'S'
-  }, {
-    value: ItemSizeEnum.M,
-    label: 'M'
-  }, {
-    value: ItemSizeEnum.L,
-    label: 'L'
-  }, {
-    value: ItemSizeEnum.XL,
-    label: 'XL'
-  }];
+  sizes = ITEM_SIZES;
 
   items: ItemInfos[] = [];
   userId = undefined;

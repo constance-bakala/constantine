@@ -9,7 +9,6 @@ export class CategoryInfos {
   title: string;
 
 }
-
 export enum ItemSizeEnum {
   S = 'S',
   M = 'M',
@@ -17,6 +16,25 @@ export enum ItemSizeEnum {
   XL = 'XL',
   O = 'O',
 }
+
+export const ITEM_SIZES: {
+  value: ItemSizeEnum;
+  label: string;
+}[] = [{
+  value: ItemSizeEnum.S,
+  label: 'S'
+}, {
+  value: ItemSizeEnum.M,
+  label: 'M'
+}, {
+  value: ItemSizeEnum.L,
+  label: 'L'
+}, {
+  value: ItemSizeEnum.XL,
+  label: 'XL'
+}];
+
+
 
 export interface IBasketInfos {
   selectedQuantity: number;

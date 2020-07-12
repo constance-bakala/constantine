@@ -45,7 +45,7 @@
                       <span *ngIf="item.selected">Annuler</span>
                       <span *ngIf="!item.selected">Sélectionner</span>
                     </button>
-                    <button type="button" class="btn btn-light btn-sm mr-0 mb-0"><i
+                    <button type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="openChoices(item)"><i
                       class="fas fa-info-circle pr-2"></i>Détails
                     </button>
                   </p>
