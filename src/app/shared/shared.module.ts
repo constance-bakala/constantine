@@ -39,6 +39,7 @@ import {AlertComponent} from './components/alert/alert.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { SnackAlertComponent } from './components/snack-alert/snack-alert.component';
 import { CategoryButtonsComponent } from './components/category-buttons/category-buttons.component';
+import { ItemDetailsComponent } from './components/item-details/item-details.component';
 
 @NgModule({
   imports: [
@@ -87,6 +88,7 @@ import { CategoryButtonsComponent } from './components/category-buttons/category
     AlertComponent,
     SnackAlertComponent,
     CategoryButtonsComponent,
+    ItemDetailsComponent,
   ],
   exports: [
     CommonModule,
