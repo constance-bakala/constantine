@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ITEM_SIZES, ItemInfos} from '@shared/interfaces';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ITEM_SIZES, ItemInfos, ItemSizeEnum} from '@shared/interfaces';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
@@ -13,7 +13,8 @@ export class ItemDetailsComponent {
   itemGroup: FormGroup;
   sizes = ITEM_SIZES;
 
-  @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
+  @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
+  selected = false;
 
   constructor(private fb: FormBuilder,
               private dialogRef: MatDialogRef<ItemDetailsComponent>,
@@ -22,6 +23,7 @@ export class ItemDetailsComponent {
   }
 
   private initForm(infos: ItemInfos) {
+    this.selected = infos.selected;
     this.itemGroup = this.fb.group({
       path: [infos.path],
       selected: [infos.selected],
@@ -30,9 +32,9 @@ export class ItemDetailsComponent {
       category: [infos.category],
       loading: [false],
       basketInfos: this.fb.group({
-        selectedQuantity: [infos.basketInfos.selectedQuantity],
-        selectedSize: [infos.basketInfos.selectedSize],
-        selectedModel: [infos.basketInfos.selectedModel],
+        selectedQuantity: [infos.basketInfos?.selectedQuantity, Validators.required],
+        selectedSize: [infos.basketInfos?.selectedSize ?? ItemSizeEnum.M, Validators.required],
+        selectedModel: [infos.basketInfos?.selectedModel ?? '', Validators.required],
       })
     });
 
@@ -40,7 +42,7 @@ export class ItemDetailsComponent {
       debounceTime(200),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ).subscribe(() => {
-      this.onToogleSelect.emit(this.itemGroup.getRawValue());
+      this.selected = false;
     });
 
   }
@@ -59,8 +61,19 @@ export class ItemDetailsComponent {
     }
   }
 
-  toogleSelect(selectedImage: ItemInfos) {
-    this.onToogleSelect.emit(selectedImage);
+  toogleSelect() {
+    this.selected = !this.selected;
+    if (this.selected) {
+      this.updateBasketItem.emit({
+        ...this.itemGroup.getRawValue(),
+        selected: true
+      });
+    } else {
+      this.updateBasketItem.emit({
+        ...this.data,
+        selected: false
+      });
+    }
   }
 
   close() {

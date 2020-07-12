@@ -54,7 +54,7 @@
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" (click)="disconnect()">
             <mat-icon>exit_to_app</mat-icon>
             &nbsp;<span class="ajust">Déconnexion<br><span style="font-size: 10px; margin-left: 10px">
-            (&nbsp;{{(afAuth.authState | async)?.email}})
+            ({{(afAuth.authState | async)?.email}})
           </span></span>
 
           </a>

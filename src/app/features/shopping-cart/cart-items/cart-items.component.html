@@ -53,12 +53,11 @@
                               {{itemGroup.get('category').value}}
                             </p>
                             <p class="mb-2 text-muted text-uppercase small"><strong>Modèle:</strong>&nbsp;
-                              <select type="text"
-                                      id="model{{i}}"
+                              <select id="model{{i}}"
                                       name="model{{i}}"
                                       formControlName="model"
                                       class="form-control">
-                                <option value="MODEL_UNIQUE" selected>Modèle unique</option>
+                                <option [value]="'MODEL_UNIQUE'" selected>Modèle unique</option>
                               </select>
                             </p>
                             <p class="mb-3 text-muted text-uppercase small"><strong>Tailles:</strong>&nbsp;
