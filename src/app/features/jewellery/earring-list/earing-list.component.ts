@@ -1,7 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
-import {ActionItemsRetrieve, ActionItemToogleSelect, selectEarings, selectExistingCategory} from '@app/features/store';
+import {
+  ActionItemsRetrieve,
+  ActionItemToogleSelect,
+  ActionUpdateBasketItem,
+  selectEarings,
+  selectExistingCategory
+} from '@app/features/store';
 import {Observable} from 'rxjs';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 import {Go} from '@app/auth/store';
@@ -30,5 +36,9 @@ export class EaringListComponent implements OnInit {
 
   navigateToCategory(name: string) {
     this.store.dispatch(new Go({path: ['/' + name]}))
+  }
+
+  updateBasketItem(itemInfos: ItemInfos) {
+    this.store.dispatch(new ActionUpdateBasketItem(itemInfos));
   }
 }

@@ -22,6 +22,7 @@ export class PortfolioListComponent implements OnInit {
   categoryInfos: ExistingCategories;
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
+  @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
 
   constructor(private dialog: MatDialog,) {
   }
@@ -38,14 +39,16 @@ export class PortfolioListComponent implements OnInit {
   }
 
   openChoices(item: ItemInfos) {
-    this.dialog.open(ItemDetailsComponent, {
+    const dialogRef = this.dialog.open(ItemDetailsComponent, {
       panelClass: 'signin-dialog',
       maxHeight: '85vh',
       maxWidth: '70vw',
       disableClose: false,
       autoFocus: true,
-
       data: item,
+    });
+    dialogRef.componentInstance.updateBasketItem.subscribe(result => {
+      this.updateBasketItem.emit(result);
     });
   }
 }

@@ -2,7 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {select, Store} from '@ngrx/store';
-import {ActionItemsRetrieve, ActionItemToogleSelect, selectExistingCategory, selectMasks} from '@app/features/store';
+import {
+  ActionItemsRetrieve,
+  ActionItemToogleSelect,
+  ActionUpdateBasketItem,
+  selectExistingCategory,
+  selectMasks
+} from '@app/features/store';
 import {Go} from '@app/auth/store';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 
@@ -32,4 +38,7 @@ export class MasksListComponent implements OnInit {
     this.store.dispatch(new Go({path: ['/' + name]}));
   }
 
+  updateBasketItem(item: ItemInfos) {
+    this.store.dispatch(new ActionUpdateBasketItem(item));
+  }
 }

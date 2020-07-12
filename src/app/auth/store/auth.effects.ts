@@ -44,7 +44,7 @@ export class AuthEffects {
       map((action: ActionAuthLogout) => {
         this.localStorageService.setItem(AUTH_KEY, undefined);
         this.localStorageService.clearAll();
-        this.cache.clearAll();
+        // this.cache.clearAll();
         return new ActionAuthLoggedOut();
       }),
       catchError(error => of(new ActionAuthSetError(error)))
@@ -57,11 +57,9 @@ export class AuthEffects {
     return this.actions$.pipe(
       ofType(AuthActionTypes.LOGGED_OUT),
       map((action: ActionAuthLoggedOut) => {
-        /*this.store$.dispatch( new Go({
+        this.store$.dispatch( new Go({
           path: ['/']
         }));
-
-         */
       }),
       catchError(error => of(new ActionAuthSetError(error)))
     );

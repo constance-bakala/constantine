@@ -9,10 +9,11 @@ export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue): 
   let itemsStateCopy = _.cloneDeep(state);
   let category = itemsStateCopy[itemToUpdateRawValue.category.toLowerCase()];
   let foundItem: ItemInfos = category.items[itemToUpdateRawValue.index - 1];
-  if (!!foundItem && foundItem.selected) {
-    foundItem.basketInfos.selectedQuantity = itemToUpdateRawValue.quantity;
-    foundItem.basketInfos.selectedModel = itemToUpdateRawValue.model;
-    foundItem.basketInfos.selectedSize = ItemSizeEnum[itemToUpdateRawValue.size];
+  if (!!foundItem && (foundItem.selected || !!itemToUpdateRawValue)) {
+    foundItem.basketInfos.selectedQuantity = itemToUpdateRawValue.basketInfos.selectedQuantity;
+    foundItem.basketInfos.selectedModel = itemToUpdateRawValue.basketInfos.selectedModel;
+    foundItem.basketInfos.selectedSize = ItemSizeEnum[itemToUpdateRawValue.basketInfos.selectedSize];
+    foundItem.selected = itemToUpdateRawValue?.selected;
   }
   return itemsStateCopy;
 }

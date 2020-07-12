@@ -140,19 +140,31 @@ export class CartItemsComponent implements OnInit {
     const group = this.fb.group({
       size: [itemInfos.basketInfos?.selectedSize ?? ItemSizeEnum.M, Validators.required],
       quantity: [itemInfos.basketInfos?.selectedQuantity, Validators.required],
+      model: [itemInfos.basketInfos?.selectedModel ?? '', Validators.required],
       path: [itemInfos.path, Validators.required],
       selected: [itemInfos.selected, Validators.required],
       reference: [itemInfos.reference, Validators.required],
       index: [itemInfos.index, Validators.required],
       category: [itemInfos.category, Validators.required],
-      model: [itemInfos.basketInfos?.selectedModel ?? '', Validators.required],
     });
 
     group.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
     ).subscribe(() => {
-      this.store.dispatch(new ActionUpdateBasketItem(group.getRawValue()))
+      const itemInfos = {
+        ...group.getRawValue(),
+        basketInfos: {
+          selectedQuantity: group.get('quantity').value,
+          selectedSize: group.get('size').value,
+          selectedModel: group.get('model').value,
+        }
+      };
+      delete itemInfos.size;
+      delete itemInfos.quantity;
+      delete itemInfos.model;
+
+      this.store.dispatch(new ActionUpdateBasketItem(itemInfos))
     });
     return group;
   }

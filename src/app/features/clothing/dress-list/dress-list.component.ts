@@ -2,14 +2,20 @@ import {Component, OnInit} from '@angular/core';
 import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {ActionItemsRetrieve, ActionItemToogleSelect, selectDresses, selectExistingCategory} from '@app/features/store';
+import {
+  ActionItemsRetrieve,
+  ActionItemToogleSelect,
+  ActionUpdateBasketItem,
+  selectDresses,
+  selectExistingCategory
+} from '@app/features/store';
 import {Go} from '@app/auth/store';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 
 @Component({
   selector: 'app-clothing-list',
   templateUrl: './dress-list.component.html',
-  styleUrls: ['./dress-list.component.css']
+  styleUrls: ['./dress-list.component.scss']
 })
 export class DressListComponent implements OnInit {
   dresses$: Observable<Category>;
@@ -32,4 +38,7 @@ export class DressListComponent implements OnInit {
     this.store.dispatch(new Go({path: ['/' + name]}));
   }
 
+  updateBasketItem(itemInfos: ItemInfos) {
+    this.store.dispatch(new ActionUpdateBasketItem(itemInfos));
+  }
 }
