@@ -1,7 +1,21 @@
-<p class="mb-2 text-muted text-uppercase small category-links"> <!-- btn-outline-info -->
-  <span class="small alert-info">Voir aussi&nbsp;:&nbsp;</span>
-  <button *ngFor="let categoryDesc of _otherCategories" type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="gotoTarget(categoryDesc.name)"><i
-    class="fas fa-shopping-cart pr-2"></i>
-    <span>{{categoryDesc.title}}</span>
-  </button>
-</p>
+<div class="align-buttons">
+  <p class="mb-2 text-muted text-uppercase small category-links"> <!-- btn-outline-info -->
+    <span class="small alert-info">Voir aussi&nbsp;:&nbsp;</span>
+    <button *ngFor="let categoryDesc of _otherCategories" type="button" class="btn btn-light btn-sm mr-0 mb-0"
+            (click)="gotoTarget(categoryDesc.name)"><i
+      class="fas fa-shopping-cart pr-2"></i>
+      <span>{{categoryDesc.title}}</span>
+    </button>
+  </p>
+  <p>
+    <span class="small alert-info">Partager&nbsp;:&nbsp;</span>
+    <span><a class="custom-btn btn-social mx-1" (click)="fbshareCurrentPage()">
+            <i class="fab fa-fw fa-facebook-f"></i>
+          </a>
+            </span>
+    <span><a class="custom-btn btn-social mx-1 twiter-color" (click)="fbshareCurrentPage()">
+            <i class="fab fa-fw fa-twitter"></i>
+          </a>
+          </span>
+  </p>
+</div>

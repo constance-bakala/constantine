@@ -290,4 +290,8 @@ export class CartItemsComponent implements OnInit {
   gotoTarget(name: string) {
     this.store.dispatch(new Go({path: ['/' + name]}));
   }
+
+  reload() {
+    window.location.reload();
+  }
 }
