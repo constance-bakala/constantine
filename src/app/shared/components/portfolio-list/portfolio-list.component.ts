@@ -32,12 +32,7 @@ export class PortfolioListComponent implements OnInit {
   }
 
   ngOnInit() {
-    const protocol = window.location.protocol;
-    this.currentUri = protocol + '//' + window.location.host;
-    if (this.currentUri.indexOf('gitHub') > 0) {
-      this.currentUri = this.currentUri + '/' + environment.appId;
-    }
-    this.currentEncodedUri = encodeURIComponent(this.currentUri);
+    this.currentEncodedUri = encodeURIComponent(window.location.href);
   }
 
   toogleSelect(selectedImage: ItemInfos) {
@@ -52,7 +47,6 @@ export class PortfolioListComponent implements OnInit {
     const dialogRef = this.dialog.open(ItemDetailsComponent, {
       panelClass: 'signin-dialog',
       maxHeight: '85vh',
-      maxWidth: '70vw',
       disableClose: false,
       autoFocus: true,
       data: item,
@@ -60,11 +54,5 @@ export class PortfolioListComponent implements OnInit {
     dialogRef.componentInstance.updateBasketItem.subscribe(result => {
       this.updateBasketItem.emit(result);
     });
-  }
-
-  fbshareCurrentPage() {
-    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href) + "&t=" + document.title, '',
-      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=auto');
-    return false;
   }
 }

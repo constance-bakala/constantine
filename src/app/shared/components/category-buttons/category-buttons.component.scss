@@ -1,3 +1,25 @@
 .category-links {
   padding: 10px;
 }
+
+.custom-btn {
+  font-weight: 400;
+  text-align: center;
+  vertical-align: initial;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  width: 1.8rem;
+  height: 1.8rem;
+}
+
+.fb-color {
+  color: #3578e5 !important;
+}
+.twiter-color {
+  color: rgba(29,161,242,1.00) !important;
+}
+
+.align-buttons {
+  display: block;
+}

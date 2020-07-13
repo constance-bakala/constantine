@@ -38,4 +38,10 @@ export class CategoryButtonsComponent implements OnInit {
     this.navigateAway.emit(name.toLowerCase());
   }
 
+  fbshareCurrentPage() {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href) + "&t=" + document.title, '',
+      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=auto');
+    return false;
+  }
+
 }

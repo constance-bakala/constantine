@@ -4,7 +4,7 @@
     <div class="jumbotron color-grey-light mt-50">
       <div class="d-flex align-items-center h-100">
         <div class="container text-center">
-          <h3 class="mb-0">Votre panier</h3>
+          <h3 class="mb-0">Votre panier <span class="btn-floating" (click)="reload()"><i class="fa fa-refresh" aria-hidden="true"></i></span></h3>
           <app-category-buttons
             [categoryToAvoid]="ItemsCategoriesEnum.UNKNOWN"
             [categoryInfos]="categoryInfos$ | async"
