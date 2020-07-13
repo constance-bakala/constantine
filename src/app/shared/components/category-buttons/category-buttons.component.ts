@@ -44,4 +44,9 @@ export class CategoryButtonsComponent implements OnInit {
     return false;
   }
 
+  twshareCurrentPage() {
+    window.open("https://twitter.com/share?url=" + encodeURIComponent(window.location.href) + "&text=" + document.title, '',
+      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=auto');
+    return false;
+  }
 }
