@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Category, CategoryInfos, ItemInfos} from '@shared/interfaces/image.interfaces';
 import {MatDialog} from '@angular/material/dialog';
 import {ItemDetailsComponent} from '@shared/components/item-details/item-details.component';
+import {environment} from '@env/environment';
 
 export interface ExistingCategories {
   earings: CategoryInfos;
@@ -23,11 +24,21 @@ export class PortfolioListComponent implements OnInit {
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
+  currentUri= '';
+  currentEncodedUri= '';
+
+
 
   constructor(private dialog: MatDialog,) {
   }
 
   ngOnInit() {
+    const protocol = window.location.protocol;
+    this.currentUri = protocol + '//' + window.location.host;
+    if (this.currentUri.indexOf('gitHub') > 0) {
+      this.currentUri = this.currentUri +'/' + environment.appId;
+    }
+    this.currentEncodedUri = encodeURI(this.currentUri);
   }
 
   toogleSelect(selectedImage: ItemInfos) {

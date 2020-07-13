@@ -2,13 +2,21 @@
   <div class="jumbotron color-grey-light mt-70">
     <div class="d-flex align-items-center h-100">
       <div class="container text-center">
-        <h3 class="mb-0">{{category.title}}</h3>
+        <h3 class="mb-0">{{category.title}}
+        </h3>
         <p class="mb-2 text-muted">{{category.summary}}</p>
         <app-category-buttons
           [categoryToAvoid]="category.name"
           [categoryInfos]="categoryInfos"
           (navigateAway)="gotoTarget($event)">
         </app-category-buttons>
+        <div class="fb-like"
+             data-href="{{currentUri}}"
+             data-width=""
+             data-layout="button_count"
+             data-action="like"
+             data-size="small"
+             data-share="true"></div>
       </div>
     </div>
   </div>
