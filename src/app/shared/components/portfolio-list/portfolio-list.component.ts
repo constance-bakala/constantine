@@ -24,9 +24,8 @@ export class PortfolioListComponent implements OnInit {
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
-  currentUri= '';
-  currentEncodedUri= '';
-
+  currentUri = '';
+  currentEncodedUri = '';
 
 
   constructor(private dialog: MatDialog,) {
@@ -36,9 +35,9 @@ export class PortfolioListComponent implements OnInit {
     const protocol = window.location.protocol;
     this.currentUri = protocol + '//' + window.location.host;
     if (this.currentUri.indexOf('gitHub') > 0) {
-      this.currentUri = this.currentUri +'/' + environment.appId;
+      this.currentUri = this.currentUri + '/' + environment.appId;
     }
-    this.currentEncodedUri = encodeURI(this.currentUri);
+    this.currentEncodedUri = encodeURIComponent(this.currentUri);
   }
 
   toogleSelect(selectedImage: ItemInfos) {
@@ -61,5 +60,11 @@ export class PortfolioListComponent implements OnInit {
     dialogRef.componentInstance.updateBasketItem.subscribe(result => {
       this.updateBasketItem.emit(result);
     });
+  }
+
+  fbshareCurrentPage() {
+    window.open("https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href) + "&t=" + document.title, '',
+      'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=auto');
+    return false;
   }
 }
