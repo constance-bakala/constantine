@@ -6,6 +6,7 @@ import {AngularFireAuth} from '@angular/fire/auth';
 import {ActionAuthLoggedIn, ActionAuthLogout} from '@app/auth/store/auth.actions';
 import {initLoginPayload} from '@helpers/common.services.utils';
 import {TranslateService} from '@ngx-translate/core';
+import {DEFAULT_LOCALE_ID} from '@helpers/constants';
 
 declare var $: any;
 
@@ -23,6 +24,7 @@ export class NavigationComponent implements OnInit {
               public translate: TranslateService) {
     translate.addLangs(['en', 'fr']);
     translate.setDefaultLang('en');
+    translate.use(DEFAULT_LOCALE_ID);
   }
 
   ngOnInit(): void {

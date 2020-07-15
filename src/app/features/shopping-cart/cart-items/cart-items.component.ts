@@ -30,6 +30,7 @@ import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.co
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
+import {transcode} from 'buffer';
 
 @Component({
   selector: 'app-cart-items',
@@ -206,7 +207,7 @@ export class CartItemsComponent implements OnInit {
           // It is important to protect the mail option as we have a limited number of email per day!
           // The comparison bellow also avoid sending to much request to the firebase backend!
           if (!this.items || this.items.length < 1 || (!!existingCommands && compareObjects(existingCommands, this.items))) {
-            this.alertCommandNotSent('Cette commande existe déjà! Vous devez la mettre à jour pour la transmettre de nouveau!');
+            this.alertCommandNotSent('COMMAND_ALREADY_EXIST');
           } else {
             // We update commendAllreadySent to true to avoid firing the database value above a second time! => this setting should stay here!!
             this.commendAllreadySent = true;
@@ -221,7 +222,7 @@ export class CartItemsComponent implements OnInit {
                       politeness: 'polite',
                     });
                 } else {
-                  this.alertCommandNotSent('Vous devez être authentifié pour envoyer une commande!');
+                  this.alertCommandNotSent('AUTHENTICATION_REQUIRED');
                 }
               });
           }
@@ -249,7 +250,7 @@ export class CartItemsComponent implements OnInit {
       autoFocus: true,
       data: {
         disableClose: false,
-        title: 'Commande non envoyée',
+        title: 'COMMAND_NOT_SENT',
         message: message,
       }
     });
@@ -278,7 +279,7 @@ export class CartItemsComponent implements OnInit {
       displayName: user.displayName,
       shoppingCardLink: prefix + "/#/shopping-cart",
       uid: user.uid,
-      subject: 'Commande Délice Éternel!',
+      subject: 'NEW_ORDER_TITLE',
       items: emailData
     };
     this.fun.httpsCallable('genericSendgridEmail')(data)
