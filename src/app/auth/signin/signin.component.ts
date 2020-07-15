@@ -85,12 +85,13 @@ export class SigninComponent implements OnInit, OnDestroy {
             email: result.user?.email,
           }
         }));
-        const callable = this.fun.httpsCallable('genericSendgridEmail');
-        callable({
-            text: 'Vous avez fait le bon choix en allant DÉLICE ÉTERNEL',
-            subject: 'Email from delice eternel gabon'
-          }
-        ).subscribe(result => console.log(result));
+        /* const callable = this.fun.httpsCallable('genericSendgridEmail');
+         callable({
+             subject: 'Commande Délice Éternel!',
+             displayName: result.user.displayName
+           }
+         ).subscribe(result => {
+         }); */
       })
       .catch(error => {
         this.loading = false;

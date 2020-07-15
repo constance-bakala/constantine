@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {ActionAuthLoggedIn, ActionAuthLoggedOut} from '@app/auth/store/auth.actions';
 import {initLoginPayload} from '@helpers/common.services.utils';
+import {DEFAULT_LOCALE_ID} from '@helpers/constants';
 
 @Component({
   selector: 'social-login',
@@ -18,25 +19,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     {
       provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
       customParameters: {
-        'lang': 'fr'
+        'locale': DEFAULT_LOCALE_ID
       }
     },
     {
       provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
       customParameters: {
-        'lang': 'fr'
+        'locale': DEFAULT_LOCALE_ID
       }
     },
     {
       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
       customParameters: {
-        'lang': 'fr'
+        'locale': DEFAULT_LOCALE_ID
       }
     },
     {
       provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID,
       customParameters: {
-        'lang': 'fr'
+        'locale': DEFAULT_LOCALE_ID
       }
     }
   ];
@@ -47,8 +48,9 @@ export class LoginComponent implements OnInit, OnDestroy {
               private store: Store<any>) {
   }
 
+
   ngOnInit() {
-    firebase.auth().languageCode = 'fr';
+    firebase.auth().languageCode = DEFAULT_LOCALE_ID;
     const uiConfig = {
       signInOptions: this.signInOptions,
       callbacks: {
