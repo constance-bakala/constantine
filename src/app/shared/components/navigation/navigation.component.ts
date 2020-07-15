@@ -3,9 +3,9 @@ import {select, Store} from '@ngrx/store';
 import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
-import {ActionAuthLoggedIn, ActionAuthLogout, AuthRefreshUserToken} from '@app/auth/store/auth.actions';
-import {IUser} from '@shared/interfaces';
+import {ActionAuthLoggedIn, ActionAuthLogout} from '@app/auth/store/auth.actions';
 import {initLoginPayload} from '@helpers/common.services.utils';
+import {TranslateService} from '@ngx-translate/core';
 
 declare var $: any;
 
@@ -17,9 +17,12 @@ declare var $: any;
 export class NavigationComponent implements OnInit {
 
   nbSelectedItems$: Observable<number>;
-  connectedUser: IUser;
+  param = {value: 'About'};
 
-  constructor(private store: Store<any>, public afAuth: AngularFireAuth, private ngZone: NgZone,) {
+  constructor(private store: Store<any>, public afAuth: AngularFireAuth, private ngZone: NgZone,
+              public translate: TranslateService) {
+    translate.addLangs(['en', 'fr']);
+    translate.setDefaultLang('en');
   }
 
   ngOnInit(): void {
@@ -90,12 +93,12 @@ export class NavigationComponent implements OnInit {
     // here we just refresh the token if user is authenticated
     this.afAuth.authState.subscribe(connectedUser => {
       // If the user is remotely connected
-      if(!!connectedUser) {
+      if (!!connectedUser) {
         // We log the user anonymousely
         this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(connectedUser)));
       }
-      if(!connectedUser){
-       //this.store.dispatch(new ActionAuthLogout());
+      if (!connectedUser) {
+        //this.store.dispatch(new ActionAuthLogout());
       }
     });
   }
@@ -104,5 +107,9 @@ export class NavigationComponent implements OnInit {
     this.ngZone.run(() => {
       this.afAuth.signOut().then(() => this.store.dispatch(new ActionAuthLogout()));
     });
+  }
+
+  switchLang(lang: string) {
+    this.translate.use(lang);
   }
 }

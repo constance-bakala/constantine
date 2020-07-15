@@ -7,6 +7,7 @@ import {AuthRefreshUserToken} from '@app/auth/store/auth.actions';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {ItemsCategoriesEnum} from '@shared/interfaces';
 import {ActionItemsRetrieve} from '@app/features/store';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -18,12 +19,18 @@ export class AppComponent implements OnInit {
   title = 'Délice éternel';
 
   constructor(
-    private router: Router, private db: AngularFirestore, private store: Store<any>, public afAuth: AngularFireAuth) {
+    private router: Router, private db: AngularFirestore, private store: Store<any>, public afAuth: AngularFireAuth,
+    public translate: TranslateService) {
     const users$ = this.db.collection('users').valueChanges();
     users$.subscribe(users => {
       //console.log(users);
     });
     users$.pipe();
+    //this language will be used as a fallback when a translation isn't found in the current language
+    translate.setDefaultLang('en');
+
+    // the lang to use, if the lang isn't available, it will use the current loader to get them
+    translate.use('en');
   }
 
   ngOnInit(): void {
@@ -35,6 +42,7 @@ export class AppComponent implements OnInit {
 
     this.store.dispatch(new ActionItemsRetrieve({category: ItemsCategoriesEnum.EARINGS}));
   }
+
 
 
 }

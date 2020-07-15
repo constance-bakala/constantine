@@ -1,0 +1,65 @@
+{
+  "ABOUT": "À PROPOS",
+  "DISCONNECT": "Déconnexion",
+  "CONNECT": "Connexion",
+  "PRESENTATION": "Masques grand public - Bijoux - Vêtements",
+  "BUILD_PLACE": "Conçus dans nos ateliers",
+  "PRODUCTS": {
+    "EARRINGS": {
+      "TITLE": "Boucles d'oreilles",
+      "DESCRIPTION":"Les boucles d'oreilles ci-dessous représentent un échantillon de nos créations. Si vous avez une idée précise de ce que vous souhaitez n'hésitez pas à nous contacter!"
+    },
+    "DRESSES": {
+      "TITLE": "Robes",
+      "DESCRIPTION":"Les robes ci-dessous représentent un échantillon de nos créations. Nous pouvons également vous fournir vos créations sur mesure !'"
+    },
+    "MASKS": {
+      "TITLE": "Masques",
+      "DESCRIPTION":"Les masques ci-dessous représentent un échantillon de nos créations. Nous suivons les recommandations de l\\'organisme français AFNOR pour produire des masques en tissus pour adulte et enfants de plus de 7 ans ! ' +\n            'Ces masques grand public visent à protéger la population saine, en complément des indispensables gestes barrières face au coronavirus."
+    },
+    "UNKNOWN": {
+      "TITLE": "Produit en construction ...",
+      "DESCRIPTION":"Ces produits ne sont pas encore connus dans nos référentiels, veuillez contacter votre administrateur"
+    },
+    "MORE": "Voir les produits",
+    "CATEGORY": "Catégorie",
+    "MODEL": "Modèle",
+    "UNIQUE_MODEL":"Modèle unique",
+    "SIZES": "Tailles",
+    "REMOVE": "Supprimer",
+    "SUMMARY": "Résumé de votre commande",
+    "BASKET": "Votre panier",
+    "CART": "Panier",
+    "TOTAL_WITH_VAT": "Total TTC",
+    "WITH_VAT": "",
+    "SHIPPING" : "Transport",
+    "GRATIS": "Gratuit",
+    "DISCOUNT_CODE": "Ajouter un code promo (optionnel)",
+    "AMOUNT_WITHOUT_VAT": "Montant HT",
+    "SEND_COMMAND": "Transmettre la commande",
+    "DELIVERY_TIME": "Quand serez-vous livré ?",
+    "PAYMENTS_MEANS": "Pour le moment, nous n'acceptons pas les moyens de paiement suivants",
+    "PAYMENTS_MEANS_DETAILS": "Envoyez-nous votre commande par mel en cliquand sur le bouton",
+    "WILL_CALL_YOU_BACK": "et nous vous rappelerons dès sa réception pour votre livraison!",
+    "HOW_TO_GET_DELIVERED_FROM_LBV": "Si vous vivez à Libreville et que vous achetez au détail, alors vous devez passez directement au magasin après votre commande, nous vous la préparons.",
+    "HOW_TO_GET_DELIVERED_FROM_ELSEWHERE": "Si vous vivez ailleurs dans le monde, nous vous informons que les frais d'expédition seront à votre charge. Pour cela, cocher la case ci-dessous"
+  },
+  "CONTACT_US": "CONTACTEZ NOUS",
+  "TELEPHONE":"Téléphone",
+  "EMAIL":"Mel",
+  "SHARE": "Partager",
+  "SEE_ALSO": "Voir aussi",
+  "SELECT": "Sélectionner",
+  "DETAILS": "Détails",
+  "CANCEL": "Annuler",
+  "ABOUT_DELICE_ETERNEL": "Délice éternel est à la fois un prêt à porter et un grossiste de Libreville qui vous propose des vêtements africains pour tous les âges. Vous pouvez également demander un modèle précis et nous le cousons pour vous! Vous avez besoin d'une importante commande commande? Contactez-nous pour affiner votre besoin. Nous faisons le maximum pour vous livrer très rapidement où que vous soyez!",
+  "ABOUT_WEBDESIGNER": "Ce site a été conçu par la société up2date-it (up2dateit@gmail.com). En cas de difficultés rencontrés sur ce site ou avec votre commande, n'hésitez pas à envoyer un message à cette adresse en détaillant de façon claire votre problème. Laissez vos coordonnées, nous vous rappellerons dès que possible! Vos préoccupations sont les nôtres!",
+  "ABOUT_CONSTANCE": "Je suis une coiffeuse-esthéticienne et couturière professionnelle. Ces métiers sont pour moi des formes d’expression artistiques qui me passionnent et me permettent de m’épanouir au quotidien.",
+  "ON_INTERNET": "Sur internet",
+  "LOCALIZATION": "Localisation",
+  "ABOUT_ME": "À propos de moi",
+  "CHOOSE" : "Choisissez",
+  "CLOSE": "Fermer",
+  "NEAR_LES_PLANCHES": "Face à la boîte de nuit 'Les Planches', Libreville",
+  "NOMBAKELE": "Quartier Nombakélé"
+}

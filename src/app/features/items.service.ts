@@ -19,8 +19,8 @@ export class ItemsService {
         nbItems = EARINGS_SIZE;
         categoryInfos = {
           name: ItemsCategoriesEnum.EARINGS,
-          title: 'Boucles d\'oreilles',
-          summary: 'Les boucles d\'oreilles ci-dessous représentent un échantillon de nos créations. Si vous avez une idée précise de ce que vous souhaitez n\'hésitez pas à nous contacter!',
+          title: 'PRODUCTS.EARRINGS.TITLE',
+          summary: 'PRODUCTS.EARRINGS.DESCRIPTION',
           items: getAssetItems(nbItems, 'jewellery', 'earing', 'png', ItemsCategoriesEnum.EARINGS),
         };
         return of(categoryInfos);
@@ -28,8 +28,8 @@ export class ItemsService {
         nbItems = DRESSES_SIZE;
         categoryInfos = {
           name: ItemsCategoriesEnum.DRESSES,
-          title: 'Vêtements',
-          summary: 'Les robes ci-dessous représentent un échantillon de nos créations. Nous pouvons également vous fournir vos créations sur mesure !',
+          title: 'PRODUCTS.DRESSES.TITLE',
+          summary: 'PRODUCTS.DRESSES.DESCRIPTION',
           items: getAssetItems(nbItems, 'dresses', 'dress', 'png', ItemsCategoriesEnum.DRESSES),
         };
         return of(categoryInfos);
@@ -38,17 +38,16 @@ export class ItemsService {
 
         categoryInfos = {
           name: ItemsCategoriesEnum.MASKS,
-          title: 'Masques',
-          summary: 'Les masques ci-dessous représentent un échantillon de nos créations. Nous suivons les recommandations de l\'organisme français AFNOR pour produire des masques en tissus pour adulte et enfants de plus de 7 ans ! ' +
-            'Ces masques grand public visent à protéger la population saine, en complément des indispensables gestes barrières face au coronavirus.',
+          title: 'PRODUCTS.MASKS.TITLE',
+          summary: 'PRODUCTS.MASKS.DESCRIPTION',
           items: getAssetItems(nbItems, 'masks', 'mask', 'png', ItemsCategoriesEnum.MASKS)
         };
         return of(categoryInfos);
       default:
         return of({
           name: ItemsCategoriesEnum.UNKNOWN,
-          title: 'Unknown',
-          summary: 'Ce produit n\'est pas encore connu dans nos référentiels, veuillez contacter votre administrateur',
+          title: 'PRODUCTS.UNKNOWN.TITLE',
+          summary: 'PRODUCTS.UNKNOWN.DESCRIPTION',
           items: []
         });
     }

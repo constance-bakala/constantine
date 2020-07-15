@@ -2,9 +2,9 @@
   <div class="jumbotron color-grey-light mt-70">
     <div class="d-flex align-items-center h-100">
       <div class="container text-center">
-        <h3 class="mb-0">{{category.title}}
+        <h3 class="mb-0">{{category.title | translate}}
         </h3>
-        <p class="mb-2 text-muted">{{category.summary}}</p>
+        <p class="mb-2 text-muted">{{category.summary | translate}}</p>
         <app-category-buttons
           [categoryToAvoid]="category.name"
           [categoryInfos]="categoryInfos"
@@ -43,11 +43,11 @@
                   <p class="mb-2 text-muted text-uppercase small">
                     <button type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="toogleSelect(item)"><i
                       class="fas fa-shopping-cart pr-2"></i>
-                      <span *ngIf="item.selected">Annuler</span>
-                      <span *ngIf="!item.selected">Sélectionner</span>
+                      <span *ngIf="item.selected">{{'CANCEL' | translate}}</span>
+                      <span *ngIf="!item.selected">{{'SELECT' | translate}}</span>
                     </button>
                     <button type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="openChoices(item)"><i
-                      class="fas fa-info-circle pr-2"></i>Détails
+                      class="fas fa-info-circle pr-2"></i>{{'DETAILS' | translate}}
                     </button>
                   </p>
                   <hr *ngIf="!item.selected">

@@ -3,8 +3,8 @@
     <div class="row">
       <!-- Footer Location-->
       <div class="col-lg-4 mb-5 mb-lg-0 text-center">
-        <h4 class="mb-4">LOCALISATION</h4>
-        <p class="pre-wrap lead mb-0">Quartier Nombakélé <br/>(face au night club les planches, Libreville) <br/>
+        <h4 class="mb-4">{{'LOCALIZATION' | translate}}</h4>
+        <p class="pre-wrap lead mb-0">{{'NOMBAKELE' | translate}} <br/>{{'NEAR_LES_PLANCHES' | translate}} <br/>
           APIP : 004-15503GUI du 04/09/2008</p>
         <div class="d-flex flex-column align-items-center ajust-botom">
           <app-map-template [mapConfig]="mapConfig">
@@ -16,7 +16,7 @@
       </div>
       <!-- Footer Social Icons-->
       <div class="col-lg-4 mb-5 mb-lg-0 ajust-botom">
-        <h4 class="mb-4">SUR INTERNET</h4><a class="btn btn-outline-light btn-social mx-1"
+        <h4 class="mb-4">{{'ON_INTERNET' | translate}}</h4><a class="btn btn-outline-light btn-social mx-1"
                                              href="https://www.facebook.com/constance.bakala"><i
         class="fab fa-fw fa-facebook-f"></i></a><a class="btn btn-outline-light btn-social mx-1"
                                                    href="https://www.twitter.com/BakalaConstance"><i
@@ -24,10 +24,8 @@
       </div>
       <!-- Footer About Text-->
       <div class="col-lg-4">
-        <h4 class="mb-4 text-center">A propos de moi</h4>
-        <p class="pre-wrap lead mb-0 text-justify">Je suis une coiffeuse-esthéticienne et couturière professionnelle.
-          Ces métiers sont pour moi des formes d’expression artistiques qui me passionnent et me permettent de
-          m’épanouir au quotidien.</p>
+        <h4 class="mb-4 text-center">{{'ABOUT_ME' | translate}}</h4>
+        <p class="pre-wrap lead mb-0 text-justify">{{'ABOUT_CONSTANCE' | translate}}</p>
       </div>
     </div>
   </div>
@@ -36,7 +34,7 @@
   <div class="container">
     <div class="app-auth-footer">
       <div class="text-center app-version">
-        <small class="pre-wrap">Copyright © Delice-Eternel 2020 <span
+        <small class="pre-wrap">Copyright © Délice-Éternel 2020 <span
           [innerHTML]="'v' + version + (isProd ? '' : '&nbsp;[' + envName+ ']')"></span></small>
       </div>
     </div>

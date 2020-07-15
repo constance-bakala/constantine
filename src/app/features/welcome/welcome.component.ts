@@ -22,14 +22,14 @@ export class WelcomeComponent implements OnInit {
     this.dataDresses = {
       portfolioLink: '/dresses',
       portfolioImagePrefix: 'dress',
-      portfolioName: 'Robes',
+      portfolioName: 'PRODUCTS.DRESSES.TITLE',
       portfolioImagesSize: DRESSES_SIZE,
       portfolioDirectory: 'dresses'
     };
     this.dataMasks = {
       portfolioLink: '/masks',
       portfolioImagePrefix: 'mask',
-      portfolioName: 'Masques',
+      portfolioName: 'PRODUCTS.MASKS.TITLE',
       portfolioImagesSize: MASKS_SIZE,
       portfolioDirectory: 'masks'
     };
@@ -37,7 +37,7 @@ export class WelcomeComponent implements OnInit {
     this.dataEarings = {
       portfolioLink: '/earings',
       portfolioImagePrefix: 'earing',
-      portfolioName: 'Boucles d\'oreille',
+      portfolioName: 'PRODUCTS.EARRINGS.TITLE',
       portfolioImagesSize: EARINGS_SIZE,
       portfolioDirectory: 'jewellery'
     }
