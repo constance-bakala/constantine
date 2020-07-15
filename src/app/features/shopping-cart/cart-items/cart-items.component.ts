@@ -25,12 +25,13 @@ import {DataSnapshot} from '@angular/fire/database/interfaces';
 import {compareObjects} from '@helpers/compare.objects.utils';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {IAppConfig} from '@shared/interfaces/app.interfaces';
-import {APP_CONFIG} from '@helpers/constants';
+import {APP_CONFIG, DEFAULT_LOCALE_ID} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 import {transcode} from 'buffer';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cart-items',
@@ -58,6 +59,7 @@ export class CartItemsComponent implements OnInit {
               private db: AngularFireDatabase,
               private dialog: MatDialog,
               private snackBar: MatSnackBar,
+              private translateService: TranslateService,
               @Inject(APP_CONFIG) appConfig: IAppConfig) {
     this.snackDuration = appConfig.snackDuration;
   }
@@ -207,7 +209,7 @@ export class CartItemsComponent implements OnInit {
           // It is important to protect the mail option as we have a limited number of email per day!
           // The comparison bellow also avoid sending to much request to the firebase backend!
           if (!this.items || this.items.length < 1 || (!!existingCommands && compareObjects(existingCommands, this.items))) {
-            this.alertCommandNotSent('COMMAND_ALREADY_EXIST');
+            this.alertCommandNotSent(this.translateService.instant('COMMAND_ALREADY_EXIST'));
           } else {
             // We update commendAllreadySent to true to avoid firing the database value above a second time! => this setting should stay here!!
             this.commendAllreadySent = true;
@@ -222,7 +224,7 @@ export class CartItemsComponent implements OnInit {
                       politeness: 'polite',
                     });
                 } else {
-                  this.alertCommandNotSent('AUTHENTICATION_REQUIRED');
+                  this.alertCommandNotSent(this.translateService.instant('AUTHENTICATION_REQUIRED'));
                 }
               });
           }
@@ -250,7 +252,7 @@ export class CartItemsComponent implements OnInit {
       autoFocus: true,
       data: {
         disableClose: false,
-        title: 'COMMAND_NOT_SENT',
+        title: this.translateService.instant('COMMAND_NOT_SENT'),
         message: message,
       }
     });
@@ -279,7 +281,7 @@ export class CartItemsComponent implements OnInit {
       displayName: user.displayName,
       shoppingCardLink: prefix + "/#/shopping-cart",
       uid: user.uid,
-      subject: 'NEW_ORDER_TITLE',
+      subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
       items: emailData
     };
     this.fun.httpsCallable('genericSendgridEmail')(data)
