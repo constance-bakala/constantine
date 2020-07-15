@@ -11,3 +11,19 @@ a.nav-link span {
   vertical-align: top;
   font-weight: 500;
 }
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: calc(1em + 1rem);
+  padding: 0.2rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 0.125rem solid #ced4da;
+  border-radius: 0.5rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}

@@ -27,25 +27,25 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <h5>{{itemGroup.get('reference').value}}</h5>
-                  <p class="mb-3 text-muted text-uppercase small"><strong>Catégorie:</strong>&nbsp;
+                  <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' | translate}}:</strong>&nbsp;
                     {{itemGroup.get('category').value}}
                   </p>
-                  <p class="mb-2 text-muted text-uppercase small"><strong>Modèle:</strong>&nbsp;
+                  <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' | translate}}:</strong>&nbsp;
                     <select type="text"
                             id="selectedModel"
                             name="selectedModel"
                             formControlName="selectedModel"
                             class="form-control">
-                      <option value="MODEL_UNIQUE" selected>Modèle unique</option>
+                      <option value="MODEL_UNIQUE" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}</option>
                     </select>
                   </p>
-                  <p class="mb-3 text-muted text-uppercase small"><strong>Tailles:</strong>&nbsp;
+                  <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' | translate}}:</strong>&nbsp;
                     <select id="selectedSize"
                             name="selectedSize"
                             formControlName="selectedSize"
                             class="form-control"
                             tabindex="2">
-                      <option disabled selected value="">Choisissez</option>
+                      <option disabled selected value="">{{'CHOOSE' | translate}}</option>
                       <option *ngFor="let s of sizes" [value]="s.value">{{ s.label }}</option>
                     </select>
                   </p>
@@ -67,14 +67,14 @@
                      class="card-link-secondary small text-uppercase btn btn-light">
                     <i *ngIf="selected" class="fas fa-trash-alt mr-1"></i>
                     <i *ngIf="!selected" class="fas fa-heart mr-1"></i>
-                    <span *ngIf="selected">Annuler</span>
-                    <span *ngIf="!selected">Ajouter au panier</span>
+                    <span *ngIf="selected">{{'CANCEL' | translate}}</span>
+                    <span *ngIf="!selected">{{'SELECT' | translate}}</span>
                     <span></span>
                   </a>
                   <!--a href="#!" type="button" class="card-link-secondary small text-uppercase">
                   <i class="fas fa-heart mr-1"></i> Move to wish list </a-->
                   <a (click)="close()" type="button" class="card-link-secondary small text-uppercase btn btn-light">
-                  <i class="fas fa-snowflake-o mr-1"></i> Fermer </a>
+                  <i class="fas fa-snowflake-o mr-1"></i> {{'CLOSE' | translate}} </a>
                 </div>
                 <p class="mb-0"><span><strong><i>0</i></strong></span></p>
               </div>

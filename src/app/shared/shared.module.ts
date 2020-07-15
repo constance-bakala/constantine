@@ -27,7 +27,7 @@ import {IconeDividerComponent} from './components/icone-divider/icone-divider.co
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {NavigationComponent} from './components/navigation/navigation.component';
 import {EnumToArrayPipe} from '@shared/pipes/enum-to-array/enum-to-array.pipe';
-import {PatternTransformPipe, TextTransformPipe, TranslatePipe} from '@shared/pipes';
+import {PatternTransformPipe, TextTransformPipe} from '@shared/pipes';
 import {NumberOnlyDirective} from '@shared/directives/number-only/number-only.directive';
 import {TruncatePipe} from '@shared/pipes/truncate-pipe/truncate.pipe';
 import {MatIconModule} from '@angular/material/icon';
@@ -37,9 +37,11 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {AlertComponent} from './components/alert/alert.component';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { SnackAlertComponent } from './components/snack-alert/snack-alert.component';
-import { CategoryButtonsComponent } from './components/category-buttons/category-buttons.component';
-import { ItemDetailsComponent } from './components/item-details/item-details.component';
+import {SnackAlertComponent} from './components/snack-alert/snack-alert.component';
+import {CategoryButtonsComponent} from './components/category-buttons/category-buttons.component';
+import {ItemDetailsComponent} from './components/item-details/item-details.component';
+import {FlagsComponent} from './components/flags/flags.component';
+import {TranslateModule, TranslatePipe} from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -58,6 +60,7 @@ import { ItemDetailsComponent } from './components/item-details/item-details.com
     MatToolbarModule,
     MatDialogModule,
     MatSnackBarModule,
+    TranslateModule,
   ],
   declarations: [
     ContactComponent,
@@ -84,11 +87,11 @@ import { ItemDetailsComponent } from './components/item-details/item-details.com
     TextTransformPipe,
     NumberOnlyDirective,
     TruncatePipe,
-    TranslatePipe,
     AlertComponent,
     SnackAlertComponent,
     CategoryButtonsComponent,
     ItemDetailsComponent,
+    FlagsComponent,
   ],
   exports: [
     CommonModule,
@@ -123,6 +126,7 @@ import { ItemDetailsComponent } from './components/item-details/item-details.com
     NumberOnlyDirective,
     TruncatePipe,
     TranslatePipe,
+    TranslateModule,
     MatDialogModule,
     CategoryButtonsComponent,
   ],

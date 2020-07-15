@@ -4,7 +4,7 @@
     <div class="jumbotron color-grey-light mt-50">
       <div class="d-flex align-items-center h-100">
         <div class="container text-center">
-          <h3 class="mb-0">Votre panier <span class="btn-floating" (click)="reload()"><i class="fa fa-refresh" aria-hidden="true"></i></span></h3>
+          <h3 class="mb-0">{{'PRODUCTS.BASKET' |translate}} <span class="btn-floating" (click)="reload()"><i class="fa fa-refresh" aria-hidden="true"></i></span></h3>
           <app-category-buttons
             [categoryToAvoid]="ItemsCategoriesEnum.UNKNOWN"
             [categoryInfos]="categoryInfos$ | async"
@@ -24,7 +24,7 @@
             <!-- Card -->
             <div class="card wish-list mb-4">
               <div [formGroup]="basketFormGroup" class="card-body" *ngIf="basketFormGroup">
-                <h5 class="mb-4">Cart (<span>{{nbSelectedItems$ | async }}</span>
+                <h5 class="mb-4">{{'PRODUCTS.CART' | translate}} (<span>{{nbSelectedItems$ | async }}</span>
                   <span *ngIf="(nbSelectedItems$ | async)  === 1">&nbsp;article</span>
                   <span *ngIf="(nbSelectedItems$ | async) > 1">&nbsp;articles</span>)
                 </h5>
@@ -49,24 +49,24 @@
                         <div class="d-flex justify-content-between">
                           <div>
                             <h5>{{itemGroup.get('reference').value}}</h5>
-                            <p class="mb-3 text-muted text-uppercase small"><strong>Catégorie:</strong>&nbsp;
+                            <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' | translate}}:</strong>&nbsp;
                               {{itemGroup.get('category').value}}
                             </p>
-                            <p class="mb-2 text-muted text-uppercase small"><strong>Modèle:</strong>&nbsp;
+                            <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' | translate}}:</strong>&nbsp;
                               <select id="model{{i}}"
                                       name="model{{i}}"
                                       formControlName="model"
                                       class="form-control">
-                                <option [value]="'MODEL_UNIQUE'" selected>Modèle unique</option>
+                                <option [value]="'MODEL_UNIQUE'" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}</option>
                               </select>
                             </p>
-                            <p class="mb-3 text-muted text-uppercase small"><strong>Tailles:</strong>&nbsp;
+                            <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' | translate}}:</strong>&nbsp;
                               <select id="size{{i}}"
                                       name="size{{i}}"
                                       formControlName="size"
                                       class="form-control"
                                       tabindex="2">
-                                <option disabled selected value="">Choisissez</option>
+                                <option disabled selected value="">{{'CHOOSE' | translate}}</option>
                                 <option *ngFor="let s of sizes" [value]="s.value">{{ s.label }}</option>
                               </select>
                             </p>
@@ -86,7 +86,7 @@
                           <div>
                             <a (click)="onToogleSelect(itemGroup.value)" type="button"
                                class="card-link-secondary small text-uppercase btn btn-light">
-                              <i class="fas fa-trash-alt mr-1"></i> Supprimer </a>
+                              <i class="fas fa-trash-alt mr-1"></i> {{'PRODUCTS.REMOVE' | translate}} </a>
                             <!--a href="#!" type="button" class="card-link-secondary small text-uppercase">
                             <i class="fas fa-heart mr-1"></i> Move to wish list </a-->
 
@@ -109,15 +109,14 @@
             <div class="card mb-4">
               <div class="card-body">
 
-                <h5 class="mb-4">Quand serez-vous livré ?</h5>
+                <h5 class="mb-4">{{'PRODUCTS.DELIVERY_TIME' | translate}}</h5>
 
                 <div class="mb-0">
                   <ul>
-                    <li>Passez directement au magasin après votre commande <strong>si vous vivez à Libreville et que
-                      vous achetez au détail!</strong></li>
-                    <li>Si vous achetez <strong>des stocks importants ou des articles sur mesure</strong>,
-                      contactez-nous!
-                      Nous évaluerons ensemble votre date de livraison!
+                    <li>
+                      {{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}
+                    </li> <li>
+                      {{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_ELSEWHERE' | translate}}
                     </li>
                   </ul>
                 </div>
@@ -127,7 +126,7 @@
             <!-- Card -->
             <div class="card mb-4">
               <div class="card-body">
-                <p class="mb-4 redInfos">Pour le moment, nous n'acceptons pas les moyens de paiment suivants: </p>
+                <p class="mb-4 redInfos">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}: </p>
                 <img class="mr-2" width="45px"
                      src="https://mdbootstrap.com/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
                      alt="Visa">
@@ -141,8 +140,8 @@
                      src="https://mdbootstrap.com/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.png"
                      alt="PayPal acceptance mark">
                 <p></p>
-                <p class="mb-4">Envoyez-nous votre commande par mail en cliquand sur le bouton <span class="greenInfos">Transmettre la commande</span>
-                  et nous vous rappelerons dès sa réception pour votre livraison!</p>
+                <p class="mb-4">{{'PRODUCTS.PAYMENTS_MEANS_DETAILS' | translate}} <span class="greenInfos">{{'PRODUCTS.SEND_COMMAND' | translate}}</span>
+                  {{'PRODUCTS.WILL_CALL_YOU_BACK' | translate}}</p>
               </div>
             </div>
             <!-- Card -->
@@ -155,12 +154,12 @@
             <!-- Card -->
             <div class="card mb-4">
               <div class="card-body">
-                <h5 class="mb-3">Résumé de votre commande</h5>
+                <h5 class="mb-3">{{'PRODUCTS.SUMMARY' | translate}}</h5>
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                     <span *ngIf="(nbSelectedItems$ | async)  <= 1">&nbsp;<h5 class="mb-3">Article</h5></span>
                     <span *ngIf="(nbSelectedItems$ | async) > 1">&nbsp;<h5 class="mb-3">Articles</h5></span>
-                    <span>Montant HT</span>
+                    <span>{{'PRODUCTS.AMOUNT_WITHOUT_VAT' | translate}}</span>
                   </li>
                   <li *ngFor="let itemGroup of basketItemsArray['controls']; let i=index"
                       class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
@@ -168,22 +167,21 @@
                     <span>0</span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    Transport
-                    <span>Gratis</span>
+                    {{'PRODUCTS.SHIPPING' | translate}}
+                    <span>{{'PRODUCTS.GRATIS' | translate}}</span>
                   </li>
                   <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
                     <div>
-                      <strong>Total de vos achats</strong>
+                      <strong>{{'PRODUCTS.TOTAL_WITH_VAT' | translate}}</strong>
                       <strong>
-                        <p class="mb-0">(y compris la TVA)</p>
+                        <p class="mb-0">{{'PRODUCTS.WITH_VAT' | translate}}</p>
                       </strong>
                     </div>
                     <span><strong>0</strong></span>
                   </li>
                 </ul>
                 <button (click)="sendCommand()" [disabled]="(nbSelectedItems$ | async) < 1 || commendAllreadySent" type="button"
-                        class="btn btn-primary btn-block waves-effect waves-light">Transmettre la
-                  commande
+                        class="btn btn-primary btn-block waves-effect waves-light">{{'PRODUCTS.SEND_COMMAND' | translate}}
                 </button>
               </div>
             </div>
@@ -195,7 +193,7 @@
 
                 <a class="dark-grey-text d-flex justify-content-between" data-toggle="collapse" href="#collapseExample"
                    aria-expanded="false" aria-controls="collapseExample">
-                  Ajouter un code promo (optionnel)
+                  {{'PRODUCTS.DISCOUNT_CODE' | translate}}
                   <span><i class="fas fa-chevron-down pt-1"></i></span>
                 </a>
                 <div class="collapse" id="collapseExample">

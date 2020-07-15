@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {SharedModule} from '@shared/shared.module';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFireStorageModule} from '@angular/fire/storage';
@@ -23,6 +23,8 @@ import {MatListModule} from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {APP_CONFIG} from '@helpers/constants';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,13 @@ import {APP_CONFIG} from '@helpers/constants';
     HttpClientModule,
     SharedModule,
     AppRoutingModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireAuthModule,
@@ -47,9 +56,9 @@ import {APP_CONFIG} from '@helpers/constants';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    MatToolbarModule
+    MatToolbarModule,
   ],
-  providers: [ CacheService,
+  providers: [CacheService,
     {
       provide: APP_CONFIG,
       useValue: {
@@ -57,8 +66,13 @@ import {APP_CONFIG} from '@helpers/constants';
         snackDuration: 5000
       }
     },],
-  exports: [],
+
+  exports: [TranslateModule],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 }
