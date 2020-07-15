@@ -1,10 +1,10 @@
 // Firebase Config
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-//const cors = require('cors')({origin: true});
-admin.initializeApp();
 // const db = admin.firestore();
 import * as sgMail from '@sendgrid/mail';
+//const cors = require('cors')({origin: true});
+admin.initializeApp();
 
 const API_KEY = functions.config().sendgrid.key;
 const TEMPLATE_ID_COMMEND = functions.config().sendgrid.commend;
@@ -20,8 +20,11 @@ export const welcomeSendgridEmail = functions.auth.user().onCreate(async user =>
     from: gmailSender,
     templateId: TEMPLATE_ID_WELCOME,
     dynamic_template_data: {
-      subject: 'Bienvenu sur délice éternel',
-      name: user.displayName ?? user.email,
+      subject: 'Bienvenu sur Délice Éternel',
+      displayName: user.displayName ?? user.email,
+      masksLink: "https://delice-eternel-gabon.web.app/#/masks",
+      dressesLink: "https://delice-eternel-gabon.web.app/#/dresses",
+      earingsLink: "https://delice-eternel-gabon.web.app/#/earings"
     },
   };
   return sgMail.send(msg);
@@ -38,7 +41,7 @@ export const genericSendgridEmail = functions.https.onCall(async (data, context)
     templateId: TEMPLATE_ID_COMMEND,
     dynamic_template_data: {
       subject: data.subject,
-      name: data.displayName,
+      displayName: data.displayName,
       items: data.items,
     },
   };

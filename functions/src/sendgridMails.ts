@@ -19,8 +19,8 @@ export const welcomeSendgridEmail = functions.auth.user().onCreate(async user =>
     from: gmailSender,
     templateId: TEMPLATE_ID,
     dynamic_template_data: {
-      subject: 'Bienvenu sur délice éternel',
-      name: user.displayName ?? user.email,
+      subject: 'Bienvenu sur Délice Éternel',
+      displayName: user.displayName ?? user.email,
     },
   };
   return sgMail.send(msg);

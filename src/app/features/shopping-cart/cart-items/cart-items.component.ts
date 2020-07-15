@@ -30,7 +30,6 @@ import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.co
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
-import {transcode} from 'buffer';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
@@ -278,13 +277,11 @@ export class CartItemsComponent implements OnInit {
     });
     const data = {
       text: '',
-      dynamic_template_data: {
-        subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
-        displayName: user.displayName,
-        uid: user.uid,
-        items: emailData,
-        shoppingCardLink: prefix + "/#/shopping-cart",
-      },
+      shoppingCardLink: prefix + "/#/shopping-cart",
+      uid: user.uid,
+      subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
+      items: emailData,
+      displayName: user.displayName,
     };
     this.fun.httpsCallable('genericSendgridEmail')(data)
       .subscribe(result => console.log(result),
