@@ -266,7 +266,7 @@ export class CartItemsComponent implements OnInit {
   private sendCommendNotificationMails(user: firebase.User) {
     const protocol = window.location.protocol;
     let prefix = protocol + '//' + window.location.host;
-    if (prefix.indexOf('gitHub') > 0) {
+    if (prefix.indexOf('github') > 0) {
       prefix = prefix + environment.appId;
     }
     const emailData = _.cloneDeep(this.items).map(item => {
