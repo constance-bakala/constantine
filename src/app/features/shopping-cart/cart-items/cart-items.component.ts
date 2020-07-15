@@ -267,7 +267,7 @@ export class CartItemsComponent implements OnInit {
     const protocol = window.location.protocol;
     let prefix = protocol + '//' + window.location.host;
     if (prefix.indexOf('github') > 0) {
-      prefix = prefix + environment.appId;
+      prefix = prefix + '/' + environment.appId;
     }
     const emailData = _.cloneDeep(this.items).map(item => {
       item.path = prefix + '/' + item.path;
@@ -278,11 +278,13 @@ export class CartItemsComponent implements OnInit {
     });
     const data = {
       text: '',
-      displayName: user.displayName,
-      shoppingCardLink: prefix + "/#/shopping-cart",
-      uid: user.uid,
-      subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
-      items: emailData
+      dynamic_template_data: {
+        subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
+        displayName: user.displayName,
+        uid: user.uid,
+        items: emailData,
+        shoppingCardLink: prefix + "/#/shopping-cart",
+      },
     };
     this.fun.httpsCallable('genericSendgridEmail')(data)
       .subscribe(result => console.log(result),
