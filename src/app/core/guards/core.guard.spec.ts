@@ -14,7 +14,7 @@ xdescribe('IsAuthenticatedGuard', () => {
       imports: [
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
-        RouterModule.forRoot([])],
+        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [IsAuthenticatedGuard,
         {provide: RolesService, useValue: {}},
