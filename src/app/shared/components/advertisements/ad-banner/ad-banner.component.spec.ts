@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AdBannerComponent } from './ad-banner.component';
 
@@ -6,7 +6,7 @@ describe('AdBannerComponent', () => {
   let component: AdBannerComponent;
   let fixture: ComponentFixture<AdBannerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AdBannerComponent ]
     })

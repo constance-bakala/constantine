@@ -15,7 +15,7 @@ xdescribe('NotFoundComponent', () => {
       declarations: [NotFoundComponent],
       imports: [
         HttpClientTestingModule,
-        RouterModule.forRoot([])],
+        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [{provide: APP_BASE_HREF, useValue: '/'}],
     })

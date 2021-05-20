@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {SigninComponent} from './signin.component';
 import {EffectsModule} from '@ngrx/effects';
@@ -13,14 +13,14 @@ xdescribe('SigninComponent', () => {
   let component: SigninComponent;
   let fixture: ComponentFixture<SigninComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [SigninComponent],
       imports: [FormsModule, ReactiveFormsModule,
         HttpClientTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
-        RouterModule.forRoot([])],
+        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [{provide: APP_BASE_HREF, useValue: '/'}],
     }).compileComponents();
