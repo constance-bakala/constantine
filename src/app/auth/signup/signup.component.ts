@@ -15,7 +15,7 @@ import {Misc} from '@helpers/misc.class';
 import {AuthSignup} from '@app/auth/store/auth.actions';
 import {selectorAuthSignup} from '@app/auth/store/auth.selectors';
 import {AngularFireAuth} from '@angular/fire/auth';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 
 @Component({
   selector: 'app-signup',
@@ -159,7 +159,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
   submit() {
     this.isFirstLoad = false;
-    this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+    this.afAuth.createUserWithEmailAndPassword(this.email.value, this.password.value)
       .then(result => {
         console.log(result);
       })

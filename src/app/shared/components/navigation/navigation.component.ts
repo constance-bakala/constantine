@@ -107,7 +107,7 @@ export class NavigationComponent implements OnInit {
 
   disconnect() {
     this.ngZone.run(() => {
-      this.afAuth.auth.signOut().then(() => this.store.dispatch(new ActionAuthLogout()));
+      this.afAuth.signOut().then(() => this.store.dispatch(new ActionAuthLogout()));
     });
   }
 

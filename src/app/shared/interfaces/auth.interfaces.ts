@@ -1,5 +1,5 @@
 import * as firebaseui from 'firebaseui';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 
 export interface ILoginSuccess {
   ssoToken?: string;

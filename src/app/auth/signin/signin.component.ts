@@ -8,7 +8,7 @@ import {selectorAuth} from '@app/auth/store/auth.selectors';
 import {AuthState} from '@app/auth/store';
 import {ActionAuthLoggedIn} from '@app/auth/store/auth.actions';
 import {AngularFireAuth} from '@angular/fire/auth';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import {AngularFireFunctions} from '@angular/fire/functions';
 
 @Component({
@@ -63,7 +63,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   }
 
   signIn() {
-    this.afAuth.auth.signInWithEmailAndPassword(this.logging.value.username.trim(), this.logging.value.password)
+    this.afAuth.signInWithEmailAndPassword(this.logging.value.username.trim(), this.logging.value.password)
       .then(result => {
         this.loading = false;
         this.store.dispatch(new ActionAuthLoggedIn({

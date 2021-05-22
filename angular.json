@@ -25,7 +25,8 @@
               "@firebase/functions",
               "@firebase/performance",
               "@firebase/remote-config",
-              "rxjs/internal/operators"
+              "rxjs/internal/operators",
+              "@firebase/app-check"
             ],
             "outputPath": "docs/",
             "index": "src/index.html",

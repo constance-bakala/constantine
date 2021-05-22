@@ -16,7 +16,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {combineLatest, Observable} from 'rxjs';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {AngularFireFunctions} from '@angular/fire/functions';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import {MatDialog} from '@angular/material/dialog';
 import {AngularFireDatabase} from '@angular/fire/database';
 import {Go} from '@app/auth/store';
