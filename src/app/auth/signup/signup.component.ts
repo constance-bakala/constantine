@@ -159,7 +159,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
   submit() {
     this.isFirstLoad = false;
-    this.afAuth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+    this.afAuth.auth.createUserWithEmailAndPassword(this.email.value, this.password.value)
       .then(result => {
         console.log(result);
       })
