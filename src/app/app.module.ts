@@ -25,6 +25,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {APP_CONFIG} from '@helpers/constants';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {AngularFireFunctionsModule} from "@angular/fire/functions";
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireFunctionsModule,
     AuthModule,
     CoreModule,
     FeaturesModule,
