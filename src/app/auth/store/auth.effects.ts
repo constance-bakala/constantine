@@ -21,7 +21,7 @@ import {Go} from './router.actions';
 import {AuthService} from '@shared/services';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AUTH_KEY} from '@app/auth/store/auth.reducer';
-import * as firebase from 'firebase';
+import firebase from 'firebase';
 import {ItemInfos} from '@shared/interfaces';
 import {ActionItemToogleNotSelected} from '@app/features/store';
 

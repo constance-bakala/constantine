@@ -1,6 +1,6 @@
 import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import * as firebaseui from 'firebaseui';
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import {AngularFireAuth} from '@angular/fire/auth';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
