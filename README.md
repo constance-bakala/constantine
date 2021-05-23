@@ -28,4 +28,13 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Build for production
 
-ng build --prod --output-path docs --base-href . 
+npm run build:prod
+
+## Deploy on firebase after connection to firebase
+firebase login --interactive 
+## Project Console: https://console.firebase.google.com/project/delice-eternel-gabon/overview
+firebase deploy --except functions
+## Hosting URL: https://delice-eternel-gabon.web.app
+## deploy only functions
+firebase deploy --only "functions:welcomeSendgridEmail,functions:genericSendgridEmail"
+
