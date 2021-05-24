@@ -12,7 +12,6 @@
     "test:ci": "ng test --watch false",
     "test:noscourcemap": "ng run test:ci  --reporters spec --sourcemaps=false",
     "lint:fix": "tslint -p src/tsconfig.app.json --fix",
-    "version": "echo $npm_package_version",
     "clean": "rm -rf ./docs/",
     "server": "cd docs && http-server",
     "prod": "npm run clean && npm run build:prod && npm run server",
