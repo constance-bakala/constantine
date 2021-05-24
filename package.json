@@ -1,22 +1,22 @@
 {
   "name": "constantine",
-  "version": "0.2.0",
+  "version": "1.5.9",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "npm version minor && ng build --configuration production --build-optimizer --vendor-chunk --output-path docs --base-href .",
+    "build:prod": "npx standard-version && ng build --configuration production --output-path docs --base-href .",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "test:ci": "ng test --watch false",
     "test:noscourcemap": "ng run test:ci  --reporters spec --sourcemaps=false",
     "lint:fix": "tslint -p src/tsconfig.app.json --fix",
-    "clean": "rm -rf ./docs/",
+    "clean": "npx rimraf docs",
     "server": "cd docs && http-server",
     "prod": "npm run clean && npm run build:prod && npm run server",
     "ci": "npm run clean && npm run prettier:ci && ng lint && ng test --browser ChromeTravisCi --reporters spec --environment prod && ng e2e && npm run build:travisci",
-    "release": "npx standard-veprsion && git push --follow-tags origin master",
+    "release": "npx standard-version && git push --follow-tags origin master",
     "prettier": "prettier --single-quote --parser typescript --write \"./src/**/*.ts\" && prettier --single-quote --parser scss --write \"./src/**/*.scss\"",
     "prettier:ci": "prettier --single-quote --parser typescript --list-different \"./src/**/*.ts\" && prettier --single-quote --parser scss --list-different \"./src/**/*.scss\"",
     "analyze": "npm run clean && npm run build:prod && npx webpack-bundle-analyzer ./public/stats.json",
@@ -54,7 +54,7 @@
     "angular-bootstrap-md": "^11.1.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^4.6.0",
-    "chart.js": "^3.2.1",
+    "chart.js": "^3.3.0",
     "core-js": "^2.6.12",
     "firebase": "^8.6.2",
     "firebaseui": "^4.8.0",
@@ -102,10 +102,7 @@
     "typescript": "~4.2.4",
     "standard-version": "^9.3.0",
     "cloc": "^2.8.0",
-    "prettier": "^2.3.0",
-    "webpack": "^5.37.1",
-    "webpack-bundle-analyzer": "^4.4.2",
-    "webpack-cli": "^4.7.0"
+    "prettier": "^2.3.0"
   },
   "husky": {
     "hooks": {
