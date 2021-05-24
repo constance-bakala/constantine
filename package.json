@@ -1,14 +1,29 @@
 {
   "name": "constantine",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "npm version minor && ng build --configuration production --output-path docs --base-href .",
+    "build:travisci": "ng build --configuration production --build-optimizer --vendor-chunk --deploy-url /constantine/ --base-href /constantine",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "test:ci": "ng test --watch false",
+    "test:noscourcemap": "ng run test:ci  --reporters spec --sourcemaps=false",
+    "lint:fix": "tslint -p src/tsconfig.app.json --fix",
+    "version": "echo $npm_package_version",
+    "clean": "rm -rf ./docs/",
+    "server": "cd docs && http-server",
+    "prod": "npm run clean && npm run build:prod && npm run server",
+    "ci": "npm run clean && npm run prettier:ci && ng lint && ng test --browser ChromeTravisCi --reporters spec --environment prod && ng e2e && npm run build:travisci",
+    "release": "standard-veprsion && git push --follow-tags origin master",
+    "prettier": "prettier --single-quote --parser typescript --write \"./src/**/*.ts\" && prettier --single-quote --parser scss --write \"./src/**/*.scss\"",
+    "prettier:ci": "prettier --single-quote --parser typescript --list-different \"./src/**/*.ts\" && prettier --single-quote --parser scss --list-different \"./src/**/*.scss\"",
+    "analyze": "npm run clean && npm run build:prod && webpack-bundle-analyzer ./public/stats.json",
+    "cloc": "cloc ./src",
+    "git:count": "git rev-list --all --count"
   },
   "private": true,
   "dependencies": {
@@ -86,6 +101,18 @@
     "protractor": "~7.0.0",
     "ts-node": "~9.1.1",
     "tslint": "~6.1.3",
-    "typescript": "~4.2.4"
+    "typescript": "~4.2.4",
+    "standard-version": "^9.3.0",
+    "cloc": "^2.8.0",
+    "prettier": "^2.3.0",
+    "webpack": "^5.37.1",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-cli": "^4.7.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test:ci"
+    }
   }
 }
