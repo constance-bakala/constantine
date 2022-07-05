@@ -7,7 +7,13 @@
     "types": [
       "jasmine",
       "jasminewd2",
-      "node"
+      "node",
+      "expect-webdriverio",
+      "@wdio/local-runner@latest",
+      "@wdio/cucumber-framework@latest",
+      "@wdio/spec-reporter@latest",
+      "webdriverio/async",
+      "@wdio/cucumber-framework"
     ]
   }
 }
