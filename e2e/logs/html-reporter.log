@@ -1,0 +1,490 @@
+[2021-06-27T16:22:36.270] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-27T16:22:36.336] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:22:36.356] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:22:36.366] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.370] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.371] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.371] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.372] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.373] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.378] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:22:36.380] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:22:36.382] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.382] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.383] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.384] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.385] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:22:36.386] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:22:36.388] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:22:36.390] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:22:36.426] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-27T16:22:36.428] [INFO] filterOut - Html Generation started
+[2021-06-27T16:22:36.519] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:22:36.723] [INFO] filterOut - Report Aggregation started
+[2021-06-27T16:22:36.739] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-27T16:22:36.740] [INFO] filterOut - Html Generation started
+[2021-06-27T16:22:36.839] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:22:36.840] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T16:22:36.862] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T16:22:36.872] [INFO] filterOut - browser launched
+[2021-06-27T16:23:51.993] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-27T16:23:52.084] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:23:52.106] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:23:52.115] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.119] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.121] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.123] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.124] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.126] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.133] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:23:52.138] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:23:52.142] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.143] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.144] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.144] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.145] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:23:52.146] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:23:52.147] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:23:52.151] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:23:52.280] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-27T16:23:52.282] [INFO] filterOut - Html Generation started
+[2021-06-27T16:23:52.391] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:23:52.619] [INFO] filterOut - Report Aggregation started
+[2021-06-27T16:23:52.635] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-27T16:23:52.637] [INFO] filterOut - Html Generation started
+[2021-06-27T16:23:52.726] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:23:52.727] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T16:23:52.755] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T16:23:52.766] [INFO] filterOut - browser launched
+[2021-06-27T16:28:06.042] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-27T16:28:06.156] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:28:06.179] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:28:06.191] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.196] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.199] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.201] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.202] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.204] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.209] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:28:06.212] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T16:28:06.216] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.217] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.218] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.219] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.220] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T16:28:06.221] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T16:28:06.223] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:28:06.227] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T16:28:06.382] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-27T16:28:06.384] [INFO] filterOut - Html Generation started
+[2021-06-27T16:28:06.483] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:28:06.719] [INFO] filterOut - Report Aggregation started
+[2021-06-27T16:28:06.735] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-27T16:28:06.736] [INFO] filterOut - Html Generation started
+[2021-06-27T16:28:06.829] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:28:06.829] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T16:28:06.864] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T16:28:06.877] [INFO] filterOut - browser launched
+[2021-06-27T16:30:34.333] [INFO] filterOut - Report Aggregation started
+[2021-06-27T16:30:34.338] [ERROR] filterOut - Invalid Metrics computed: undefined -- undefined
+[2021-06-27T16:30:34.344] [INFO] filterOut - Aggregated 0 specs, 0 suites, 1 reports, 
+[2021-06-27T16:30:34.345] [INFO] filterOut - Html Generation started
+[2021-06-27T16:30:34.429] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:30:34.429] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T16:30:34.458] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T16:30:34.549] [INFO] filterOut - browser launched
+[2021-06-27T16:31:19.348] [INFO] filterOut - Report Aggregation started
+[2021-06-27T16:31:19.351] [ERROR] filterOut - Invalid Metrics computed: undefined -- undefined
+[2021-06-27T16:31:19.357] [INFO] filterOut - Aggregated 0 specs, 0 suites, 1 reports, 
+[2021-06-27T16:31:19.359] [INFO] filterOut - Html Generation started
+[2021-06-27T16:31:19.446] [INFO] filterOut - Html Generation completed
+[2021-06-27T16:31:19.446] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T16:31:19.469] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T16:31:19.570] [INFO] filterOut - browser launched
+[2021-06-27T20:49:13.241] [INFO] filterOut - Report Aggregation started
+[2021-06-27T20:49:13.242] [ERROR] filterOut - Invalid Metrics computed: undefined -- undefined
+[2021-06-27T20:49:13.244] [INFO] filterOut - Aggregated 0 specs, 0 suites, 1 reports, 
+[2021-06-27T20:49:13.244] [INFO] filterOut - Html Generation started
+[2021-06-27T20:49:13.280] [INFO] filterOut - Html Generation completed
+[2021-06-27T20:49:13.280] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T20:49:13.293] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T20:49:13.447] [INFO] filterOut - browser launched
+[2021-06-27T23:33:28.420] [INFO] filterOut - Report Aggregation started
+[2021-06-27T23:33:28.422] [ERROR] filterOut - Invalid Metrics computed: undefined -- undefined
+[2021-06-27T23:33:28.425] [INFO] filterOut - Aggregated 0 specs, 0 suites, 1 reports, 
+[2021-06-27T23:33:28.425] [INFO] filterOut - Html Generation started
+[2021-06-27T23:33:28.460] [INFO] filterOut - Html Generation completed
+[2021-06-27T23:33:28.461] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T23:33:28.482] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T23:33:28.517] [INFO] filterOut - browser launched
+[2021-06-27T23:40:23.074] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-27T23:40:23.125] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T23:40:23.136] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T23:40:23.141] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.142] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.142] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.143] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.143] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.143] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.145] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T23:40:23.146] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-27T23:40:23.147] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.148] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.148] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.149] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.149] [INFO] filterOut - onTestStart: 0-0
+[2021-06-27T23:40:23.150] [INFO] filterOut - onTestFail: 0-0
+[2021-06-27T23:40:23.150] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T23:40:23.152] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-27T23:40:23.194] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-27T23:40:23.195] [INFO] filterOut - Html Generation started
+[2021-06-27T23:40:23.253] [INFO] filterOut - Html Generation completed
+[2021-06-27T23:40:23.417] [INFO] filterOut - Report Aggregation started
+[2021-06-27T23:40:23.425] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-27T23:40:23.425] [INFO] filterOut - Html Generation started
+[2021-06-27T23:40:23.477] [INFO] filterOut - Html Generation completed
+[2021-06-27T23:40:23.477] [INFO] filterOut - Report Aggregation completed
+[2021-06-27T23:40:23.498] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-27T23:40:23.506] [INFO] filterOut - browser launched
+[2021-06-28T06:42:53.274] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T06:42:53.359] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:42:53.379] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:42:53.389] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.393] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.395] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.396] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.397] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.397] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.402] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:42:53.404] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:42:53.408] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.410] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.410] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.412] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.412] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:42:53.413] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:42:53.415] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:42:53.419] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:42:53.543] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T06:42:53.545] [INFO] filterOut - Html Generation started
+[2021-06-28T06:42:53.637] [INFO] filterOut - Html Generation completed
+[2021-06-28T06:42:53.873] [INFO] filterOut - Report Aggregation started
+[2021-06-28T06:42:53.894] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-28T06:42:53.895] [INFO] filterOut - Html Generation started
+[2021-06-28T06:42:53.996] [INFO] filterOut - Html Generation completed
+[2021-06-28T06:42:53.996] [INFO] filterOut - Report Aggregation completed
+[2021-06-28T06:42:54.029] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-28T06:42:54.041] [INFO] filterOut - browser launched
+[2021-06-28T06:58:21.382] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T06:58:21.478] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:58:21.500] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:58:21.510] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.514] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.514] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.515] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.516] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.517] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.520] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:58:21.523] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T06:58:21.525] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.525] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.526] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.527] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.528] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T06:58:21.528] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T06:58:21.530] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:58:21.534] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T06:58:21.547] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T06:58:21.549] [INFO] filterOut - Html Generation started
+[2021-06-28T06:58:21.652] [INFO] filterOut - Html Generation completed
+[2021-06-28T07:53:53.718] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T07:53:53.809] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:53:53.833] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:53:53.844] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.848] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.849] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.850] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.850] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.851] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.857] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:53:53.860] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:53:53.863] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.865] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.867] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.868] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.869] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:53:53.870] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:53:53.872] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:53:53.879] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:53:54.013] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T07:53:54.015] [INFO] filterOut - Html Generation started
+[2021-06-28T07:53:54.098] [INFO] filterOut - Html Generation completed
+[2021-06-28T07:53:54.350] [INFO] filterOut - Report Aggregation started
+[2021-06-28T07:53:54.367] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-28T07:53:54.368] [INFO] filterOut - Html Generation started
+[2021-06-28T07:53:54.456] [INFO] filterOut - Html Generation completed
+[2021-06-28T07:53:54.457] [INFO] filterOut - Report Aggregation completed
+[2021-06-28T07:53:54.488] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-28T07:53:54.498] [INFO] filterOut - browser launched
+[2021-06-28T07:54:19.372] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T07:54:19.461] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:54:19.481] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:54:19.491] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.494] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.495] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.496] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.496] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.497] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.503] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:54:19.506] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T07:54:19.508] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.509] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.510] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.511] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.512] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T07:54:19.512] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T07:54:19.514] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:54:19.519] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T07:54:19.528] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T07:54:19.530] [INFO] filterOut - Html Generation started
+[2021-06-28T07:54:19.639] [INFO] filterOut - Html Generation completed
+[2021-06-28T10:12:47.538] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T10:12:47.642] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T10:12:47.665] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T10:12:47.675] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.679] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.681] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.682] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.683] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.685] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.689] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T10:12:47.691] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T10:12:47.693] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.694] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.695] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.696] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.696] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T10:12:47.698] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T10:12:47.699] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T10:12:47.703] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T10:12:47.824] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T10:12:47.826] [INFO] filterOut - Html Generation started
+[2021-06-28T10:12:47.921] [INFO] filterOut - Html Generation completed
+[2021-06-28T10:12:48.136] [INFO] filterOut - Report Aggregation started
+[2021-06-28T10:12:48.154] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-28T10:12:48.155] [INFO] filterOut - Html Generation started
+[2021-06-28T10:12:48.240] [INFO] filterOut - Html Generation completed
+[2021-06-28T10:12:48.240] [INFO] filterOut - Report Aggregation completed
+[2021-06-28T10:12:48.269] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-28T10:12:48.280] [INFO] filterOut - browser launched
+[2021-06-28T17:21:30.216] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T17:21:30.301] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:21:30.323] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:21:30.337] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.341] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.342] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.343] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.343] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.344] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.351] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:21:30.353] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:21:30.355] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.356] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.356] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.357] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.358] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:21:30.359] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:21:30.360] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:21:30.365] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:21:30.500] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T17:21:30.502] [INFO] filterOut - Html Generation started
+[2021-06-28T17:21:30.599] [INFO] filterOut - Html Generation completed
+[2021-06-28T17:21:30.834] [INFO] filterOut - Report Aggregation started
+[2021-06-28T17:21:30.856] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-28T17:21:30.858] [INFO] filterOut - Html Generation started
+[2021-06-28T17:21:31.018] [INFO] filterOut - Html Generation completed
+[2021-06-28T17:21:31.018] [INFO] filterOut - Report Aggregation completed
+[2021-06-28T17:21:31.068] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-28T17:21:31.203] [INFO] filterOut - browser launched
+[2021-06-28T17:25:32.701] [INFO] filterOut - onRunnerStart: 0-0
+[2021-06-28T17:25:32.803] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:25:32.833] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:25:32.845] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.850] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.850] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.852] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.852] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.854] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.861] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:25:32.865] [INFO] filterOut - onSuiteStart: 0-0
+[2021-06-28T17:25:32.868] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.869] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.870] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.871] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.872] [INFO] filterOut - onTestStart: 0-0
+[2021-06-28T17:25:32.872] [INFO] filterOut - onTestFail: 0-0
+[2021-06-28T17:25:32.875] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:25:32.883] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-06-28T17:25:33.020] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-06-28T17:25:33.021] [INFO] filterOut - Html Generation started
+[2021-06-28T17:25:33.116] [INFO] filterOut - Html Generation completed
+[2021-06-28T17:25:33.376] [INFO] filterOut - Report Aggregation started
+[2021-06-28T17:25:33.394] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-06-28T17:25:33.396] [INFO] filterOut - Html Generation started
+[2021-06-28T17:25:33.490] [INFO] filterOut - Html Generation completed
+[2021-06-28T17:25:33.490] [INFO] filterOut - Report Aggregation completed
+[2021-06-28T17:25:33.522] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-06-28T17:25:33.534] [INFO] filterOut - browser launched
+[2021-07-01T19:04:21.405] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:04:21.497] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:04:21.522] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:04:21.530] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.537] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.538] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.539] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.540] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.541] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.546] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:04:21.549] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:04:21.552] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.553] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.554] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.555] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.556] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:04:21.557] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:04:21.558] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:04:21.562] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:04:21.631] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:04:21.633] [INFO] filterOut - Html Generation started
+[2021-07-01T19:04:21.759] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:04:21.967] [INFO] filterOut - Report Aggregation started
+[2021-07-01T19:04:21.981] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-07-01T19:04:21.982] [INFO] filterOut - Html Generation started
+[2021-07-01T19:04:22.072] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:04:22.072] [INFO] filterOut - Report Aggregation completed
+[2021-07-01T19:04:22.105] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-07-01T19:04:22.118] [INFO] filterOut - browser launched
+[2021-07-01T19:06:08.735] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:06:08.818] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:06:08.840] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:06:08.851] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.854] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.855] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.856] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.856] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.857] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.863] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:06:08.865] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:06:08.867] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.868] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.869] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.869] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.870] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:06:08.871] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:06:08.872] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:06:08.877] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:06:08.952] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:06:08.954] [INFO] filterOut - Html Generation started
+[2021-07-01T19:06:09.088] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:06:09.320] [INFO] filterOut - Report Aggregation started
+[2021-07-01T19:06:09.335] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-07-01T19:06:09.337] [INFO] filterOut - Html Generation started
+[2021-07-01T19:06:09.443] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:06:09.444] [INFO] filterOut - Report Aggregation completed
+[2021-07-01T19:06:09.483] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-07-01T19:06:09.498] [INFO] filterOut - browser launched
+[2021-07-01T19:08:37.561] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:08:37.652] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:08:37.673] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:08:37.686] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.694] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.696] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.697] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.698] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.700] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.704] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:08:37.707] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:08:37.710] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.711] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.712] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.713] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.714] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:08:37.715] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:08:37.717] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:08:37.720] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:08:37.834] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:08:37.836] [INFO] filterOut - Html Generation started
+[2021-07-01T19:08:37.927] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:08:38.122] [INFO] filterOut - Report Aggregation started
+[2021-07-01T19:08:38.135] [INFO] filterOut - Aggregated 1 specs, 3 suites, 1 reports, 
+[2021-07-01T19:08:38.136] [INFO] filterOut - Html Generation started
+[2021-07-01T19:08:38.224] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:08:38.225] [INFO] filterOut - Report Aggregation completed
+[2021-07-01T19:08:38.256] [INFO] filterOut - copyfiles complete : C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\wdio-html-nice-reporter\css\*.* to C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\e2e\coverage\chrome-html-reports\
+[2021-07-01T19:08:38.268] [INFO] filterOut - browser launched
+[2021-07-01T19:09:35.431] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:09:35.540] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:09:35.560] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:09:35.571] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.576] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.578] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.579] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.579] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.581] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.587] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:09:35.591] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:09:35.596] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.597] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.598] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.599] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.599] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:09:35.601] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:09:35.604] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:09:35.609] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:09:35.623] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:09:35.626] [INFO] filterOut - Html Generation started
+[2021-07-01T19:09:35.724] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:10:48.480] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:10:48.575] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:10:48.596] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:10:48.610] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.613] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.615] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.616] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.616] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.618] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.622] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:10:48.624] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:10:48.626] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.627] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.628] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.629] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.630] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:10:48.631] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:10:48.633] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:10:48.638] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:10:48.649] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:10:48.651] [INFO] filterOut - Html Generation started
+[2021-07-01T19:10:48.768] [INFO] filterOut - Html Generation completed
+[2021-07-01T19:13:00.555] [INFO] filterOut - onRunnerStart: 0-0
+[2021-07-01T19:13:00.655] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:13:00.678] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:13:00.688] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.692] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.693] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.694] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.695] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.696] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.700] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:13:00.702] [INFO] filterOut - onSuiteStart: 0-0
+[2021-07-01T19:13:00.704] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.705] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.706] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.707] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.707] [INFO] filterOut - onTestStart: 0-0
+[2021-07-01T19:13:00.709] [INFO] filterOut - onTestFail: 0-0
+[2021-07-01T19:13:00.712] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:13:00.716] [INFO] filterOut - onSuiteEnd: 0-0
+[2021-07-01T19:13:00.733] [INFO] filterOut - onRunnerEnd: 0-0
+[2021-07-01T19:13:00.735] [INFO] filterOut - Html Generation started
+[2021-07-01T19:13:00.853] [INFO] filterOut - Html Generation completed
