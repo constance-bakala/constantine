@@ -1,0 +1,174 @@
+{
+  "start": "2021-07-01T17:13:00.553Z",
+  "end": "2021-07-01T17:13:00.730Z",
+  "capabilities": {
+    "acceptInsecureCerts": true,
+    "browserName": "chrome",
+    "browserVersion": "91.0.4472.114",
+    "chrome": {
+      "chromedriverVersion": "91.0.4472.101 (af52a90bf87030dd1523486a1cd3ae25c5d76c9b-refs/branch-heads/4472@{#1462})",
+      "userDataDir": "C:\\Users\\wylfr\\AppData\\Local\\Temp\\scoped_dir34692_763794931"
+    },
+    "goog:chromeOptions": {
+      "debuggerAddress": "localhost:57890"
+    },
+    "networkConnectionEnabled": false,
+    "pageLoadStrategy": "normal",
+    "platformName": "windows",
+    "proxy": {},
+    "setWindowRect": true,
+    "strictFileInteractability": false,
+    "timeouts": {
+      "implicit": 0,
+      "pageLoad": 300000,
+      "script": 30000
+    },
+    "unhandledPromptBehavior": "dismiss and notify",
+    "webauthn:extension:largeBlob": true,
+    "webauthn:virtualAuthenticators": true,
+    "sessionId": "22cdd70767258282b8fc83ec883e099e"
+  },
+  "host": "localhost",
+  "port": 9515,
+  "baseUrl": "http://localhost:4200/",
+  "framework": "cucumber",
+  "duration": 177,
+  "suites": [
+    {
+      "title": "As a user, I can log into the secure area",
+      "duration": 21,
+      "start": "2021-07-01T17:13:00.678Z",
+      "end": "2021-07-01T17:13:00.699Z",
+      "tests": [
+        {
+          "title": "Given I am on the login page",
+          "start": "2021-07-01T17:13:00.688Z",
+          "end": "2021-07-01T17:13:00.692Z",
+          "duration": 4,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I am on the login page\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I am on the login page\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I am on the login page):5:5\n"
+          }
+        },
+        {
+          "title": "When I login with tomsmith and SuperSecretPassword!",
+          "start": "2021-07-01T17:13:00.693Z",
+          "end": "2021-07-01T17:13:00.694Z",
+          "duration": 1,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I login with tomsmith and SuperSecretPassword!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I login with tomsmith and SuperSecretPassword!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I login with <username> and <password>):6:5\n"
+          }
+        },
+        {
+          "title": "Then I should see a flash message saying You logged into a secure area!",
+          "start": "2021-07-01T17:13:00.694Z",
+          "end": "2021-07-01T17:13:00.695Z",
+          "duration": 1,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I should see a flash message saying You logged into a secure area!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I should see a flash message saying You logged into a secure area!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I should see a flash message saying <message>):7:5\n"
+          }
+        }
+      ],
+      "hooks": [
+        {
+          "start": "2021-07-01T17:13:00.681Z",
+          "end": "2021-07-01T17:13:00.687Z",
+          "duration": 6,
+          "title": "",
+          "associatedSuite": "0"
+        },
+        {
+          "start": "2021-07-01T17:13:00.696Z",
+          "end": "2021-07-01T17:13:00.698Z",
+          "duration": 2,
+          "title": "",
+          "associatedSuite": "0"
+        }
+      ]
+    },
+    {
+      "title": "As a user, I can log into the secure area",
+      "duration": 9,
+      "start": "2021-07-01T17:13:00.702Z",
+      "end": "2021-07-01T17:13:00.711Z",
+      "tests": [
+        {
+          "title": "Given I am on the login page",
+          "start": "2021-07-01T17:13:00.704Z",
+          "end": "2021-07-01T17:13:00.705Z",
+          "duration": 1,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I am on the login page\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I am on the login page\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I am on the login page):5:5\n"
+          }
+        },
+        {
+          "title": "When I login with foobar and barfoo",
+          "start": "2021-07-01T17:13:00.706Z",
+          "end": "2021-07-01T17:13:00.707Z",
+          "duration": 1,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I login with foobar and barfoo\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I login with foobar and barfoo\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I login with <username> and <password>):6:5\n"
+          }
+        },
+        {
+          "title": "Then I should see a flash message saying Your username is invalid!",
+          "start": "2021-07-01T17:13:00.707Z",
+          "end": "2021-07-01T17:13:00.709Z",
+          "duration": 2,
+          "state": "failed",
+          "screenshots": [],
+          "error": {
+            "message": "Step \"I should see a flash message saying Your username is invalid!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.",
+            "stack": "Step \"I should see a flash message saying Your username is invalid!\" is not defined. You can ignore this error by setting cucumberOpts.ignoreUndefinedDefinitions as true.\n\tat Feature(C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature):1:1\n\tat Scenario(As a user, I can log into the secure area):3:3\n\tat Step(I should see a flash message saying <message>):7:5\n"
+          }
+        }
+      ],
+      "hooks": [
+        {
+          "start": "2021-07-01T17:13:00.703Z",
+          "end": "2021-07-01T17:13:00.704Z",
+          "duration": 1,
+          "title": "",
+          "associatedSuite": "1"
+        },
+        {
+          "start": "2021-07-01T17:13:00.710Z",
+          "end": "2021-07-01T17:13:00.711Z",
+          "duration": 1,
+          "title": "",
+          "associatedSuite": "1"
+        }
+      ]
+    },
+    {
+      "title": "The Internet Guinea Pig Website",
+      "duration": 61,
+      "start": "2021-07-01T17:13:00.655Z",
+      "end": "2021-07-01T17:13:00.716Z",
+      "tests": [],
+      "hooks": []
+    }
+  ],
+  "specs": [
+    "C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\e2e\\features\\login.feature"
+  ],
+  "state": {
+    "passed": 0,
+    "failed": 6,
+    "skipped": 0
+  }
+}

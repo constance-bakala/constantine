@@ -1,0 +1,198 @@
+[debug] [2021-07-18T16:03:44.256Z] ----------------------------------------------------------------------
+[debug] [2021-07-18T16:03:44.259Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\bin\firebase.js functions:shell
+[debug] [2021-07-18T16:03:44.260Z] CLI Version:   9.14.0
+[debug] [2021-07-18T16:03:44.260Z] Platform:      win32
+[debug] [2021-07-18T16:03:44.260Z] Node Version:  v14.17.3
+[debug] [2021-07-18T16:03:44.261Z] Time:          Sun Jul 18 2021 18:03:44 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2021-07-18T16:03:44.262Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-07-18T16:03:44.266Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2021-07-18T16:03:44.305Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-07-18T16:03:44.305Z] > authorizing via signed-in user (delice.eternel.gabon@gmail.com)
+[debug] [2021-07-18T16:03:44.305Z] [iam] checking project delice-eternel-gabon for permissions ["firebase.projects.get"]
+[debug] [2021-07-18T16:03:44.307Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-18T16:03:44.307Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:03:44.407Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Sun, 18 Jul 2021 16:03:44 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:03:44.417Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/delice-eternel-gabon:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2021-07-18T16:03:44.719Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2021-07-18T16:03:44.719Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2021-07-18T16:03:45.032Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 18 Jul 2021 16:03:44 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=551","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[warn] !  Your requested "node" version "10" doesn't match your global version "14" {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"10\" doesn't match your global version \"14\""}}
+[debug] [2021-07-18T16:03:45.044Z] defaultcredentials: writing to file C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:03:45.045Z] DEBUG: Setting GAC to C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:03:45.045Z] > refreshing access token with scopes: []
+[debug] [2021-07-18T16:03:45.045Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:03:45.102Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","date":"Sun, 18 Jul 2021 16:03:44 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:03:45.110Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig [none]
+[debug] [2021-07-18T16:03:45.382Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig 200
+[debug] [2021-07-18T16:03:45.382Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig {"projectId":"delice-eternel-gabon","databaseURL":"https://delice-eternel-gabon.firebaseio.com","storageBucket":"delice-eternel-gabon.appspot.com","locationId":"europe-west"}
+[debug] [2021-07-18T16:03:45.395Z] [functions] Watching "C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions" for Cloud Functions...
+[debug] [2021-07-18T16:03:45.407Z] DEBUG: [worker-pool] addWorker(~diagnostic~)
+[debug] [2021-07-18T16:03:45.407Z] DEBUG: [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2021-07-18T16:03:45.408Z] DEBUG: [worker-pool] submitWork(triggerId=)
+[debug] [2021-07-18T16:03:45.408Z] DEBUG: [worker-~diagnostic~-19eac425-8482-4fb7-ae2a-3618079019cc]: Assigning socketPath: \\?\pipe\C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\24064
+[debug] [2021-07-18T16:03:45.408Z] DEBUG: [worker-~diagnostic~-19eac425-8482-4fb7-ae2a-3618079019cc]: BUSY
+[debug] [2021-07-18T16:03:45.673Z] DEBUG: [runtime-status] [24064] Functions runtime initialized. {"cwd":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions","node_version":"14.17.3"}
+[debug] [2021-07-18T16:03:45.674Z] DEBUG: [runtime-status] [24064] Disabled runtime features: undefined
+[debug] [2021-07-18T16:03:45.678Z] DEBUG: [runtime-status] [24064] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.680Z] DEBUG: [runtime-status] [24064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.681Z] DEBUG: [runtime-status] [24064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.683Z] DEBUG: [runtime-status] [24064] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2021-07-18T16:03:45.683Z] DEBUG: [runtime-status] [24064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.747Z] DEBUG: [runtime-status] [24064] Checked functions.config() {"config":{}}
+[debug] [2021-07-18T16:03:45.747Z] DEBUG: [runtime-status] [24064] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}}
+[debug] [2021-07-18T16:03:45.748Z] DEBUG: [runtime-status] [24064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.750Z] DEBUG: [runtime-status] [24064] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.750Z] DEBUG: [runtime-status] [24064] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:03:45.750Z] DEBUG: [runtime-status] [24064] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}}
+[debug] [2021-07-18T16:03:45.816Z] DEBUG: [runtime-status] [24064] initializeApp(DEFAULT) {"storageBucket":"delice-eternel-gabon.appspot.com","databaseURL":"https://delice-eternel-gabon.firebaseio.com","projectId":"delice-eternel-gabon"}
+[warn] !  It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator {"metadata":{"emulator":{"name":"functions"},"message":"It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator"}}
+[warn] !  TypeError: Cannot read property 'key' of undefined
+    at Object.<anonymous> (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\lib\index.js:11:44)
+    at Module._compile (internal/modules/cjs/loader.js:1085:14)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1114:10)
+    at Module.load (internal/modules/cjs/loader.js:950:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:790:14)
+    at Module.require (internal/modules/cjs/loader.js:974:19)
+    at require (internal/modules/cjs/helpers.js:92:18)
+    at initializeRuntime (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:684:29)
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)
+    at async handleMessage (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:723:20) {"metadata":{"emulator":{"name":"functions"},"message":"TypeError: Cannot read property 'key' of undefined\n    at Object.<anonymous> (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\lib\\index.js:11:44)\n    at Module._compile (internal/modules/cjs/loader.js:1085:14)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1114:10)\n    at Module.load (internal/modules/cjs/loader.js:950:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:790:14)\n    at Module.require (internal/modules/cjs/loader.js:974:19)\n    at require (internal/modules/cjs/helpers.js:92:18)\n    at initializeRuntime (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorRuntime.js:684:29)\n    at processTicksAndRejections (internal/process/task_queues.js:95:5)\n    at async handleMessage (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorRuntime.js:723:20)"}}
+[warn] !  We were unable to load your functions code. (see above)
+   - It appears your code is written in Typescript, which must be compiled before emulation.
+   - You may be able to run "npm run build" in your functions directory to resolve this. {"metadata":{"emulator":{"name":"functions"}}}
+[debug] [2021-07-18T16:03:45.851Z] DEBUG: [worker-~diagnostic~-19eac425-8482-4fb7-ae2a-3618079019cc]: exited
+[debug] [2021-07-18T16:03:45.851Z] DEBUG: [worker-~diagnostic~-19eac425-8482-4fb7-ae2a-3618079019cc]: FINISHED
+[debug] [2021-07-18T16:06:56.473Z] ----------------------------------------------------------------------
+[debug] [2021-07-18T16:06:56.475Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\bin\firebase.js functions:shell
+[debug] [2021-07-18T16:06:56.476Z] CLI Version:   9.14.0
+[debug] [2021-07-18T16:06:56.476Z] Platform:      win32
+[debug] [2021-07-18T16:06:56.476Z] Node Version:  v14.17.3
+[debug] [2021-07-18T16:06:56.477Z] Time:          Sun Jul 18 2021 18:06:56 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2021-07-18T16:06:56.477Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-07-18T16:06:56.483Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-07-18T16:06:56.483Z] > authorizing via signed-in user (delice.eternel.gabon@gmail.com)
+[debug] [2021-07-18T16:06:56.483Z] [iam] checking project delice-eternel-gabon for permissions ["firebase.projects.get"]
+[debug] [2021-07-18T16:06:56.485Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-18T16:06:56.485Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:06:56.565Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","date":"Sun, 18 Jul 2021 16:06:56 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:06:56.572Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/delice-eternel-gabon:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2021-07-18T16:06:57.147Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 18 Jul 2021 16:06:56 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=552","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[warn] !  Your requested "node" version "10" doesn't match your global version "14" {"metadata":{"emulator":{"name":"functions"},"message":"Your requested \"node\" version \"10\" doesn't match your global version \"14\""}}
+[debug] [2021-07-18T16:06:57.159Z] defaultcredentials: writing to file C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:06:57.160Z] DEBUG: Setting GAC to C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:06:57.161Z] > refreshing access token with scopes: []
+[debug] [2021-07-18T16:06:57.161Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:06:57.214Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","cache-control":"no-cache, no-store, max-age=0, must-revalidate","date":"Sun, 18 Jul 2021 16:06:56 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:06:57.224Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig [none]
+[debug] [2021-07-18T16:06:57.521Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig 200
+[debug] [2021-07-18T16:06:57.521Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig {"projectId":"delice-eternel-gabon","databaseURL":"https://delice-eternel-gabon.firebaseio.com","storageBucket":"delice-eternel-gabon.appspot.com","locationId":"europe-west"}
+[debug] [2021-07-18T16:06:57.536Z] [functions] Watching "C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions" for Cloud Functions...
+[debug] [2021-07-18T16:06:57.550Z] DEBUG: [worker-pool] addWorker(~diagnostic~)
+[debug] [2021-07-18T16:06:57.550Z] DEBUG: [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2021-07-18T16:06:57.550Z] DEBUG: [worker-pool] submitWork(triggerId=)
+[debug] [2021-07-18T16:06:57.551Z] DEBUG: [worker-~diagnostic~-74c1d0e5-508e-40d3-b326-f74f934abe40]: Assigning socketPath: \\?\pipe\C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\536
+[debug] [2021-07-18T16:06:57.551Z] DEBUG: [worker-~diagnostic~-74c1d0e5-508e-40d3-b326-f74f934abe40]: BUSY
+[debug] [2021-07-18T16:06:57.854Z] DEBUG: [runtime-status] [536] Functions runtime initialized. {"cwd":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions","node_version":"14.17.3"}
+[debug] [2021-07-18T16:06:57.856Z] DEBUG: [runtime-status] [536] Disabled runtime features: undefined
+[debug] [2021-07-18T16:06:57.860Z] DEBUG: [runtime-status] [536] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.862Z] DEBUG: [runtime-status] [536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.865Z] DEBUG: [runtime-status] [536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.866Z] DEBUG: [runtime-status] [536] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2021-07-18T16:06:57.867Z] DEBUG: [runtime-status] [536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.927Z] DEBUG: [runtime-status] [536] Checked functions.config() {"config":{}}
+[debug] [2021-07-18T16:06:57.927Z] DEBUG: [runtime-status] [536] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}}
+[debug] [2021-07-18T16:06:57.927Z] DEBUG: [runtime-status] [536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.929Z] DEBUG: [runtime-status] [536] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.930Z] DEBUG: [runtime-status] [536] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:06:57.930Z] DEBUG: [runtime-status] [536] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}}
+[debug] [2021-07-18T16:06:57.996Z] DEBUG: [runtime-status] [536] initializeApp(DEFAULT) {"storageBucket":"delice-eternel-gabon.appspot.com","databaseURL":"https://delice-eternel-gabon.firebaseio.com","projectId":"delice-eternel-gabon"}
+[warn] !  It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator {"metadata":{"emulator":{"name":"functions"},"message":"It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator"}}
+[warn] !  TypeError: Cannot read property 'key' of undefined
+    at Object.<anonymous> (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\lib\index.js:11:44)
+    at Module._compile (internal/modules/cjs/loader.js:1085:14)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1114:10)
+    at Module.load (internal/modules/cjs/loader.js:950:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:790:14)
+    at Module.require (internal/modules/cjs/loader.js:974:19)
+    at require (internal/modules/cjs/helpers.js:92:18)
+    at initializeRuntime (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:684:29)
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)
+    at async handleMessage (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:723:20) {"metadata":{"emulator":{"name":"functions"},"message":"TypeError: Cannot read property 'key' of undefined\n    at Object.<anonymous> (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\lib\\index.js:11:44)\n    at Module._compile (internal/modules/cjs/loader.js:1085:14)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1114:10)\n    at Module.load (internal/modules/cjs/loader.js:950:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:790:14)\n    at Module.require (internal/modules/cjs/loader.js:974:19)\n    at require (internal/modules/cjs/helpers.js:92:18)\n    at initializeRuntime (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorRuntime.js:684:29)\n    at processTicksAndRejections (internal/process/task_queues.js:95:5)\n    at async handleMessage (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorRuntime.js:723:20)"}}
+[warn] !  We were unable to load your functions code. (see above)
+   - It appears your code is written in Typescript, which must be compiled before emulation.
+   - You may be able to run "npm run build" in your functions directory to resolve this. {"metadata":{"emulator":{"name":"functions"}}}
+[debug] [2021-07-18T16:06:58.023Z] DEBUG: [worker-~diagnostic~-74c1d0e5-508e-40d3-b326-f74f934abe40]: exited
+[debug] [2021-07-18T16:06:58.024Z] DEBUG: [worker-~diagnostic~-74c1d0e5-508e-40d3-b326-f74f934abe40]: FINISHED
+[debug] [2021-07-18T16:14:26.880Z] ----------------------------------------------------------------------
+[debug] [2021-07-18T16:14:26.881Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\bin\firebase.js functions:shell
+[debug] [2021-07-18T16:14:26.882Z] CLI Version:   9.14.0
+[debug] [2021-07-18T16:14:26.882Z] Platform:      win32
+[debug] [2021-07-18T16:14:26.882Z] Node Version:  v10.24.1
+[debug] [2021-07-18T16:14:26.883Z] Time:          Sun Jul 18 2021 18:14:26 GMT+0200 (GMT+02:00)
+[debug] [2021-07-18T16:14:26.883Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-07-18T16:14:26.890Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-07-18T16:14:26.890Z] > authorizing via signed-in user (delice.eternel.gabon@gmail.com)
+[debug] [2021-07-18T16:14:26.890Z] [iam] checking project delice-eternel-gabon for permissions ["firebase.projects.get"]
+[debug] [2021-07-18T16:14:26.892Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-07-18T16:14:26.892Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:14:27.716Z] <<< HTTP RESPONSE 200 {"cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","date":"Sun, 18 Jul 2021 16:14:27 GMT","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:14:27.727Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/delice-eternel-gabon:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2021-07-18T16:14:28.364Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 18 Jul 2021 16:14:28 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=563","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:14:30.397Z] [functions] Using node@10 from host.
+[debug] [2021-07-18T16:14:30.397Z] defaultcredentials: writing to file C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:14:30.399Z] DEBUG: Setting GAC to C:\Users\wylfr\AppData\Roaming\firebase\delice_eternel.gabon_gmail.com_application_default_credentials.json
+[debug] [2021-07-18T16:14:30.399Z] > refreshing access token with scopes: []
+[debug] [2021-07-18T16:14:30.400Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-07-18T16:14:30.461Z] <<< HTTP RESPONSE 200 {"date":"Sun, 18 Jul 2021 16:14:30 GMT","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-07-18T16:14:30.480Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig [none]
+[debug] [2021-07-18T16:14:30.734Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig 200
+[debug] [2021-07-18T16:14:30.734Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/delice-eternel-gabon/adminSdkConfig {"projectId":"delice-eternel-gabon","databaseURL":"https://delice-eternel-gabon.firebaseio.com","storageBucket":"delice-eternel-gabon.appspot.com","locationId":"europe-west"}
+[debug] [2021-07-18T16:14:30.747Z] [functions] Watching "C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions" for Cloud Functions...
+[debug] [2021-07-18T16:14:30.756Z] DEBUG: [worker-pool] addWorker(~diagnostic~)
+[debug] [2021-07-18T16:14:30.756Z] DEBUG: [worker-pool] Adding worker with key ~diagnostic~, total=1
+[debug] [2021-07-18T16:14:30.756Z] DEBUG: [worker-pool] submitWork(triggerId=)
+[debug] [2021-07-18T16:14:30.756Z] DEBUG: [worker-~diagnostic~-1957866b-84a5-462c-af5d-f4605ba512d9]: Assigning socketPath: \\?\pipe\C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\27320
+[debug] [2021-07-18T16:14:30.757Z] DEBUG: [worker-~diagnostic~-1957866b-84a5-462c-af5d-f4605ba512d9]: BUSY
+[debug] [2021-07-18T16:14:30.953Z] DEBUG: [runtime-status] [27320] Functions runtime initialized. {"cwd":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions","node_version":"10.24.1"}
+[debug] [2021-07-18T16:14:30.954Z] DEBUG: [runtime-status] [27320] Disabled runtime features: undefined
+[debug] [2021-07-18T16:14:30.958Z] DEBUG: [runtime-status] [27320] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:14:30.960Z] DEBUG: [runtime-status] [27320] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:14:30.960Z] DEBUG: [runtime-status] [27320] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:14:30.964Z] DEBUG: [runtime-status] [27320] Outgoing network have been stubbed. [{"name":"http","status":"mocked"},{"name":"http","status":"mocked"},{"name":"https","status":"mocked"},{"name":"https","status":"mocked"},{"name":"net","status":"mocked"}]
+[debug] [2021-07-18T16:14:30.964Z] DEBUG: [runtime-status] [27320] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:14:31.002Z] DEBUG: [runtime-status] [27320] Checked functions.config() {"config":{}}
+[debug] [2021-07-18T16:14:31.002Z] DEBUG: [runtime-status] [27320] firebase-functions has been stubbed. {"functionsResolution":{"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}}
+[debug] [2021-07-18T16:14:31.003Z] DEBUG: [runtime-status] [27320] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:14:31.004Z] DEBUG: [runtime-status] [27320] Resolved module firebase-admin {"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}
+[debug] [2021-07-18T16:14:31.004Z] DEBUG: [runtime-status] [27320] Resolved module firebase-functions {"declared":true,"installed":true,"version":"3.14.1","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-functions\\lib\\index.js"}
+[debug] [2021-07-18T16:14:31.004Z] DEBUG: [runtime-status] [27320] firebase-admin has been stubbed. {"adminResolution":{"declared":true,"installed":true,"version":"9.11.0","resolution":"C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\node_modules\\firebase-admin\\lib\\index.js"}}
+[debug] [2021-07-18T16:14:31.036Z] DEBUG: [runtime-status] [27320] initializeApp(DEFAULT) {"storageBucket":"delice-eternel-gabon.appspot.com","databaseURL":"https://delice-eternel-gabon.firebaseio.com","projectId":"delice-eternel-gabon"}
+[warn] !  It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator {"metadata":{"emulator":{"name":"functions"},"message":"It looks like you're trying to access functions.config().sendgrid but there is no value there. You can learn more about setting up config here: https://firebase.google.com/docs/functions/local-emulator"}}
+[warn] !  TypeError: Cannot read property 'key' of undefined
+    at Object.<anonymous> (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\functions\lib\index.js:11:44)
+    at Module._compile (internal/modules/cjs/loader.js:778:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:789:10)
+    at Module.load (internal/modules/cjs/loader.js:653:32)
+    at tryModuleLoad (internal/modules/cjs/loader.js:593:12)
+    at Function.Module._load (internal/modules/cjs/loader.js:585:3)
+    at Module.require (internal/modules/cjs/loader.js:692:17)
+    at require (internal/modules/cjs/helpers.js:25:18)
+    at initializeRuntime (C:\Users\wylfr\Documents\travail\delice-eternel-gabon\constantine\node_modules\firebase-tools\lib\emulator\functionsEmulatorRuntime.js:684:29)
+    at process._tickCallback (internal/process/next_tick.js:68:7) {"metadata":{"emulator":{"name":"functions"},"message":"TypeError: Cannot read property 'key' of undefined\n    at Object.<anonymous> (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\functions\\lib\\index.js:11:44)\n    at Module._compile (internal/modules/cjs/loader.js:778:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:789:10)\n    at Module.load (internal/modules/cjs/loader.js:653:32)\n    at tryModuleLoad (internal/modules/cjs/loader.js:593:12)\n    at Function.Module._load (internal/modules/cjs/loader.js:585:3)\n    at Module.require (internal/modules/cjs/loader.js:692:17)\n    at require (internal/modules/cjs/helpers.js:25:18)\n    at initializeRuntime (C:\\Users\\wylfr\\Documents\\travail\\delice-eternel-gabon\\constantine\\node_modules\\firebase-tools\\lib\\emulator\\functionsEmulatorRuntime.js:684:29)\n    at process._tickCallback (internal/process/next_tick.js:68:7)"}}
+[warn] !  We were unable to load your functions code. (see above)
+   - It appears your code is written in Typescript, which must be compiled before emulation.
+   - You may be able to run "npm run build" in your functions directory to resolve this. {"metadata":{"emulator":{"name":"functions"}}}
+[debug] [2021-07-18T16:14:31.060Z] DEBUG: [worker-~diagnostic~-1957866b-84a5-462c-af5d-f4605ba512d9]: exited
+[debug] [2021-07-18T16:14:31.061Z] DEBUG: [worker-~diagnostic~-1957866b-84a5-462c-af5d-f4605ba512d9]: FINISHED
