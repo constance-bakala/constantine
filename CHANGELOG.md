@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.10](https://github.com/constance-bakala/constantine/compare/v0.1.2...v1.5.10) (2022-07-09)
+
+
+### Bug Fixes
+
+* added standard-version ([dfe5457](https://github.com/constance-bakala/constantine/commit/dfe54575fe034bdba3682ac3132c9f3fc8fe91c5))
+
 ### [1.5.9](https://github.com/constance-bakala/constantine/compare/v1.5.8...v1.5.9) (2021-05-25)
 
 ### [1.5.8](https://github.com/constance-bakala/constantine/compare/v1.6.1...v1.5.8) (2021-05-25)
