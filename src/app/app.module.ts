@@ -26,6 +26,7 @@ import {APP_CONFIG} from '@helpers/constants';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {AngularFireFunctionsModule} from "@angular/fire/functions";
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import {AngularFireFunctionsModule} from "@angular/fire/functions";
     MatListModule,
     MatIconModule,
     MatToolbarModule,
+    RouterModule,
   ],
   providers: [CacheService,
     {
