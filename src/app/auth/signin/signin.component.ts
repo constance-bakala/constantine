@@ -7,9 +7,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {selectorAuth} from '@app/auth/store/auth.selectors';
 import {AuthState} from '@app/auth/store';
 import {ActionAuthLoggedIn} from '@app/auth/store/auth.actions';
-import {AngularFireAuth} from '@angular/fire/auth';
-import firebase from 'firebase/app';
-import {AngularFireFunctions} from '@angular/fire/functions';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {sendEmailVerification} from 'firebase/auth';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
 
 @Component({
   selector: 'app-signin',
@@ -100,14 +100,14 @@ export class SigninComponent implements OnInit, OnDestroy {
   }
 
   sendEmailVerification() {
-    firebase.auth().currentUser.sendEmailVerification({url: ''})
-      .then(function () {
-        // Verification email sent.
-      })
-      .catch(function (error) {
-        // Error occurred. Inspect error.code.
-      });
+    this.afAuth.currentUser.then(user => {
+      if (!user) {
+        return;
+      }
+      return sendEmailVerification(user, {url: ''});
+    }).catch(console.error);
   }
+
 
   ngOnDestroy() {
     this.unsubscribe$.next();

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "test-angular": {
+    "constantine": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -38,17 +38,14 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "node_modules/intl-tel-input/build/css/intlTelInput.css",
-              "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss",
-              "node_modules/@fortawesome/fontawesome-free/scss/solid.scss",
-              "node_modules/@fortawesome/fontawesome-free/scss/regular.scss",
-              "node_modules/@fortawesome/fontawesome-free/scss/brands.scss",
               "node_modules/animate.css/animate.css",
-              "src/styles.scss",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "src/styles.scss"
             ],
             "scripts": [
+              "node_modules/firebaseui/dist/firebaseui.js",
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
               "node_modules/jquery.easing/jquery.easing.js",
@@ -93,18 +90,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "test-angular:build"
+            "browserTarget": "constantine:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "test-angular:build:production"
+              "browserTarget": "constantine:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "test-angular:build"
+            "browserTarget": "constantine:build"
           }
         },
         "test": {
@@ -123,22 +120,10 @@
               "src/assets"
             ]
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     },
-    "test-angular-e2e": {
+    "constantine-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -147,26 +132,16 @@
           "builder": "@wdio/schematics:wdio",
           "options": {
             "wdioConfig": "wdio.conf.js",
-            "devServerTarget": "test-angular:serve",
+            "devServerTarget": "constantine:serve",
             "port": 4200
           },
           "configurations": {
             "production": {
-              "devServerTarget": "test-angular:serve:production"
+              "devServerTarget": "constantine:serve:production"
             }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
           }
         }
       }
     }
-  },
-  "defaultProject": "test-angular"
+  }
 }

@@ -14,8 +14,8 @@ import {PasswordValidators} from '@shared/validators/password-validators';
 import {Misc} from '@helpers/misc.class';
 import {AuthSignup} from '@app/auth/store/auth.actions';
 import {selectorAuthSignup} from '@app/auth/store/auth.selectors';
-import {AngularFireAuth} from '@angular/fire/auth';
-import firebase from 'firebase';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import { EmailAuthProvider } from 'firebase/auth';
 
 @Component({
   selector: 'app-signup',
@@ -45,7 +45,7 @@ export class SignupComponent implements OnDestroy, OnInit {
   private token: string;
   private isFirstLoad = true;
   signInOptions = [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    EmailAuthProvider.PROVIDER_ID,
   ];
 
   constructor(private route: ActivatedRoute,

@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {AngularFirestore} from '@angular/fire/firestore';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {routerTransition} from '@app/core';
 import {Store} from '@ngrx/store';
 import {AuthRefreshUserToken} from '@app/auth/store/auth.actions';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {ItemsCategoriesEnum} from '@shared/interfaces';
 import {ActionItemsRetrieve} from '@app/features/store';
 import {TranslateService} from '@ngx-translate/core';

@@ -1,5 +1,10 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import * as _ from 'lodash';
+import {select, Store} from '@ngrx/store';
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+
 import {
   ActionItemToogleNotSelected,
   ActionItemToogleSelect,
@@ -7,21 +12,22 @@ import {
   ItemSizeEnum,
   selectChosenItems,
   selectExistingCategory,
-  selectNbChosenItems
+  selectNbChosenItems,
 } from '@app/features/store';
+
 import {ITEM_SIZES, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
-import {select, Store} from '@ngrx/store';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {combineLatest, Observable} from 'rxjs';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {AngularFireFunctions} from '@angular/fire/functions';
-import firebase from 'firebase/app';
+import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
+
+import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFireFunctions} from '@angular/fire/compat/functions';
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/database';
+
 import {MatDialog} from '@angular/material/dialog';
-import {AngularFireDatabase} from '@angular/fire/database';
 import {Go} from '@app/auth/store';
 import {AlertComponent} from '@shared/components/alert/alert.component';
-import {DataSnapshot} from '@angular/fire/database/interfaces';
 import {compareObjects} from '@helpers/compare.objects.utils';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {IAppConfig} from '@shared/interfaces/app.interfaces';
@@ -29,119 +35,154 @@ import {APP_CONFIG, DEFAULT_LOCALE_ID} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
-import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-cart-items',
   templateUrl: './cart-items.component.html',
-  styleUrls: ['./cart-items.component.css']
+  styleUrls: ['./cart-items.component.scss'], // ✅ corrigé (scss)
 })
-export class CartItemsComponent implements OnInit {
-  basketFormGroup: FormGroup;
-  nbSelectedItems$: Observable<number>;
+export class CartItemsComponent implements OnInit, OnDestroy {
+  basketFormGroup!: FormGroup;
+  nbSelectedItems$!: Observable<number>;
   sizes = ITEM_SIZES;
 
   items: ItemInfos[] = [];
-  userId = undefined;
+  userId: string | undefined;
   commendAllreadySent = false;
   private readonly snackDuration: number;
+
   ItemsCategoriesEnum = ItemsCategoriesEnum;
 
   @Input()
-  categoryInfos$: Observable<ExistingCategories>;
+  categoryInfos$!: Observable<ExistingCategories>;
 
-  constructor(private store: Store<any>,
-              private fb: FormBuilder,
-              public afAuth: AngularFireAuth,
-              private fun: AngularFireFunctions,
-              private db: AngularFireDatabase,
-              private dialog: MatDialog,
-              private snackBar: MatSnackBar,
-              private translateService: TranslateService,
-              @Inject(APP_CONFIG) appConfig: IAppConfig) {
+  private subs = new Subscription();
+  private commendsRef?: firebase.database.Reference;
+
+  constructor(
+    private store: Store<any>,
+    private fb: FormBuilder,
+    public afAuth: AngularFireAuth,
+    private fun: AngularFireFunctions,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private translateService: TranslateService,
+    @Inject(APP_CONFIG) appConfig: IAppConfig
+  ) {
     this.snackDuration = appConfig.snackDuration;
   }
 
   ngOnInit(): void {
-
-
-    this.nbSelectedItems$ = this.store.pipe(
-      select(selectNbChosenItems)
-    );
-
+    this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
 
-    this.store.pipe(select(selectChosenItems))
-      .subscribe((items: ItemInfos[]) => {
-        if (!!items) {
+    // Form init
+    this.basketFormGroup = this.fb.group({
+      basketItems: this.fb.array([]),
+    });
+
+    // Items store -> form
+    this.subs.add(
+      this.store.pipe(select(selectChosenItems)).subscribe((items: ItemInfos[]) => {
+        if (items) {
           this.items = items;
           this.initFormArray(items);
         }
-      });
+      })
+    );
 
-    combineLatest([
-      this.store.select(selectorConnectedUser, this.afAuth.authState)
+    // Connexion user (store) + authState (firebase)
+    this.subs.add(
+      combineLatest([
+        this.store.select(selectorConnectedUser),
+        this.afAuth.authState as any
+      ])
         .pipe(
-          filter(old => !!old),
-          distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))),
-      this.afAuth.authState
-        .pipe(
-          filter(newConnected => !!newConnected),
-          distinctUntilChanged((a, b) => a.uid === b.uid)),
-    ])
-      .pipe(map(([oldUser, newUser]) => {
-        if (!!newUser?.uid) {
-          this.userId = newUser.uid;
-          firebase.database().ref(`users/${newUser.uid}/commends`).on('value', (snap) => {
-            let savedItems = this.getExistingItemsFromSnapShot(snap);
-            if (!!savedItems) {
-              savedItems.forEach(item => {
-                this.store.dispatch(new ActionItemToogleNotSelected(item));
-              });
+          filter(([oldUser, newUser]) => !!oldUser && !!newUser),
+
+          // on retape proprement newUser
+          map(([oldUser, newUser]) => [oldUser, newUser as firebase.User] as const),
+
+          distinctUntilChanged(([aOld, aNew], [bOld, bNew]) => {
+            return aOld?.additionalInfos?.uid === bOld?.additionalInfos?.uid && aNew?.uid === bNew?.uid;
+          }),
+
+          map(([oldUser, newUser]) => {
+            if (!newUser?.uid) return;
+
+            this.userId = newUser.uid;
+
+            this.detachCommendsListener();
+            this.commendsRef = firebase.database().ref(`users/${newUser.uid}/commends`);
+            this.commendsRef.on('value', (snap) => {
+              const savedItems = this.getExistingItemsFromSnapShot(snap);
+              if (savedItems?.length) {
+                savedItems.forEach((item) => this.store.dispatch(new ActionItemToogleNotSelected(item)));
+              }
+            });
+
+            if (
+              newUser.uid &&
+              oldUser?.additionalInfos?.uid &&
+              newUser.uid !== oldUser.additionalInfos.uid &&
+              oldUser?.isAnonymous &&
+              oldUser?.credential
+            ) {
+              firebase
+                .auth()
+                .currentUser?.linkWithCredential(oldUser.credential)
+                .then((userCred) => console.log('[linkWithCredential]', userCred))
+                .catch((e) => console.error('[linkWithCredential]', e));
             }
-          });
-          if (newUser.uid && oldUser.additionalInfos.uid && newUser.uid !== oldUser.additionalInfos.uid && oldUser?.isAnonymous) {
-            firebase.auth().currentUser.linkWithCredential(oldUser.credential)
-              .then(userCred => console.log(userCred));
-          }
-        }
-        return true
-      })).subscribe();
+          })
+        )
+        .subscribe()
+    );
   }
 
-  private getExistingItemsFromSnapShot(snap: DataSnapshot): ItemInfos[] {
-    let savedItems = undefined;
-    if (!!snap.val()) {
-      savedItems = Object.values(snap.val())[0] as ItemInfos[];
-      if (!!savedItems) {
-        if (!(savedItems instanceof Array)) {
-          savedItems = [savedItems];
-        }
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+    this.detachCommendsListener();
+  }
+
+  private detachCommendsListener(): void {
+    if (this.commendsRef) {
+      this.commendsRef.off();
+      this.commendsRef = undefined;
+    }
+  }
+
+  private getExistingItemsFromSnapShot(snap: firebase.database.DataSnapshot): ItemInfos[] {
+    let savedItems: any = undefined;
+
+    const val = snap.val();
+    if (val) {
+      // val peut être { pushId: items } -> on prend le 1er
+      savedItems = Object.values(val)[0] as any;
+      if (savedItems && !(savedItems instanceof Array)) {
+        savedItems = [savedItems];
       }
     }
+
     return savedItems;
   }
-
 
   get basketItemsArray(): FormArray {
     return this.basketFormGroup.get('basketItems') as FormArray;
   }
 
   initFormArray(items: ItemInfos[]) {
-    this.basketFormGroup = this.fb.group({
-      basketItems: this.fb.array([])
-    });
-    const basketItems = this.basketFormGroup.get('basketItems') as FormArray;
-    items.forEach(item => {
-      basketItems.push(this.initBasketItemGroup(item));
-    });
+    this.basketFormGroup.setControl('basketItems', this.fb.array([]));
+    const basketItems = this.basketItemsArray;
+
+    items.forEach((item) => basketItems.push(this.initBasketItemGroup(item)));
   }
 
   initBasketItemGroup(itemInfos: ItemInfos): FormGroup {
     const group = this.fb.group({
       size: [itemInfos.basketInfos?.selectedSize ?? ItemSizeEnum.M, Validators.required],
-      quantity: [itemInfos.basketInfos?.selectedQuantity, Validators.required],
+      quantity: [itemInfos.basketInfos?.selectedQuantity ?? 1, [Validators.required, Validators.min(1)]],
       model: [itemInfos.basketInfos?.selectedModel ?? '', Validators.required],
       path: [itemInfos.path, Validators.required],
       selected: [itemInfos.selected, Validators.required],
@@ -150,96 +191,100 @@ export class CartItemsComponent implements OnInit {
       category: [itemInfos.category, Validators.required],
     });
 
-    group.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-    ).subscribe(() => {
-      const itemInfos = {
-        ...group.getRawValue(),
-        basketInfos: {
-          selectedQuantity: group.get('quantity').value,
-          selectedSize: group.get('size').value,
-          selectedModel: group.get('model').value,
-        }
-      };
-      delete itemInfos.size;
-      delete itemInfos.quantity;
-      delete itemInfos.model;
+    this.subs.add(
+      group.valueChanges
+        .pipe(debounceTime(200), distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)))
+        .subscribe(() => {
+          const updated: any = {
+            ...group.getRawValue(),
+            basketInfos: {
+              selectedQuantity: group.get('quantity')?.value,
+              selectedSize: group.get('size')?.value,
+              selectedModel: group.get('model')?.value,
+            },
+          };
 
-      this.store.dispatch(new ActionUpdateBasketItem(itemInfos))
-    });
+          delete updated.size;
+          delete updated.quantity;
+          delete updated.model;
+
+          this.store.dispatch(new ActionUpdateBasketItem(updated));
+        })
+    );
+
     return group;
   }
-
 
   onToogleSelect(item: ItemInfos) {
     this.store.dispatch(new ActionItemToogleSelect(item));
   }
 
   stepDown(index: number) {
-    const value: number = this.getItemQuantity(index).value;
-    if (value > 1) {
-      this.getItemQuantity(index).patchValue(value - 1);
-    } else {
-      this.getItemQuantity(index).patchValue(1);
-    }
+    const value: number = Number(this.getItemQuantity(index).value);
+    this.getItemQuantity(index).patchValue(Math.max(1, value - 1));
   }
 
   stepUp(index: number) {
-    const value: number = +this.getItemQuantity(index).value;
-    if (value < 999) {
-      this.getItemQuantity(index).patchValue(value + 1);
-    } else {
-      this.getItemQuantity(index).patchValue(1000);
-    }
+    const value: number = Number(this.getItemQuantity(index).value);
+    this.getItemQuantity(index).patchValue(Math.min(1000, value + 1));
   }
 
   getItemQuantity(index: number): FormControl {
     return this.basketItemsArray.controls[index].get('quantity') as FormControl;
-
   }
 
   sendCommand() {
-    if (!!firebase.auth().currentUser?.uid) {
-      firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).on('value', (snap) => {
-        // Don't move this test away from here! because this block will be fired after each modification of the database!!!
-        if (!this.commendAllreadySent) {
-          let existingCommands = this.getExistingItemsFromSnapShot(snap);
-          // It is important to protect the mail option as we have a limited number of email per day!
-          // The comparison bellow also avoid sending to much request to the firebase backend!
-          if (!this.items || this.items.length < 1 || (!!existingCommands && compareObjects(existingCommands, this.items))) {
+    const currentUser = firebase.auth().currentUser;
+
+    if (currentUser?.uid) {
+      const commendsPath = `users/${currentUser.uid}/commends`;
+      const ref = firebase.database().ref(commendsPath);
+
+      // ✅ Lecture unique : évite d’empiler des listeners à chaque clic
+      ref
+        .once('value')
+        .then((snap) => {
+          if (this.commendAllreadySent) return;
+
+          const existingCommands = this.getExistingItemsFromSnapShot(snap);
+
+          if (!this.items || this.items.length < 1 || (existingCommands && compareObjects(existingCommands, this.items))) {
             this.alertCommandNotSent(this.translateService.instant('COMMAND_ALREADY_EXIST'));
-          } else {
-            // We update commendAllreadySent to true to avoid firing the database value above a second time! => this setting should stay here!!
-            this.commendAllreadySent = true;
-            firebase.database().ref(`users/${firebase.auth().currentUser.uid}/commends`).set(null)
-              .then(() => {
-                this.db.list(`users/${firebase.auth().currentUser.uid}/commends`).push(this.items);
-                if (!firebase.auth().currentUser?.isAnonymous) {
-                  this.sendCommendNotificationMails(firebase.auth().currentUser);
-                  this.snackBar.openFromComponent(SnackAlertComponent,
-                    {
-                      duration: this.snackDuration,
-                      politeness: 'polite',
-                    });
-                } else {
-                  this.alertCommandNotSent(this.translateService.instant('AUTHENTICATION_REQUIRED'));
-                }
-              });
+            return;
           }
-        }
-      });
+
+          this.commendAllreadySent = true;
+
+          return ref.set(null).then(() => {
+            return ref.push(this.items).then(() => {
+              if (!currentUser.isAnonymous) {
+                this.sendCommendNotificationMails(currentUser);
+                this.snackBar.openFromComponent(SnackAlertComponent, {
+                  duration: this.snackDuration,
+                  politeness: 'polite',
+                });
+              } else {
+                this.alertCommandNotSent(this.translateService.instant('AUTHENTICATION_REQUIRED'));
+              }
+            });
+          });
+        })
+        .catch((e) => {
+          console.error(e);
+          this.commendAllreadySent = false;
+        });
     } else {
-      firebase.auth().signInAnonymously()
-        .then(user => {
-          if (user) {
+      firebase
+        .auth()
+        .signInAnonymously()
+        .then((userCred) => {
+          if (userCred?.user) {
             this.sendCommand();
           } else {
-            this.store.dispatch(new Go({
-              path: ['/auth/signin']
-            }));
+            this.store.dispatch(new Go({path: ['/auth/signin']}));
           }
-        });
+        })
+        .catch((e) => console.error(e));
     }
   }
 
@@ -252,13 +297,14 @@ export class CartItemsComponent implements OnInit {
       data: {
         disableClose: false,
         title: this.translateService.instant('COMMAND_NOT_SENT'),
-        message: message,
-      }
+        message,
+      },
     });
-    dialogRef.afterClosed().subscribe(
-      () => {
-        dialogRef = undefined;
-      }
+
+    this.subs.add(
+      dialogRef.afterClosed().subscribe(() => {
+        dialogRef = undefined as any;
+      })
     );
   }
 
@@ -268,26 +314,29 @@ export class CartItemsComponent implements OnInit {
     if (prefix.indexOf('github') > 0) {
       prefix = prefix + '/' + environment.appId;
     }
-    const emailData = _.cloneDeep(this.items).map(item => {
+
+    const emailData = _.cloneDeep(this.items).map((item) => {
       item.path = prefix + '/' + item.path;
-      delete item.loading;
-      delete item.selected;
-      delete item.index;
+      delete (item as any).loading;
+      delete (item as any).selected;
+      delete (item as any).index;
       return item;
     });
+
     const data = {
       text: '',
-      shoppingCardLink: prefix + "/#/shopping-cart",
+      shoppingCardLink: prefix + '/#/shopping-cart',
       uid: user.uid,
       subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
       items: emailData,
       displayName: user.displayName,
     };
-    this.fun.httpsCallable('genericSendgridEmail')(data)
-      .subscribe(result => console.log(result),
-        error => console.log(error));
-  }
 
+    this.fun.httpsCallable('genericSendgridEmail')(data).subscribe(
+      (result) => console.log(result),
+      (error) => console.log(error)
+    );
+  }
 
   gotoTarget(name: string) {
     this.store.dispatch(new Go({path: ['/' + name]}));

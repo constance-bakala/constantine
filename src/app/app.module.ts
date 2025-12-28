@@ -5,10 +5,10 @@ import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {SharedModule} from '@shared/shared.module';
-import {AngularFireModule} from '@angular/fire';
-import {AngularFireStorageModule} from '@angular/fire/storage';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
-import {AngularFireAuthModule} from '@angular/fire/auth';
+import {AngularFireModule} from '@angular/fire/compat';
+import {AngularFireStorageModule} from '@angular/fire/compat/storage';
+import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
+import {AngularFireAuthModule} from '@angular/fire/compat/auth';
 import {AuthModule} from '@app/auth/auth.module';
 import {CoreModule} from '@app/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -25,7 +25,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {APP_CONFIG} from '@helpers/constants';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {AngularFireFunctionsModule} from "@angular/fire/functions";
+import {AngularFireFunctionsModule} from "@angular/fire/compat/functions";
 import {RouterModule} from "@angular/router";
 
 @NgModule({
