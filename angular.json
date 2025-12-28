@@ -90,18 +90,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "constantine:build"
+            "buildTarget": "constantine:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "constantine:build:production"
+              "buildTarget": "constantine:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "constantine:build"
+            "buildTarget": "constantine:build"
           }
         },
         "test": {
