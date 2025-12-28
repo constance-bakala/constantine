@@ -20,7 +20,7 @@ xdescribe('SigninComponent', () => {
         HttpClientTestingModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
-        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })],
+        RouterModule.forRoot([], {})],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [{provide: APP_BASE_HREF, useValue: '/'}],
     }).compileComponents();
