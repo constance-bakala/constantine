@@ -2,7 +2,7 @@ import {Component, NgZone, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {selectNbChosenItems} from '@app/features/store';
 import {Observable} from 'rxjs';
-import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {ActionAuthLoggedIn, ActionAuthLogout} from '@app/auth/store/auth.actions';
 import {initLoginPayload} from '@helpers/common.services.utils';
 import {TranslateService} from '@ngx-translate/core';
