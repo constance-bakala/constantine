@@ -3,7 +3,7 @@ import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {takeUntil} from 'rxjs/operators';
 
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {selectorAuth} from '@app/auth/store/auth.selectors';
 import {AuthState} from '@app/auth/store';
 import {ActionAuthLoggedIn} from '@app/auth/store/auth.actions';
@@ -17,7 +17,7 @@ import {AngularFireFunctions} from '@angular/fire/compat/functions';
   styleUrls: ['./signin.component.scss']
 })
 export class SigninComponent implements OnInit, OnDestroy {
-  logging: FormGroup;
+  logging: UntypedFormGroup;
   loading = false;
   error: {
     code?: string;
@@ -26,7 +26,7 @@ export class SigninComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private store: Store<any>,
-              private _fb: FormBuilder,
+              private _fb: UntypedFormBuilder,
               private afAuth: AngularFireAuth,
               private ngZone: NgZone,
               private fun: AngularFireFunctions) {

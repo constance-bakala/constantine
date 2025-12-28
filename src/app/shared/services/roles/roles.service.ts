@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 
 import {IRole, ROLES} from './list';
-import {filter} from 'rxjs/internal/operators';
+import {filter} from 'rxjs/operators';
 import {ILoginSuccess} from '@shared/interfaces';
 import {selectorAuth} from '@app/auth/store/auth.selectors';
 import {AuthState} from '@app/auth/store';

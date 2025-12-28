@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import * as _ from 'lodash';
 import {select, Store} from '@ngrx/store';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
@@ -36,6 +36,7 @@ import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.co
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
+import { Store as NgRxStore } from '@ngrx/store';
 
 @Component({
   selector: 'app-cart-items',
@@ -43,7 +44,7 @@ import {TranslateService} from '@ngx-translate/core';
   styleUrls: ['./cart-items.component.scss'], // ✅ corrigé (scss)
 })
 export class CartItemsComponent implements OnInit, OnDestroy {
-  basketFormGroup!: FormGroup;
+  basketFormGroup!: UntypedFormGroup;
   nbSelectedItems$!: Observable<number>;
   sizes = ITEM_SIZES;
 
@@ -61,8 +62,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   private commendsRef?: firebase.database.Reference;
 
   constructor(
-    private store: Store<any>,
-    private fb: FormBuilder,
+    private store: NgRxStore<any>,
+    private fb: UntypedFormBuilder,
     public afAuth: AngularFireAuth,
     private fun: AngularFireFunctions,
     private dialog: MatDialog,
@@ -93,19 +94,24 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     );
 
     // Connexion user (store) + authState (firebase)
+    // Connexion user (store) + authState (firebase)
+    const authState$ = this.afAuth.authState as Observable<firebase.User | null>;
+
     this.subs.add(
       combineLatest([
-        this.store.select(selectorConnectedUser),
-        this.afAuth.authState as any
+        this.store.select(selectorConnectedUser) as Observable<any>,
+        authState$
       ])
         .pipe(
           filter(([oldUser, newUser]) => !!oldUser && !!newUser),
 
-          // on retape proprement newUser
           map(([oldUser, newUser]) => [oldUser, newUser as firebase.User] as const),
 
           distinctUntilChanged(([aOld, aNew], [bOld, bNew]) => {
-            return aOld?.additionalInfos?.uid === bOld?.additionalInfos?.uid && aNew?.uid === bNew?.uid;
+            return (
+              aOld?.additionalInfos?.uid === bOld?.additionalInfos?.uid &&
+              aNew?.uid === bNew?.uid
+            );
           }),
 
           map(([oldUser, newUser]) => {
@@ -139,6 +145,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
+
   }
 
   ngOnDestroy(): void {
@@ -168,8 +175,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return savedItems;
   }
 
-  get basketItemsArray(): FormArray {
-    return this.basketFormGroup.get('basketItems') as FormArray;
+  get basketItemsArray(): UntypedFormArray {
+    return this.basketFormGroup.get('basketItems') as UntypedFormArray;
   }
 
   initFormArray(items: ItemInfos[]) {
@@ -179,7 +186,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     items.forEach((item) => basketItems.push(this.initBasketItemGroup(item)));
   }
 
-  initBasketItemGroup(itemInfos: ItemInfos): FormGroup {
+  initBasketItemGroup(itemInfos: ItemInfos): UntypedFormGroup {
     const group = this.fb.group({
       size: [itemInfos.basketInfos?.selectedSize ?? ItemSizeEnum.M, Validators.required],
       quantity: [itemInfos.basketInfos?.selectedQuantity ?? 1, [Validators.required, Validators.min(1)]],
@@ -229,8 +236,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.getItemQuantity(index).patchValue(Math.min(1000, value + 1));
   }
 
-  getItemQuantity(index: number): FormControl {
-    return this.basketItemsArray.controls[index].get('quantity') as FormControl;
+  getItemQuantity(index: number): UntypedFormControl {
+    return this.basketItemsArray.controls[index].get('quantity') as UntypedFormControl;
   }
 
   sendCommand() {

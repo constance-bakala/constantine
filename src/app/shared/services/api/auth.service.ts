@@ -4,7 +4,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
 import {distinctUntilChanged, map} from 'rxjs/operators';
-import {filter} from 'rxjs/internal/operators';
+import {filter} from 'rxjs/operators';
 import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable({providedIn: 'root'})

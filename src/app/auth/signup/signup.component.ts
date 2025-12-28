@@ -7,7 +7,7 @@ import {environment} from '@env/environment';
 import {EMAIL_REGEX} from '@shared/helpers/constants';
 import {IQuestion, ISignup} from '@shared/interfaces';
 
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {HttpErrorResponse} from '@angular/common/http';
 import {PasswordValidators} from '@shared/validators/password-validators';
@@ -27,7 +27,7 @@ export class SignupComponent implements OnDestroy, OnInit {
   subtitle = 'Compléter les informations ci-dessous :';
   submitButtonText = 'Suivant';
   submittingButtonText = 'Création en cours...';
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
   isValidation = false;
   requiredAlert = 'Veuillez renseigner un';
   env = environment;
@@ -49,7 +49,7 @@ export class SignupComponent implements OnDestroy, OnInit {
   ];
 
   constructor(private route: ActivatedRoute,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private store: Store<any>,
               private afAuth: AngularFireAuth) {
     this.store

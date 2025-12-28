@@ -25,7 +25,7 @@
               "@firebase/functions",
               "@firebase/performance",
               "@firebase/remote-config",
-              "rxjs/internal/operators",
+              "rxjs/operators",
               "@firebase/app-check"
             ],
             "outputPath": "docs/",

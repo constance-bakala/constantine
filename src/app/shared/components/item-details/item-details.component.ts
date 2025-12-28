@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Inject, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ITEM_SIZES, ItemInfos, ItemSizeEnum} from '@shared/interfaces';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -10,13 +10,13 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./item-details.component.scss']
 })
 export class ItemDetailsComponent {
-  itemGroup: FormGroup;
+  itemGroup: UntypedFormGroup;
   sizes = ITEM_SIZES;
 
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
   selected = false;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private dialogRef: MatDialogRef<ItemDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: ItemInfos) {
     this.initForm(data);
