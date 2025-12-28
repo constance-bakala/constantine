@@ -1,9 +1,9 @@
-import {FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 
 export class PasswordValidators {
   static minLength = 8;
 
-  static passwordShouldBeMinimumChars(control: FormControl) {
+  static passwordShouldBeMinimumChars(control: UntypedFormControl) {
     if (control.value.length < PasswordValidators.minLength) {
       return {passwordShouldBeMinimumChars: true};
     }
@@ -11,7 +11,7 @@ export class PasswordValidators {
     return null;
   }
 
-  static passwordsShouldMatch(group: FormGroup) {
+  static passwordsShouldMatch(group: UntypedFormGroup) {
     const password = group.get('password').value;
     const confirmPassword = group.get('confirmPassword').value;
 
@@ -26,14 +26,14 @@ export class PasswordValidators {
     return null;
   }
 
-  static passwordShouldHaveAtLeastOneLowerCaseLetter(control: FormControl) {
+  static passwordShouldHaveAtLeastOneLowerCaseLetter(control: UntypedFormControl) {
     if (/[a-z]/.test(control.value)) {
       return null;
     }
     return {passwordShouldHaveAtLeastOneLowerCaseLetter: true};
   }
 
-  static passwordShouldHaveAtLeastOneUpperCaseLetter(control: FormControl) {
+  static passwordShouldHaveAtLeastOneUpperCaseLetter(control: UntypedFormControl) {
     if (/[A-Z]/.test(control.value)) {
       return null;
     }
@@ -41,7 +41,7 @@ export class PasswordValidators {
     return {passwordShouldHaveAtLeastOneUpperCaseLetter: true};
   }
 
-  static passwordShouldHaveAtLeastOneDigit(control: FormControl) {
+  static passwordShouldHaveAtLeastOneDigit(control: UntypedFormControl) {
     if (/[0-9]/.test(control.value)) {
       return null;
     }
@@ -49,7 +49,7 @@ export class PasswordValidators {
     return {passwordShouldHaveAtLeastOneDigit: true};
   }
 
-  static passwordShouldHaveAtLeastOneSpecialCharacter(control: FormControl) {
+  static passwordShouldHaveAtLeastOneSpecialCharacter(control: UntypedFormControl) {
     if (/[!@#$%^&*]/.test(control.value)) {
       return null;
     }
@@ -57,7 +57,7 @@ export class PasswordValidators {
     return {passwordShouldHaveAtLeastOneSpecialCharacter: true};
   }
 
-  static passwordMatchAtLeastThreeConditions(control: FormControl) {
+  static passwordMatchAtLeastThreeConditions(control: UntypedFormControl) {
     const oneLowerCaseLetter = PasswordValidators.passwordShouldHaveAtLeastOneLowerCaseLetter(
       control
     );
