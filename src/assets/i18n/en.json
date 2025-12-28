@@ -6,29 +6,29 @@
   "BUILD_PLACE": "Designed in our workshops",
   "EARRINGS": "Earrings",
   "CONTACT_US": "CONTACT US",
-  "TELEPHONE":"Phone",
-  "EMAIL":"Email",
+  "TELEPHONE": "Phone",
+  "EMAIL": "Email",
   "PRODUCTS": {
     "EARRINGS": {
       "TITLE": "Earrings",
-      "DESCRIPTION":"Earrings below represent a pattern of our creations. If you have a clear idea of what you need, do not hesitate to contact us!"
+      "DESCRIPTION": "Earrings below represent a pattern of our creations. If you have a clear idea of what you need, do not hesitate to contact us!"
     },
     "DRESSES": {
       "TITLE": "Dresses",
-      "DESCRIPTION":"The dresses below represent a pattern of our creations. We can also provide you with your custom creations"
+      "DESCRIPTION": "The dresses below represent a pattern of our creations. We can also provide you with your custom creations"
     },
     "MASKS": {
       "TITLE": "Masks",
-      "DESCRIPTION":"The masks below represent samples of our creations. We follow the recommendations of the French organization AFNOR to produce masks for adults and children over 7 years old! These general public masks aim to protect the healthy population, in addition to the essential barrier gestures against coronavirus."
+      "DESCRIPTION": "The masks below represent samples of our creations. We follow the recommendations of the French organization AFNOR to produce masks for adults and children over 7 years old! These general public masks aim to protect the healthy population, in addition to the essential barrier gestures against coronavirus."
     },
     "UNKNOWN": {
       "TITLE": "Under construction ...",
-      "DESCRIPTION":"These products are not yet known in our repositories, please contact your administrator"
+      "DESCRIPTION": "These products are not yet known in our repositories, please contact your administrator"
     },
     "MORE": "More products",
     "CATEGORY": "Category",
     "MODEL": "Model",
-    "UNIQUE_MODEL":"Unique model",
+    "UNIQUE_MODEL": "Unique model",
     "SIZES": "Sizes",
     "REMOVE": "Remove",
     "SUMMARY": "Summary",
@@ -36,7 +36,7 @@
     "CART": "Cart",
     "TOTAL_WITH_VAT": "The total amount of",
     "WITH_VAT": "(including VAT)",
-    "SHIPPING" : "Shipping",
+    "SHIPPING": "Shipping",
     "GRATIS": "GRATIS",
     "DISCOUNT_CODE": "Add a discount code (optional)",
     "AMOUNT_WITHOUT_VAT": "Temp amount",

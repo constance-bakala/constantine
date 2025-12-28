@@ -1,12 +1,12 @@
-import { Router } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { Action, Store } from '@ngrx/store';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, tap, withLatestFrom } from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Action, Store} from '@ngrx/store';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
+import {of} from 'rxjs';
+import {catchError, filter, map, tap, withLatestFrom} from 'rxjs/operators';
 
-import { LocalStorageService } from '../../core/local-storage/local-storage.service';
-import { CacheService } from '@shared/services/cache/cache.service';
+import {LocalStorageService} from '../../core/local-storage/local-storage.service';
+import {CacheService} from '@shared/services/cache/cache.service';
 
 import {
   ActionAuthLoggedIn,
@@ -16,14 +16,14 @@ import {
   AuthActionTypes,
 } from './auth.actions';
 
-import { Go } from './router.actions';
-import { AuthService } from '@shared/services';
-import { selectorConnectedUser } from '@app/auth/store/auth.selectors';
-import { AUTH_KEY } from '@app/auth/store/auth.reducer';
+import {Go} from './router.actions';
+import {AuthService} from '@shared/services';
+import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
+import {AUTH_KEY} from '@app/auth/store/auth.reducer';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import { ItemInfos } from '@shared/interfaces';
-import { ActionItemToogleNotSelected } from '@app/features/store';
+import {ItemInfos} from '@shared/interfaces';
+import {ActionItemToogleNotSelected} from '@app/features/store';
 
 @Injectable()
 export class AuthEffects {
@@ -34,9 +34,9 @@ export class AuthEffects {
     private router: Router,
     private localStorageService: LocalStorageService,
     private cache: CacheService
-  ) {}
+  ) {
+  }
 
-  // Was: @Effect() logout(): Observable<Action>
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.LOGOUT),
@@ -50,7 +50,6 @@ export class AuthEffects {
     )
   );
 
-  // Was: @Effect({dispatch:false}) loggedOut()
   loggedOut$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -63,10 +62,9 @@ export class AuthEffects {
           );
         })
       ),
-    { dispatch: false }
+    {dispatch: false}
   );
 
-  // Was: @Effect({dispatch:false}) refrechUserToken()
   refrechUserToken$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -92,17 +90,17 @@ export class AuthEffects {
           }
         })
       ),
-    { dispatch: false }
+    {dispatch: false}
   );
 
-  // Was: @Effect({dispatch:false}) toggleLoggedIn()
   toggleLoggedIn$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.LOGGED_IN),
       withLatestFrom(this.store$),
       map(([action, state]: [ActionAuthLogged, any]) => {
+        // (techniquement action ne devrait jamais être falsy ici, mais on garde ta sécurité)
         if (!action) {
-          return new Go({ path: ['/'] });
+          return new Go({path: ['/']});
         }
 
         if (state && !!state['core:auth:constantine']) {
@@ -110,14 +108,16 @@ export class AuthEffects {
           const authState = selectorConnectedUser(state);
 
           if (/^\/auth/.test(this.router.url)) {
-            return new Go({ path: ['/'] });
+            return new Go({path: ['/']});
           } else if (!!authState) {
             return null;
           }
         }
 
         return null;
-      })
+      }),
+      // ✅ IMPORTANT: ne laisse passer que de vraies actions
+      filter((a): a is NonNullable<typeof a> => a != null)
     )
   );
 }
