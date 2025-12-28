@@ -11,7 +11,7 @@ import {routes} from './route.model';
     NgbModule,
     CommonModule,
     FormsModule,
-    RouterModule.forRoot(routes, { useHash: true, initialNavigation: 'enabledBlocking', scrollPositionRestoration: 'top', relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(routes, { useHash: true, initialNavigation: 'enabledBlocking', scrollPositionRestoration: 'top' }),
   ],
   exports: [RouterModule],
   declarations: [],
