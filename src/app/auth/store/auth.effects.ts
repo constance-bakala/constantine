@@ -1,13 +1,12 @@
-import {Router} from '@angular/router';
-import {Injectable} from '@angular/core';
-import {Action, Store} from '@ngrx/store';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
-import {catchError, map, tap, withLatestFrom} from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { Action, Store } from '@ngrx/store';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, tap, withLatestFrom } from 'rxjs/operators';
 
-import {LocalStorageService} from '../../core/local-storage/local-storage.service';
-
-import {CacheService} from '@shared/services/cache/cache.service';
+import { LocalStorageService } from '../../core/local-storage/local-storage.service';
+import { CacheService } from '@shared/services/cache/cache.service';
 
 import {
   ActionAuthLoggedIn,
@@ -17,14 +16,14 @@ import {
   AuthActionTypes,
 } from './auth.actions';
 
-import {Go} from './router.actions';
-import {AuthService} from '@shared/services';
-import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
-import {AUTH_KEY} from '@app/auth/store/auth.reducer';
+import { Go } from './router.actions';
+import { AuthService } from '@shared/services';
+import { selectorConnectedUser } from '@app/auth/store/auth.selectors';
+import { AUTH_KEY } from '@app/auth/store/auth.reducer';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import {ItemInfos} from '@shared/interfaces';
-import {ActionItemToogleNotSelected} from '@app/features/store';
+import { ItemInfos } from '@shared/interfaces';
+import { ActionItemToogleNotSelected } from '@app/features/store';
 
 @Injectable()
 export class AuthEffects {
@@ -35,12 +34,11 @@ export class AuthEffects {
     private router: Router,
     private localStorageService: LocalStorageService,
     private cache: CacheService
-  ) {
-  }
+  ) {}
 
-  @Effect()
-  logout(): Observable<Action> {
-    return this.actions$.pipe(
+  // Was: @Effect() logout(): Observable<Action>
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
       ofType(AuthActionTypes.LOGOUT),
       map((action: ActionAuthLogout) => {
         this.localStorageService.setItem(AUTH_KEY, undefined);
@@ -48,86 +46,80 @@ export class AuthEffects {
         // this.cache.clearAll();
         return new ActionAuthLoggedOut();
       }),
-      catchError(error => of(new ActionAuthSetError(error)))
-    );
-  }
+      catchError((error) => of(new ActionAuthSetError(error)))
+    )
+  );
 
+  // Was: @Effect({dispatch:false}) loggedOut()
+  loggedOut$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActionTypes.LOGGED_OUT),
+        tap(() => {
+          this.store$.dispatch(
+            new Go({
+              path: ['/'],
+            })
+          );
+        })
+      ),
+    { dispatch: false }
+  );
 
-  @Effect({dispatch: false})
-  loggedOut(): Observable<any> {
-    return this.actions$.pipe(
-      ofType(AuthActionTypes.LOGGED_OUT),
-      map((action: ActionAuthLoggedOut) => {
-        this.store$.dispatch( new Go({
-          path: ['/']
-        }));
-      }),
-      catchError(error => of(new ActionAuthSetError(error)))
-    );
-  }
-
-  @Effect({
-    dispatch: false
-  })
-  refrechUserToken(): Observable<any> {
-    return this.actions$
-      .pipe(
+  // Was: @Effect({dispatch:false}) refrechUserToken()
+  refrechUserToken$ = createEffect(
+    () =>
+      this.actions$.pipe(
         ofType(AuthActionTypes.AUTH_REFRESH_USER_TOKEN),
-        map((action) => {
-          // Empty localStorage if you are about to login or logout.
+        tap(() => {
           const currentUser = this.localStorageService.getItem(AUTH_KEY);
-          if(currentUser) {
+
+          if (currentUser) {
             this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
-            firebase.database().ref(`users/${currentUser.uid}/commends`).on('value', (snap) => {
-              if(snap.val()) {
-                (Object.values(snap.val())[0] as ItemInfos[]).forEach(item => {
-                  this.store$.dispatch(new ActionItemToogleNotSelected(item));
-                });
-              }
-            });
+
+            firebase
+              .database()
+              .ref(`users/${currentUser.uid}/commends`)
+              .on('value', (snap) => {
+                if (snap.val()) {
+                  (Object.values(snap.val())[0] as ItemInfos[]).forEach((item) => {
+                    this.store$.dispatch(new ActionItemToogleNotSelected(item));
+                  });
+                }
+              });
           } else {
             // this.store$.dispatch(new ActionAuthLogout());
           }
-          return of(undefined)
         })
-      );
-  }
+      ),
+    { dispatch: false }
+  );
 
-  @Effect({dispatch: false})
-  toggleLoggedIn(): Observable<Action> {
-    return this.actions$
-      .pipe(
-        ofType(AuthActionTypes.LOGGED_IN),
-        withLatestFrom(this.store$),
-        map(([action, state]: [ActionAuthLogged, any]) => {
-          // Empty localStorage if you are about to login or logout.
-          if(!action) {
-            return new Go({
-              path: ['/']
-            });
-          }
-          if (state && !!state["core:auth:constantine"]) {
-            this.localStorageService.setItem(AUTH_KEY, action.payload);
-            const authState = selectorConnectedUser(state);
-            if (/^\/auth/.test(this.router.url)) {
-              return new Go({
-                path: ['/']
-              });
-            } else if (!!authState) {
-              return null;
-            }
-          }
-          return null;
-        }),
-        tap(action => {
-          if (action) {
-           this.store$.dispatch(action);
-          }
-        })
-      );
-  }
+  // Was: @Effect({dispatch:false}) toggleLoggedIn()
+  toggleLoggedIn$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActionTypes.LOGGED_IN),
+      withLatestFrom(this.store$),
+      map(([action, state]: [ActionAuthLogged, any]) => {
+        if (!action) {
+          return new Go({ path: ['/'] });
+        }
 
+        if (state && !!state['core:auth:constantine']) {
+          this.localStorageService.setItem(AUTH_KEY, action.payload);
+          const authState = selectorConnectedUser(state);
+
+          if (/^\/auth/.test(this.router.url)) {
+            return new Go({ path: ['/'] });
+          } else if (!!authState) {
+            return null;
+          }
+        }
+
+        return null;
+      })
+    )
+  );
 }
 
-export type ActionAuthLogged =
-  | ActionAuthLoggedIn;
+export type ActionAuthLogged = ActionAuthLoggedIn;
