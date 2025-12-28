@@ -53,30 +53,31 @@ import { TruncatePipe } from '@shared/pipes/truncate-pipe/truncate.pipe';
 import { AdService } from './services/ad.service';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
 
-    // UI libs
-    NgbModule,
-    NgbTooltipModule,
-    GoogleMapsModule,
-    NgbCarouselModule,
+        // UI libs
+        NgbModule,
+        NgbTooltipModule,
+        GoogleMapsModule,
+        NgbCarouselModule,
 
-    // Material
-    MatCheckboxModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatToolbarModule,
-    MatDialogModule,
-    MatSnackBarModule,
+        // Material
+        MatCheckboxModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatToolbarModule,
+        MatDialogModule,
+        MatSnackBarModule,
 
-    // i18n
-    TranslateModule,
-  ],
+        // i18n
+        TranslateModule,
+        CommonModule,
+    ],
   declarations: [
     // Components
     ContactComponent,

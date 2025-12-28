@@ -1,10 +1,12 @@
 import {NgModule, Optional, SkipSelf} from '@angular/core';
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+
 import {MetaReducer, StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
-import {NgxMaskModule} from 'ngx-mask';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+
+import {provideNgxMask} from 'ngx-mask';
 
 import {environment} from '@env/environment';
 import {AuthService} from '@shared/services/api/auth.service';
@@ -35,44 +37,46 @@ if (!environment.production) {
         meta: metaReducer,
         functionalErrors: functionalErrorsReducer,
       },
-      { metaReducers,  runtimeChecks: {
+      {
+        metaReducers,
+        runtimeChecks: {
           strictStateImmutability: false,
           strictActionImmutability: false,
           strictStateSerializability: false,
           strictActionSerializability: false,
-          strictActionWithinNgZone: false
-        }, },
+          strictActionWithinNgZone: false,
+        },
+      }
     ),
     EffectsModule.forRoot([AuthEffects, RouterEffects]),
-    NgxMaskModule.forRoot(),
-    // Instrumentation must be imported after importing StoreModule (config is optional)
+
+    // Instrumentation must be imported after importing StoreModule
     StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: environment.production // Restrict extension to log-only mode
-    })
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
-  declarations: [],
   providers: [
     LocalStorageService,
     AuthService,
+
+    // ngx-mask (Angular 16+)
+    provideNgxMask(),
+
     {
       provide: HTTP_INTERCEPTORS,
       useClass: XTokenInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AssetsInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class CoreModule {
-  constructor(
-    @Optional()
-    @SkipSelf()
-      parentModule: CoreModule
-  ) {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
       throw new Error('CoreModule is already loaded. Import only in AppModule');
     }
