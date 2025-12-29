@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {collection, collectionData, Firestore} from '@angular/fire/firestore';
 import {routerTransition} from '@app/core';
 import {Store} from '@ngrx/store';
 import {AuthRefreshUserToken} from '@app/auth/store/auth.actions';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {Auth} from '@angular/fire/auth';
 import {ItemsCategoriesEnum} from '@shared/interfaces';
 import {ActionItemsRetrieve} from '@app/features/store';
 import {TranslateService} from '@ngx-translate/core';
@@ -19,9 +19,11 @@ export class AppComponent implements OnInit {
   title = 'Délice éternel';
 
   constructor(
-    private router: Router, private db: AngularFirestore, private store: Store<any>, public afAuth: AngularFireAuth,
+    private router: Router, private firestore: Firestore, public auth: Auth, private store: Store<any>,
     public translate: TranslateService) {
-    const users$ = this.db.collection('users').valueChanges();
+    const usersRef = collection(this.firestore, 'users');
+    const users$ = collectionData(usersRef, { idField: 'id' });
+
     users$.subscribe(users => {
       //console.log(users);
     });
@@ -40,7 +42,6 @@ export class AppComponent implements OnInit {
 
     this.store.dispatch(new ActionItemsRetrieve({category: ItemsCategoriesEnum.EARINGS}));
   }
-
 
 
 }

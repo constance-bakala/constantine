@@ -14,8 +14,8 @@ import {PasswordValidators} from '@shared/validators/password-validators';
 import {Misc} from '@helpers/misc.class';
 import {AuthSignup} from '@app/auth/store/auth.actions';
 import {selectorAuthSignup} from '@app/auth/store/auth.selectors';
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import { EmailAuthProvider } from 'firebase/auth';
+import {Auth, createUserWithEmailAndPassword} from '@angular/fire/auth';
+import {EmailAuthProvider} from 'firebase/auth';
 
 @Component({
   selector: 'app-signup',
@@ -51,7 +51,7 @@ export class SignupComponent implements OnDestroy, OnInit {
   constructor(private route: ActivatedRoute,
               private fb: UntypedFormBuilder,
               private store: Store<any>,
-              private afAuth: AngularFireAuth) {
+              private auth: Auth) {
     this.store
       .pipe(
         select(selectorAuthSignup),
@@ -159,7 +159,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
   submit() {
     this.isFirstLoad = false;
-    this.afAuth.createUserWithEmailAndPassword(this.email.value, this.password.value)
+    createUserWithEmailAndPassword(this.auth, this.email.value, this.password.value)
       .then(result => {
         console.log(result);
       })
