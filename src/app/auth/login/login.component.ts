@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 
+import { environment } from '../../../environments/environment'; // <-- ajuste le chemin si besoin
 import { ActionAuthLoggedIn } from '@app/auth/store/auth.actions';
 import { initLoginPayload } from '@helpers/common.services.utils';
 import { DEFAULT_LOCALE_ID } from '@helpers/constants';
@@ -17,36 +18,25 @@ declare const firebaseui: any;
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: any;
-
   private fallbackTimer: any;
-  private started = false;
 
   signInOptions = [
-    {
-      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      customParameters: { locale: DEFAULT_LOCALE_ID },
-    },
-    {
-      provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      customParameters: { locale: DEFAULT_LOCALE_ID },
-    },
-    {
-      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      customParameters: { locale: DEFAULT_LOCALE_ID },
-    },
-    {
-      provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-      customParameters: { locale: DEFAULT_LOCALE_ID },
-    },
+    { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
   ];
 
-  constructor(
-    private ngZone: NgZone,
-    private store: Store<any>
-  ) {}
+  constructor(private ngZone: NgZone, private store: Store<any>) {}
 
   async ngOnInit(): Promise<void> {
+    // ✅ IMPORTANT : init Firebase COMPAT (FirebaseUI dépend de compat)
+    if (!firebase.apps?.length) {
+      firebase.initializeApp(environment.firebaseConfig);
+    }
+
     (window as any).firebase = firebase;
+
     firebase.auth().languageCode = DEFAULT_LOCALE_ID;
     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
@@ -57,11 +47,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     });
 
-    const isLocalhost = this.isLocalhost();
-    const preferredFlow: 'popup' | 'redirect' = isLocalhost ? 'popup' : 'redirect';
-    this.startFirebaseUi(preferredFlow);
-
-    if (!isLocalhost) {
+    this.startFirebaseUi(this.isLocalhost() ? 'popup' : 'redirect');
+    if (!this.isLocalhost()) {
       this.scheduleRedirectFallbackToPopup();
     }
   }
@@ -74,11 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private isLocalhost(): boolean {
-    return (
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname === '[::1]'
-    );
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '[::1]';
   }
 
   private startFirebaseUi(flow: 'popup' | 'redirect'): void {
@@ -101,7 +84,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     this.ui.start('#firebaseui-auth-container', uiConfig);
-    this.started = true;
   }
 
   private scheduleRedirectFallbackToPopup(): void {
