@@ -124,5 +124,52 @@ ngb-carousel .carousel-indicators {
   display: none;
 }
 
+
+img {
+  background-color: transparent !important;
+  display: block;
+}
+
+/* Images de portfolio / produits / grilles */
+.portfolio-img,
+.product-img,
+.card-img-top,
+.item-img,
+.grid-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;       /* remplit le container */
+  background-color: transparent;
+}
+
+/* Wrapper d'image (si hauteur fixe) */
+.image-wrapper,
+.card-img-wrapper,
+.portfolio-item,
+.product-card {
+  background-color: transparent; /* évite le noir */
+  overflow: hidden;
+}
+
+/* ===============================
+   HERO / CAROUSEL
+   =============================== */
+
+.hero-carousel {
+  background-color: transparent !important;
+}
+
+.hero-carousel .carousel-item {
+  background-color: transparent !important;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  max-height: 500px;        /* ajuste si besoin */
+  object-fit: cover;       /* plus de bandes noires */
+  background-color: transparent !important;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
