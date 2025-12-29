@@ -1,6 +1,6 @@
 import {Action} from '@ngrx/store';
 import {ILoginSuccess, ISignup} from '@shared/interfaces';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export enum AuthActionTypes {
 

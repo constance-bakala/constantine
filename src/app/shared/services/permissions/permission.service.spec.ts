@@ -2,17 +2,15 @@ import {inject, TestBed} from '@angular/core/testing';
 
 import {PermissionService} from '@shared/services';
 import {StoreModule} from '@ngrx/store';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 xdescribe('PermissionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PermissionService],
-      imports: [
-        HttpClientTestingModule,
-        StoreModule.forRoot({})
-      ]
-    });
+    imports: [StoreModule.forRoot({})],
+    providers: [PermissionService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+});
   });
 
   it(

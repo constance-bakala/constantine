@@ -9,7 +9,7 @@ import {IQuestion, ISignup} from '@shared/interfaces';
 
 import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {PasswordValidators} from '@shared/validators/password-validators';
 import {Misc} from '@helpers/misc.class';
 import {AuthSignup} from '@app/auth/store/auth.actions';

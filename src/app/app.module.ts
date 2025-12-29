@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -37,53 +37,46 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    SharedModule,
-    AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
-      }
-    }),
-    AuthModule,
-    CoreModule,
-    FeaturesModule,
-    BrowserAnimationsModule,
-    FontAwesomeModule,
-    WelcomeModule,
-    AuthRoutingModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatToolbarModule,
-  ],
-  providers: [
-    CacheService,
-    {
-      provide: APP_CONFIG,
-      useValue: {
-        debounceTime: 600,
-        snackDuration: 5000
-      }
-    },
-    // ✅ AngularFire moderne uniquement (Angular 17)
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideFunctions(() => getFunctions()),
-    provideStorage(() => getStorage()),
-  ],
-
-  exports: [TranslateModule],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+    ],
+    exports: [TranslateModule],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        SharedModule,
+        AppRoutingModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useFactory: HttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        AuthModule,
+        CoreModule,
+        FeaturesModule,
+        BrowserAnimationsModule,
+        FontAwesomeModule,
+        WelcomeModule,
+        AuthRoutingModule,
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        MatToolbarModule], providers: [
+        CacheService,
+        {
+            provide: APP_CONFIG,
+            useValue: {
+                debounceTime: 600,
+                snackDuration: 5000
+            }
+        },
+        // ✅ AngularFire moderne uniquement (Angular 17)
+        provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+        provideAuth(() => getAuth()),
+        provideFirestore(() => getFirestore()),
+        provideFunctions(() => getFunctions()),
+        provideStorage(() => getStorage()),
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
 }

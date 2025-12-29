@@ -1,4 +1,4 @@
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
 import {AuthActions, AuthActionTypes} from '@app/auth/store/auth.actions';
 
