@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 
 export enum ItemsActionTypes {

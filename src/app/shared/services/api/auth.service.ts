@@ -1,7 +1,7 @@
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ILoginSuccess} from '@shared/interfaces';
 import {distinctUntilChanged, map} from 'rxjs/operators';
 import {filter} from 'rxjs/operators';

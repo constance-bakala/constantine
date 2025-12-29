@@ -1,7 +1,7 @@
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {Inject, Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 
 import {tap} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material/snack-bar';

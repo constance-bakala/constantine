@@ -1,6 +1,6 @@
 import {NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import {MetaReducer, StoreModule} from '@ngrx/store';
 import {EffectsModule} from '@ngrx/effects';
@@ -24,57 +24,46 @@ if (!environment.production) {
   metaReducers.unshift(debug);
 }
 
-@NgModule({
-  imports: [
-    // angular
-    CommonModule,
-    HttpClientModule,
-
-    // ngrx
-    StoreModule.forRoot(
-      {
-        'core:auth:constantine': authReducer,
-        meta: metaReducer,
-        functionalErrors: functionalErrorsReducer,
-      },
-      {
-        metaReducers,
-        runtimeChecks: {
-          strictStateImmutability: false,
-          strictActionImmutability: false,
-          strictStateSerializability: false,
-          strictActionSerializability: false,
-          strictActionWithinNgZone: false,
+@NgModule({ imports: [
+        // angular
+        CommonModule,
+        // ngrx
+        StoreModule.forRoot({
+            'core:auth:constantine': authReducer,
+            meta: metaReducer,
+            functionalErrors: functionalErrorsReducer,
+        }, {
+            metaReducers,
+            runtimeChecks: {
+                strictStateImmutability: false,
+                strictActionImmutability: false,
+                strictStateSerializability: false,
+                strictActionSerializability: false,
+                strictActionWithinNgZone: false,
+            },
+        }),
+        EffectsModule.forRoot([AuthEffects, RouterEffects]),
+        // Instrumentation must be imported after importing StoreModule
+        StoreDevtoolsModule.instrument({
+            maxAge: 25,
+            logOnly: environment.production,
+        })], providers: [
+        LocalStorageService,
+        AuthService,
+        // ngx-mask (Angular 16+)
+        provideNgxMask(),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: XTokenInterceptor,
+            multi: true,
         },
-      }
-    ),
-    EffectsModule.forRoot([AuthEffects, RouterEffects]),
-
-    // Instrumentation must be imported after importing StoreModule
-    StoreDevtoolsModule.instrument({
-      maxAge: 25,
-      logOnly: environment.production,
-    }),
-  ],
-  providers: [
-    LocalStorageService,
-    AuthService,
-
-    // ngx-mask (Angular 16+)
-    provideNgxMask(),
-
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: XTokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AssetsInterceptor,
-      multi: true,
-    },
-  ],
-})
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AssetsInterceptor,
+            multi: true,
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
     if (parentModule) {
