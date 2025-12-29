@@ -1,9 +1,10 @@
 import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
 import * as _ from 'lodash';
-import {select, Store} from '@ngrx/store';
+import {select, Store as NgRxStore} from '@ngrx/store';
 import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {combineLatest, Observable, Subscription} from 'rxjs';
+import {combineLatest, from, Observable, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+
 
 import {
   ActionItemToogleNotSelected,
@@ -18,8 +19,7 @@ import {
 import {ITEM_SIZES, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
 import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
 
-import {AngularFireAuth} from '@angular/fire/compat/auth';
-import {AngularFireFunctions} from '@angular/fire/compat/functions';
+import {Functions, httpsCallable} from '@angular/fire/functions';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -31,12 +31,11 @@ import {AlertComponent} from '@shared/components/alert/alert.component';
 import {compareObjects} from '@helpers/compare.objects.utils';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {IAppConfig} from '@shared/interfaces/app.interfaces';
-import {APP_CONFIG, DEFAULT_LOCALE_ID} from '@helpers/constants';
+import {APP_CONFIG} from '@helpers/constants';
 import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {environment} from '@env/environment';
 import {TranslateService} from '@ngx-translate/core';
-import { Store as NgRxStore } from '@ngrx/store';
 
 @Component({
   selector: 'app-cart-items',
@@ -64,8 +63,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   constructor(
     private store: NgRxStore<any>,
     private fb: UntypedFormBuilder,
-    public afAuth: AngularFireAuth,
-    private fun: AngularFireFunctions,
+    private fun: Functions,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
@@ -94,8 +92,13 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     );
 
     // Connexion user (store) + authState (firebase)
-    // Connexion user (store) + authState (firebase)
-    const authState$ = this.afAuth.authState as Observable<firebase.User | null>;
+    const authState$ = new Observable<firebase.User | null>((subscriber) => {
+      const unsubscribe = firebase.auth().onAuthStateChanged(
+        (u) => subscriber.next(u),
+        (err) => subscriber.error(err)
+      );
+      return {unsubscribe};
+    });
 
     this.subs.add(
       combineLatest([
@@ -334,15 +337,16 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       text: '',
       shoppingCardLink: prefix + '/#/shopping-cart',
       uid: user.uid,
-      subject: this.translateService.instant('NEW_ORDER_TITLE', DEFAULT_LOCALE_ID),
+      subject: this.translateService.instant('NEW_ORDER_TITLE'),
       items: emailData,
       displayName: user.displayName,
     };
 
-    this.fun.httpsCallable('genericSendgridEmail')(data).subscribe(
-      (result) => console.log(result),
-      (error) => console.log(error)
-    );
+    const callable = httpsCallable(this.fun, 'genericSendgridEmail');
+    from(callable(data)).subscribe({
+      next: (result) => console.log(result),
+      error: (error) => console.log(error),
+    });
   }
 
   gotoTarget(name: string) {

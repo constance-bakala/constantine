@@ -58,17 +58,40 @@
 
         <!-- ===== ROUTING ANGULAR (PAS de js-scroll-trigger) ===== -->
 
-        <li
-          class="nav-item mx-0 mx-lg-1"
-          *ngIf="!(afAuth.authState | async) || (afAuth.authState | async)?.isAnonymous">
-          <a
-            class="nav-link py-3 px-0 px-lg-3 rounded"
-            [routerLink]="['/auth/signin']">
-            <mat-icon>account_circle</mat-icon>
-            <span class="ajust">{{ 'CONNECT' | translate }}</span>
-          </a>
-        </li>
+        <!-- On évite de répéter (user$ | async) partout -->
+        <ng-container *ngIf="user$ | async as user; else guestLinks">
 
+          <!-- user connecté -->
+          <li class="nav-item mx-0 mx-lg-1">
+            <a
+              class="nav-link py-3 px-0 px-lg-3 rounded"
+              (click)="disconnect()">
+              <mat-icon>exit_to_app</mat-icon>
+              <span class="ajust">
+                {{ 'DISCONNECT' | translate }}
+                <br>
+                <span style="font-size: 10px; margin-left: 10px">
+                  ({{ user.email }})
+                </span>
+              </span>
+            </a>
+          </li>
+
+        </ng-container>
+
+        <!-- user non connecté -->
+        <ng-template #guestLinks>
+          <li class="nav-item mx-0 mx-lg-1">
+            <a
+              class="nav-link py-3 px-0 px-lg-3 rounded"
+              [routerLink]="['/auth/signin']">
+              <mat-icon>account_circle</mat-icon>
+              <span class="ajust">{{ 'CONNECT' | translate }}</span>
+            </a>
+          </li>
+        </ng-template>
+
+        <!-- panier: visible tout le temps -->
         <li class="nav-item mx-0 mx-lg-1">
           <a
             class="nav-link py-3 px-0 px-lg-3 rounded"
@@ -81,33 +104,17 @@
           </a>
         </li>
 
-        <li
-          class="nav-item mx-0 mx-lg-1"
-          *ngIf="!!(afAuth.authState | async) && !(afAuth.authState | async)?.isAnonymous">
-          <a
-            class="nav-link py-3 px-0 px-lg-3 rounded"
-            (click)="disconnect()">
-            <mat-icon>exit_to_app</mat-icon>
-            <span class="ajust">
-              {{ 'DISCONNECT' | translate }}
-              <br>
-              <span style="font-size: 10px; margin-left: 10px">
-                ({{ (afAuth.authState | async)?.email }})
-              </span>
-            </span>
-          </a>
-        </li>
-
       </ul>
     </div>
 
     <div class="filler"></div>
 
-    <ng-container *ngIf="(afAuth.authState | async) && !(afAuth.authState | async)?.isAnonymous">
+    <!-- avatar -->
+    <ng-container *ngIf="user$ | async as user">
       <img
         class="user-avatar"
-        [src]="(afAuth.authState | async)?.photoURL"
-        *ngIf="!!((afAuth.authState | async)?.photoURL)">
+        [src]="user.photoURL"
+        *ngIf="user.photoURL">
     </ng-container>
 
   </div>
