@@ -12,12 +12,13 @@
         class="form-control"
         #selectedLang
         (change)="switchLang(selectedLang.value)">
-        <option
-          *ngFor="let language of translate.getLangs()"
-          [value]="language"
-          [selected]="language === translate.currentLang">
-          {{ language }}
-        </option>
+        @for (language of translate.getLangs(); track language) {
+          <option
+            [value]="language"
+            [selected]="language === translate.currentLang">
+            {{ language }}
+          </option>
+        }
       </select>
     </span>
 
@@ -59,8 +60,7 @@
         <!-- ===== ROUTING ANGULAR (PAS de js-scroll-trigger) ===== -->
 
         <!-- On évite de répéter (user$ | async) partout -->
-        <ng-container *ngIf="user$ | async as user; else guestLinks">
-
+        @if (user$ | async; as user) {
           <!-- user connecté -->
           <li class="nav-item mx-0 mx-lg-1">
             <a
@@ -70,52 +70,52 @@
               <span class="ajust">
                 {{ 'DISCONNECT' | translate }}
                 <br>
-                <span style="font-size: 10px; margin-left: 10px">
-                  ({{ user.email }})
+                  <span style="font-size: 10px; margin-left: 10px">
+                    ({{ user.email }})
+                  </span>
                 </span>
+              </a>
+            </li>
+          } @else {
+            <li class="nav-item mx-0 mx-lg-1">
+              <a
+                class="nav-link py-3 px-0 px-lg-3 rounded"
+                [routerLink]="['/auth/signin']">
+                <mat-icon>account_circle</mat-icon>
+                <span class="ajust">{{ 'CONNECT' | translate }}</span>
+              </a>
+            </li>
+          }
+
+          <!-- user non connecté -->
+
+          <!-- panier: visible tout le temps -->
+          <li class="nav-item mx-0 mx-lg-1">
+            <a
+              class="nav-link py-3 px-0 px-lg-3 rounded"
+              [routerLink]="['/shopping-cart']"
+              aria-label="Toggle navigation">
+              <mat-icon>shopping_cart</mat-icon>
+              <span class="badge badge-pill red">
+                {{ nbSelectedItems$ | async }}
               </span>
             </a>
           </li>
 
-        </ng-container>
+        </ul>
+      </div>
 
-        <!-- user non connecté -->
-        <ng-template #guestLinks>
-          <li class="nav-item mx-0 mx-lg-1">
-            <a
-              class="nav-link py-3 px-0 px-lg-3 rounded"
-              [routerLink]="['/auth/signin']">
-              <mat-icon>account_circle</mat-icon>
-              <span class="ajust">{{ 'CONNECT' | translate }}</span>
-            </a>
-          </li>
-        </ng-template>
+      <div class="filler"></div>
 
-        <!-- panier: visible tout le temps -->
-        <li class="nav-item mx-0 mx-lg-1">
-          <a
-            class="nav-link py-3 px-0 px-lg-3 rounded"
-            [routerLink]="['/shopping-cart']"
-            aria-label="Toggle navigation">
-            <mat-icon>shopping_cart</mat-icon>
-            <span class="badge badge-pill red">
-              {{ nbSelectedItems$ | async }}
-            </span>
-          </a>
-        </li>
+      <!-- avatar -->
+      @if (user$ | async; as user) {
+        @if (user.photoURL) {
+          <img
+            class="user-avatar"
+            [src]="user.photoURL"
+            >
+        }
+      }
 
-      </ul>
     </div>
-
-    <div class="filler"></div>
-
-    <!-- avatar -->
-    <ng-container *ngIf="user$ | async as user">
-      <img
-        class="user-avatar"
-        [src]="user.photoURL"
-        *ngIf="user.photoURL">
-    </ng-container>
-
-  </div>
-</nav>
+  </nav>
