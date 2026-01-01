@@ -1,0 +1,54 @@
+img.displayed{
+  display: block;
+  margin:0 auto;
+}
+
+.img-fluid, .img-thumbnail {
+  width: auto;
+  max-width: 40%;
+  max-height: 100%;
+}
+
+.display {
+  display: flex;
+  justify-content: center;
+}
+
+.image-wrapper {
+  position: relative; // nécessaire pour positionner le mask en absolute
+}
+
+.centered-img {
+  display: block;
+  margin: 0 auto;      // centre horizontalement
+  width: auto;         // garde le ratio
+  max-width: 40%;      // ton besoin
+  height: auto;
+}
+
+.click-mask {
+  position: absolute;
+  inset: 0;            // top/right/bottom/left: 0;
+  cursor: pointer;
+  // pas de display qui perturbe la mise en page
+}
+
+
+.img-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-width: 40%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.image-wrapper img {
+  max-width: 40%;
+  max-height: 100%;
+  width: auto;
+}
+
