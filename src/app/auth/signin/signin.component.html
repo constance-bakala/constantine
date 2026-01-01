@@ -24,24 +24,28 @@
         </a>
       </div>
     </div>
-    <button id="connextionButton" *ngIf="!loading" [disabled]="!logging?.valid" class="btn-connexion btn-primaire-h40 "
-            type="submit">
-      Connexion
-    </button>
+    @if (!loading) {
+      <button id="connextionButton" [disabled]="!logging?.valid" class="btn-connexion btn-primaire-h40 "
+        type="submit">
+        Connexion
+      </button>
+    }
 
-    <button *ngIf="loading" class="btn-spinner btn-primaire-h40" disabled type="button">
-      <i class="fa fa-spinner animate rotation"></i>
-    </button>
-    <ng-container *ngIf="error">
+    @if (loading) {
+      <button class="btn-spinner btn-primaire-h40" disabled type="button">
+        <i class="fa fa-spinner animate rotation"></i>
+      </button>
+    }
+    @if (error) {
       <span class="app-auth-error">{{error.message || error}}</span>
-    </ng-container>
+    }
   </form>
   <div class="app-auth-divider">
     <span>ou</span>
   </div>
   <!--button id="createAccountButton" routerLink="/auth/signup" class="btn-creercompte btn-secondaire-h40">Créer un
-    compte
-  </button-->
-  <p>Utilisez les liens proposés. </p>
-  <social-login></social-login>
+  compte
+</button-->
+<p>Utilisez les liens proposés. </p>
+<social-login></social-login>
 </div>
