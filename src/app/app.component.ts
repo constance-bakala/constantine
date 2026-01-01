@@ -38,6 +38,11 @@ export class AppComponent implements OnInit {
     if (!firebase.apps.length) {
       firebase.initializeApp(environment.firebaseConfig);
     }
+
+    this.translate.addLangs(['fr', 'en']);
+    this.translate.setDefaultLang('fr');
+    this.translate.use(localStorage.getItem('lang') || 'fr');
+
     const usersRef = collection(this.firestore, 'users');
     this.users$ = collectionData(usersRef, { idField: 'id' });
 
@@ -48,10 +53,6 @@ export class AppComponent implements OnInit {
         return of([] as any[]);
       })
     ).subscribe();
-
-    this.translate.addLangs(['fr', 'en']);
-    this.translate.setDefaultLang('fr');
-    this.translate.use(localStorage.getItem('lang') || 'fr');
   }
 
   ngOnInit(): void {
