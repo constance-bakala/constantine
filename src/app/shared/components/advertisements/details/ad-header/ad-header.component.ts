@@ -6,7 +6,8 @@ import {Subject} from 'rxjs';
 @Component({
   selector: 'app-ad-header',
   templateUrl: './ad-header.component.html',
-  styleUrls: ['./ad-header.component.scss']
+  styleUrls: ['./ad-header.component.scss'],
+  standalone: false,
 })
 export class AdHeaderComponent implements OnInit, OnDestroy {
 

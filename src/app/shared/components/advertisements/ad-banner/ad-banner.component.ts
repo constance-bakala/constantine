@@ -6,7 +6,8 @@ import {AdItemComponent2} from '../ad-item/ad-item-component2.component';
 @Component({
   selector: 'app-ad-banner',
   templateUrl: './ad-banner.component.html',
-  styleUrls: ['./ad-banner.component.scss']
+  styleUrls: ['./ad-banner.component.scss'],
+  standalone: false,
 })
 export class AdBannerComponent implements OnInit, OnDestroy {
   @Input() ads: AdItemComponent2[];

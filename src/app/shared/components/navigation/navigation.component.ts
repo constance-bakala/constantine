@@ -18,6 +18,7 @@ declare const $: any;
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  standalone: false,
 })
 export class NavigationComponent implements OnInit, OnDestroy {
   nbSelectedItems$!: Observable<number>;

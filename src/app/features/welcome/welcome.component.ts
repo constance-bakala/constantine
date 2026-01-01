@@ -5,7 +5,8 @@ import {DRESSES_SIZE, EARINGS_SIZE, MASKS_SIZE} from '@helpers/common.services.u
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.css']
+  styleUrls: ['./welcome.component.css'],
+  standalone: false,
 })
 export class WelcomeComponent implements OnInit {
 

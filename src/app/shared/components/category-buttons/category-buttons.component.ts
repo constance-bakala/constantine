@@ -7,6 +7,7 @@ import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-li
   templateUrl: './category-buttons.component.html',
   styleUrls: ['./category-buttons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CategoryButtonsComponent implements OnInit {
 

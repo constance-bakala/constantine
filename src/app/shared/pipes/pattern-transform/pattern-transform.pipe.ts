@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {IRegExpPattern} from '@shared/interfaces/pattern.interfaces';
 
 @Pipe({
-  name: 'patternTransform'
+  name: 'patternTransform',
+  standalone: false,
 })
 export class PatternTransformPipe implements PipeTransform {
 

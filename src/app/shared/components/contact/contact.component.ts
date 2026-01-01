@@ -4,7 +4,8 @@ import {GoogleMapConfig, GooglemapZoom} from '../../interfaces/map.interfaces';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+  styleUrls: ['./contact.component.scss'],
+  standalone: false,
 })
 export class ContactComponent implements OnInit {
 

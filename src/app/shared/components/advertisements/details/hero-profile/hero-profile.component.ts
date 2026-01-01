@@ -3,7 +3,8 @@ import {Component, Input, OnInit} from '@angular/core';
 @Component({
   selector: 'app-hero-profile',
   templateUrl: './hero-profile.component.html',
-  styleUrls: ['./hero-profile.component.scss']
+  styleUrls: ['./hero-profile.component.scss'],
+  standalone: false,
 })
 export class HeroProfileComponent implements OnInit {
 

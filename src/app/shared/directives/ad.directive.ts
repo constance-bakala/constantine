@@ -2,6 +2,7 @@ import {Directive, ViewContainerRef} from '@angular/core';
 
 @Directive({
   selector: '[ad-host]',
+  standalone: false,
 })
 export class AdDirective {
   constructor(public viewContainerRef: ViewContainerRef) { }
