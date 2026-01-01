@@ -7,7 +7,8 @@ interface InputTarget extends EventTarget {
 }
 
 @Directive({
-  selector: '[appNumberOnly]'
+  selector: '[appNumberOnly]',
+  standalone: false,
 })
 export class NumberOnlyDirective {
   @HostListener('keydown', ['$event'])

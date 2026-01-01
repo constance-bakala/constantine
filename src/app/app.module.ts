@@ -1,82 +1,74 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {AppComponent} from './app.component';
-import {AppRoutingModule} from './app-routing.module';
-import {CoreModule} from './core/core.module';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
 
-import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
-import {getAuth, provideAuth} from '@angular/fire/auth';
-import {getFirestore, provideFirestore} from '@angular/fire/firestore';
-import {getFunctions, provideFunctions} from '@angular/fire/functions';
-import {getStorage, provideStorage} from '@angular/fire/storage';
+// ✅ AngularFire moderne
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { provideFunctions, getFunctions } from '@angular/fire/functions';
+import { provideStorage, getStorage } from '@angular/fire/storage';
 
-import {SharedModule} from '@shared/shared.module';
-import {AuthModule} from '@app/auth/auth.module';
-import {FeaturesModule} from '@app/features/features.module';
+// ✅ ngx-translate
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+// (tes modules)
+import { SharedModule } from '@shared/shared.module';
+import { AuthModule } from '@app/auth/auth.module';
+import { CoreModule } from '@app/core';
+import { FeaturesModule } from '@app/features/features.module';
+import { WelcomeModule } from '@app/features/welcome/welcome.module';
 
-import {MatListModule} from '@angular/material/list';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatIconModule} from '@angular/material/icon';
-import {MatToolbarModule} from '@angular/material/toolbar';
+// ✅ Loader custom (compatible Angular 19)
+class HttpTranslateLoader implements TranslateLoader {
+  constructor(private http: HttpClient) {}
 
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {CacheService} from "@shared/services";
-import {WelcomeModule} from "@app/features/welcome/welcome.module";
-import {APP_CONFIG} from "@helpers/constants";
-import {AuthRoutingModule} from "@app/auth/auth-routing.module";
+  getTranslation(lang: string): Observable<any> {
+    return this.http.get(`./assets/i18n/${lang}.json`);
+  }
+}
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new HttpTranslateLoader(http);
 }
 
-@NgModule({ declarations: [
-        AppComponent,
-    ],
-    exports: [TranslateModule],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        SharedModule,
-        AppRoutingModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            }
-        }),
-        AuthModule,
-        CoreModule,
-        FeaturesModule,
-        BrowserAnimationsModule,
-        FontAwesomeModule,
-        WelcomeModule,
-        AuthRoutingModule,
-        MatSidenavModule,
-        MatListModule,
-        MatIconModule,
-        MatToolbarModule], providers: [
-        CacheService,
-        {
-            provide: APP_CONFIG,
-            useValue: {
-                debounceTime: 600,
-                snackDuration: 5000
-            }
-        },
-        // ✅ AngularFire moderne uniquement (Angular 17)
-        provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-        provideAuth(() => getAuth()),
-        provideFirestore(() => getFirestore()),
-        provideFunctions(() => getFunctions()),
-        provideStorage(() => getStorage()),
-        provideHttpClient(withInterceptorsFromDi()),
-    ] })
-export class AppModule {
-}
+@NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+
+    AppRoutingModule,
+    SharedModule,
+
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
+
+    AuthModule,
+    CoreModule,
+    FeaturesModule,
+    WelcomeModule,
+  ],
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideFunctions(() => getFunctions()),
+    provideStorage(() => getStorage()),
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}

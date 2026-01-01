@@ -40,7 +40,8 @@ import {TranslateService} from '@ngx-translate/core';
 @Component({
   selector: 'app-cart-items',
   templateUrl: './cart-items.component.html',
-  styleUrls: ['./cart-items.component.scss'], // ✅ corrigé (scss)
+  styleUrls: ['./cart-items.component.scss'],
+  standalone: false,
 })
 export class CartItemsComponent implements OnInit, OnDestroy {
   basketFormGroup!: UntypedFormGroup;

@@ -7,7 +7,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 @Component({
   selector: 'app-item-details',
   templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.scss']
+  styleUrls: ['./item-details.component.scss'],
+  standalone: false,
 })
 export class ItemDetailsComponent {
   itemGroup: UntypedFormGroup;

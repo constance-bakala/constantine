@@ -4,7 +4,8 @@ import {environment as env} from '@env/environment';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  standalone: false,
 })
 export class MainComponent implements OnInit {
   // logoFondClair = require('../../../assets/portfolio/boucle_oreille_sans_arriere_plan.png');

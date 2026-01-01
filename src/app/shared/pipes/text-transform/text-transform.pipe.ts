@@ -2,7 +2,8 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {TransformTypeEnum} from '@shared/directives/text-transform/TransformTypeEnum';
 
 @Pipe({
-  name: 'textTransform'
+  name: 'textTransform',
+  standalone: false,
 })
 export class TextTransformPipe implements PipeTransform {
   static transformText(value: string, type: string = ''): string {

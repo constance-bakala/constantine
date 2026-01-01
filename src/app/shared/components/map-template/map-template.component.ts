@@ -5,7 +5,8 @@ import {GoogleMapConfig} from '@shared/interfaces/map.interfaces';
 @Component({
   selector: 'app-map-template',
   templateUrl: './map-template.component.html',
-  styleUrls: ['./map-template.component.scss']
+  styleUrls: ['./map-template.component.scss'],
+  standalone: false,
 })
 export class MapTemplateComponent implements OnInit, AfterViewInit {
 
