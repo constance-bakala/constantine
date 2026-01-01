@@ -28,15 +28,16 @@
                  (change)="toogleSelect(item)">
               <!-- Card -->
               <div class="">
-                <div class="view zoom overlay z-depth-2 rounded">
-                  <img class="img-fluid w-100" src="{{item.path}}" alt="Sample">
+                <div class="view zoom overlay z-depth-2 rounded image-wrapper">
+                  <img class="img-fluid centered-img" [src]="item.path" [alt]="item.alias">
+
                   <a>
-                    <div class="mask" (click)="openChoices(item)">
-                      <img class="img-fluid w-100" src="{{item.path}}">
+                    <div class="mask click-mask" (click)="openChoices(item)">
                       <div class="mask rgba-black-slight"></div>
                     </div>
                   </a>
                 </div>
+
                 <div class="text-center pt-4">
                   <span>REF: {{item.reference}}</span>
                   <!--h6 class="mb-3">12.99 $</h6-->

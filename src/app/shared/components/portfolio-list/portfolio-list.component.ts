@@ -13,7 +13,7 @@ export interface ExistingCategories {
 @Component({
   selector: 'app-portfolio-list',
   templateUrl: './portfolio-list.component.html',
-  styleUrls: ['./portfolio-list.component.css'],
+  styleUrls: ['./portfolio-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
