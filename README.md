@@ -38,3 +38,8 @@ firebase deploy --except functions
 ## deploy only functions
 firebase deploy --only "functions:welcomeSendgridEmail,functions:genericSendgridEmail"
 
+
+## Vérifier l'état de la base de donnée firebase
+Aller sur : https://delice-eternel-gabon.firebaseio.com/.json
+
+## Compte twilio: GQY151YRDH7DJKPE3ZS4QUF7
