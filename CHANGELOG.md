@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/wylfranda/constantine/compare/v1.5.13...v2.0.1) (2026-01-02)
+
 ### [1.5.13](https://github.com/wylfranda/constantine/compare/v1.5.12...v1.5.13) (2026-01-02)
 
 ### [1.5.12](https://github.com/wylfranda/constantine/compare/v1.5.11...v1.5.12) (2026-01-02)
