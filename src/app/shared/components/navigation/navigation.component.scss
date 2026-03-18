@@ -12,6 +12,10 @@ a.nav-link span {
   font-weight: 500;
 }
 
+#mainNav .navbar-nav li.nav-item a.nav-link {
+  white-space: nowrap;
+}
+
 .form-control {
   display: block;
   width: 100%;
@@ -26,4 +30,20 @@ a.nav-link span {
   border: 0.125rem solid #ced4da;
   border-radius: 0.5rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand img {
+  margin-right: 0.5rem;
+}
+
+.nav-lang-select {
+  height: 32px;
+  line-height: 32px;
+  padding: 0 0.5rem;
+  min-width: 115px;
 }

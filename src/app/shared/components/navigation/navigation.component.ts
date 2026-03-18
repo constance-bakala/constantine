@@ -1,117 +1,71 @@
-import {Component, NgZone, OnInit} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {selectNbChosenItems} from '@app/features/store';
-import {Observable} from 'rxjs';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {ActionAuthLoggedIn, ActionAuthLogout} from '@app/auth/store/auth.actions';
-import {initLoginPayload} from '@helpers/common.services.utils';
-import {TranslateService} from '@ngx-translate/core';
-import {DEFAULT_LOCALE_ID} from '@helpers/constants';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
 
-declare var $: any;
+import { Auth, signOut, user } from '@angular/fire/auth';
+
+import { selectNbChosenItems } from '@app/features/store';
+import { ActionAuthLoggedIn, ActionAuthLogout } from '@app/auth/store/auth.actions';
+import { initLoginPayload } from '@helpers/common.services.utils';
+import { TranslateService } from '@ngx-translate/core';
+import { DEFAULT_LOCALE_ID } from '@helpers/constants';
+
+import { User } from 'firebase/auth';
+
+import { initNavScroll } from '@helpers/nav-scroll.utils';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
+  standalone: false,
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
+  nbSelectedItems$!: Observable<number>;
+  private readonly subs = new Subscription();
+  private destroyNavScroll?: () => void;
 
-  nbSelectedItems$: Observable<number>;
-  param = {value: 'About'};
+  user$: Observable<User | null>;
 
-  constructor(private store: Store<any>, public afAuth: AngularFireAuth, private ngZone: NgZone,
-              public translate: TranslateService) {
-    translate.addLangs(['en', 'fr']);
-    translate.setDefaultLang('en');
-    translate.use(DEFAULT_LOCALE_ID);
+  constructor(
+    private store: Store<any>,
+    private ngZone: NgZone,
+    private auth: Auth,
+    public translate: TranslateService
+  ) {
+    this.user$ = user(this.auth);
+    this.translate.addLangs(['fr', 'en']);
+    this.translate.setDefaultLang('fr');
+    this.translate.use(localStorage.getItem('lang') || DEFAULT_LOCALE_ID || 'fr');
   }
 
   ngOnInit(): void {
-    $(document).ready(function () {
-      $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function () {
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-          var target = $(this.hash);
-          target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-          if (target.length) {
-            $('html, body').animate({
-              scrollTop: (target.offset().top - 71)
-            }, 1000, "easeInOutExpo");
-            return false;
-          }
+    this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
+
+    this.subs.add(
+      user(this.auth).subscribe((firebaseUser) => {
+        if (firebaseUser) {
+          this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(firebaseUser)));
         }
-      });
-
-      // Scroll to top button appear
-      $(document).scroll(function () {
-        var scrollDistance = $(this).scrollTop();
-        if (scrollDistance > 100) {
-          $('.scroll-to-top').fadeIn();
-        } else {
-          $('.scroll-to-top').fadeOut();
-        }
-      });
-
-      // Closes responsive menu when a scroll trigger link is clicked
-      $('.js-scroll-trigger').click(function () {
-        $('.navbar-collapse').collapse('hide');
-      });
-
-      // Activate scrollspy to add active class to navbar items on scroll
-      $('body').scrollspy({
-        target: '#mainNav',
-        offset: 80
-      });
-
-      // Collapse Navbar
-      var navbarCollapse = function () {
-        if ($("#mainNav").offset().top > 100) {
-          $("#mainNav").addClass("navbar-shrink");
-        } else {
-          $("#mainNav").removeClass("navbar-shrink");
-        }
-      };
-      // Collapse now if page is not at top
-      navbarCollapse();
-      // Collapse the navbar when page is scrolled
-      $(window).scroll(navbarCollapse);
-
-      // Floating label headings for the contact form
-      $(function () {
-        $("body").on("input propertychange", ".floating-label-form-group", function (e) {
-          $(this).toggleClass("floating-label-form-group-with-value", !!$(e.target).val());
-        }).on("focus", ".floating-label-form-group", function () {
-          $(this).addClass("floating-label-form-group-with-focus");
-        }).on("blur", ".floating-label-form-group", function () {
-          $(this).removeClass("floating-label-form-group-with-focus");
-        });
-      });
-    });
-
-    this.nbSelectedItems$ = this.store.pipe(
-      select(selectNbChosenItems)
+      })
     );
 
-    // here we just refresh the token if user is authenticated
-    this.afAuth.authState.subscribe(connectedUser => {
-      // If the user is remotely connected
-      if (!!connectedUser) {
-        // We log the user anonymousely
-        this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(connectedUser)));
-      }
-      if (!connectedUser) {
-        //this.store.dispatch(new ActionAuthLogout());
-      }
-    });
+    this.destroyNavScroll = initNavScroll();
   }
 
-  disconnect() {
-    this.ngZone.run(() => {
-      this.afAuth.signOut().then(() => this.store.dispatch(new ActionAuthLogout()));
-    });
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+    this.destroyNavScroll?.();
   }
 
-  switchLang(lang: string) {
+  switchLang(lang: string): void {
     this.translate.use(lang);
+    localStorage.setItem('lang', lang);
+  }
+
+  disconnect(): void {
+    this.ngZone.run(() => {
+      signOut(this.auth).then(() => this.store.dispatch(new ActionAuthLogout()));
+    });
   }
 }

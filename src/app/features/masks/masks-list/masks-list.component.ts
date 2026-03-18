@@ -15,11 +15,12 @@ import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-li
 @Component({
   selector: 'app-masks-list',
   templateUrl: './masks-list.component.html',
-  styleUrls: ['./masks-list.component.css']
+  styleUrls: ['./masks-list.component.css'],
+  standalone: false,
 })
 export class MasksListComponent implements OnInit {
-  masks$: Observable<Category>;
-  categoryInfos$: Observable<ExistingCategories>;
+  masks$!: Observable<Category>;
+  categoryInfos$!: Observable<ExistingCategories>;
 
   constructor(private store: Store<any>) {
   }

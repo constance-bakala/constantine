@@ -1,20 +1,10 @@
-<google-map
-  height="{{mapConfig.size.height}}"
-  width="{{mapConfig.size.width}}"
-  [zoom]="mapConfig.zoom.initialValue"
-  [center]="center"
-  [options]="options"
->
-  <map-marker
-    #markerElem
-    *ngFor="let marker of markers"
-    [position]="marker.position"
-    [label]="marker.label"
-    [title]="marker.title"
-    [options]="marker.options"
-    (mapClick)="openInfo(markerElem, marker.info)"
-  >
+<google-map height="{{mapConfig.size.height}}" width="{{mapConfig.size.width}}" [zoom]="mapConfig.zoom.initialValue"
+  [center]="center" [options]="options">
+  @for (marker of markers; track marker) {
+  <map-marker [position]="marker.position" [label]="marker.label" [title]="marker.title" [options]="marker.options"
+    (mapClick)="openInfo(marker, marker.info)">
     <!-- set label(label: string | google.maps.MarkerLabel); -->
   </map-marker>
+  }
   <map-info-window>{{ infoContent }}</map-info-window>
 </google-map>

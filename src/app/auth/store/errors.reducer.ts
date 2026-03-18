@@ -39,7 +39,7 @@ export function mergeFunctionalErrors(existingFunctionalErrors: string[], newFun
   return result;
 }
 
-export const selectorFunctionalErrors = state => state.functionalErrors;
+export const selectorFunctionalErrors = (state: any) => state.functionalErrors;
 
 export function functionalErrorsReducer(
   state: FunctionalErrorsState = errorsInitialState,

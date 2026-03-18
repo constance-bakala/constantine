@@ -1,25 +1,52 @@
-import {Component, EventEmitter, Inject, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ITEM_SIZES, ItemInfos, ItemSizeEnum} from '@shared/interfaces';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { ITEM_SIZES, ItemInfos, ItemSizeEnum } from '@shared/interfaces';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { PricingService } from '@shared/services/pricing.service';
 
 @Component({
   selector: 'app-item-details',
   templateUrl: './item-details.component.html',
-  styleUrls: ['./item-details.component.scss']
+  styleUrls: ['./item-details.component.scss'],
+  standalone: false,
 })
 export class ItemDetailsComponent {
-  itemGroup: FormGroup;
+  itemGroup!: UntypedFormGroup;
   sizes = ITEM_SIZES;
+  images: string[] = [];
+  selectedImageIndex = 0;
 
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
   selected = false;
 
-  constructor(private fb: FormBuilder,
-              private dialogRef: MatDialogRef<ItemDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: ItemInfos) {
+  get currentImage(): string {
+    return this.images[this.selectedImageIndex];
+  }
+
+  get totalPrice(): string {
+    const qty = (this.itemGroup?.get('basketInfos.selectedQuantity')?.value as number) || 1;
+    return this.pricing.format(this.data.price * qty);
+  }
+
+  constructor(private fb: UntypedFormBuilder,
+    private dialogRef: MatDialogRef<ItemDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: ItemInfos,
+    public pricing: PricingService) {
+    this.images = (data.images?.length ?? 0) > 0 ? data.images : [data.path];
     this.initForm(data);
+  }
+
+  selectImage(index: number): void {
+    this.selectedImageIndex = index;
+  }
+
+  prevImage(): void {
+    this.selectedImageIndex = (this.selectedImageIndex - 1 + this.images.length) % this.images.length;
+  }
+
+  nextImage(): void {
+    this.selectedImageIndex = (this.selectedImageIndex + 1) % this.images.length;
   }
 
   private initForm(infos: ItemInfos) {
@@ -48,16 +75,16 @@ export class ItemDetailsComponent {
   }
 
   stepUp() {
-    let value = this.itemGroup.get('basketInfos.selectedQuantity').value as number;
+    let value = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
     if (value < 999) {
-      this.itemGroup.get('basketInfos.selectedQuantity').setValue(++value);
+      this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(++value);
     }
   }
 
   stepDown() {
-    let value = this.itemGroup.get('basketInfos.selectedQuantity').value as number;
+    let value = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
     if (value > 1) {
-      this.itemGroup.get('basketInfos.selectedQuantity').setValue(--value)
+      this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(--value)
     }
   }
 

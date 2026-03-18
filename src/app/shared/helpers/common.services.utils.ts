@@ -1,44 +1,88 @@
-import {ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum} from '@shared/interfaces';
+import { ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum } from '@shared/interfaces';
+import { DEFAULT_LOCALE_ID } from "@helpers/constants";
+import { ItemGroupDef } from '@helpers/items-groups.const';
+import { CategoryPrices } from '@helpers/items-prices.const';
 
-export const DRESSES_SIZE = 48;
-export const EARINGS_SIZE = 17;
-export const MASKS_SIZE = 62;
-
-export function getAssetItems(size: number, directoryName: string, refPrefix: string, extension, category: ItemsCategoriesEnum): ItemInfos[] {
-  return Array(size).fill(0).map((x, index) => {
-    const currentIndex = index + 1;
-    const path = 'assets/' + directoryName + '/' + refPrefix + '-' + currentIndex + '.' + extension;
-    const reference = refPrefix.toUpperCase() + '-' + currentIndex;
+export function getAssetGroups(
+  groups: ItemGroupDef[],
+  directoryName: string,
+  refPrefix: string,
+  category: ItemsCategoriesEnum,
+  prices: CategoryPrices = {}
+): ItemInfos[] {
+  return groups.map((group, index) => {
+    const groupDir = `assets/${directoryName}/${refPrefix}-${group.id}`;
+    const coverPath = `${groupDir}/cover.png`;
+    const extraPaths = (group.extraImages ?? []).map(img => `${groupDir}/${img}`);
+    const images = [coverPath, ...extraPaths];
     const basketInfos = {
       selectedQuantity: 1,
       selectedSize: ItemSizeEnum.M,
-      selectedModel: 'MODEL_UNIQUE'
+      selectedModel: 'MODEL_UNIQUE',
     };
-    return new ItemInfos(path, false, reference, currentIndex, category, false, basketInfos);
+    return new ItemInfos(
+      coverPath,
+      false,
+      `${refPrefix.toUpperCase()}-${group.id}`,
+      index + 1,
+      category,
+      false,
+      basketInfos,
+      images,
+      prices[group.id] ?? 0
+    );
   });
 }
 
-export function initLoginPayload(result): ILoginSuccess {
+export function initLoginPayload(result: any): ILoginSuccess {
+  const user = result?.user ?? result; // parfois on passe direct "user"
+  const profile = result?.additionalUserInfo?.profile ?? {};
+
+  const uid =
+    user?.uid ??
+    result?.uid ??
+    profile?.id ??
+    profile?.sub; // parfois OpenID
+
+  const email =
+    user?.email ??
+    profile?.email ??
+    result?.email;
+
+  const picture =
+    profile?.picture?.data?.url ??
+    profile?.picture ??
+    user?.photoURL;
+
+  const prenom =
+    profile?.given_name ??
+    user?.displayName?.split(' ')?.[0];
+
+  const nom =
+    profile?.family_name ??
+    user?.displayName?.split(' ')?.slice(1)?.join(' ');
+
   return {
-    ssoToken: result?.credential?.idToken ?? result?.refreshToken,
-    token: result?.credential?.accessToken ?? result?.refreshToken,
+    ssoToken: result?.credential?.idToken ?? result?.refreshToken ?? (user as any)?.refreshToken,
+    token: result?.credential?.accessToken ?? result?.refreshToken ?? (user as any)?.refreshToken,
     userHabilitations: [],
     indexRole: -1,
     actions: {},
-    isAnonymous: result?.user?.isAnonymous ?? result?.isAnonymous,
-    credential: result.credential,
+    isAnonymous: user?.isAnonymous ?? result?.isAnonymous,
+    credential: result?.credential,
     additionalInfos: {
-      uid: result.additionalUserInfo?.profile?.id ?? result.uid,
-      providerId: result.additionalUserInfo?.providerId,
-      local: result.additionalUserInfo?.profile?.locale,
-      picture: result.additionalUserInfo?.profile?.picture ?? result.additionalUserInfo?.profile?.picture?.data?.url,
-      nom: result.additionalUserInfo?.profile?.family_name,
-      prenom: result.additionalUserInfo?.profile?.given_name,
-      gender: result.additionalUserInfo?.profile?.gender,
-      email: result.additionalUserInfo?.profile?.email,
-    }
+      uid,
+      providerId: result?.additionalUserInfo?.providerId ?? user?.providerData?.[0]?.providerId,
+      local: profile?.locale ?? DEFAULT_LOCALE_ID,
+      picture,
+      nom,
+      prenom,
+      gender: profile?.gender,
+      email,
+    },
   };
 }
+
 
 export enum AlertTypeEnum {
   WARNING = 'warning',

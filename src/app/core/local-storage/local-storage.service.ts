@@ -19,9 +19,10 @@ export class LocalStorageService {
         stateKey.forEach((key, index) => {
           if (index === stateKey.length - 1) {
             try {
-              currentStateRef[key] = JSON.parse(
-                localStorage.getItem(storageKey)
-              );
+              const storedValue = localStorage.getItem(storageKey);
+              if (storedValue !== null) {
+                currentStateRef[key] = JSON.parse(storedValue);
+              }
             } catch (e) {
             }
             return;
@@ -43,7 +44,8 @@ export class LocalStorageService {
   }
 
   getItem(key: string) {
-    return JSON.parse(localStorage.getItem(`${APP_PREFIX}${key}`));
+    const storedValue = localStorage.getItem(`${APP_PREFIX}${key}`);
+    return storedValue ? JSON.parse(storedValue) : null;
   }
 
   clearAll() {

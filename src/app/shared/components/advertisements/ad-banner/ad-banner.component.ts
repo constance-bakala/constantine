@@ -1,17 +1,18 @@
-import {Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
-import {AdDirective} from '../../../directives/ad.directive';
-import {AdItemComponent2} from '../ad-item/ad-item-component2.component';
+import { AdDirective } from '../../../directives/ad.directive';
+import { AdItemComponent2 } from '../ad-item/ad-item-component2.component';
 
 @Component({
   selector: 'app-ad-banner',
   templateUrl: './ad-banner.component.html',
-  styleUrls: ['./ad-banner.component.scss']
+  styleUrls: ['./ad-banner.component.scss'],
+  standalone: false,
 })
 export class AdBannerComponent implements OnInit, OnDestroy {
-  @Input() ads: AdItemComponent2[];
+  @Input() ads!: AdItemComponent2[];
   currentAdIndex = -1;
-  @ViewChild(AdDirective, {static: true}) adHost: AdDirective;
+  @ViewChild(AdDirective, { static: true }) adHost!: AdDirective;
   interval: any;
 
   constructor(private componentFactoryResolver: ComponentFactoryResolver) { }
@@ -22,7 +23,7 @@ export class AdBannerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-   clearInterval(this.interval);
+    clearInterval(this.interval);
   }
 
   loadComponent() {

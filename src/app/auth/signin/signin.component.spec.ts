@@ -7,7 +7,8 @@ import {RouterModule} from '@angular/router';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {APP_BASE_HREF} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 xdescribe('SigninComponent', () => {
   let component: SigninComponent;
@@ -15,15 +16,14 @@ xdescribe('SigninComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SigninComponent],
-      imports: [FormsModule, ReactiveFormsModule,
-        HttpClientTestingModule,
+    declarations: [SigninComponent],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    imports: [FormsModule, ReactiveFormsModule,
         StoreModule.forRoot({}),
         EffectsModule.forRoot([]),
-        RouterModule.forRoot([], { relativeLinkResolution: 'legacy' })],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA],
-      providers: [{provide: APP_BASE_HREF, useValue: '/'}],
-    }).compileComponents();
+        RouterModule.forRoot([], {})],
+    providers: [{ provide: APP_BASE_HREF, useValue: '/' }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+}).compileComponents();
   }));
 
   beforeEach(() => {

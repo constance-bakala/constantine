@@ -1,83 +1,113 @@
-import {Component, NgZone, OnDestroy, OnInit} from '@angular/core';
-import * as firebaseui from 'firebaseui';
-import firebase from 'firebase/app';
-import {AngularFireAuth} from '@angular/fire/auth';
-import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {ActionAuthLoggedIn, ActionAuthLoggedOut} from '@app/auth/store/auth.actions';
-import {initLoginPayload} from '@helpers/common.services.utils';
-import {DEFAULT_LOCALE_ID} from '@helpers/constants';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
+import { environment } from '../../../environments/environment'; // <-- ajuste le chemin si besoin
+import { ActionAuthLoggedIn } from '@app/auth/store/auth.actions';
+import { initLoginPayload } from '@helpers/common.services.utils';
+import { DEFAULT_LOCALE_ID } from '@helpers/constants';
+
+declare const firebaseui: any;
 
 @Component({
   selector: 'social-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  ui: firebaseui.auth.AuthUI;
+  ui: any;
+  private fallbackTimer: any;
+
   signInOptions = [
-    {
-      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-      customParameters: {
-        'locale': DEFAULT_LOCALE_ID
-      }
-    },
-    {
-      provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-      customParameters: {
-        'locale': DEFAULT_LOCALE_ID
-      }
-    },
-    {
-      provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-      customParameters: {
-        'locale': DEFAULT_LOCALE_ID
-      }
-    },
-    {
-      provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-      customParameters: {
-        'locale': DEFAULT_LOCALE_ID
-      }
-    }
+    { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
   ];
 
-  constructor(private afAuth: AngularFireAuth,
-              private router: Router,
-              private ngZone: NgZone,
-              private store: Store<any>) {
+  constructor(private ngZone: NgZone, private store: Store<any>) {}
+
+  async ngOnInit(): Promise<void> {
+    // ✅ IMPORTANT : init Firebase COMPAT (FirebaseUI dépend de compat)
+    if (!firebase.apps?.length) {
+      firebase.initializeApp(environment.firebaseConfig);
+    }
+
+    (window as any).firebase = firebase;
+
+    firebase.auth().languageCode = DEFAULT_LOCALE_ID;
+    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+    firebase.auth().onAuthStateChanged((u) => {
+      if (u) {
+        this.clearFallback();
+        this.dispatchLoggedIn({ user: u });
+      }
+    });
+
+    this.startFirebaseUi(this.isLocalhost() ? 'popup' : 'redirect');
+    if (!this.isLocalhost()) {
+      this.scheduleRedirectFallbackToPopup();
+    }
   }
 
+  ngOnDestroy(): void {
+    this.clearFallback();
+    if (this.ui?.delete) {
+      this.ui.delete();
+    }
+  }
 
-  ngOnInit() {
-    firebase.auth().languageCode = DEFAULT_LOCALE_ID;
-    const uiConfig = {
+  private isLocalhost(): boolean {
+    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '[::1]';
+  }
+
+  private startFirebaseUi(flow: 'popup' | 'redirect'): void {
+    try {
+      const existing = firebaseui.auth.AuthUI.getInstance();
+      if (existing) existing.reset();
+    } catch {}
+
+    const uiConfig: any = {
+      signInFlow: flow,
       signInOptions: this.signInOptions,
+      signInSuccessUrl: window.location.origin + window.location.pathname + '#/auth/signin',
       callbacks: {
-        signInSuccessWithAuthResult: this
-          .onLoginSuccessful
-          .bind(this),
-      }
+        signInFailure: (error: any) => {
+          console.error('[FirebaseUI] failure', error);
+          return Promise.resolve();
+        },
+      },
     };
+
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     this.ui.start('#firebaseui-auth-container', uiConfig);
   }
 
-  ngOnDestroy() {
-    this.ui.delete();
+  private scheduleRedirectFallbackToPopup(): void {
+    this.clearFallback();
+    this.fallbackTimer = setTimeout(() => {
+      const current = firebase.auth().currentUser;
+      if (!current) {
+        this.startFirebaseUi('popup');
+      }
+    }, 2500);
   }
 
-  onLoginSuccessful(result) {
-    this.ngZone.run(() => {
-      this.store.dispatch(new ActionAuthLoggedIn(initLoginPayload(result)));
-    });
+  private clearFallback(): void {
+    if (this.fallbackTimer) {
+      clearTimeout(this.fallbackTimer);
+      this.fallbackTimer = undefined;
+    }
   }
 
-  onLogoutSuccessful(result) {
+  private dispatchLoggedIn(resultLike: any): void {
+    const payload = initLoginPayload(resultLike);
     this.ngZone.run(() => {
-      this.store.dispatch(new ActionAuthLoggedOut());
+      this.store.dispatch(new ActionAuthLoggedIn(payload));
     });
   }
 }
-
-

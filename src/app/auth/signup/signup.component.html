@@ -7,9 +7,9 @@
         <label for="gender" class="required">Civilité</label>
         <div class="form-group-select">
           <select id="gender"
-                  name="gender"
-                  [formControl]="gender"
-                  class="form-control">
+            name="gender"
+            [formControl]="gender"
+            class="form-control">
             <option [ngValue]="1" selected>M.</option>
             <option [ngValue]="2">Mme</option>
           </select>
@@ -20,102 +20,126 @@
       <div class="form-group col-7 form-nom">
         <label for="nom" class="required">Nom</label>
         <input type="text"
-               id="nom"
-               name="nom"
-               [formControl]="nom"
-               appTextTransform
-               text-uppercase
-               class="form-control">
+          id="nom"
+          name="nom"
+          [formControl]="nom"
+          appTextTransform
+          text-uppercase
+          class="form-control">
         <i class="bar"></i>
-        <span *ngIf="nom.invalid && (nom.dirty || nom.touched)"
-              class="error">{{requiredAlert}} nom.</span>
+        @if (nom.invalid && (nom.dirty || nom.touched)) {
+          <span
+          class="error">{{requiredAlert}} nom.</span>
+        }
       </div>
       <div class="form-group col-12">
         <label for="prenom" class="required">Prénom</label>
         <input type="text"
-               id="prenom"
-               name="prenom"
-               [formControl]="prenom"
-               appTextTransform
-               class="form-control">
+          id="prenom"
+          name="prenom"
+          [formControl]="prenom"
+          appTextTransform
+          class="form-control">
         <i class="bar"></i>
-        <span *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)"
-              class="error">{{requiredAlert}} prénom.</span>
+        @if (prenom.invalid && (prenom.dirty || prenom.touched)) {
+          <span
+          class="error">{{requiredAlert}} prénom.</span>
+        }
       </div>
       <div class="form-group col-12">
         <label for="email" class="required">Email</label>
         <input type="email"
-               id="email"
-               name="email"
-               [formControl]="email"
-               autocomplete="off"
-               class="form-control">
+          id="email"
+          name="email"
+          [formControl]="email"
+          autocomplete="off"
+          class="form-control">
         <i class="bar"></i>
-        <span *ngIf="email.invalid && (email.dirty || email.touched)"
-              class="error">{{requiredAlert}}e adresse mail valide</span>
+        @if (email.invalid && (email.dirty || email.touched)) {
+          <span
+          class="error">{{requiredAlert}}e adresse mail valide</span>
+        }
       </div>
       <div class="form-group col-12">
         <label for="password" class="required">Mot de passe</label>
         <input type="password"
-               id="password"
-               name="password"
-               [formControl]="password"
-               class="form-control">
+          id="password"
+          name="password"
+          [formControl]="password"
+          class="form-control">
         <i class="bar"></i>
-        <div *ngIf="password.errors" class="container-fluid pwd-check radius-4">
-          <div class="row">
-            <div class="col">
-              <span class="title">Votre mot de passe doit contenir:</span>
+        @if (password.errors) {
+          <div class="container-fluid pwd-check radius-4">
+            <div class="row">
+              <div class="col">
+                <span class="title">Votre mot de passe doit contenir:</span>
+              </div>
+            </div>
+            @if (!!password.errors.passwordShouldBeMinimumChars) {
+              <div class="row">
+                <div class="col">
+                  <div class="bullet"></div>
+                  <span class="criteria">8 caractères minimum</span>
+                </div>
+              </div>
+            }
+            <div class="row">
+              @if (!!password.errors.passwordShouldHaveAtLeastOneLowerCaseLetter) {
+                <div class="col-md">
+                  <div class="bullet"></div>
+                  <span class="criteria">1 lettre minuscule</span>
+                </div>
+              }
+              @if (!!password.errors.passwordShouldHaveAtLeastOneDigit) {
+                <div class="col-md">
+                  <div class="bullet"></div>
+                  <span class="criteria">1 chiffre</span>
+                </div>
+              }
+            </div>
+            <div class="row">
+              @if (!!password.errors.passwordShouldHaveAtLeastOneUpperCaseLetter) {
+                <div class="col-md">
+                  <div class="bullet"></div>
+                  <span class="criteria">1 lettre majuscule</span>
+                </div>
+              }
+              @if (!!password.errors.passwordShouldHaveAtLeastOneSpecialCharacter) {
+                <div class="col-md">
+                  <div class="bullet"></div>
+                  <span class="criteria">1 caractère spécial</span>
+                </div>
+              }
             </div>
           </div>
-          <div *ngIf="!!password.errors.passwordShouldBeMinimumChars" class="row">
-            <div class="col">
-              <div class="bullet"></div>
-              <span class="criteria">8 caractères minimum</span>
-            </div>
-          </div>
-          <div class="row">
-            <div *ngIf="!!password.errors.passwordShouldHaveAtLeastOneLowerCaseLetter" class="col-md">
-              <div class="bullet"></div>
-              <span class="criteria">1 lettre minuscule</span>
-            </div>
-            <div *ngIf="!!password.errors.passwordShouldHaveAtLeastOneDigit" class="col-md">
-              <div class="bullet"></div>
-              <span class="criteria">1 chiffre</span>
-            </div>
-          </div>
-          <div class="row">
-            <div *ngIf="!!password.errors.passwordShouldHaveAtLeastOneUpperCaseLetter" class="col-md">
-              <div class="bullet"></div>
-              <span class="criteria">1 lettre majuscule</span>
-            </div>
-            <div *ngIf="!!password.errors.passwordShouldHaveAtLeastOneSpecialCharacter" class="col-md">
-              <div class="bullet"></div>
-              <span class="criteria">1 caractère spécial</span>
-            </div>
-          </div>
-        </div>
-        <span *ngIf="password.invalid && (password.dirty || password.touched)"
-              class="error">
-        {{requiredAlert}} mot de passe valide. Votre mot de passe est trop faible.
-      </span>
+        }
+        @if (password.invalid && (password.dirty || password.touched)) {
+          <span
+            class="error">
+            {{requiredAlert}} mot de passe valide. Votre mot de passe est trop faible.
+          </span>
+        }
       </div>
       <div class="form-group col-12">
         <label for="confirmPassword" class="required">Confirmer votre mot de passe</label>
         <input type="password"
-               id="confirmPassword"
-               name="confirmPassword"
-               [formControl]="confirmPassword"
-               class="form-control">
+          id="confirmPassword"
+          name="confirmPassword"
+          [formControl]="confirmPassword"
+          class="form-control">
         <i class="bar"></i>
-        <span *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)"
-              class="error">
-        Veuillez confirmer votre mot de passe.
-      </span>
-        <span *ngIf="confirmPassword.value !== password.value && (confirmPassword.dirty || confirmPassword.touched)"
-              class="error">
-      Les mots de passe ne sont pas identiques.
-    </span>
+        @if (confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)) {
+          <span
+            class="error">
+            Veuillez confirmer votre mot de passe.
+          </span>
+        }
+        @if (confirmPassword.value !== password.value && (confirmPassword.dirty || confirmPassword.touched)) {
+          <span
+            class="error">
+            Les mots de passe ne sont pas identiques.
+          </span>
+        }
       </div>
     </div>
     <div class="content-mentions">
@@ -130,32 +154,40 @@
         possibilité de vous opposer, à tout moment et sans frais, à la prospection commerciale, y compris lorsque
         celle-ci est réalisée de manière ciblée. Ces droits peuvent être exercés, en justifiant de votre identité,
         par mail à
-        <a href="mailto:delice.eternel.gabon@gmail.com">delice.eternel.gabon@gmail.com</a>
+        <a href="mailto:delice.eternel.gabon@gmail.com">delice.eternel.gabon&#64;gmail.com</a>
         ou juste nous laisser un message sur le site
       </p>
     </div>
-    <button *ngIf="!loading"
-            type="submit"
-            class="btn-suivant btn-primaire-h40 col-md-12"
-            [disabled]="sendButtonState()">
-      {{submitButtonText}}
-    </button>
-    <button *ngIf="loading" class="btn-spinner btn-primaire-h40 col-md-12" disabled type="button">
-      <i class="fa fa-spinner animate rotation"></i>
-    </button>
+    @if (!loading) {
+      <button
+        type="submit"
+        class="btn-suivant btn-primaire-h40 col-md-12"
+        [disabled]="sendButtonState()">
+        {{submitButtonText}}
+      </button>
+    }
+    @if (loading) {
+      <button class="btn-spinner btn-primaire-h40 col-md-12" disabled type="button">
+        <i class="fa fa-spinner animate rotation"></i>
+      </button>
+    }
   </form>
-  <div class="error-alert" *ngIf="retrieveUserError">
-    <div class="alert alert-danger">
-      Une erreur est survenue lors de la récupération de l'utilisateur.
-      Veuillez contacter votre administrateur.
+  @if (retrieveUserError) {
+    <div class="error-alert">
+      <div class="alert alert-danger">
+        Une erreur est survenue lors de la récupération de l'utilisateur.
+        Veuillez contacter votre administrateur.
+      </div>
     </div>
-  </div>
-  <div *ngIf="success" class="success-alert">
-    <div class="alert alert-success">
-      Nous venons de vous envoyer un e-mail avec un lien de confirmation.
-      Merci de vérifier votre boite mail et de cliquer sur le lien.
+  }
+  @if (success) {
+    <div class="success-alert">
+      <div class="alert alert-success">
+        Nous venons de vous envoyer un e-mail avec un lien de confirmation.
+        Merci de vérifier votre boite mail et de cliquer sur le lien.
+      </div>
     </div>
-  </div>
+  }
   <div class="app-auth-divider">
     <span>Déjà client?</span>
   </div>

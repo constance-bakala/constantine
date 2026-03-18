@@ -1,12 +1,13 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivationEnd, Router} from '@angular/router';
-import {filter, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivationEnd, Router } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  standalone: false,
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
@@ -23,7 +24,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         filter(event => event instanceof ActivationEnd)
       )
       .subscribe((event: ActivationEnd) => {
-        this. displayHtml = event.snapshot.routeConfig.path.indexOf('home') >= 0;
+        this.displayHtml = (event.snapshot.routeConfig?.path?.indexOf('home') ?? -1) >= 0;
       });
   }
 

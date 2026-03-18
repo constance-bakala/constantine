@@ -1,5 +1,7 @@
 import * as firebaseui from 'firebaseui';
-import firebase from 'firebase';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+
 
 export interface ILoginSuccess {
   ssoToken?: string;
@@ -20,10 +22,10 @@ export interface IQuestion {
 }
 
 export interface IUser {
-  nom: string;
-  prenom: string;
+  nom?: string;
+  prenom?: string;
   gender?: number;
-  email: string;
+  email?: string;
   uid?: string,
   providerId?: string,
   local?: string,

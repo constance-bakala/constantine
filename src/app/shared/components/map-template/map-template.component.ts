@@ -1,29 +1,30 @@
-import {AfterViewInit, Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {GoogleMap, MapInfoWindow, MapMarker} from '@angular/google-maps';
-import {GoogleMapConfig} from '@shared/interfaces/map.interfaces';
+import { AfterViewInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
+import { GoogleMapConfig } from '@shared/interfaces/map.interfaces';
 
 @Component({
   selector: 'app-map-template',
   templateUrl: './map-template.component.html',
-  styleUrls: ['./map-template.component.scss']
+  styleUrls: ['./map-template.component.scss'],
+  standalone: false,
 })
 export class MapTemplateComponent implements OnInit, AfterViewInit {
 
-  @ViewChild(GoogleMap, { static: false }) map: GoogleMap;
-  @ViewChild(MapInfoWindow, { static: false }) info: MapInfoWindow;
-  @ViewChild('infoTemplate', { static: false }) details: TemplateRef<any>;
+  @ViewChild(GoogleMap, { static: false }) map!: GoogleMap;
+  @ViewChild(MapInfoWindow, { static: false }) info!: MapInfoWindow;
+  @ViewChild('infoTemplate', { static: false }) details!: TemplateRef<any>;
 
-  @Input() mapConfig: GoogleMapConfig;
-  center: google.maps.LatLngLiteral;
-  options: google.maps.MapOptions;
-  markers = [];
+  @Input() mapConfig!: GoogleMapConfig;
+  center!: google.maps.LatLngLiteral;
+  options!: google.maps.MapOptions;
+  markers: any[] = [];
   infoContent = '';
 
 
   constructor() {
   }
   ngOnInit() {
-    this.options= {
+    this.options = {
       zoomControl: true,
       scrollwheel: true,
       disableDoubleClickZoom: false,
@@ -43,12 +44,12 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
   }
   //-- set label(label: string | google.maps.MarkerLabel); --
   addMarker() {
-   /* let numberMarkerImg = {
-      url: '/assets/dresses/dress-18.png',
-      size: new google.maps.Size(32, 38),
-      scaledSize: new google.maps.Size(32, 38)
-    };
-    */
+    /* let numberMarkerImg = {
+       url: '/assets/dresses/dress-18.png',
+       size: new google.maps.Size(32, 38),
+       scaledSize: new google.maps.Size(32, 38)
+     };
+     */
     this.markers.push({
       position: {
         lat: this.mapConfig.lat,
@@ -70,7 +71,7 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
     })
   }
 
-  openInfo(marker: MapMarker, content) {
+  openInfo(marker: MapMarker, content: any) {
     this.infoContent = content;
     this.info.open(marker);
   }

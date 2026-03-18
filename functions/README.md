@@ -15,9 +15,12 @@ npm run deploy
 Configure the email transport using the default SMTP transport and a GMail account (free for tests).
 For other types of transports such as Sendgrid see https://nodemailer.com/transports/
  => TODO: Configure the `gmail.email` and `gmail.password` Google Cloud environment variables:
-firebase functions:config:set gmail.mail=compte_that_send_the_email  gmail.password=**********
+firebase functions:config:set sendgrid.key=compte_that_send_the_email  gmail.password=**********
 
 Also, don't forget to unlock captcha for the google account: https://accounts.google.com/DisplayUnlockCaptcha
 and enable less secure app on https://myaccount.google.com/lesssecureapps
 Note: These actions should be done after each deplyment to follow google security purpose
 good luck!
+
+## Accéder à la console Twilio
+==> https://console.twilio.com

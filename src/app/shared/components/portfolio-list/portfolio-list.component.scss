@@ -1,0 +1,87 @@
+img.displayed{
+  display: block;
+  margin:0 auto;
+}
+
+.img-fluid, .img-thumbnail {
+  width: auto;
+  max-width: 40%;
+  max-height: 100%;
+}
+
+.display {
+  display: flex;
+  justify-content: center;
+}
+
+.item-card {
+  cursor: pointer;
+}
+
+.item-ref {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.item-price {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #c8a96e;
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  z-index: 10;
+}
+
+.centered-img {
+  display: block;
+  margin: 0 auto;      // centre horizontalement
+  width: auto;         // garde le ratio
+  max-width: 40%;      // ton besoin
+  height: auto;
+}
+
+.click-mask {
+  position: absolute;
+  inset: 0;            // top/right/bottom/left: 0;
+  cursor: pointer;
+  // pas de display qui perturbe la mise en page
+}
+
+
+.img-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  max-width: 40%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+}
+
+.image-wrapper img {
+  max-width: 40%;
+  max-height: 100%;
+  width: auto;
+}
+

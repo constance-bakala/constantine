@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, CanDeactivate, RouterStateSnapshot} from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {select, Store} from '@ngrx/store';
@@ -8,7 +8,7 @@ import {ActionDisplayFooter, ActionHideFooter, ActionHideWrapper, AuthState, Go}
 import {selectorAuth} from '@app/auth/store/auth.selectors';
 
 @Injectable()
-export class IsAuthenticatedGuard implements CanActivate {
+export class IsAuthenticatedGuard  {
   constructor(private store: Store<any>) {
   }
 
@@ -33,7 +33,7 @@ export class IsAuthenticatedGuard implements CanActivate {
 
 
 @Injectable()
-export class RemoveWrapperGuard implements CanActivate, CanDeactivate<any> {
+export class RemoveWrapperGuard  {
   constructor(private store: Store<any>) {
   }
 
@@ -49,7 +49,7 @@ export class RemoveWrapperGuard implements CanActivate, CanDeactivate<any> {
 }
 
 @Injectable()
-export class RemoveFooterGuard implements CanActivate, CanDeactivate<any> {
+export class RemoveFooterGuard  {
   constructor(private store: Store<any>) {
   }
 

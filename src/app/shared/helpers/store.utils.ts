@@ -1,54 +1,60 @@
-import {Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum, ItemsState} from '@shared/interfaces';
+import { Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum, ItemsState } from '@shared/interfaces';
 import * as _ from 'lodash'
 
-export function findItemByReference(items: ItemInfos[], reference: string): ItemInfos {
+export function findItemByReference(items: ItemInfos[], reference: string): ItemInfos | undefined {
   return items.find(e => e.reference === reference);
 }
 
-export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue): ItemsState {
+export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue: any): ItemsState {
   let itemsStateCopy = _.cloneDeep(state);
-  let category = itemsStateCopy[itemToUpdateRawValue.category.toLowerCase()];
+  let category = (itemsStateCopy as any)[itemToUpdateRawValue.category.toLowerCase()];
   let foundItem: ItemInfos = category.items[itemToUpdateRawValue.index - 1];
   if (!!foundItem && (foundItem.selected || !!itemToUpdateRawValue)) {
     foundItem.basketInfos.selectedQuantity = itemToUpdateRawValue.basketInfos.selectedQuantity;
     foundItem.basketInfos.selectedModel = itemToUpdateRawValue.basketInfos.selectedModel;
-    foundItem.basketInfos.selectedSize = ItemSizeEnum[itemToUpdateRawValue.basketInfos.selectedSize];
+    foundItem.basketInfos.selectedSize = (ItemSizeEnum as any)[itemToUpdateRawValue.basketInfos.selectedSize];
     foundItem.selected = itemToUpdateRawValue?.selected;
   }
   return itemsStateCopy;
 }
 
-export function getCategoryByName(state, categoryName: ItemsCategoriesEnum): Category {
-  let category: Category;
+export function getCategoryByName(state: any, categoryName: ItemsCategoriesEnum): Category | undefined {
+  let category: Category | undefined;
   switch (categoryName) {
     case ItemsCategoriesEnum.EARINGS:
       category = _.cloneDeep(state.earings);
       break;
-    case ItemsCategoriesEnum.MASKS:
-      category = _.cloneDeep(state.masks);
-      break;
     case ItemsCategoriesEnum.DRESSES:
       category = _.cloneDeep(state.dresses);
+      break;
+    case ItemsCategoriesEnum.MASKS:
+      category = _.cloneDeep(state.masks);
       break;
     default:
       category = undefined;
   }
 
-  return category as Category;
+  return category;
 }
 
 export function toogleSelectItem(state: ItemsState, anItem: ItemInfos, forceSelect?: boolean): ItemsState {
   let category = getCategoryByName(state, anItem.category);
-  let foundItem: ItemInfos = findItemByReference(category.items, anItem.reference);
+  if (!category) {
+    return state;
+  }
+  let foundItem: ItemInfos | undefined = findItemByReference(category.items || [], anItem.reference);
   if (!!foundItem && !forceSelect) {
     foundItem.selected = !foundItem.selected;
-  } else {
+  } else if (foundItem) {
     foundItem.selected = true;
   }
   return updateItemState(state, category)
 }
 
-export function updateItemState(state: ItemsState, category: Category, overrideExisting: boolean = true): ItemsState {
+export function updateItemState(state: ItemsState, category: Category | undefined, overrideExisting: boolean = true): ItemsState {
+  if (!category) {
+    return state;
+  }
   switch (category.name) {
     case ItemsCategoriesEnum.EARINGS:
       if (canOverride(state.earings.items, overrideExisting)) {

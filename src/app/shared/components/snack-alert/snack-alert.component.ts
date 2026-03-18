@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-snack-alert',
   templateUrl: './snack-alert.component.html',
-  styleUrls: ['./snack-alert.component.css']
+  styleUrls: ['./snack-alert.component.css'],
+  standalone: false,
 })
 export class SnackAlertComponent implements OnInit {
 

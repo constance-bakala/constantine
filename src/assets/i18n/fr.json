@@ -7,24 +7,24 @@
   "PRODUCTS": {
     "EARRINGS": {
       "TITLE": "Boucles d'oreilles",
-      "DESCRIPTION":"Les boucles d'oreilles ci-dessous représentent un échantillon de nos créations. Si vous avez une idée précise de ce que vous souhaitez n'hésitez pas à nous contacter!"
+      "DESCRIPTION": "Les boucles d'oreilles ci-dessous représentent un échantillon de nos créations. Si vous avez une idée précise de ce que vous souhaitez n'hésitez pas à nous contacter!"
     },
     "DRESSES": {
       "TITLE": "Robes",
-      "DESCRIPTION":"Les robes ci-dessous représentent un échantillon de nos créations. Nous pouvons également vous fournir vos créations sur mesure !'"
+      "DESCRIPTION": "Les robes ci-dessous représentent un échantillon de nos créations. Nous pouvons également vous fournir vos créations sur mesure !"
     },
     "MASKS": {
       "TITLE": "Masques",
-      "DESCRIPTION":"Les masques ci-dessous représentent un échantillon de nos créations. Nous suivons les recommandations de l\\'organisme français AFNOR pour produire des masques en tissus pour adulte et enfants de plus de 7 ans ! ' +\n            'Ces masques grand public visent à protéger la population saine, en complément des indispensables gestes barrières face au coronavirus."
+      "DESCRIPTION": "Les masques ci-dessous représentent un échantillon de nos créations. Nous suivons les recommandations de l'organisme français AFNOR pour produire des masques en tissus pour adulte et enfants de plus de 7 ans ! Ces masques grand public visent à protéger la population saine, en complément des indispensables gestes barrières face au coronavirus."
     },
     "UNKNOWN": {
       "TITLE": "Produit en construction ...",
-      "DESCRIPTION":"Ces produits ne sont pas encore connus dans nos référentiels, veuillez contacter votre administrateur"
+      "DESCRIPTION": "Ces produits ne sont pas encore connus dans nos référentiels, veuillez contacter votre administrateur"
     },
     "MORE": "Voir les produits",
     "CATEGORY": "Catégorie",
     "MODEL": "Modèle",
-    "UNIQUE_MODEL":"Modèle unique",
+    "UNIQUE_MODEL": "Modèle unique",
     "SIZES": "Tailles",
     "REMOVE": "Supprimer",
     "SUMMARY": "Résumé de votre commande",
@@ -32,7 +32,7 @@
     "CART": "Panier",
     "TOTAL_WITH_VAT": "Total TTC",
     "WITH_VAT": "",
-    "SHIPPING" : "Transport",
+    "SHIPPING": "Transport",
     "GRATIS": "Gratuit",
     "DISCOUNT_CODE": "Ajouter un code promo (optionnel)",
     "AMOUNT_WITHOUT_VAT": "Montant HT",
@@ -45,11 +45,13 @@
     "HOW_TO_GET_DELIVERED_FROM_ELSEWHERE": "Si vous vivez ailleurs dans le monde, nous vous informons que les frais d'expédition seront à votre charge. Pour cela, cocher la case ci-dessous"
   },
   "CONTACT_US": "CONTACTEZ NOUS",
-  "TELEPHONE":"Téléphone",
-  "EMAIL":"Mel",
+  "TELEPHONE": "Téléphone",
+  "EMAIL": "Mel",
   "SHARE": "Partager",
   "SEE_ALSO": "Voir aussi",
   "SELECT": "Sélectionner",
+  "ADD_TO_CART": "Ajouter au panier",
+  "REMOVE_FROM_CART": "Supprimer du panier",
   "DETAILS": "Détails",
   "CANCEL": "Annuler",
   "ABOUT_DELICE_ETERNEL": "Délice éternel est à la fois un prêt à porter et un grossiste de Libreville qui vous propose des vêtements africains pour tous les âges. Vous pouvez également demander un modèle précis et nous le cousons pour vous! Vous avez besoin d'une importante commande commande? Contactez-nous pour affiner votre besoin. Nous faisons le maximum pour vous livrer très rapidement où que vous soyez!",
@@ -58,7 +60,7 @@
   "ON_INTERNET": "Sur internet",
   "LOCALIZATION": "Localisation",
   "ABOUT_ME": "À propos de moi",
-  "CHOOSE" : "Choisissez",
+  "CHOOSE": "Choisissez",
   "CLOSE": "Fermer",
   "NEAR_LES_PLANCHES": "Face à la boîte de nuit 'Les Planches', Libreville",
   "NOMBAKELE": "Quartier Nombakélé",

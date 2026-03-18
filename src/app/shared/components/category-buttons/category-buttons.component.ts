@@ -1,17 +1,18 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {CategoryInfos, ItemsCategoriesEnum} from '@shared/interfaces';
-import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CategoryInfos, ItemsCategoriesEnum } from '@shared/interfaces';
+import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-list.component';
 
 @Component({
   selector: 'app-category-buttons',
   templateUrl: './category-buttons.component.html',
   styleUrls: ['./category-buttons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class CategoryButtonsComponent implements OnInit {
 
   @Input()
-  categoryToAvoid: ItemsCategoriesEnum;
+  categoryToAvoid!: ItemsCategoriesEnum;
 
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
 
@@ -20,7 +21,7 @@ export class CategoryButtonsComponent implements OnInit {
     this._otherCategories = this.getOtherLinks(this.categoryToAvoid, categories);
   };
 
-  _otherCategories: CategoryInfos[];
+  _otherCategories!: CategoryInfos[];
 
   constructor() {
   }
@@ -31,7 +32,7 @@ export class CategoryButtonsComponent implements OnInit {
   getOtherLinks(name: ItemsCategoriesEnum, categoryInfos: ExistingCategories): CategoryInfos[] {
     return Object.keys(categoryInfos)
       .filter(key => key !== name?.toLowerCase())
-      .map(targetKey => categoryInfos[targetKey]);
+      .map(targetKey => (categoryInfos as any)[targetKey]);
   }
 
   gotoTarget(name: ItemsCategoriesEnum) {

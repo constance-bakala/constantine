@@ -1,12 +1,13 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActivationEnd, Router} from '@angular/router';
-import {filter, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActivationEnd, Router } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-ad-header',
   templateUrl: './ad-header.component.html',
-  styleUrls: ['./ad-header.component.scss']
+  styleUrls: ['./ad-header.component.scss'],
+  standalone: false,
 })
 export class AdHeaderComponent implements OnInit, OnDestroy {
 
@@ -26,7 +27,7 @@ export class AdHeaderComponent implements OnInit, OnDestroy {
         filter(event => event instanceof ActivationEnd)
       )
       .subscribe((event: ActivationEnd) => {
-        this. displayHtml = event.snapshot.routeConfig.path.indexOf('home') >= 0;
+        this.displayHtml = (event.snapshot.routeConfig?.path?.indexOf('home') ?? -1) >= 0;
       });
   }
 

@@ -15,11 +15,12 @@ import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-li
 @Component({
   selector: 'app-clothing-list',
   templateUrl: './dress-list.component.html',
-  styleUrls: ['./dress-list.component.scss']
+  styleUrls: ['./dress-list.component.scss'],
+  standalone: false,
 })
 export class DressListComponent implements OnInit {
-  dresses$: Observable<Category>;
-  categoryInfos$: Observable<ExistingCategories>;
+  dresses$!: Observable<Category>;
+  categoryInfos$!: Observable<ExistingCategories>;
 
   constructor(private store: Store<any>) {
   }
