@@ -1,9 +1,9 @@
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {Action, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
-import {catchError, filter, map, tap, withLatestFrom} from 'rxjs/operators';
+import {from, of} from 'rxjs';
+import {catchError, filter, map, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 
 import {LocalStorageService} from '../../core/local-storage/local-storage.service';
 import {CacheService} from '@shared/services/cache/cache.service';
@@ -23,7 +23,7 @@ import {AUTH_KEY} from '@app/auth/store/auth.reducer';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import {ItemInfos} from '@shared/interfaces';
-import {ActionItemToogleNotSelected} from '@app/features/store';
+import {ActionItemToogleNotSelected, ActionUpdateBasketItem} from '@app/features/store';
 
 @Injectable()
 export class AuthEffects {
@@ -119,6 +119,46 @@ export class AuthEffects {
       // ✅ IMPORTANT: ne laisse passer que de vraies actions
       filter((a): a is NonNullable<typeof a> => a != null)
     )
+  );
+
+  restoreBasketOnLogin$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActionTypes.LOGGED_IN),
+        switchMap((action: ActionAuthLoggedIn) => {
+          const uid = action.payload?.additionalInfos?.uid;
+          if (!uid) return of(null);
+          // Efface les données stale de localStorage avant la réponse Firebase
+          // pour que restoreBasket$ ne dispatche pas d'anciens items
+          localStorage.removeItem('delice-basket');
+          return from(firebase.database().ref(`users/${uid}/basket`).once('value')).pipe(
+            switchMap((snap) => {
+              const val = snap.val();
+              if (!val) return of(null);
+              const rawItems: any[] = Array.isArray(val) ? val : Object.values(val);
+              const items = rawItems.filter(Boolean);
+              if (!items.length) return of(null);
+              localStorage.setItem('delice-basket', JSON.stringify(items));
+              // Attend que les 3 catégories soient chargées dans le store avant de dispatcher
+              return this.store$.pipe(
+                select((state: any) =>
+                  (state.constantine?.earings?.items?.length ?? 0) > 0 &&
+                  (state.constantine?.dresses?.items?.length ?? 0) > 0 &&
+                  (state.constantine?.masks?.items?.length ?? 0) > 0
+                ),
+                filter((allLoaded) => !!allLoaded),
+                take(1),
+                tap(() => items.forEach((item) => this.store$.dispatch(new ActionUpdateBasketItem(item))))
+              );
+            }),
+            catchError((e) => {
+              console.error('[basket restore on login]', e);
+              return of(null);
+            })
+          );
+        })
+      ),
+    { dispatch: false }
   );
 }
 

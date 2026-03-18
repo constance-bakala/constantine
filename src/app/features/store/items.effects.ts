@@ -65,6 +65,10 @@ export class ItemsEffects {
         take(1)
       )),
       tap((selectedItems: ItemInfos[]) => {
+        if (selectedItems.length === 0) {
+          localStorage.removeItem(BASKET_STORAGE_KEY);
+          return;
+        }
         const toSave: BasketSavedEntry[] = selectedItems.map(item => ({
           reference: item.reference,
           category: item.category,
