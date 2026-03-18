@@ -16,7 +16,7 @@ import {selectorAuth} from '@app/auth/store/auth.selectors';
 @Injectable()
 export class XTokenInterceptor implements HttpInterceptor {
   readonly snackBarDuration: number;
-  private X_TOKEN: string = null;
+  private X_TOKEN: string | undefined = undefined;
   private API_PREFIX = '/api';
 
   constructor(private store: Store<any>,
@@ -30,7 +30,7 @@ export class XTokenInterceptor implements HttpInterceptor {
       if (state) {
         this.X_TOKEN = state?.user?.token;
       } else {
-        this.X_TOKEN = null;
+        this.X_TOKEN = undefined;
       }
     });
   }
@@ -39,7 +39,7 @@ export class XTokenInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const headers = {};
+    const headers: { [key: string]: string } = {};
 
     if (this.X_TOKEN) {
       headers['X-AUTH-TOKEN'] = this.X_TOKEN;

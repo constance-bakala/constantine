@@ -30,7 +30,7 @@ export class PasswordService {
   }
 
   test(value: string) {
-    if (this.config.minConstraints <= 0) {
+    if (this.config.minConstraints! <= 0) {
       return true;
     }
 
@@ -59,19 +59,19 @@ export class PasswordService {
     ];
 
     for (const v of toVerify) {
-      if (this.config[v.attr] && v.fn(value)) {
+      if ((this.config as any)[v.attr] && v.fn(value)) {
         satisfied += 1;
       }
     }
 
     return (
-      satisfied >= this.config.minConstraints - 1 &&
-      value.length >= this.config.minLength
+      satisfied >= this.config.minConstraints! - 1 &&
+      value.length >= this.config.minLength!
     );
   }
 
   isLongEnough = (value: string) => {
-    return value && value.length >= this.config.minLength;
+    return value && value.length >= this.config.minLength!;
   }
 
   lowerCaseExist = (value: string) => {

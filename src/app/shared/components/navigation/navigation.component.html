@@ -1,34 +1,26 @@
 <nav class="navbar navbar-expand-lg bg-secondary fixed-top" id="mainNav">
   <div class="container">
 
-    <!-- Brand = ancre uniquement -->
-    <a class="navbar-brand js-scroll-trigger" href="#page-top">
-      <img src="assets/style-sauvage_only_logo-removebg.png" height="40px">
-      DÉLICE ÉTERNEL
-    </a>
-
-    <span>
-      <select
-        class="form-control"
-        #selectedLang
-        (change)="switchLang(selectedLang.value)">
-        @for (language of translate.getLangs(); track language) {
-          <option
-            [value]="language"
-            [selected]="language === translate.currentLang">
+    <!-- Brand + language selector -->
+    <div class="d-flex align-items-center">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+        <img src="assets/style-sauvage_only_logo-removebg.png" height="40px">
+        DÉLICE ÉTERNEL
+      </a>
+      <div class="ml-3">
+        <select class="form-control form-control-sm nav-lang-select" #selectedLang
+          (change)="switchLang(selectedLang.value)">
+          @for (language of translate.getLangs(); track language) {
+          <option [value]="language" [selected]="language === translate.currentLang">
             {{ language }}
           </option>
-        }
-      </select>
-    </span>
+          }
+        </select>
+      </div>
+    </div>
 
-    <button
-      class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarResponsive"
-      aria-controls="navbarResponsive"
-      aria-expanded="false"
+    <button class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded" type="button"
+      data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
       aria-label="Toggle navigation">
       Menu
       <i class="fas fa-bars"></i>
@@ -40,7 +32,7 @@
         <!-- ===== ANCRES (scrollspy OK) ===== -->
 
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger active" href="#portfolio">
             <span>PORTFOLIO</span>
           </a>
         </li>
@@ -61,61 +53,49 @@
 
         <!-- On évite de répéter (user$ | async) partout -->
         @if (user$ | async; as user) {
-          <!-- user connecté -->
-          <li class="nav-item mx-0 mx-lg-1">
-            <a
-              class="nav-link py-3 px-0 px-lg-3 rounded"
-              (click)="disconnect()">
+        <!-- user connecté -->
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded d-flex flex-column align-items-start" (click)="disconnect()">
+            <div class="d-flex align-items-center">
               <mat-icon>exit_to_app</mat-icon>
-              <span class="ajust">
-                {{ 'DISCONNECT' | translate }}
-                <br>
-                  <span style="font-size: 10px; margin-left: 10px">
-                    ({{ user.email }})
-                  </span>
-                </span>
-              </a>
-            </li>
-          } @else {
-            <li class="nav-item mx-0 mx-lg-1">
-              <a
-                class="nav-link py-3 px-0 px-lg-3 rounded"
-                [routerLink]="['/auth/signin']">
-                <mat-icon>account_circle</mat-icon>
-                <span class="ajust">{{ 'CONNECT' | translate }}</span>
-              </a>
-            </li>
-          }
-
-          <!-- user non connecté -->
-
-          <!-- panier: visible tout le temps -->
-          <li class="nav-item mx-0 mx-lg-1">
-            <a
-              class="nav-link py-3 px-0 px-lg-3 rounded"
-              [routerLink]="['/shopping-cart']"
-              aria-label="Toggle navigation">
-              <mat-icon>shopping_cart</mat-icon>
-              <span class="badge badge-pill red">
-                {{ nbSelectedItems$ | async }}
-              </span>
-            </a>
-          </li>
-
-        </ul>
-      </div>
-
-      <div class="filler"></div>
-
-      <!-- avatar -->
-      @if (user$ | async; as user) {
-        @if (user.photoURL) {
-          <img
-            class="user-avatar"
-            [src]="user.photoURL"
-            >
+              <span class="ml-2 ajust">{{ 'DISCONNECT' | translate }}</span>
+            </div>
+            <span class="small text-muted">{{ user.email }}</span>
+          </a>
+        </li>
+        } @else {
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/auth/signin']">
+            <mat-icon>account_circle</mat-icon>
+            <span class="ajust">{{ 'CONNECT' | translate }}</span>
+          </a>
+        </li>
         }
-      }
 
+        <!-- user non connecté -->
+
+        <!-- panier: visible tout le temps -->
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/shopping-cart']"
+            aria-label="Toggle navigation">
+            <mat-icon>shopping_cart</mat-icon>
+            <span class="badge badge-pill red">
+              {{ nbSelectedItems$ | async }}
+            </span>
+          </a>
+        </li>
+
+        <!-- avatar -->
+        <ng-container *ngIf="user$ | async as user">
+          <li class="nav-item mx-0 mx-lg-1" *ngIf="user.photoURL">
+            <img class="user-avatar" [src]="user.photoURL" alt="User avatar" loading="lazy" />
+          </li>
+        </ng-container>
+
+      </ul>
     </div>
-  </nav>
+
+    <div class="filler"></div>
+
+  </div>
+</nav>

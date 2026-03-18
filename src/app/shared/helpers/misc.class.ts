@@ -22,6 +22,7 @@ export class Misc {
       }
 
     }
+    return true;
   }
 
   static isEqual(value: any, other: any): boolean {

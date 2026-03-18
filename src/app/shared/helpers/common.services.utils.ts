@@ -1,21 +1,36 @@
-import {ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum} from '@shared/interfaces';
-import {DEFAULT_LOCALE_ID} from "@helpers/constants";
+import { ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum } from '@shared/interfaces';
+import { DEFAULT_LOCALE_ID } from "@helpers/constants";
+import { ItemGroupDef } from '@helpers/items-groups.const';
+import { CategoryPrices } from '@helpers/items-prices.const';
 
-export const DRESSES_SIZE = 48;
-export const EARINGS_SIZE = 17;
-export const MASKS_SIZE = 62;
-
-export function getAssetItems(size: number, directoryName: string, refPrefix: string, extension, category: ItemsCategoriesEnum): ItemInfos[] {
-  return Array(size).fill(0).map((x, index) => {
-    const currentIndex = index + 1;
-    const path = 'assets/' + directoryName + '/' + refPrefix + '-' + currentIndex + '.' + extension;
-    const reference = refPrefix.toUpperCase() + '-' + currentIndex;
+export function getAssetGroups(
+  groups: ItemGroupDef[],
+  directoryName: string,
+  refPrefix: string,
+  category: ItemsCategoriesEnum,
+  prices: CategoryPrices = {}
+): ItemInfos[] {
+  return groups.map((group, index) => {
+    const groupDir = `assets/${directoryName}/${refPrefix}-${group.id}`;
+    const coverPath = `${groupDir}/cover.png`;
+    const extraPaths = (group.extraImages ?? []).map(img => `${groupDir}/${img}`);
+    const images = [coverPath, ...extraPaths];
     const basketInfos = {
       selectedQuantity: 1,
       selectedSize: ItemSizeEnum.M,
-      selectedModel: 'MODEL_UNIQUE'
+      selectedModel: 'MODEL_UNIQUE',
     };
-    return new ItemInfos(path, false, reference, currentIndex, category, false, basketInfos);
+    return new ItemInfos(
+      coverPath,
+      false,
+      `${refPrefix.toUpperCase()}-${group.id}`,
+      index + 1,
+      category,
+      false,
+      basketInfos,
+      images,
+      prices[group.id] ?? 0
+    );
   });
 }
 

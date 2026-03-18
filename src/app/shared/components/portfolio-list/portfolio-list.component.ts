@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Category, CategoryInfos, ItemInfos} from '@shared/interfaces/image.interfaces';
-import {MatDialog} from '@angular/material/dialog';
-import {ItemDetailsComponent} from '@shared/components/item-details/item-details.component';
-import {environment} from '@env/environment';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Category, CategoryInfos, ItemInfos } from '@shared/interfaces/image.interfaces';
+import { MatDialog } from '@angular/material/dialog';
+import { ItemDetailsComponent } from '@shared/components/item-details/item-details.component';
+import { environment } from '@env/environment';
+import { PricingService } from '@shared/services/pricing.service';
 
 export interface ExistingCategories {
   earings: CategoryInfos;
@@ -19,9 +20,9 @@ export interface ExistingCategories {
 })
 export class PortfolioListComponent implements OnInit {
 
-  @Input() category: Category;
+  @Input() category!: Category;
   @Input()
-  categoryInfos: ExistingCategories;
+  categoryInfos!: ExistingCategories;
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
@@ -29,7 +30,7 @@ export class PortfolioListComponent implements OnInit {
   currentEncodedUri = '';
 
 
-  constructor(private dialog: MatDialog,) {
+  constructor(private dialog: MatDialog, public pricing: PricingService) {
   }
 
   ngOnInit() {
@@ -53,6 +54,7 @@ export class PortfolioListComponent implements OnInit {
       data: item,
     });
     dialogRef.componentInstance.updateBasketItem.subscribe(result => {
+      this.onToogleSelect.emit(result);
       this.updateBasketItem.emit(result);
     });
   }

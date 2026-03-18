@@ -20,9 +20,9 @@ import {Functions} from '@angular/fire/functions';
   standalone: false,
 })
 export class SigninComponent implements OnInit, OnDestroy {
-  logging: UntypedFormGroup;
+  logging!: UntypedFormGroup;
   loading = false;
-  error: { code?: string; message: string };
+  error!: { code?: string; message: string };
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -83,12 +83,12 @@ export class SigninComponent implements OnInit, OnDestroy {
               actions: {},
               additionalInfos: {
                 uid: result.user?.uid,
-                providerId: getAdditionalUserInfo(result)?.providerId,
+                providerId: getAdditionalUserInfo(result)?.providerId ?? undefined,
 
-                picture: result.user?.photoURL,
-                nom: result.user?.displayName,
+                picture: result.user?.photoURL ?? undefined,
+                nom: result.user?.displayName ?? undefined,
                 prenom: '',
-                email: result.user?.email,
+                email: result.user?.email ?? undefined,
               }
             })
           );

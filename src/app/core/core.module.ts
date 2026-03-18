@@ -32,9 +32,9 @@ if (!environment.production) {
     CommonModule,
     // ngrx
     StoreModule.forRoot({
-      'core:auth:constantine': authReducer,
-      meta: metaReducer,
-      functionalErrors: functionalErrorsReducer,
+      'core:auth:constantine': authReducer as any,
+      meta: metaReducer as any,
+      functionalErrors: functionalErrorsReducer as any,
     }, {
       metaReducers,
       runtimeChecks: {

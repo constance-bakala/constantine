@@ -21,3 +21,6 @@ Also, don't forget to unlock captcha for the google account: https://accounts.go
 and enable less secure app on https://myaccount.google.com/lesssecureapps
 Note: These actions should be done after each deplyment to follow google security purpose
 good luck!
+
+## Accéder à la console Twilio
+==> https://console.twilio.com

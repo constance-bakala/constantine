@@ -1,13 +1,13 @@
-import {Component, Inject, Input, OnDestroy, OnInit} from '@angular/core';
+﻿import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import * as _ from 'lodash';
-import {select, Store as NgRxStore} from '@ngrx/store';
-import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {combineLatest, from, Observable, Subscription} from 'rxjs';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import { select, Store as NgRxStore } from '@ngrx/store';
+import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { combineLatest, from, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 
 import {
-  ActionItemToogleNotSelected,
+  ActionItemsRetrieve,
   ActionItemToogleSelect,
   ActionUpdateBasketItem,
   ItemSizeEnum,
@@ -16,26 +16,27 @@ import {
   selectNbChosenItems,
 } from '@app/features/store';
 
-import {ITEM_SIZES, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
-import {ExistingCategories} from '@shared/components/portfolio-list/portfolio-list.component';
+import { ITEM_SIZES, ItemInfos, ItemsCategoriesEnum } from '@shared/interfaces';
+import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-list.component';
 
-import {Functions, httpsCallable} from '@angular/fire/functions';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/database';
 
-import {MatDialog} from '@angular/material/dialog';
-import {Go} from '@app/auth/store';
-import {AlertComponent} from '@shared/components/alert/alert.component';
-import {compareObjects} from '@helpers/compare.objects.utils';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {IAppConfig} from '@shared/interfaces/app.interfaces';
-import {APP_CONFIG} from '@helpers/constants';
-import {SnackAlertComponent} from '@shared/components/snack-alert/snack-alert.component';
-import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
-import {environment} from '@env/environment';
-import {TranslateService} from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Go } from '@app/auth/store';
+import { AlertComponent } from '@shared/components/alert/alert.component';
+import { compareObjects } from '@helpers/compare.objects.utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { IAppConfig } from '@shared/interfaces/app.interfaces';
+import { APP_CONFIG } from '@helpers/constants';
+import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.component';
+import { selectorConnectedUser } from '@app/auth/store/auth.selectors';
+import { environment } from '@env/environment';
+import { TranslateService } from '@ngx-translate/core';
+import { PricingService } from '@shared/services/pricing.service';
 
 @Component({
   selector: 'app-cart-items',
@@ -59,6 +60,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   categoryInfos$!: Observable<ExistingCategories>;
 
   private subs = new Subscription();
+  private formSubs = new Subscription();
   private commendsRef?: firebase.database.Reference;
 
   constructor(
@@ -68,6 +70,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
+    public pricing: PricingService,
     @Inject(APP_CONFIG) appConfig: IAppConfig
   ) {
     this.snackDuration = appConfig.snackDuration;
@@ -77,18 +80,59 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
 
+    // Charge toutes les catégories si on arrive directement sur le panier (ex: refresh),
+    // ce qui déclenche restoreBasket$ via RETRIEVE_ITEMS_SUCCESS.
+    this.store.dispatch(new ActionItemsRetrieve({ category: ItemsCategoriesEnum.MASKS }));
+    this.store.dispatch(new ActionItemsRetrieve({ category: ItemsCategoriesEnum.DRESSES }));
+    this.store.dispatch(new ActionItemsRetrieve({ category: ItemsCategoriesEnum.EARINGS }));
+
     // Form init
     this.basketFormGroup = this.fb.group({
       basketItems: this.fb.array([]),
     });
 
     // Items store -> form
+    // distinctUntilChanged avec comparaison profonde : évite de reconstruire le form
+    // si Firebase basket renvoie un contenu identique à l'état courant.
     this.subs.add(
-      this.store.pipe(select(selectChosenItems)).subscribe((items: ItemInfos[]) => {
+      this.store.pipe(
+        select(selectChosenItems),
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+      ).subscribe((items: ItemInfos[]) => {
         if (items) {
+          const sameStructure =
+            this.items.length === items.length &&
+            this.items.every((item, i) => item.reference === items[i].reference);
           this.items = items;
-          this.initFormArray(items);
+          if (!sameStructure) {
+            this.initFormArray(items);
+          }
         }
+      })
+    );
+
+    // Sauvegarde le panier dans Firebase basket quand l'utilisateur est connecté.
+    // debounceTime + distinctUntilChanged évitent la boucle : basket.on('value') → store → ici → set() → on('value')...
+    this.subs.add(
+      this.store.pipe(
+        select(selectChosenItems),
+        debounceTime(500),
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        filter((items: ItemInfos[]) => !!this.userId && items.length > 0)
+      ).subscribe((items: ItemInfos[]) => {
+        const toSave = items.map(item => ({
+          reference: item.reference,
+          category: item.category,
+          index: item.index,
+          selected: true,
+          basketInfos: {
+            selectedQuantity: item.basketInfos?.selectedQuantity ?? 1,
+            selectedSize: item.basketInfos?.selectedSize ?? 'M',
+            selectedModel: item.basketInfos?.selectedModel ?? 'MODEL_UNIQUE',
+          },
+        }));
+        firebase.database().ref(`users/${this.userId}/basket`).set(toSave)
+          .catch((e: any) => console.error('[basket save]', e));
       })
     );
 
@@ -98,7 +142,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
         (u) => subscriber.next(u),
         (err) => subscriber.error(err)
       );
-      return {unsubscribe};
+      return { unsubscribe };
     });
 
     this.subs.add(
@@ -123,14 +167,21 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
             this.userId = newUser.uid;
 
-            this.detachCommendsListener();
-            this.commendsRef = firebase.database().ref(`users/${newUser.uid}/commends`);
-            this.commendsRef.on('value', (snap) => {
-              const savedItems = this.getExistingItemsFromSnapShot(snap);
-              if (savedItems?.length) {
-                savedItems.forEach((item) => this.store.dispatch(new ActionItemToogleNotSelected(item)));
-              }
-            });
+            // À la connexion : lecture unique de Firebase basket pour mettre à jour localStorage.
+            // C'est localStorage qui reste la source principale du panier.
+            firebase.database().ref(`users/${newUser.uid}/basket`).once('value')
+              .then((snap: firebase.database.DataSnapshot) => {
+                const val = snap.val();
+                if (val) {
+                  const rawItems: any[] = Array.isArray(val) ? val : Object.values(val);
+                  const items = rawItems.filter(Boolean);
+                  if (items.length) {
+                    localStorage.setItem('delice-basket', JSON.stringify(items));
+                    items.forEach((item) => this.store.dispatch(new ActionUpdateBasketItem(item)));
+                  }
+                }
+              })
+              .catch((e: any) => console.error('[basket restore]', e));
 
             if (
               newUser.uid &&
@@ -154,6 +205,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    this.formSubs.unsubscribe();
     this.detachCommendsListener();
   }
 
@@ -184,6 +236,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   initFormArray(items: ItemInfos[]) {
+    this.formSubs.unsubscribe();
+    this.formSubs = new Subscription();
     this.basketFormGroup.setControl('basketItems', this.fb.array([]));
     const basketItems = this.basketItemsArray;
 
@@ -202,7 +256,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       category: [itemInfos.category, Validators.required],
     });
 
-    this.subs.add(
+    this.formSubs.add(
       group.valueChanges
         .pipe(debounceTime(200), distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)))
         .subscribe(() => {
@@ -244,6 +298,20 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return this.basketItemsArray.controls[index].get('quantity') as UntypedFormControl;
   }
 
+  getItemTotal(index: number): string {
+    const price = this.items[index]?.price ?? 0;
+    const qty = Number(this.getItemQuantity(index)?.value) || 1;
+    return this.pricing.format(price * qty);
+  }
+
+  get cartTotal(): string {
+    const total = this.items.reduce((sum, item, i) => {
+      const qty = Number(this.getItemQuantity(i)?.value) || 1;
+      return sum + (item.price ?? 0) * qty;
+    }, 0);
+    return this.pricing.format(total);
+  }
+
   sendCommand() {
     const currentUser = firebase.auth().currentUser;
 
@@ -251,33 +319,50 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       const commendsPath = `users/${currentUser.uid}/commends`;
       const ref = firebase.database().ref(commendsPath);
 
-      // ✅ Lecture unique : évite d’empiler des listeners à chaque clic
+      // ✅ Lecture unique : évite d'empiler des listeners à chaque clic
       ref
         .once('value')
         .then((snap) => {
           if (this.commendAllreadySent) return;
 
+          // Lire les quantités directement depuis le formulaire pour éviter le délai du debounce :
+          // si l'utilisateur vient de modifier une quantité et clique immédiatement sur Envoyer,
+          // this.items peut encore avoir l'ancienne valeur (ActionUpdateBasketItem pas encore dispatché).
+          const itemsToSend = this.basketItemsArray.controls.map((group, i) => ({
+            ...this.items[i],
+            basketInfos: {
+              selectedQuantity: Number(group.get('quantity')?.value) || 1,
+              selectedSize: group.get('size')?.value,
+              selectedModel: group.get('model')?.value,
+            },
+          }));
+
           const existingCommands = this.getExistingItemsFromSnapShot(snap);
 
-          if (!this.items || this.items.length < 1 || (existingCommands && compareObjects(existingCommands, this.items))) {
+          if (!itemsToSend || itemsToSend.length < 1 || (existingCommands && compareObjects(existingCommands, itemsToSend))) {
             this.alertCommandNotSent(this.translateService.instant('COMMAND_ALREADY_EXIST'));
             return;
           }
 
           this.commendAllreadySent = true;
 
-          return ref.set(null).then(() => {
-            return ref.push(this.items).then(() => {
-              if (!currentUser.isAnonymous) {
-                this.sendCommendNotificationMails(currentUser);
-                this.snackBar.openFromComponent(SnackAlertComponent, {
-                  duration: this.snackDuration,
-                  politeness: 'polite',
-                });
-              } else {
-                this.alertCommandNotSent(this.translateService.instant('AUTHENTICATION_REQUIRED'));
-              }
-            });
+          // Écriture atomique : on génère la clé push en avance et on fait un set() unique.
+          // Contrairement à set(null).then(push()), si l'écriture échoue, les données Firebase
+          // précédentes restent intactes et le panier sera correctement restauré au prochain chargement.
+          const pushKey = firebase.database().ref().push().key!;
+          const payload: Record<string, any> = {};
+          payload[pushKey] = itemsToSend;
+
+          return ref.set(payload).then(() => {
+            if (!currentUser.isAnonymous) {
+              this.sendCommendNotificationMails(currentUser);
+              this.snackBar.openFromComponent(SnackAlertComponent, {
+                duration: this.snackDuration,
+                politeness: 'polite',
+              });
+            } else {
+              this.alertCommandNotSent(this.translateService.instant('AUTHENTICATION_REQUIRED'));
+            }
           });
         })
         .catch((e) => {
@@ -292,7 +377,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
           if (userCred?.user) {
             this.sendCommand();
           } else {
-            this.store.dispatch(new Go({path: ['/auth/signin']}));
+            this.store.dispatch(new Go({ path: ['/auth/signin'] }));
           }
         })
         .catch((e) => console.error(e));
@@ -343,6 +428,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       displayName: user.displayName,
     };
 
+    console.log('Sending email with data', data);
+
     const callable = httpsCallable(this.fun, 'genericSendgridEmail');
     from(callable(data)).subscribe({
       next: (result) => console.log(result),
@@ -351,7 +438,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   gotoTarget(name: string) {
-    this.store.dispatch(new Go({path: ['/' + name]}));
+    this.store.dispatch(new Go({ path: ['/' + name] }));
   }
 
   reload() {

@@ -8,7 +8,13 @@
 
 .user-avatar {
   max-height: 55px;
+  max-width: 55px;
+  width: auto;
+  height: auto;
   border-radius: 4px;
+  display: block;
+  margin: 0 10px;
+  object-fit: cover;
 }
 
 .align-top {
@@ -35,7 +41,10 @@
   background-color: #1abc9c !important
 }
 
-a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-primary:hover {
+a.bg-primary:focus,
+a.bg-primary:hover,
+button.bg-primary:focus,
+button.bg-primary:hover {
   background-color: #148f77 !important
 }
 
@@ -43,7 +52,10 @@ a.bg-primary:focus, a.bg-primary:hover, button.bg-primary:focus, button.bg-prima
   background-color: #2c3e50 !important
 }
 
-a.bg-secondary:focus, a.bg-secondary:hover, button.bg-secondary:focus, button.bg-secondary:hover {
+a.bg-secondary:focus,
+a.bg-secondary:hover,
+button.bg-secondary:focus,
+button.bg-secondary:hover {
   background-color: #1a252f !important
 }
 
@@ -58,6 +70,7 @@ ngb-carousel.carousel-fade .carousel-item.active {
 ngb-carousel.carousel-fade .carousel-item:not(.active) {
   opacity: 0;
 }
+
 .hero-carousel {
   width: 100%;
 }
@@ -71,14 +84,17 @@ ngb-carousel.carousel-fade .carousel-item:not(.active) {
 .hero-carousel .hero-img {
   width: 100%;
   height: 420px;
-  object-fit: contain;   /* ⬅️ clé du problème */
+  object-fit: contain;
+  /* ⬅️ clé du problème */
   object-position: center;
-  background-color: #000; /* ou bg-primary si tu préfères */
+  background-color: #000;
+  /* ou bg-primary si tu préfères */
   display: block;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
+
   .hero-carousel .carousel-inner,
   .hero-carousel .hero-img {
     height: 260px;
@@ -104,7 +120,7 @@ ngb-carousel.carousel-fade .carousel-item:not(.active) {
 .hero-carousel .carousel-control-prev-icon,
 .hero-carousel .carousel-control-next-icon {
   transform: scale(0.8);
-  filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.4));
 }
 
 /* Optionnel : On supprime complètement les boutons de navigation du carousel */
@@ -137,7 +153,8 @@ img {
 .grid-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;       /* remplit le container */
+  object-fit: cover;
+  /* remplit le container */
   background-color: transparent;
 }
 
@@ -146,7 +163,8 @@ img {
 .card-img-wrapper,
 .portfolio-item,
 .product-card {
-  background-color: transparent; /* évite le noir */
+  background-color: transparent;
+  /* évite le noir */
   overflow: hidden;
 }
 
@@ -165,10 +183,19 @@ img {
 .hero-img {
   width: 100%;
   height: 100%;
-  max-height: 500px;        /* ajuste si besoin */
-  object-fit: cover;       /* plus de bandes noires */
+  max-height: 500px;
+  /* ajuste si besoin */
+  object-fit: cover;
+  /* plus de bandes noires */
   background-color: transparent !important;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

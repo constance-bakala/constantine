@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import {ILoginSuccess} from '@shared/interfaces';
-import {AuthActions, AuthActionTypes} from '@app/auth/store/auth.actions';
+import { ILoginSuccess } from '@shared/interfaces';
+import { AuthActions, AuthActionTypes } from '@app/auth/store/auth.actions';
 
 export const AUTH_KEY = 'CORE:AUTH:CONSTANTINE';
 
@@ -16,16 +16,16 @@ export const authInitialState: AuthState = {
   user: undefined,
   error: undefined
 }
-;
+  ;
 
 export function authReducer(state: AuthState = authInitialState,
-                            action: AuthActions): AuthState {
+  action: AuthActions): AuthState {
   switch (action.type) {
     case AuthActionTypes.AUTH_SIGNUP:
       return {
         ...state,
         loading: true,
-        error: null,
+        error: undefined,
       };
     case AuthActionTypes.AUTH_SIGNUP_ERROR:
       return {
@@ -37,7 +37,7 @@ export function authReducer(state: AuthState = authInitialState,
       return {
         ...state,
         loading: false,
-        error: null,
+        error: undefined,
         user: action.payload
       };
     case AuthActionTypes.LOGGED_IN:
@@ -73,10 +73,10 @@ export function authReducer(state: AuthState = authInitialState,
  * Method used for clearing state/reset store on logout
  * @param reducer
  */
-export function clearState(reducer) {
-  return function (state, action) {
+export function clearState(reducer: (state: AuthState | undefined, action: AuthActions) => AuthState) {
+  return function (state: AuthState | undefined, action: AuthActions) {
     if (action.type === AuthActionTypes.LOGOUT) {
-      state = undefined;
+      state = authInitialState;
     }
 
     return reducer(state, action);

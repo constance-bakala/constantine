@@ -4,4 +4,5 @@ export interface PortfolioData {
   portfolioName: string;
   portfolioImagesSize: number;
   portfolioDirectory: string;
+  portfolioGroupIds: number[];
 }

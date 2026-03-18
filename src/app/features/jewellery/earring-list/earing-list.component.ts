@@ -19,8 +19,8 @@ import {Go} from '@app/auth/store';
   standalone: false,
 })
 export class EaringListComponent implements OnInit {
-  earings$: Observable<Category>;
-  categoryInfos$: Observable<ExistingCategories>;
+  earings$!: Observable<Category>;
+  categoryInfos$!: Observable<ExistingCategories>;
 
   constructor(private store: Store<any>) {
   }

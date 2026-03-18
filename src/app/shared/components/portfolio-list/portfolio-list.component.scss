@@ -14,8 +14,41 @@ img.displayed{
   justify-content: center;
 }
 
+.item-card {
+  cursor: pointer;
+}
+
+.item-ref {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.item-price {
+  display: block;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
 .image-wrapper {
-  position: relative; // nécessaire pour positionner le mask en absolute
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #c8a96e;
+  color: #fff;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  z-index: 10;
 }
 
 .centered-img {

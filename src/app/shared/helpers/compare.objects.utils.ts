@@ -1,5 +1,4 @@
-export function compareObjects(o, p): boolean
-{
+export function compareObjects(o: any, p: any): boolean {
   var i,
     keysO = Object.keys(o).sort(),
     keysP = Object.keys(p).sort();
@@ -7,10 +6,8 @@ export function compareObjects(o, p): boolean
     return false;//not the same nr of keys
   if (keysO.join('') !== keysP.join(''))
     return false;//different keys
-  for (i=0;i<keysO.length;++i)
-  {
-    if (o[keysO[i]] instanceof Array)
-    {
+  for (i = 0; i < keysO.length; ++i) {
+    if (o[keysO[i]] instanceof Array) {
       if (!(p[keysO[i]] instanceof Array))
         return false;
       //if (compareObjects(o[keysO[i]], p[keysO[i]] === false) return false
@@ -18,25 +15,21 @@ export function compareObjects(o, p): boolean
       if (p[keysO[i]].sort().join('') !== o[keysO[i]].sort().join(''))
         return false;
     }
-    else if (o[keysO[i]] instanceof Date)
-    {
+    else if (o[keysO[i]] instanceof Date) {
       if (!(p[keysO[i]] instanceof Date))
         return false;
-      if ((''+o[keysO[i]]) !== (''+p[keysO[i]]))
+      if (('' + o[keysO[i]]) !== ('' + p[keysO[i]]))
         return false;
     }
-    else if (o[keysO[i]] instanceof Function)
-    {
+    else if (o[keysO[i]] instanceof Function) {
       if (!(p[keysO[i]] instanceof Function))
         return false;
       //ignore functions, or check them regardless?
     }
-    else if (o[keysO[i]] instanceof Object)
-    {
+    else if (o[keysO[i]] instanceof Object) {
       if (!(p[keysO[i]] instanceof Object))
         return false;
-      if (o[keysO[i]] === o)
-      {//self reference?
+      if (o[keysO[i]] === o) {//self reference?
         if (p[keysO[i]] !== p)
           return false;
       }
@@ -44,7 +37,7 @@ export function compareObjects(o, p): boolean
         return false;//WARNING: does not deal with circular refs other than ^^
     }
     if (o[keysO[i]] !== p[keysO[i]]) {//change !== to != for loose comparison
-      if(o[keysO[i]] instanceof Array || o[keysO[i]] instanceof Object || o[keysO[i]] instanceof Function || o[keysO[i]] instanceof Date) {
+      if (o[keysO[i]] instanceof Array || o[keysO[i]] instanceof Object || o[keysO[i]] instanceof Function || o[keysO[i]] instanceof Date) {
         return compareObjects(o[keysO[i]], p[keysO[i]]);
       }
       return false;//not the same value

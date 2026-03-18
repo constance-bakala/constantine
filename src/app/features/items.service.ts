@@ -1,48 +1,38 @@
-import {Injectable} from '@angular/core';
-import {Category, ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
-import {Observable, of} from 'rxjs';
-import {DRESSES_SIZE, EARINGS_SIZE, getAssetItems, MASKS_SIZE} from '@helpers/common.services.utils';
+import { Injectable } from '@angular/core';
+import { Category, ItemsCategoriesEnum } from '@shared/interfaces';
+import { Observable, of } from 'rxjs';
+import { getAssetGroups } from '@helpers/common.services.utils';
+import { DRESS_GROUPS, EARING_GROUPS, MASK_GROUPS } from '@helpers/items-groups.const';
+import { ITEMS_PRICES } from '@helpers/items-prices.const';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ItemsService {
 
-  constructor() {
-  }
-
   public findAllFromAssets(category: ItemsCategoriesEnum): Observable<Category> {
-    let nbItems = 0;
-    let categoryInfos: Category = undefined;
     switch (category) {
       case ItemsCategoriesEnum.EARINGS:
-        nbItems = EARINGS_SIZE;
-        categoryInfos = {
+        return of({
           name: ItemsCategoriesEnum.EARINGS,
           title: 'PRODUCTS.EARRINGS.TITLE',
           summary: 'PRODUCTS.EARRINGS.DESCRIPTION',
-          items: getAssetItems(nbItems, 'jewellery', 'earing', 'png', ItemsCategoriesEnum.EARINGS),
-        };
-        return of(categoryInfos);
+          items: getAssetGroups(EARING_GROUPS, 'jewellery', 'earing', ItemsCategoriesEnum.EARINGS, ITEMS_PRICES.earings),
+        });
       case ItemsCategoriesEnum.DRESSES:
-        nbItems = DRESSES_SIZE;
-        categoryInfos = {
+        return of({
           name: ItemsCategoriesEnum.DRESSES,
           title: 'PRODUCTS.DRESSES.TITLE',
           summary: 'PRODUCTS.DRESSES.DESCRIPTION',
-          items: getAssetItems(nbItems, 'dresses', 'dress', 'png', ItemsCategoriesEnum.DRESSES),
-        };
-        return of(categoryInfos);
+          items: getAssetGroups(DRESS_GROUPS, 'dresses', 'dress', ItemsCategoriesEnum.DRESSES, ITEMS_PRICES.dresses),
+        });
       case ItemsCategoriesEnum.MASKS:
-        nbItems = MASKS_SIZE;
-
-        categoryInfos = {
+        return of({
           name: ItemsCategoriesEnum.MASKS,
           title: 'PRODUCTS.MASKS.TITLE',
           summary: 'PRODUCTS.MASKS.DESCRIPTION',
-          items: getAssetItems(nbItems, 'masks', 'mask', 'png', ItemsCategoriesEnum.MASKS)
-        };
-        return of(categoryInfos);
+          items: getAssetGroups(MASK_GROUPS, 'masks', 'mask', ItemsCategoriesEnum.MASKS, ITEMS_PRICES.masks),
+        });
       default:
         return of({
           name: ItemsCategoriesEnum.UNKNOWN,

@@ -5,9 +5,7 @@
         <h3 class="mb-0">{{category.title | translate}}
         </h3>
         <p class="mb-2 text-muted">{{category.summary | translate}}</p>
-        <app-category-buttons
-          [categoryToAvoid]="category.name"
-          [categoryInfos]="categoryInfos"
+        <app-category-buttons [categoryToAvoid]="category.name" [categoryInfos]="categoryInfos"
           (navigateAway)="gotoTarget($event)">
         </app-category-buttons>
       </div>
@@ -24,50 +22,30 @@
           <div class="row">
             <!-- Grid column -->
             @for (item of category.items; track item) {
-              <div class="col-md-4 mb-4 col-sm-auto"
-                [ngClass]="item.selected? 'selected': ''"
-                (change)="toogleSelect(item)">
-                <!-- Card -->
-                <div class="">
-                  <div class="view zoom overlay z-depth-2 rounded image-wrapper">
-                    <img class="img-fluid centered-img" [src]="item.path" [alt]="item.alias">
-                    <a>
-                      <div class="mask click-mask" (click)="openChoices(item)">
-                        <div class="mask rgba-black-slight"></div>
-                      </div>
-                    </a>
-                  </div>
-                  <div class="text-center pt-4">
-                    <span>REF: {{item.reference}}</span>
-                  <!--h6 class="mb-3">12.99 $</h6-->
-                  <p class="mb-2 text-muted text-uppercase small">
-                    <button type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="toogleSelect(item)"><i
-                    class="fas fa-shopping-cart pr-2"></i>
-                    @if (item.selected) {
-                      <span>{{'CANCEL' | translate}}</span>
-                    }
-                    @if (!item.selected) {
-                      <span>{{'SELECT' | translate}}</span>
-                    }
-                  </button>
-                  <button type="button" class="btn btn-light btn-sm mr-0 mb-0" (click)="openChoices(item)"><i
-                  class="fas fa-info-circle pr-2"></i>{{'DETAILS' | translate}}
-                </button>
-              </p>
-              @if (!item.selected) {
-                <hr>
-                }
+            <div class="col-md-4 mb-4 col-sm-auto" [ngClass]="item.selected ? 'selected' : ''">
+              <!-- Card -->
+              <div class="item-card" (click)="openChoices(item)">
+                <div class="view zoom overlay z-depth-2 rounded image-wrapper">
+                  <img class="img-fluid centered-img" [src]="item.path" [alt]="item.reference">
+                  <div class="mask rgba-black-slight"></div>
+                  @if (item.selected) {
+                    <div class="cart-badge"><i class="fas fa-shopping-cart"></i></div>
+                  }
+                </div>
+                <div class="text-center pt-2 pb-2">
+                  <span class="item-ref">REF: {{item.reference}}</span>
+                  <span class="item-price">{{ pricing.format(item.price) }}</span>
+                </div>
               </div>
+              <!-- Card -->
             </div>
-            <!-- Card -->
+            }
+            <!-- Grid column -->
           </div>
-        }
-        <!-- Grid column -->
+          <!-- Grid row -->
+        </section>
       </div>
-      <!-- Grid row -->
-    </section>
-  </div>
-</div>
-</main>
+    </div>
+  </main>
 </div>
 <!--Section: Block Content-->

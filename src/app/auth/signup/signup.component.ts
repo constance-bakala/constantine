@@ -7,7 +7,7 @@ import {environment} from '@env/environment';
 import {EMAIL_REGEX} from '@shared/helpers/constants';
 import {IQuestion, ISignup} from '@shared/interfaces';
 
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators, FormControl} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import {PasswordValidators} from '@shared/validators/password-validators';
@@ -28,7 +28,7 @@ export class SignupComponent implements OnDestroy, OnInit {
   subtitle = 'Compléter les informations ci-dessous :';
   submitButtonText = 'Suivant';
   submittingButtonText = 'Création en cours...';
-  userForm: UntypedFormGroup;
+  userForm!: UntypedFormGroup;
   isValidation = false;
   requiredAlert = 'Veuillez renseigner un';
   env = environment;
@@ -36,14 +36,14 @@ export class SignupComponent implements OnDestroy, OnInit {
   showSecretResp = false;
   questions: IQuestion[] = [];
   success = false;
-  error: {
+  error!: {
     code?: string;
     message: string;
-  };
-  retrieveUserError: HttpErrorResponse;
-  user: ISignup;
+  } | undefined;
+  retrieveUserError!: HttpErrorResponse;
+  user!: ISignup;
   private unsubscribe$: Subject<void> = new Subject<void>();
-  private token: string;
+  private token!: string;
   private isFirstLoad = true;
   signInOptions = [
     EmailAuthProvider.PROVIDER_ID,
@@ -68,34 +68,34 @@ export class SignupComponent implements OnDestroy, OnInit {
           if (state.error) {
             this.error = state.error.error;
           } else {
-            this.error = null;
+            this.error = undefined;
           }
         }
       });
   }
 
-  get gender(): AbstractControl {
-    return this.userForm.get('gender');
+  get gender(): FormControl {
+    return this.userForm.get('gender') as FormControl;
   }
 
-  get nom(): AbstractControl {
-    return this.userForm.get('nom');
+  get nom(): FormControl {
+    return this.userForm.get('nom') as FormControl;
   }
 
-  get prenom(): AbstractControl {
-    return this.userForm.get('prenom');
+  get prenom(): FormControl {
+    return this.userForm.get('prenom') as FormControl;
   }
 
-  get email(): AbstractControl {
-    return this.userForm.get('email');
+  get email(): FormControl {
+    return this.userForm.get('email') as FormControl;
   }
 
-  get password(): AbstractControl {
-    return this.userForm.get('password');
+  get password(): FormControl {
+    return this.userForm.get('password') as FormControl;
   }
 
-  get confirmPassword(): AbstractControl {
-    return this.userForm.get('confirmPassword');
+  get confirmPassword(): FormControl {
+    return this.userForm.get('confirmPassword') as FormControl;
   }
 
   ngOnInit() {

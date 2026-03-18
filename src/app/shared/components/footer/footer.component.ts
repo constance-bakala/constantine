@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {GoogleMapConfig} from '@shared/interfaces';
-import {environment as env} from '@env/environment';
+import { GoogleMapConfig } from '@shared/interfaces';
+import { environment as env } from '@env/environment';
 
 @Component({
   selector: 'app-footer',
@@ -10,7 +10,7 @@ import {environment as env} from '@env/environment';
 })
 export class FooterComponent implements OnInit {
 
-  mapConfig: GoogleMapConfig;
+  mapConfig!: GoogleMapConfig;
   envName = env.envName;
   version = env.versions.app;
   isProd = env.production;

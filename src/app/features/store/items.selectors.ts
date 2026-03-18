@@ -1,16 +1,16 @@
-import {Category, CategoryInfos, ItemInfos} from '@shared/interfaces';
-import {createSelector} from '@ngrx/store';
+import { Category, CategoryInfos, ItemInfos } from '@shared/interfaces';
+import { createSelector } from '@ngrx/store';
 
-export function selectEarings(state): Category {
-  return state.constantine.items.earings;
+export function selectEarings(state: any): Category {
+  return state.constantine.earings;
 }
 
-export function selectDresses(state): Category {
-  return state.constantine.items.dresses;
+export function selectDresses(state: any): Category {
+  return state.constantine.dresses;
 }
 
-export function selectMasks(state): Category {
-  return state.constantine.items.masks;
+export function selectMasks(state: any): Category {
+  return state.constantine.masks;
 }
 
 export const selectNbChosenItems = createSelector(

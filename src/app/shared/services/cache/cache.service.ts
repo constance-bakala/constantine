@@ -1,10 +1,11 @@
-import {Injectable} from '@angular/core';
-import {Observable, of, Subject, throwError as _throw} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, of, Subject, throwError as _throw } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
+// @ts-ignore - No types available for debug module
 import * as debug from 'debug';
-import {catchError, tap} from 'rxjs/operators';
 
-const log = debug('app:cache');
+const log: any = debug('app:cache');
 
 interface CacheContent {
   expiry: number;
@@ -39,7 +40,7 @@ export class CacheService {
   ): Observable<any> | Subject<any> {
     if (this.hasValidCachedValue(key)) {
       log(`%cGetting from cache ${key}`, 'color: green');
-      return of(this.cache.get(key).value);
+      return of(this.cache.get(key)!.value);
     }
 
     if (!maxAge) {
@@ -47,7 +48,7 @@ export class CacheService {
     }
 
     if (this.inFlightObservables.has(key)) {
-      return this.inFlightObservables.get(key);
+      return this.inFlightObservables.get(key)!;
     } else if (fallback && fallback instanceof Observable) {
       this.inFlightObservables.set(key, new Subject());
       log(`%c Calling api for ${key}`, 'color: purple');
@@ -87,12 +88,11 @@ export class CacheService {
    */
   private notifyInFlightObservers(key: string, value: any): void {
     if (this.inFlightObservables.has(key)) {
-      const inFlight = this.inFlightObservables.get(key);
+      const inFlight = this.inFlightObservables.get(key)!;
       const observersCount = inFlight.observers.length;
       if (observersCount) {
         log(
-          `%cNotifying ${
-            inFlight.observers.length
+          `%cNotifying ${inFlight.observers.length
           } flight subscribers for ${key}`,
           'color: blue'
         );
@@ -108,7 +108,7 @@ export class CacheService {
    */
   private hasValidCachedValue(key: string): boolean {
     if (this.cache.has(key)) {
-      if (this.cache.get(key).expiry < Date.now()) {
+      if (this.cache.get(key)!.expiry < Date.now()) {
         this.cache.delete(key);
         return false;
       }

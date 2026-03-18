@@ -1,12 +1,12 @@
 export class Category {
-  name: ItemsCategoriesEnum;
-  title: string;
-  summary: string;
-  items: ItemInfos[]
+  name!: ItemsCategoriesEnum;
+  title!: string;
+  summary!: string;
+  items!: ItemInfos[]
 }
 export class CategoryInfos {
-  name: ItemsCategoriesEnum;
-  title: string;
+  name!: ItemsCategoriesEnum;
+  title!: string;
 
 }
 export enum ItemSizeEnum {
@@ -49,8 +49,10 @@ export class ItemInfos {
     public reference: string,
     public index: number,
     public category: ItemsCategoriesEnum,
-    public loading:boolean,
-    public basketInfos: IBasketInfos){}
+    public loading: boolean,
+    public basketInfos: IBasketInfos,
+    public images: string[] = [],
+    public price: number = 0) { }
 }
 
 export enum ItemsCategoriesEnum {

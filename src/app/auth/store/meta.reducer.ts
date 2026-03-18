@@ -34,7 +34,7 @@ export const metaInitialState: MetaState = {
   isFooter: true
 };
 
-export const selectorMeta = state => state.meta;
+export const selectorMeta = (state: any) => state.meta;
 
 export function metaReducer(
   state: MetaState = metaInitialState,

@@ -1,6 +1,6 @@
-import {Directive, HostListener} from '@angular/core';
+import { Directive, HostListener } from '@angular/core';
 
-import {isMetaKey} from '@shared/helpers/keys.helpers';
+import { isMetaKey } from '@shared/helpers/keys.helpers';
 
 interface InputTarget extends EventTarget {
   value?: string;
@@ -12,7 +12,7 @@ interface InputTarget extends EventTarget {
 })
 export class NumberOnlyDirective {
   @HostListener('keydown', ['$event'])
-  onKeyDown(event) {
+  onKeyDown(event: any) {
     const e = <KeyboardEvent>event;
     const min = event.target.getAttribute('appMin');
     const max = event.target.getAttribute('appMax');
@@ -54,7 +54,7 @@ export class NumberOnlyDirective {
   }
 
   @HostListener('keyup', ['$event'])
-  onKeyUp(event) {
+  onKeyUp(event: any) {
     const e = <KeyboardEvent>event;
     const t = <InputTarget>e.currentTarget;
 
@@ -64,7 +64,7 @@ export class NumberOnlyDirective {
   }
 
   @HostListener('wheel', ['$event'])
-  onMouseWheel(event) {
+  onMouseWheel(event: any) {
     const e = <Event>event;
     const v = event.target.value;
     const max = event.target.getAttribute('appMax');
