@@ -45,3 +45,4 @@ testem.log
 Thumbs.db
 sendgrid.env
 functions/.env
+functions/.env
