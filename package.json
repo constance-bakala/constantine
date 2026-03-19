@@ -1,6 +1,6 @@
 {
   "name": "constantine",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "ng": "ng",
     "generate-groups": "node generate-groups.js",
@@ -98,6 +98,7 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.6.0",
     "prettier": "~2.3.0",
+    "sharp": "^0.34.5",
     "standard-version": "~9.3.0",
     "ts-node": "~9.1.1",
     "typescript": "~5.9.3",
