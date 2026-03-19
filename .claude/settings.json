@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx firebase:*)",
+      "Bash(npm install:*)",
+      "Bash(\"c:\\\\Users\\\\wylfr\\\\Documents\\\\travail\\\\delice-eternel-gabon\\\\constantine\\\\functions\\\\.env\":*)",
+      "Bash(ng build:*)"
+    ]
+  }
+}

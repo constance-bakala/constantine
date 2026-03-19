@@ -21,9 +21,12 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
   infoContent = '';
 
 
+  isGoogleMapsLoaded = typeof (window as any)['google'] !== 'undefined';
+
   constructor() {
   }
   ngOnInit() {
+    if (!this.isGoogleMapsLoaded) return;
     this.options = {
       zoomControl: true,
       scrollwheel: true,
@@ -32,10 +35,8 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
       maxZoom: this.mapConfig.zoom.maxZoom,
       minZoom: this.mapConfig.zoom.minZoom,
     };
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition(() => {
       this.center = {
-        // lat: position.coords.latitude,
-        // lng: position.coords.longitude,
         lat: this.mapConfig.lat,
         lng: this.mapConfig.lng
       }
@@ -44,12 +45,7 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
   }
   //-- set label(label: string | google.maps.MarkerLabel); --
   addMarker() {
-    /* let numberMarkerImg = {
-       url: '/assets/dresses/dress-18.png',
-       size: new google.maps.Size(32, 38),
-       scaledSize: new google.maps.Size(32, 38)
-     };
-     */
+    if (!this.isGoogleMapsLoaded) return;
     this.markers.push({
       position: {
         lat: this.mapConfig.lat,
@@ -58,15 +54,14 @@ export class MapTemplateComponent implements OnInit, AfterViewInit {
       label: {
         color: this.mapConfig.companyMarkerColor,
         fontWeight: 'bold',
-        text: 'Délice éternel', // + (this.markers.length + 1),
+        text: 'Délice éternel',
       },
-      title: this.mapConfig.companyTitle, //+ (this.markers.length + 1),
-      info: 'Prêt à porter, Vente de masques anti covid-19, Bijoux de fantaisie',//this.mapConfig.companyInfo, //+ (this.markers.length + 1),
+      title: this.mapConfig.companyTitle,
+      info: 'Prêt à porter, Vente de masques anti covid-19, Bijoux de fantaisie',
       options: {
-        animation: google.maps.Animation.BOUNCE,
+        animation: (window as any)['google'].maps.Animation.BOUNCE,
         opacity: 0.8,
         zIndex: 300,
-        // icon: numberMarkerImg,
       },
     })
   }

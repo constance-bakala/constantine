@@ -7,4 +7,4 @@ if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-export {welcomeSendgridEmail, genericSendgridEmail} from './sendgridMails';
+export { welcomeBrevoEmail, genericBrevoEmail } from './brevoMails';

@@ -304,12 +304,19 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return this.pricing.format(price * qty);
   }
 
-  get cartTotal(): string {
-    const total = this.items.reduce((sum, item, i) => {
+  private get rawTotalHT(): number {
+    return this.items.reduce((sum, item, i) => {
       const qty = Number(this.getItemQuantity(i)?.value) || 1;
       return sum + (item.price ?? 0) * qty;
     }, 0);
-    return this.pricing.format(total);
+  }
+
+  get cartTva(): string {
+    return this.pricing.format(Math.round(this.rawTotalHT * 0.10));
+  }
+
+  get cartTotal(): string {
+    return this.pricing.format(Math.round(this.rawTotalHT * 1.10));
   }
 
   sendCommand() {
@@ -430,7 +437,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
     console.log('Sending email with data', data);
 
-    const callable = httpsCallable(this.fun, 'genericSendgridEmail');
+    const callable = httpsCallable(this.fun, 'genericBrevoEmail');
     from(callable(data)).subscribe({
       next: (result) => console.log(result),
       error: (error) => console.log(error),

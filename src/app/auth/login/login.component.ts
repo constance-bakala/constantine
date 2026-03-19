@@ -66,11 +66,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private startFirebaseUi(flow: 'popup' | 'redirect'): void {
-    try {
-      const existing = firebaseui.auth.AuthUI.getInstance();
-      if (existing) existing.reset();
-    } catch {}
-
     const uiConfig: any = {
       signInFlow: flow,
       signInOptions: this.signInOptions,
@@ -83,7 +78,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
     };
 
-    this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+    try {
+      const existing = firebaseui.auth.AuthUI.getInstance();
+      this.ui = existing ?? new firebaseui.auth.AuthUI(firebase.auth());
+    } catch {
+      this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+    }
     this.ui.start('#firebaseui-auth-container', uiConfig);
   }
 
