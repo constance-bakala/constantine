@@ -24,7 +24,7 @@ export class ItemsService {
           name: ItemsCategoriesEnum.DRESSES,
           title: 'PRODUCTS.DRESSES.TITLE',
           summary: 'PRODUCTS.DRESSES.DESCRIPTION',
-          items: getAssetGroups(DRESS_GROUPS, 'dresses', 'dress', ItemsCategoriesEnum.DRESSES, ITEMS_PRICES.dresses),
+          items: getAssetGroups(DRESS_GROUPS, 'dresses', 'dress', ItemsCategoriesEnum.DRESSES, ITEMS_PRICES.dresses, 'cover.jpeg'),
         });
       case ItemsCategoriesEnum.MASKS:
         return of({

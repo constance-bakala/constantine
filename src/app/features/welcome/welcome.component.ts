@@ -26,7 +26,8 @@ export class WelcomeComponent implements OnInit {
       portfolioName: 'PRODUCTS.DRESSES.TITLE',
       portfolioImagesSize: DRESS_GROUPS.length,
       portfolioDirectory: 'dresses',
-      portfolioGroupIds: DRESS_GROUPS.map(g => g.id)
+      portfolioGroupIds: DRESS_GROUPS.map(g => g.id),
+      coverFile: 'cover.jpeg',
     };
     this.dataMasks = {
       portfolioLink: '/masks',

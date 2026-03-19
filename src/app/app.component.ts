@@ -7,6 +7,7 @@ import { Auth } from '@angular/fire/auth';
 import { ItemsCategoriesEnum } from '@shared/interfaces';
 import { ActionItemsRetrieve } from '@app/features/store';
 import { TranslateService } from '@ngx-translate/core';
+import { SeoService } from '@shared/services/seo.service';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -28,8 +29,10 @@ export class AppComponent implements OnInit {
     private router: Router,
     public auth: Auth,
     private store: Store<any>,
-    public translate: TranslateService
+    public translate: TranslateService,
+    seo: SeoService,
   ) {
+    seo.init();
     if (!firebase.apps.length) {
       firebase.initializeApp(environment.firebaseConfig);
     }

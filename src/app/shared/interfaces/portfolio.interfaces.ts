@@ -5,4 +5,5 @@ export interface PortfolioData {
   portfolioImagesSize: number;
   portfolioDirectory: string;
   portfolioGroupIds: number[];
+  coverFile?: string; // défaut : 'cover.png'
 }

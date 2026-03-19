@@ -36,7 +36,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.user$ = user(this.auth);
     this.translate.addLangs(['fr', 'en']);
     this.translate.setDefaultLang('fr');
-    this.translate.use(localStorage.getItem('lang') || DEFAULT_LOCALE_ID || 'fr');
+    const supportedLangs = ['fr', 'en'];
+    const savedLang = localStorage.getItem('lang');
+    const browserLang = DEFAULT_LOCALE_ID;
+    this.translate.use(
+      supportedLangs.includes(savedLang!) ? savedLang! :
+      supportedLangs.includes(browserLang) ? browserLang : 'fr'
+    );
   }
 
   ngOnInit(): void {

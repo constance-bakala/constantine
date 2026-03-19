@@ -15,19 +15,26 @@ async function sendBrevoTemplate(params: {
   templateId: number;
   templateParams: Record<string, unknown>;
   subject?: string;
+  bcc?: boolean;
 }): Promise<void> {
   const apiKey = process.env['BREVO_API_KEY'];
   if (!apiKey) throw new Error('BREVO_API_KEY manquant dans functions/.env');
 
+  const ownerEmail = process.env['BREVO_FROM_EMAIL'] ?? 'delice.eternel.gabon@gmail.com';
+
   const body: Record<string, unknown> = {
     sender: {
-      email: process.env['BREVO_FROM_EMAIL'] ?? 'delice.eternel.gabon@gmail.com',
+      email: ownerEmail,
       name:  process.env['BREVO_FROM_NAME']  ?? 'Délice Éternel',
     },
     to: [{ email: params.to.email, name: params.to.name ?? params.to.email }],
     templateId: params.templateId,
     params: params.templateParams,
   };
+
+  if (params.bcc) {
+    body['bcc'] = [{ email: ownerEmail, name: 'Délice Éternel (copie)' }];
+  }
 
   if (params.subject) body['subject'] = params.subject;
 
@@ -62,9 +69,9 @@ export const welcomeBrevoEmail = functions.auth.user().onCreate(async (user) => 
       templateId,
       templateParams: {
         displayName,
-        masksLink:   'https://delice-eternel-gabon.web.app/#/masks',
-        dressesLink: 'https://delice-eternel-gabon.web.app/#/dresses',
-        earingsLink: 'https://delice-eternel-gabon.web.app/#/earings',
+        masksLink:   'https://delice-eternel-gabon.web.app/masks',
+        dressesLink: 'https://delice-eternel-gabon.web.app/dresses',
+        earingsLink: 'https://delice-eternel-gabon.web.app/earings',
       },
     });
     console.log('[Brevo] welcomeBrevoEmail OK →', user.email);
@@ -103,6 +110,7 @@ export const genericBrevoEmail = functions.https.onCall(async (data, context) =>
       templateId,
       templateParams: { displayName, items, subject, totalHT, tva, totalTTC },
       subject,
+      bcc: true,
     });
     return { success: true };
   } catch (err) {

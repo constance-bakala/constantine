@@ -53,42 +53,18 @@ export const MASK_GROUPS: ItemGroupDef[] = [
   { id: 60, extraImages: ['mask-60-b.png', 'mask-60-c.png'] }, // mask-61, mask-62
 ];
 
+// Nouvelles robes (format JPEG) — dress-7 = dress-1 (2e vue), dress-13 = dress-11 (2e vue)
 export const DRESS_GROUPS: ItemGroupDef[] = [
-  { id: 1 },
-  { id: 2,  extraImages: ['dress-2-b.png'] },  // dress-3
-  { id: 4 },
-  { id: 5 },
-  { id: 6 },
-  { id: 7 },
-  { id: 8 },
-  { id: 9,  extraImages: ['dress-9-b.png'] },  // dress-10
-  { id: 11, extraImages: ['dress-11-b.png'] }, // dress-12
-  { id: 13, extraImages: ['dress-13-b.png'] }, // dress-14
-  { id: 15, extraImages: ['dress-15-b.png'] }, // dress-16
-  { id: 17, extraImages: ['dress-17-b.png'] }, // dress-18
-  { id: 19, extraImages: ['dress-19-b.png'] }, // dress-20
-  { id: 21, extraImages: ['dress-21-b.png'] }, // dress-22
-  { id: 23 },
-  { id: 24 },
-  { id: 25 },
-  { id: 26 },
-  { id: 27 },
-  { id: 28 },
-  { id: 29 },
-  { id: 30 },
-  { id: 31 },
-  { id: 32 },
-  { id: 33 },
-  { id: 34 },
-  { id: 35 },
-  { id: 36, extraImages: ['dress-36-b.png'] }, // dress-37
-  { id: 38, extraImages: ['dress-38-b.png', 'dress-38-c.png'] }, // dress-41, dress-48
-  { id: 39 },
-  { id: 40 },
-  { id: 42, extraImages: ['dress-42-b.png'] }, // dress-46
-  { id: 43 },
-  { id: 44, extraImages: ['dress-44-b.png'] }, // dress-45
-  { id: 47 },
+  { id: 1 },  { id: 2 },  { id: 3 },  { id: 4 },  { id: 5 },
+  { id: 6 },  { id: 8 },  { id: 9 },  { id: 10 }, { id: 11, extraImages: ['dress-11-b.jpeg'] },
+  { id: 12 }, { id: 14 }, { id: 15 }, { id: 16 }, { id: 17 },
+  { id: 18 }, { id: 19 }, { id: 20 }, { id: 21 }, { id: 22 },
+  { id: 23 }, { id: 24 }, { id: 25 }, { id: 26 }, { id: 27 },
+  { id: 28 }, { id: 29 }, { id: 30 }, { id: 31 }, { id: 32 },
+  { id: 33 }, { id: 34 }, { id: 35 }, { id: 36 }, { id: 37 },
+  { id: 38 }, { id: 39 }, { id: 40 }, { id: 41 }, { id: 42 },
+  { id: 43 }, { id: 44 }, { id: 45 }, { id: 46 }, { id: 47 },
+  { id: 48 }, { id: 49 }, { id: 50 }, { id: 51 }, { id: 52 },
 ];
 
 export const EARING_GROUPS: ItemGroupDef[] = [

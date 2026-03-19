@@ -33,6 +33,11 @@ img.displayed{
 
 .image-wrapper {
   position: relative;
+  cursor: pointer;
+
+  .mask {
+    cursor: pointer;
+  }
 }
 
 .cart-badge {

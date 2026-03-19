@@ -112,6 +112,19 @@
   }
   .container {
     max-width: 520px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .col-md-7 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .view img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
 }
 

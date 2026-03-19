@@ -5,18 +5,18 @@
     <div class="col-md-12 mb-12">
       <!-- Card -->
       <div class="">
-        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
-          <img class="img-fluid w-100"
-               src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/cover.png" alt="Sample">
+        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0" style="cursor: pointer;">
+          <img class="img-fluid w-100" style="cursor: pointer;"
+               src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}" alt="Sample">
           <a [routerLink]="[data.portfolioLink]">
             <div class="mask waves-effect waves-light">
               <img class="img-fluid w-100"
-                   src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/cover.png">
+                   src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}">
               <div class="mask rgba-black-slight"></div>
             </div>
           </a>
         </div>
-        <div [routerLink]="[data.portfolioLink]" class="text-center pt-4 portfolio-item mx-auto">
+        <div [routerLink]="[data.portfolioLink]" class="text-center pt-4 portfolio-item mx-auto" style="cursor: pointer;">
           <h5>{{data.portfolioName | translate}}</h5>
           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
             <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>

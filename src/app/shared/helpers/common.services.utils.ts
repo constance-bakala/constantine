@@ -8,11 +8,12 @@ export function getAssetGroups(
   directoryName: string,
   refPrefix: string,
   category: ItemsCategoriesEnum,
-  prices: CategoryPrices = {}
+  prices: CategoryPrices = {},
+  coverFile: string = 'cover.png'
 ): ItemInfos[] {
   return groups.map((group, index) => {
-    const groupDir = `assets/${directoryName}/${refPrefix}-${group.id}`;
-    const coverPath = `${groupDir}/cover.png`;
+    const groupDir  = `assets/${directoryName}/${refPrefix}-${group.id}`;
+    const coverPath = `${groupDir}/${coverFile}`;
     const extraPaths = (group.extraImages ?? []).map(img => `${groupDir}/${img}`);
     const images = [coverPath, ...extraPaths];
     const basketInfos = {

@@ -59,6 +59,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   @Input()
   categoryInfos$!: Observable<ExistingCategories>;
 
+  currentCurrency = this.pricing.currency;
+
   private subs = new Subscription();
   private formSubs = new Subscription();
   private commendsRef?: firebase.database.Reference;
@@ -77,6 +79,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subs.add(this.pricing.currency$.subscribe(c => { this.currentCurrency = c; }));
+
     this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
 
@@ -312,11 +316,19 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   get cartTva(): string {
-    return this.pricing.format(Math.round(this.rawTotalHT * 0.10));
+    return this.pricing.format(Math.round(this.rawTotalHT * this.pricing.tvaRate));
   }
 
   get cartTotal(): string {
-    return this.pricing.format(Math.round(this.rawTotalHT * 1.10));
+    return this.pricing.format(Math.round(this.rawTotalHT * (1 + this.pricing.tvaRate)));
+  }
+
+  onCurrencyChange(value: string): void {
+    this.pricing.setCurrency(value as any);
+  }
+
+  get isFrench(): boolean {
+    return (this.translateService.currentLang ?? 'fr') === 'fr';
   }
 
   sendCommand() {
