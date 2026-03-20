@@ -51,37 +51,73 @@ https://console.firebase.google.com/project/delice-eternel-gabon/hosting
 
 ## Gestion des images produits
 
+### Formats d'image par catégorie
+
+| Catégorie   | Format  | Extension         |
+|-------------|---------|-------------------|
+| Masques     | WebP    | `.webp`           |
+| Bijoux      | WebP    | `.webp`           |
+| Robes       | JPEG    | `.jpeg`           |
+
+> Les masques et bijoux ont été convertis en WebP en mars 2026 (−85 % de poids).
+> Les robes restent en JPEG car leur qualité photographique le justifie.
+
 ### Structure des assets
 
 Chaque objet physique est représenté par un **sous-répertoire** dans sa catégorie.
-Le fichier principal affiché dans la liste s'appelle toujours `cover.png`.
+Le fichier principal affiché dans la liste s'appelle toujours `cover.<ext>`.
 Les vues additionnelles du même objet sont placées dans le même répertoire.
 
 ```
 src/assets/
   masks/
     mask-1/
-      cover.png          ← image affichée dans la liste portfolio
-      mask-1-b.png       ← vue additionnelle (galerie dans la fiche détail)
-      mask-1-c.png
+      cover.webp         ← image affichée dans la liste portfolio
+      mask-1-b.webp      ← vue additionnelle (galerie dans la fiche détail)
+      mask-1-c.webp
     mask-2/
-      cover.png
+      cover.webp
   dresses/
     dress-1/
-      cover.png
-      dress-1-b.png
+      cover.jpeg
+      dress-1-b.jpeg
   jewellery/
     earing-1/
-      cover.png
+      cover.webp
 ```
 
 ### Ajouter un nouvel objet
+
+#### Masques et bijoux (WebP)
 
 1. Créer un sous-répertoire avec le prochain identifiant disponible :
    ```
    src/assets/masks/mask-63/
    ```
-2. Y déposer `cover.png` (obligatoire) et les vues additionnelles (`mask-63-b.png`, etc.)
+2. Y déposer les images sources (PNG ou JPEG) :
+   - `cover.png` (obligatoire) et les vues additionnelles (`mask-63-b.png`, etc.)
+3. **Convertir en WebP** (supprime les PNG originaux) :
+   ```bash
+   node scripts/convert-to-webp.js
+   ```
+   Le script convertit récursivement tous les PNG de `masks/` et `jewellery/`
+   en WebP (qualité 85) et supprime les fichiers PNG d'origine.
+4. **Générer les JPEG pour les emails** :
+   ```bash
+   node scripts/generate-email-jpegs.js
+   ```
+   Ce script crée un fichier `cover.jpeg` (280 px, qualité 80) à côté de chaque
+   `cover.webp`. Ces JPEG sont utilisés exclusivement dans les emails de commande
+   pour assurer la compatibilité avec les clients mail sans support WebP (Outlook…).
+5. Regénérer le fichier de groupes :
+   ```bash
+   npm run generate-groups
+   ```
+
+#### Robes (JPEG)
+
+1. Créer un sous-répertoire : `src/assets/dresses/dress-53/`
+2. Y déposer directement les fichiers JPEG (`cover.jpeg`, `dress-53-b.jpeg`, etc.)
 3. Regénérer le fichier de groupes :
    ```bash
    npm run generate-groups
@@ -91,13 +127,43 @@ src/assets/
 
 1. Choisir l'identifiant du groupe (en général le plus petit numéro)
 2. Déplacer les images supplémentaires dans le répertoire de ce groupe :
-   - `cover.png` → image principale
-   - `mask-X-b.png`, `mask-X-c.png`... → vues additionnelles
+   - `cover.webp` (ou `.jpeg` pour les robes) → image principale
+   - `mask-X-b.webp`, `mask-X-c.webp`... → vues additionnelles
 3. Supprimer le sous-répertoire devenu vide
 4. Regénérer :
    ```bash
    npm run generate-groups
    ```
+
+### Scripts de traitement des images
+
+#### `scripts/convert-to-webp.js` — Conversion PNG → WebP (site web)
+
+Convertit tous les PNG de `masks/` et `jewellery/` en WebP (qualité 85)
+et supprime les PNG d'origine.
+
+```bash
+node scripts/convert-to-webp.js
+```
+
+**Quand l'utiliser :** après avoir ajouté de nouvelles images PNG pour les masques ou bijoux.
+Ne pas l'exécuter sur `dresses/` (les robes restent en JPEG).
+
+#### `scripts/generate-email-jpegs.js` — Génération JPEG pour les emails
+
+Crée un fichier `cover.jpeg` (280 px, qualité 80) à partir de chaque `cover.webp`
+dans `masks/` et `jewellery/`. Ces fichiers sont utilisés **uniquement dans les emails**
+de commande, car certains clients email (Outlook…) ne supportent pas le format WebP.
+
+```bash
+node scripts/generate-email-jpegs.js
+```
+
+**Quand l'utiliser :** après chaque exécution de `convert-to-webp.js`.
+
+> **Règle** : site web = WebP (performance), emails = JPEG (compatibilité universelle).
+
+**Prérequis :** `sharp` doit être installé (`npm install --legacy-peer-deps`).
 
 ### Fichier généré automatiquement
 
@@ -117,8 +183,10 @@ exécuter le script de migration **une seule fois** depuis la racine du projet (
 .\reorganize-assets.ps1
 ```
 
-Puis regénérer les groupes :
+Puis convertir en WebP, générer les JPEG pour les emails, et regénérer les groupes :
 
 ```bash
+node scripts/convert-to-webp.js
+node scripts/generate-email-jpegs.js
 npm run generate-groups
 ```

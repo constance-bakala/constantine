@@ -17,7 +17,7 @@ export class ItemsService {
           name: ItemsCategoriesEnum.EARINGS,
           title: 'PRODUCTS.EARRINGS.TITLE',
           summary: 'PRODUCTS.EARRINGS.DESCRIPTION',
-          items: getAssetGroups(EARING_GROUPS, 'jewellery', 'earing', ItemsCategoriesEnum.EARINGS, ITEMS_PRICES.earings),
+          items: getAssetGroups(EARING_GROUPS, 'jewellery', 'earing', ItemsCategoriesEnum.EARINGS, ITEMS_PRICES.earings, 'cover.webp'),
         });
       case ItemsCategoriesEnum.DRESSES:
         return of({
@@ -31,7 +31,7 @@ export class ItemsService {
           name: ItemsCategoriesEnum.MASKS,
           title: 'PRODUCTS.MASKS.TITLE',
           summary: 'PRODUCTS.MASKS.DESCRIPTION',
-          items: getAssetGroups(MASK_GROUPS, 'masks', 'mask', ItemsCategoriesEnum.MASKS, ITEMS_PRICES.masks),
+          items: getAssetGroups(MASK_GROUPS, 'masks', 'mask', ItemsCategoriesEnum.MASKS, ITEMS_PRICES.masks, 'cover.webp'),
         });
       default:
         return of({

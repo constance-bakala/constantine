@@ -1,0 +1,75 @@
+<div class="admin-container">
+
+  <header class="admin-header">
+    <h1>Tableau de bord — Commandes</h1>
+  </header>
+
+  <div *ngIf="error" class="error-banner">
+    {{ error }}
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    Chargement des commandes…
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="empty">
+    Aucune commande pour le moment.
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+
+    <div *ngFor="let order of orders; trackBy: trackById" class="order-card">
+
+      <div class="order-header">
+        <div class="order-meta">
+          <span class="order-id">Commande #{{ order.id | slice:0:8 }}</span>
+          <span class="order-date">{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+        <span class="status-badge" [style.background-color]="statusColors[order.status]">
+          {{ statusLabels[order.status] }}
+        </span>
+      </div>
+
+      <div class="customer-info">
+        <span class="label">Client :</span>
+        <span>{{ order.customerName || order.customerEmail }}</span>
+        <a [href]="'mailto:' + order.customerEmail" class="email-link">{{ order.customerEmail }}</a>
+      </div>
+
+      <div class="items-list">
+        <div *ngFor="let item of order.items" class="item-row">
+          <span class="item-title">{{ item.title }}</span>
+          <span *ngIf="item.basketInfos?.selectedSize" class="item-detail">
+            Taille : {{ item.basketInfos?.selectedSize }}
+          </span>
+          <span *ngIf="item.basketInfos?.selectedModel" class="item-detail">
+            Modèle : {{ item.basketInfos?.selectedModel }}
+          </span>
+          <span class="item-qty">Qté : {{ item.basketInfos?.selectedQuantity ?? 1 }}</span>
+        </div>
+      </div>
+
+      <div class="order-actions">
+        <button
+          *ngIf="order.status === 'pending'"
+          class="btn btn-ready"
+          [disabled]="updatingOrderId === order.id"
+          (click)="setStatus(order, 'ready')">
+          <span *ngIf="updatingOrderId === order.id">…</span>
+          <span *ngIf="updatingOrderId !== order.id">Marquer comme prête</span>
+        </button>
+        <button
+          *ngIf="order.status === 'ready'"
+          class="btn btn-paid"
+          [disabled]="updatingOrderId === order.id"
+          (click)="setStatus(order, 'paid')">
+          <span *ngIf="updatingOrderId === order.id">…</span>
+          <span *ngIf="updatingOrderId !== order.id">Marquer comme payée</span>
+        </button>
+        <span *ngIf="order.status === 'paid'" class="paid-label">✓ Payée</span>
+      </div>
+
+    </div>
+  </div>
+
+</div>

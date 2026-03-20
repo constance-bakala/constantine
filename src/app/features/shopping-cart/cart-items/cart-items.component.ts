@@ -59,8 +59,6 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   @Input()
   categoryInfos$!: Observable<ExistingCategories>;
 
-  currentCurrency = this.pricing.currency;
-
   private subs = new Subscription();
   private formSubs = new Subscription();
   private commendsRef?: firebase.database.Reference;
@@ -79,7 +77,6 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subs.add(this.pricing.currency$.subscribe(c => { this.currentCurrency = c; }));
 
     this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
@@ -323,14 +320,6 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return this.pricing.format(Math.round(this.rawTotalHT * (1 + this.pricing.tvaRate)));
   }
 
-  onCurrencyChange(value: string): void {
-    this.pricing.setCurrency(value as any);
-  }
-
-  get isFrench(): boolean {
-    return (this.translateService.currentLang ?? 'fr') === 'fr';
-  }
-
   sendCommand() {
     const currentUser = firebase.auth().currentUser;
 
@@ -374,6 +363,15 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
           return ref.set(payload).then(() => {
             if (!currentUser.isAnonymous) {
+              // Double-write vers orders/ pour le tableau de bord admin
+              firebase.database().ref(`orders/${pushKey}`).set({
+                status: 'pending',
+                createdAt: Date.now(),
+                customerEmail: currentUser.email ?? '',
+                customerName: currentUser.displayName ?? currentUser.email ?? '',
+                items: itemsToSend,
+              }).catch((e: any) => console.error('[orders] double-write error', e));
+
               this.sendCommendNotificationMails(currentUser);
               this.snackBar.openFromComponent(SnackAlertComponent, {
                 duration: this.snackDuration,
@@ -430,21 +428,47 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       prefix = prefix + '/' + environment.appId;
     }
 
-    const emailData = _.cloneDeep(this.items).map((item) => {
-      item.path = prefix + '/' + item.path;
+    const currency = this.pricing.currency;
+    const currencySymbol = currency === 'XAF' ? 'FCFA' : '€';
+    const tvaRate = this.pricing.tvaRate;
+    const hasTva = tvaRate > 0;
+
+    const emailData = _.cloneDeep(this.basketItemsArray.controls).map((group, i) => {
+      const item = _.cloneDeep(this.items[i]);
+      const qty = Number(group.get('quantity')?.value) || 1;
+      // Utilise cover.jpeg pour l'email (compatibilité Outlook / clients sans WebP)
+      const emailPath = item.path.replace(/cover\.webp$/, 'cover.jpeg');
+      item.path = prefix + '/' + emailPath;
+      item.basketInfos = {
+        selectedQuantity: qty,
+        selectedSize: group.get('size')?.value,
+        selectedModel: group.get('model')?.value,
+      };
       delete (item as any).loading;
       delete (item as any).selected;
       delete (item as any).index;
+      (item as any).unitPriceFormatted = this.pricing.format(item.price ?? 0);
+      (item as any).linePriceFormatted = this.pricing.format((item.price ?? 0) * qty);
       return item;
     });
 
+    const rawTotalHT = emailData.reduce((sum, item) =>
+      sum + (item.price ?? 0) * (item.basketInfos?.selectedQuantity ?? 1), 0);
+    const rawTva = hasTva ? Math.round(rawTotalHT * tvaRate) : 0;
+    const rawTotalTTC = rawTotalHT + rawTva;
+
     const data = {
-      text: '',
       shoppingCardLink: prefix + '/#/shopping-cart',
       uid: user.uid,
       subject: this.translateService.instant('NEW_ORDER_TITLE'),
       items: emailData,
       displayName: user.displayName,
+      currency,
+      currencySymbol,
+      hasTva,
+      totalHT: rawTotalHT,
+      tva: rawTva,
+      totalTTC: rawTotalTTC,
     };
 
     console.log('Sending email with data', data);

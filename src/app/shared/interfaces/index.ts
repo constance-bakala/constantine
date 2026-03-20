@@ -1,3 +1,4 @@
+export * from './currency.type';
 export * from './image.interfaces';
 export * from './map.interfaces';
 export * from './portfolio.interfaces';

@@ -42,6 +42,7 @@ import { SnackAlertComponent } from './components/snack-alert/snack-alert.compon
 import { CategoryButtonsComponent } from './components/category-buttons/category-buttons.component';
 import { ItemDetailsComponent } from './components/item-details/item-details.component';
 import { FlagsComponent } from './components/flags/flags.component';
+import { CurrencySelectorComponent } from './components/currency-selector/currency-selector.component';
 
 import { AdDirective } from './directives/ad.directive';
 import { NumberOnlyDirective } from '@shared/directives/number-only/number-only.directive';
@@ -106,6 +107,7 @@ import { AdService } from './services/ad.service';
     CategoryButtonsComponent,
     ItemDetailsComponent,
     FlagsComponent,
+    CurrencySelectorComponent,
 
     // Pipes & directives
     EnumToArrayPipe,
@@ -165,6 +167,7 @@ import { AdService } from './services/ad.service';
     CategoryButtonsComponent,
     ItemDetailsComponent,
     FlagsComponent,
+    CurrencySelectorComponent,
 
     // Pipes & directives to reuse
     EnumToArrayPipe,

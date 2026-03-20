@@ -35,7 +35,8 @@ export class WelcomeComponent implements OnInit {
       portfolioName: 'PRODUCTS.MASKS.TITLE',
       portfolioImagesSize: MASK_GROUPS.length,
       portfolioDirectory: 'masks',
-      portfolioGroupIds: MASK_GROUPS.map(g => g.id)
+      portfolioGroupIds: MASK_GROUPS.map(g => g.id),
+      coverFile: 'cover.webp',
     };
 
     this.dataEarings = {
@@ -44,7 +45,8 @@ export class WelcomeComponent implements OnInit {
       portfolioName: 'PRODUCTS.EARRINGS.TITLE',
       portfolioImagesSize: EARING_GROUPS.length,
       portfolioDirectory: 'jewellery',
-      portfolioGroupIds: EARING_GROUPS.map(g => g.id)
+      portfolioGroupIds: EARING_GROUPS.map(g => g.id),
+      coverFile: 'cover.webp',
     }
   }
 

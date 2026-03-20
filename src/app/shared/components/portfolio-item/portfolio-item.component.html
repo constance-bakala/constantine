@@ -7,11 +7,11 @@
       <div class="">
         <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0" style="cursor: pointer;">
           <img class="img-fluid w-100" style="cursor: pointer;"
-               src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}" alt="Sample">
+               src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}" alt="Sample" loading="lazy">
           <a [routerLink]="[data.portfolioLink]">
             <div class="mask waves-effect waves-light">
               <img class="img-fluid w-100"
-                   src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}">
+                   src="assets/{{data.portfolioDirectory}}/{{data.portfolioImagePrefix}}-{{photoIndexToPrint}}/{{data.coverFile ?? 'cover.png'}}" loading="lazy">
               <div class="mask rgba-black-slight"></div>
             </div>
           </a>

@@ -227,7 +227,7 @@
                   <td align="left" style="color: #888888; font-size: 16px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px;">
                     <span class="itemLabel">Taille :</span><span class="itemValue"> &nbsp;{{ item.basketInfos.selectedSize }}</span><br/>
                     <span class="itemLabel">Quantité :</span><span class="itemValue"> &nbsp;{{ item.basketInfos.selectedQuantity }}</span><br/>
-                    <span class="itemLabel">Prix :</span><span class="itemValue"> &nbsp;{{ item.price }} €</span><br/>
+                    <span class="itemLabel">Prix :</span><span class="itemValue"> &nbsp;{{ item.unitPriceFormatted }}</span><br/>
                     <span class="itemLabel">Modèle :</span><span class="itemValue"> &nbsp;{{ item.basketInfos.selectedModel }}</span>
                   </td>
                 </tr>
@@ -292,7 +292,7 @@
                 <tr>
                   <td align="left" width="260" style="color: #3d3d3d; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; font-weight:700; line-height: 24px; padding: 8px 0;">{{ item.reference }}</td>
                   <td align="center" width="100" style="color: #888888; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">× {{ item.basketInfos.selectedQuantity }}</td>
-                  <td align="right" width="200" style="color: #148f77; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; font-weight:700; line-height: 24px; padding: 8px 0;">{{ item.price * item.basketInfos.selectedQuantity }} €</td>
+                  <td align="right" width="200" style="color: #148f77; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; font-weight:700; line-height: 24px; padding: 8px 0;">{{ item.linePriceFormatted }}</td>
                 </tr>
               </table>
             </td>
@@ -312,27 +312,29 @@
             </td>
           </tr>
           <tr><td style="border-bottom: 1px solid #eeeeee; font-size: 1px; line-height: 1px;">&nbsp;</td></tr>
-          <!-- TVA -->
+          <!-- TVA (EUR uniquement) -->
+          {% if params.hasTva %}
           <tr>
             <td>
               <table border="0" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="left" width="260" style="color: #888888; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">TVA (10%)</td>
                   <td align="center" width="100"></td>
-                  <td align="right" width="200" style="color: #888888; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">{{ params.tva }} €</td>
+                  <td align="right" width="200" style="color: #888888; font-size: 14px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">{{ params.tva }} {{ params.currencySymbol }}</td>
                 </tr>
               </table>
             </td>
           </tr>
+          {% endif %}
           <tr><td style="border-bottom: 2px solid #eeeeee; font-size: 1px; line-height: 1px;">&nbsp;</td></tr>
-          <!-- total TTC -->
+          <!-- total -->
           <tr>
             <td>
               <table border="0" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="left" width="260" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">Total TTC</td>
+                  <td align="left" width="260" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">{% if params.hasTva %}Total TTC{% else %}Total{% endif %}</td>
                   <td align="center" width="100"></td>
-                  <td align="right" width="200" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">{{ params.totalTTC }} €</td>
+                  <td align="right" width="200" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">{{ params.totalTTC }} {{ params.currencySymbol }}</td>
                 </tr>
               </table>
             </td>
@@ -347,7 +349,7 @@
   <table border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="eeeeee">
     <tr>
       <td style="font-size: 20px; line-height: 40px;">&nbsp;
-        À très vite sur Délice Éternel!</br>
+        À très vite sur Délice Éternel!<br/>
       </td>
     </tr>
   </table>

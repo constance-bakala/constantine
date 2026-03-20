@@ -5,14 +5,19 @@ const NAV_OFFSET = 81;
 
 function updateActiveLink(): void {
   const scrollPos = window.scrollY + NAV_OFFSET;
+  const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
   let activeSection = NAV_SECTIONS[0];
 
-  NAV_SECTIONS.forEach((id) => {
-    const el = document.querySelector(id);
-    if (el && (el as HTMLElement).offsetTop <= scrollPos) {
-      activeSection = id;
-    }
-  });
+  if (atBottom) {
+    activeSection = NAV_SECTIONS[NAV_SECTIONS.length - 1];
+  } else {
+    NAV_SECTIONS.forEach((id) => {
+      const el = document.querySelector(id);
+      if (el && (el as HTMLElement).offsetTop <= scrollPos) {
+        activeSection = id;
+      }
+    });
+  }
 
   document
     .querySelectorAll('.navbar-nav .nav-link')

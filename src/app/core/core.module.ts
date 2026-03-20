@@ -16,6 +16,7 @@ import {LocalStorageService} from './local-storage/local-storage.service';
 import {XTokenInterceptor} from '@app/core/interceptors';
 import {AssetsInterceptor} from '@app/core/interceptors/assets.interceptor';
 import {AuthEffects, authReducer, metaReducer, RouterEffects} from '@app/auth/store';
+import { uiReducer } from './store/ui.reducer';
 import {functionalErrorsReducer} from '@app/auth/store/errors.reducer';
 import {CacheService} from "@shared/services";
 import {APP_CONFIG} from "@helpers/constants";
@@ -35,6 +36,7 @@ if (!environment.production) {
       'core:auth:constantine': authReducer as any,
       meta: metaReducer as any,
       functionalErrors: functionalErrorsReducer as any,
+      ui: uiReducer,
     }, {
       metaReducers,
       runtimeChecks: {

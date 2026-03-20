@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {NotFoundComponent} from './shared/components/not-found/not-found.component';
 import {AppComponent} from './app.component';
 import {WelcomeComponent} from './features/welcome/welcome.component';
+import {AdminGuard} from './core/guards/admin.guard';
 
 export const routes: Routes = [
   {
@@ -60,6 +61,11 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('@app/auth/auth.module').then(m => m.AuthModule),
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AdminGuard],
   },
   {
     path: '**',

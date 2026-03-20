@@ -10,7 +10,7 @@ import * as functions from 'firebase-functions/v1';
 //   BREVO_TEMPLATE_WELCOME : ID template bienvenue  (défaut: 2)
 // ---------------------------------------------------------------------------
 
-async function sendBrevoTemplate(params: {
+export async function sendBrevoTemplate(params: {
   to: { email: string; name?: string };
   templateId: number;
   templateParams: Record<string, unknown>;
@@ -97,18 +97,20 @@ export const genericBrevoEmail = functions.https.onCall(async (data, context) =>
   const items       = Array.isArray(data?.items) ? data.items : [];
   const to          = typeof data?.email       === 'string' ? data.email       : callerEmail;
 
-  const totalHT  = items.reduce((sum: number, item: any) =>
-    sum + (item.price ?? 0) * (item.basketInfos?.selectedQuantity ?? 1), 0);
-  const tva      = Math.round(totalHT * 0.10);
-  const totalTTC = totalHT + tva;
+  const currency       = typeof data?.currency       === 'string'  ? data.currency       : 'EUR';
+  const currencySymbol = typeof data?.currencySymbol === 'string'  ? data.currencySymbol : '€';
+  const hasTva         = data?.hasTva === true;
+  const totalHT        = typeof data?.totalHT === 'number' ? data.totalHT : 0;
+  const tva            = typeof data?.tva      === 'number' ? data.tva     : 0;
+  const totalTTC       = typeof data?.totalTTC === 'number' ? data.totalTTC : 0;
 
-  console.log('[Brevo] genericBrevoEmail →', { to, subject, itemsCount: items.length, totalTTC });
+  console.log('[Brevo] genericBrevoEmail →', { to, subject, itemsCount: items.length, currency, totalTTC });
 
   try {
     await sendBrevoTemplate({
       to: { email: to, name: displayName },
       templateId,
-      templateParams: { displayName, items, subject, totalHT, tva, totalTTC },
+      templateParams: { displayName, items, subject, currency, currencySymbol, hasTva, totalHT, tva, totalTTC },
       subject,
       bcc: true,
     });

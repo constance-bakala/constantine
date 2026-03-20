@@ -26,6 +26,7 @@
                     [class.gallery-thumb--active]="i === selectedImageIndex"
                     [src]="img"
                     [alt]="'Vue ' + (i + 1)"
+                    loading="lazy"
                     (click)="selectImage(i)">
                 }
               </div>

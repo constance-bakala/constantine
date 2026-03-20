@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { ITEMS_PRICES, ItemsPrices } from '@helpers/items-prices.const';
-import { ItemsCategoriesEnum } from '@shared/interfaces';
-
-export type Currency = 'EUR' | 'XAF';
+import { Currency, ItemsCategoriesEnum } from '@shared/interfaces';
+import { ActionSetCurrency } from '@app/core/store/ui.actions';
+import { selectCurrency } from '@app/core/store/ui.selectors';
 
 /**
  * PricingService
@@ -17,48 +18,47 @@ export type Currency = 'EUR' | 'XAF';
  *  - EUR (€)  : langue 'fr' ou 'en'
  *  - XAF (FCFA) : langue 'fr' uniquement, taux fixe 1 EUR = 655.957 FCFA, TVA = 0%
  *
- * Pour externaliser les prix vers une API :
- *  → Injecter HttpClient, charger les prix dans loadFromApi(),
- *    remplacer this.prices par la réponse HTTP.
- *  → L'interface publique (getPrice, format) reste identique.
+ * Source de vérité : NgRx store (clé `ui.currency`), persisté dans localStorage.
  */
 @Injectable({ providedIn: 'root' })
 export class PricingService {
 
-  constructor(private translate: TranslateService) {
+  /** Observable de la devise active — source : NgRx store. */
+  readonly currency$: Observable<Currency>;
+
+  /** Snapshot synchrone utilisé dans format() et tvaRate. */
+  private _currency: Currency = 'XAF';
+
+  private readonly prices: ItemsPrices = ITEMS_PRICES;
+  private readonly EUR_TO_XAF = 655.96;
+  private readonly RATES: Record<string, number> = { fr: 1, en: 1.08 };
+  private readonly SYMBOLS: Record<string, string> = { fr: '€', en: '$' };
+
+  constructor(private translate: TranslateService, private store: Store<any>) {
+    this.currency$ = this.store.select(selectCurrency);
+
+    // Maintient le snapshot synchrone à jour
+    this.currency$.subscribe(c => { this._currency = c; });
+
+    // Passage en anglais : toujours EUR, on efface le choix sauvegardé
     this.translate.onLangChange.subscribe(({ lang }) => {
-      this.currency$.next(lang === 'fr' ? 'XAF' : 'EUR');
+      if (lang !== 'fr') {
+        localStorage.removeItem('currency');
+        this.setCurrency('EUR');
+      }
+      // Passage en français : on conserve le choix de l'utilisateur
     });
   }
 
-  private readonly prices: ItemsPrices = ITEMS_PRICES;
-
-  private readonly EUR_TO_XAF = 655.96;
-
-  private readonly RATES: Record<string, number> = {
-    fr: 1,
-    en: 1.08,
-  };
-
-  private readonly SYMBOLS: Record<string, string> = {
-    fr: '€',
-    en: '$',
-  };
-
-  private initialCurrency(): Currency {
-    const lang = this.translate.currentLang ?? localStorage.getItem('lang') ?? 'fr';
-    return lang === 'fr' ? 'XAF' : 'EUR';
-  }
-
-  readonly currency$ = new BehaviorSubject<Currency>(this.initialCurrency());
-
-  get currency(): Currency { return this.currency$.value; }
+  get currency(): Currency { return this._currency; }
 
   /** TVA applicable : 0% en FCFA, 10% en EUR. */
-  get tvaRate(): number { return this.currency === 'XAF' ? 0 : 0.10; }
+  get tvaRate(): number { return this._currency === 'XAF' ? 0 : 0.10; }
 
+  /** Change la devise : persiste en localStorage et dispatche une action NgRx. */
   setCurrency(currency: Currency): void {
-    this.currency$.next(currency);
+    localStorage.setItem('currency', currency);
+    this.store.dispatch(new ActionSetCurrency({ currency }));
   }
 
   /** Retourne le prix en EUR pour un item donné (0 si non trouvé). */
@@ -69,8 +69,8 @@ export class PricingService {
 
   /** Formate un prix en EUR selon la langue et la devise actives. */
   format(priceEur: number): string {
-    if (this.currency === 'XAF') {
-      const value = Math.round(priceEur * this.EUR_TO_XAF);
+    if (this._currency === 'XAF') {
+      const value = Math.round(priceEur * this.EUR_TO_XAF / 100) * 100;
       return `${value.toLocaleString('fr-FR')} FCFA`;
     }
 

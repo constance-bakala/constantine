@@ -8,3 +8,4 @@ if (!admin.apps.length) {
 }
 
 export { welcomeBrevoEmail, genericBrevoEmail } from './brevoMails';
+export { updateOrderStatus } from './orderStatus';

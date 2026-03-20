@@ -1,0 +1,155 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
+  <!--[if !mso]--><!-- -->
+  <link href='https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,600,700' rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel="stylesheet">
+  <!--<![endif]-->
+  <title>Votre commande est prête !</title>
+
+  <style type="text/css">
+    body {
+      width: 100%;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    p, h1, h2, h3, h4 {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    html { width: 100%; }
+    table { font-size: 14px; border: 0; }
+
+    @media only screen and (max-width: 640px) {
+      .main-header { font-size: 20px !important; }
+      .main-section-header { font-size: 28px !important; }
+      body { margin: 0; padding: 0; }
+      table[class="container"] { width: 100% !important; }
+    }
+  </style>
+</head>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<!-- Préheader invisible -->
+<span style="display:none;font-size:1px;">Votre commande est prête – vous pouvez maintenant procéder au paiement.</span>
+
+<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" style="background-color:#f4f4f4;">
+  <tr>
+    <td align="center" valign="top">
+
+      <!-- Container -->
+      <table cellpadding="0" cellspacing="0" border="0" width="600" class="container" style="background-color:#ffffff; max-width:600px;">
+
+        <!-- En-tête marque -->
+        <tr>
+          <td align="center" style="padding:30px 0 20px; background-color:#2c3e50;">
+            <p style="font-family:'Quicksand',sans-serif; font-size:28px; font-weight:700; color:#ffffff; letter-spacing:2px; margin:0;">
+              Délice Éternel
+            </p>
+            <p style="font-family:'Work Sans',sans-serif; font-size:12px; color:#bdc3c7; margin:6px 0 0; letter-spacing:1px;">
+              MODE AFRICAINE · LIBREVILLE GABON
+            </p>
+          </td>
+        </tr>
+
+        <!-- Bannière statut -->
+        <tr>
+          <td align="center" style="padding:30px 40px 20px;">
+            <p style="font-family:'Work Sans',sans-serif; font-size:13px; color:#7f8c8d; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px;">
+              Bonne nouvelle !
+            </p>
+            <h1 class="main-header" style="font-family:'Quicksand',sans-serif; font-size:26px; font-weight:700; color:#148f77; margin:0 0 16px;">
+              Votre commande est prête
+            </h1>
+            <p style="font-family:'Work Sans',sans-serif; font-size:15px; color:#2c3e50; line-height:1.6; margin:0;">
+              Bonjour {{ params.customerName }},<br/>
+              Nous avons le plaisir de vous informer que votre commande a été préparée
+              et est disponible. Vous pouvez maintenant procéder au paiement.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Récapitulatif articles -->
+        {% if params.items and params.items|length > 0 %}
+        <tr>
+          <td style="padding:10px 40px 20px;">
+            <p style="font-family:'Work Sans',sans-serif; font-size:13px; color:#7f8c8d; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px;">
+              Articles commandés
+            </p>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                   style="border:1px solid #ecf0f1; border-radius:4px;">
+              {% for item in params.items %}
+              <tr style="border-bottom:1px solid #ecf0f1;">
+                <td style="padding:12px; font-family:'Work Sans',sans-serif; color:#2c3e50;">
+                  {{ item.title }}
+                  {% if item.basketInfos.selectedSize %}
+                    <span style="color:#7f8c8d;"> — Taille : {{ item.basketInfos.selectedSize }}</span>
+                  {% endif %}
+                  {% if item.basketInfos.selectedModel %}
+                    <span style="color:#7f8c8d;"> — Modèle : {{ item.basketInfos.selectedModel }}</span>
+                  {% endif %}
+                  <br/>
+                  <span style="color:#7f8c8d; font-size:13px;">Qté : {{ item.basketInfos.selectedQuantity }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+          </td>
+        </tr>
+        {% endif %}
+
+        <!-- Bouton paiement -->
+        <tr>
+          <td align="center" style="padding:20px 40px 30px;">
+            <a href="{{ params.paymentLink }}"
+               style="display:inline-block; background-color:#148f77; color:#ffffff;
+                      font-family:'Quicksand',sans-serif; font-size:16px; font-weight:700;
+                      text-decoration:none; padding:14px 36px; border-radius:4px; letter-spacing:1px;">
+              Procéder au paiement
+            </a>
+            <p style="font-family:'Work Sans',sans-serif; font-size:12px; color:#7f8c8d; margin-top:12px;">
+              Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :<br/>
+              <a href="{{ params.paymentLink }}" style="color:#148f77; word-break:break-all;">{{ params.paymentLink }}</a>
+            </p>
+          </td>
+        </tr>
+
+        <!-- Message d'aide -->
+        <tr>
+          <td style="padding:0 40px 30px;">
+            <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                   style="background-color:#f8f9fa; border-left:3px solid #148f77; padding:16px;">
+              <tr>
+                <td style="padding:16px; font-family:'Work Sans',sans-serif; color:#2c3e50; font-size:14px; line-height:1.6;">
+                  Une question ? Répondez directement à cet email ou contactez-nous sur nos réseaux sociaux.
+                  Nous sommes là pour vous accompagner.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Pied de page -->
+        <tr>
+          <td align="center" style="padding:20px; background-color:#2c3e50;">
+            <p style="font-family:'Work Sans',sans-serif; font-size:12px; color:#bdc3c7; margin:0;">
+              © 2024 Délice Éternel · Libreville, Gabon<br/>
+              <a href="https://delice-eternel-gabon.web.app" style="color:#bdc3c7;">delice-eternel-gabon.web.app</a>
+            </p>
+          </td>
+        </tr>
+
+      </table>
+      <!-- /Container -->
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

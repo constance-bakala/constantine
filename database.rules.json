@@ -1,11 +1,23 @@
 {
   "rules": {
-    ".read": true,
+    ".read": false,
     ".write": false,
     "users": {
+      ".read": true,
       "$uid": {
         ".write": "auth.uid === $uid"
       }
+    },
+    "orders": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$orderId": {
+        ".write": "auth != null",
+        ".read": "auth != null && root.child('admins').child(auth.uid).exists()"
+      }
+    },
+    "admins": {
+      ".read": "auth != null",
+      ".write": false
     }
   }
 }
