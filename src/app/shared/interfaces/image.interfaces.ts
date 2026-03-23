@@ -1,7 +1,8 @@
 export class Category {
   name!: ItemsCategoriesEnum;
   title!: string;
-  summary!: string;
+  summary!: string;     // FR
+  summaryEn?: string;   // EN
   items!: ItemInfos[]
 }
 export class CategoryInfos {

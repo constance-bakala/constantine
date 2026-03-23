@@ -1,0 +1,374 @@
+<!-- ═══ VUE LISTE DES CATÉGORIES ═══════════════════════════════════════════ -->
+<ng-container *ngIf="!selectedCategory">
+
+  <div class="catalog-toolbar">
+    <button class="btn-catalog-new" (click)="openCreateForm()">+ Nouvelle catégorie</button>
+  </div>
+
+  <!-- Formulaire de création -->
+  <div *ngIf="showCreateForm" class="create-form-card">
+    <h3 class="form-title">Créer une catégorie</h3>
+
+    <div class="form-field">
+      <label class="form-label">Préfixe <span class="required">*</span>
+        <span class="hint"> — segment d'URI&nbsp;: lettres minuscules, chiffres, tirets (ex&nbsp;: bijoux, sac-femme)</span>
+      </label>
+      <input type="text" [(ngModel)]="newPrefix" class="form-input"
+             placeholder="ex : bijoux"
+             pattern="[a-z0-9]([a-z0-9-]*[a-z0-9])?"
+             autocomplete="off"
+             (input)="onPrefixInput($event)" />
+    </div>
+    <div class="form-field">
+      <label class="form-label">Titre <span class="required">*</span></label>
+      <input type="text" [(ngModel)]="newTitle" class="form-input"
+             placeholder="ex : Masques africains" />
+    </div>
+    <div class="form-field">
+      <label class="form-label">Description <span class="optional">(optionnel)</span></label>
+      <div class="lang-tabs">
+        <button type="button" class="lang-tab" [class.active]="descLang === 'fr'" (click)="descLang = 'fr'">🇫🇷 FR</button>
+        <button type="button" class="lang-tab" [class.active]="descLang === 'en'" (click)="descLang = 'en'">🇬🇧 EN</button>
+      </div>
+      <quill-editor [hidden]="descLang !== 'fr'"
+                    [ngModel]="newDescription"
+                    (onContentChanged)="onNewDescChanged('fr', $event)"
+                    [modules]="quillModules"
+                    format="html"
+                    placeholder="Description en français…"
+                    class="quill-desc">
+      </quill-editor>
+      <quill-editor [hidden]="descLang !== 'en'"
+                    [ngModel]="newDescriptionEn"
+                    (onContentChanged)="onNewDescChanged('en', $event)"
+                    [modules]="quillModules"
+                    format="html"
+                    placeholder="Description in English…"
+                    class="quill-desc">
+      </quill-editor>
+    </div>
+
+    <p *ngIf="createError" class="form-error">{{ createError }}</p>
+
+    <div class="form-actions">
+      <button class="btn-save" [disabled]="creating" (click)="submitCreateCategory()">
+        {{ creating ? '…' : 'Créer' }}
+      </button>
+      <button class="btn-cancel" (click)="cancelCreate()">Annuler</button>
+    </div>
+  </div>
+
+  <!-- Liste des catégories -->
+  <div *ngIf="categories.length === 0 && !showCreateForm" class="empty-state">
+    Aucune catégorie. Créez-en une pour commencer.
+  </div>
+
+  <div class="category-list">
+    <div *ngFor="let cat of categories; trackBy: trackByPrefix" class="category-card">
+      <div class="category-card-header">
+        <div class="category-meta">
+          <span class="category-title">{{ cat.title }}</span>
+          <span class="category-prefix">{{ cat.prefix }}</span>
+        </div>
+        <div class="category-actions">
+          <button class="btn-publish"
+                  [class.published]="cat.published"
+                  (click)="toggleCategoryPublished(cat)">
+            {{ cat.published ? '✓ Publié' : 'Publier' }}
+          </button>
+          <button class="btn-view" (click)="selectCategory(cat)">Gérer →</button>
+          <button class="btn-delete-cat" (click)="deleteCategory(cat)">✕</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+
+<!-- ═══ VUE DÉTAIL D'UNE CATÉGORIE ════════════════════════════════════════ -->
+<ng-container *ngIf="selectedCategory">
+
+  <div class="detail-header">
+    <button class="btn-back" (click)="backToList()">← Retour</button>
+    <div class="detail-title-block">
+      <h2 class="detail-title">{{ selectedCategory.title }}</h2>
+      <span class="detail-prefix">{{ selectedCategory.prefix }}</span>
+    </div>
+    <button class="btn-publish"
+            [class.published]="selectedCategory.published"
+            (click)="toggleCategoryPublished(selectedCategory)">
+      {{ selectedCategory.published ? '✓ Publié' : 'Publier' }}
+    </button>
+  </div>
+
+  <!-- ── Description ────────────────────────────────────────────────────── -->
+  <section class="desc-section">
+    <div class="desc-header">
+      <h3 class="section-title">Description</h3>
+      <button *ngIf="!editingDesc" class="btn-field-edit" (click)="openEditDesc(selectedCategory)">✎ Modifier</button>
+    </div>
+
+    <ng-container *ngIf="!editingDesc">
+      <p *ngIf="selectedCategory.description" class="desc-preview" [innerHTML]="selectedCategory.description"></p>
+      <p *ngIf="!selectedCategory.description" class="desc-empty">Aucune description FR.</p>
+      <p *ngIf="selectedCategory.descriptionEn" class="desc-preview desc-en" [innerHTML]="selectedCategory.descriptionEn"></p>
+      <p *ngIf="!selectedCategory.descriptionEn" class="desc-empty">Aucune description EN.</p>
+    </ng-container>
+
+    <ng-container *ngIf="editingDesc">
+      <div class="lang-tabs">
+        <button type="button" class="lang-tab" [class.active]="editDescLang === 'fr'" (click)="editDescLang = 'fr'">🇫🇷 FR</button>
+        <button type="button" class="lang-tab" [class.active]="editDescLang === 'en'" (click)="editDescLang = 'en'">🇬🇧 EN</button>
+      </div>
+
+      <div class="desc-edit-layout">
+        <div class="desc-edit-editor">
+          <quill-editor [hidden]="editDescLang !== 'fr'"
+                        [ngModel]="editDescFr"
+                        (onContentChanged)="onDescChanged('fr', $event)"
+                        [modules]="quillModules"
+                        format="html"
+                        placeholder="Description en français…"
+                        class="quill-desc">
+          </quill-editor>
+          <quill-editor [hidden]="editDescLang !== 'en'"
+                        [ngModel]="editDescEn"
+                        (onContentChanged)="onDescChanged('en', $event)"
+                        [modules]="quillModules"
+                        format="html"
+                        placeholder="Description in English…"
+                        class="quill-desc">
+          </quill-editor>
+        </div>
+
+        <div class="desc-edit-preview">
+          <p class="desc-preview-label">Aperçu</p>
+          <div class="desc-preview-content"
+               [innerHTML]="editDescLang === 'fr' ? editDescFr : editDescEn">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions" style="margin-top:8px">
+        <button class="btn-save" [disabled]="savingDesc" (click)="saveDesc()">
+          {{ savingDesc ? '…' : 'Enregistrer' }}
+        </button>
+        <button class="btn-cancel" (click)="cancelEditDesc()">Annuler</button>
+      </div>
+    </ng-container>
+  </section>
+
+  <!-- ── Zone d'import ──────────────────────────────────────────────────── -->
+  <section class="import-section">
+    <h3 class="section-title">Importer des articles</h3>
+
+    <div class="drop-zone"
+         [class.drag-over]="dragOver"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave()"
+         (drop)="onDrop($event)"
+         (click)="filePicker.click()">
+      <input #filePicker type="file" multiple accept="image/*"
+             style="display:none" (change)="onFilePick($event)" />
+      <span class="drop-icon">🖼</span>
+      <span class="drop-text">Glissez des images ici ou cliquez pour sélectionner</span>
+      <span class="drop-hint">PNG, JPEG, WebP — regroupement automatique par nom</span>
+    </div>
+
+    <!-- Barre d'outils regroupement -->
+    <div *ngIf="importGroups.length > 0" class="group-toolbar">
+      <button class="btn-selection-mode"
+              [class.active]="selectionMode"
+              (click)="toggleSelectionMode()">
+        {{ selectionMode ? '✕ Annuler la sélection' : '⊞ Mode regroupement' }}
+      </button>
+      <button *ngIf="selectionMode && selectedCount > 0"
+              class="btn-merge"
+              (click)="prepareMerge()">
+        Regrouper {{ selectedCount }} image{{ selectedCount > 1 ? 's' : '' }}
+      </button>
+      <span *ngIf="selectionMode && selectedCount === 0" class="selection-hint">
+        Cliquez sur les images à regrouper
+      </span>
+    </div>
+
+    <!-- Panneau choix de couverture -->
+    <div *ngIf="pendingMerge" class="merge-cover-panel">
+      <p class="merge-cover-title">Choisissez la photo de couverture</p>
+      <div class="merge-cover-images">
+        <div *ngFor="let preview of pendingMerge.previews; let i = index"
+             class="merge-cover-img-wrap"
+             [class.is-cover]="pendingMerge.coverIndex === i"
+             (click)="pendingMerge.coverIndex = i">
+          <img [src]="preview" class="merge-cover-thumb" />
+          <span *ngIf="pendingMerge.coverIndex === i" class="cover-badge">Cover</span>
+        </div>
+      </div>
+      <div class="merge-cover-actions">
+        <button class="btn-save" (click)="confirmMerge()">Confirmer le regroupement</button>
+        <button class="btn-cancel" (click)="pendingMerge = null">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Groupes d'import -->
+    <div *ngIf="importGroups.length > 0" class="import-groups">
+      <div *ngFor="let group of importGroups; let gi = index; trackBy: trackByIndex"
+           class="import-group-card"
+           [class.has-selection]="selectionMode">
+
+        <div class="group-header">
+          <span class="group-key">{{ group.key }}</span>
+          <button class="btn-remove-group" (click)="removeGroup(gi)">✕</button>
+        </div>
+
+        <div class="group-images">
+          <div *ngFor="let preview of group.previews; let fi = index; trackBy: trackByIndex"
+               class="group-img-wrap"
+               [class.is-cover]="group.coverIndex === fi && !selectionMode"
+               [class.is-selected]="isImageSelected(gi, fi)"
+               (click)="selectionMode ? toggleImageSelection(gi, fi, $event) : setCover(gi, fi)">
+            <img [src]="preview" class="group-thumb" />
+            <span *ngIf="group.coverIndex === fi && !selectionMode" class="cover-badge">Cover</span>
+            <span *ngIf="selectionMode" class="select-checkbox">
+              <span class="checkbox-inner" [class.checked]="isImageSelected(gi, fi)">
+                {{ isImageSelected(gi, fi) ? '✓' : '' }}
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="group-fields">
+          <div class="group-field">
+            <label class="group-label">Prix (FCFA)</label>
+            <input type="number" min="0" [(ngModel)]="group.priceXAF"
+                   class="group-input" />
+          </div>
+          <div class="group-field">
+            <label class="group-label">Stock</label>
+            <input type="number" min="0" [(ngModel)]="group.stock"
+                   class="group-input group-input-sm" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p *ngIf="importError" class="import-error">{{ importError }}</p>
+
+    <button *ngIf="importGroups.length > 0"
+            class="btn-import"
+            [disabled]="importing"
+            (click)="importAll()">
+      {{ importing ? 'Import en cours…' : 'Importer ' + importGroups.length + ' article(s)' }}
+    </button>
+  </section>
+
+  <!-- ── Liste des articles ─────────────────────────────────────────────── -->
+  <section class="items-section">
+    <h3 class="section-title">
+      Articles
+      <span class="items-count">({{ categoryItems.length }})</span>
+    </h3>
+
+    <div *ngIf="categoryItems.length === 0" class="empty-state">
+      Aucun article. Importez des images ci-dessus.
+    </div>
+
+    <table *ngIf="categoryItems.length > 0" class="items-table">
+      <thead>
+        <tr>
+          <th style="width:56px"></th>
+          <th>Référence</th>
+          <th class="text-center">Stock</th>
+          <th class="text-center">Prix (FCFA)</th>
+          <th class="text-center">Statut</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of pagedItems; trackBy: trackById"
+            [class.unpublished-row]="!item.published">
+
+          <td class="img-cell">
+            <img [src]="item.coverUrl" [alt]="item.reference"
+                 class="item-thumb" (click)="openLightbox(item.coverUrl)" />
+          </td>
+
+          <td class="ref-cell">{{ item.reference }}</td>
+
+          <!-- Stock -->
+          <td class="text-center">
+            <ng-container *ngIf="editing?.itemId !== item.id || editing?.field !== 'stock'">
+              <span class="field-value"
+                    [class.stock-zero]="(stockByRef[item.reference] ?? item.stock) === 0">
+                {{ stockByRef[item.reference] ?? item.stock }}
+              </span>
+              <button class="btn-field-edit" (click)="startEdit(item, 'stock')">✎</button>
+            </ng-container>
+            <ng-container *ngIf="editing?.itemId === item.id && editing?.field === 'stock'">
+              <input type="number" min="0" [(ngModel)]="editing!.value"
+                     class="field-input"
+                     (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" />
+              <button class="btn-field-save" [disabled]="saving" (click)="saveEdit()">
+                {{ saving ? '…' : 'OK' }}
+              </button>
+              <button class="btn-field-cancel" (click)="cancelEdit()">✕</button>
+            </ng-container>
+          </td>
+
+          <!-- Prix -->
+          <td class="text-center">
+            <ng-container *ngIf="editing?.itemId !== item.id || editing?.field !== 'price'">
+              <span class="field-value">{{ formatPrice(item.priceXAF) }}</span>
+              <button class="btn-field-edit btn-price-edit" (click)="startEdit(item, 'price')">✎</button>
+            </ng-container>
+            <ng-container *ngIf="editing?.itemId === item.id && editing?.field === 'price'">
+              <input type="number" min="0" [(ngModel)]="editing!.value"
+                     class="field-input field-input-lg"
+                     (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" />
+              <button class="btn-field-save" [disabled]="saving" (click)="saveEdit()">
+                {{ saving ? '…' : 'OK' }}
+              </button>
+              <button class="btn-field-cancel" (click)="cancelEdit()">✕</button>
+            </ng-container>
+          </td>
+
+          <!-- Publié -->
+          <td class="text-center">
+            <button class="btn-publish-item"
+                    [class.published]="item.published"
+                    (click)="toggleItemPublished(item)">
+              {{ item.published ? '✓ Publié' : 'Brouillon' }}
+            </button>
+          </td>
+
+          <!-- Supprimer -->
+          <td class="actions-cell">
+            <button class="btn-delete-item" (click)="deleteItem(item)">✕</button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav *ngIf="totalPages > 1" class="pagination-bar">
+      <button class="page-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">‹</button>
+      <button *ngFor="let p of pages"
+              class="page-btn"
+              [class.active]="p === currentPage"
+              (click)="goToPage(p)">{{ p }}</button>
+      <button class="page-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">›</button>
+      <span class="page-info">{{ (currentPage - 1) * pageSize + 1 }}–{{ min(currentPage * pageSize, categoryItems.length) }} / {{ categoryItems.length }}</span>
+    </nav>
+
+  </section>
+
+</ng-container>
+
+
+<!-- Lightbox -->
+<div *ngIf="lightboxSrc" class="lightbox-overlay" (click)="closeLightbox()">
+  <img [src]="lightboxSrc" class="lightbox-img" (click)="$event.stopPropagation()" />
+  <button class="lightbox-close" (click)="closeLightbox()">✕</button>
+</div>

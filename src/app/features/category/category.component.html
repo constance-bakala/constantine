@@ -1,0 +1,15 @@
+<ng-container *ngIf="category$ | async as category; else notFound">
+  <app-portfolio-list
+    [category]="category"
+    [categoryInfos]="(categoryInfos$ | async)!"
+    (onToogleSelect)="onToogleSelect($event)"
+    (updateBasketItem)="updateBasketItem($event)"
+    (navigateAway)="gotoTarget($event)">
+  </app-portfolio-list>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="container mt-5 text-center">
+    <p>Catégorie introuvable.</p>
+  </div>
+</ng-template>

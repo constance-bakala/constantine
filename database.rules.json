@@ -5,7 +5,7 @@
     "users": {
       ".read": true,
       "$uid": {
-        ".write": "auth.uid === $uid"
+        ".write": "auth.uid === $uid || (auth != null && root.child('admins').child(auth.uid).exists())"
       }
     },
     "orders": {
@@ -18,6 +18,37 @@
     "admins": {
       ".read": "auth != null",
       ".write": false
+    },
+    "stock": {
+      ".read": "auth != null",
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "prices": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "config": {
+      "carousel":  { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
+      "appTitle":  { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
+      "i18n": {
+        ".read": true,
+        "$lang": { ".write": "auth != null && root.child('admins').child(auth.uid).exists()" }
+      }
+    },
+    "catalog": {
+      "categories": {
+        ".read": true,
+        "$categoryId": {
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+        }
+      },
+      "items": {
+        ".read": true,
+        ".indexOn": ["categoryId"],
+        "$itemId": {
+          ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+        }
+      }
     }
   }
 }

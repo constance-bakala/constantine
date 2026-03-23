@@ -1,49 +1,15 @@
-import { ILoginSuccess, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum } from '@shared/interfaces';
+import { ILoginSuccess } from '@shared/interfaces';
 import { DEFAULT_LOCALE_ID } from "@helpers/constants";
-import { ItemGroupDef } from '@helpers/items-groups.const';
-import { CategoryPrices } from '@helpers/items-prices.const';
-
-export function getAssetGroups(
-  groups: ItemGroupDef[],
-  directoryName: string,
-  refPrefix: string,
-  category: ItemsCategoriesEnum,
-  prices: CategoryPrices = {},
-  coverFile: string = 'cover.png'
-): ItemInfos[] {
-  return groups.map((group, index) => {
-    const groupDir  = `assets/${directoryName}/${refPrefix}-${group.id}`;
-    const coverPath = `${groupDir}/${coverFile}`;
-    const extraPaths = (group.extraImages ?? []).map(img => `${groupDir}/${img}`);
-    const images = [coverPath, ...extraPaths];
-    const basketInfos = {
-      selectedQuantity: 1,
-      selectedSize: ItemSizeEnum.M,
-      selectedModel: 'MODEL_UNIQUE',
-    };
-    return new ItemInfos(
-      coverPath,
-      false,
-      `${refPrefix.toUpperCase()}-${group.id}`,
-      index + 1,
-      category,
-      false,
-      basketInfos,
-      images,
-      prices[group.id] ?? 0
-    );
-  });
-}
 
 export function initLoginPayload(result: any): ILoginSuccess {
-  const user = result?.user ?? result; // parfois on passe direct "user"
+  const user = result?.user ?? result;
   const profile = result?.additionalUserInfo?.profile ?? {};
 
   const uid =
     user?.uid ??
     result?.uid ??
     profile?.id ??
-    profile?.sub; // parfois OpenID
+    profile?.sub;
 
   const email =
     user?.email ??
@@ -83,7 +49,6 @@ export function initLoginPayload(result: any): ILoginSuccess {
     },
   };
 }
-
 
 export enum AlertTypeEnum {
   WARNING = 'warning',

@@ -28,6 +28,7 @@ export function itemsReducer(state: ItemsState = intialState,
                              action: any): ItemsState {
   switch (action.type) {
     case AuthActionTypes.LOGOUT:
+    case ItemsActionTypes.CLEAR_BASKET:
       return {
         ...state,
         earings: { ...state.earings, items: state.earings.items.map(i => ({ ...i, selected: false })) },
@@ -41,6 +42,7 @@ export function itemsReducer(state: ItemsState = intialState,
     case ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS:
       return updateItemState(state, action.payload, false);
     case ItemsActionTypes.UPDATE_BASKET_ITEM:
+    case ItemsActionTypes.RESTORE_BASKET_ITEM:
       return updateItemBasketInfos(state, action.payload);
     default:
       return state;

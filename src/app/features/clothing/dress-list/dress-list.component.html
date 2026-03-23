@@ -1,7 +1,0 @@
-<ng-container *ngIf="(dresses$ | async) as category">
-  <ng-container *ngIf="(categoryInfos$ | async) as categoryInfos">
-    <app-portfolio-list [category]="category" [categoryInfos]="categoryInfos" (onToogleSelect)="onToogleSelect($event)"
-      (updateBasketItem)="updateBasketItem($event)" (navigateAway)="navigateToCategory($event)">
-    </app-portfolio-list>
-  </ng-container>
-</ng-container>

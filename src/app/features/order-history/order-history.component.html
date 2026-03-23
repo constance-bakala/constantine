@@ -1,0 +1,41 @@
+<div class="history-container">
+
+  <header class="history-header">
+    <h3>Mes commandes expédiées</h3>
+  </header>
+
+  <div *ngIf="loading" class="history-empty">Chargement…</div>
+
+  <div *ngIf="!loading && orders.length === 0" class="history-empty">
+    Aucune commande expédiée pour le moment.
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+
+    <div *ngFor="let order of orders" class="order-card">
+
+      <div class="order-header">
+        <span class="order-id">#{{ order.id | slice:0:8 }}</span>
+        <span class="order-date">{{ order.createdAt | date:'dd/MM/yyyy' }}</span>
+        <span class="shipped-badge">Expédiée</span>
+      </div>
+
+      <table class="items-table">
+        <tr *ngFor="let item of order.items">
+          <td class="item-title">{{ item.title }}</td>
+          <td *ngIf="item.reference" class="item-ref">{{ item.reference }}</td>
+          <td class="item-qty">× {{ item.basketInfos?.selectedQuantity ?? 1 }}</td>
+          <td class="item-price">{{ pricing.format((item.price ?? 0) * (item.basketInfos?.selectedQuantity ?? 1)) }}</td>
+        </tr>
+      </table>
+
+      <div class="order-total">
+        <span>Total :</span>
+        <strong>{{ orderTotal(order) }}</strong>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

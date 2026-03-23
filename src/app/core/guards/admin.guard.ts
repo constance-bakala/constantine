@@ -1,44 +1,47 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Auth } from '@angular/fire/auth';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/database';
-import { Go } from '@app/auth/store';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { Auth, authState } from '@angular/fire/auth';
+import { Database, ref, get } from '@angular/fire/database';
+import { firstValueFrom } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 /**
  * Guard qui vérifie que l'utilisateur connecté est présent dans admins/{uid}.
- * authStateReady() attend que Firebase ait chargé l'état d'auth avant de décider.
+ * Utilise le SDK Firebase modular (même instance que le reste de l'app).
  */
 @Injectable({ providedIn: 'root' })
 export class AdminGuard {
+
   constructor(
-    private authService: Auth,
-    private store: Store<any>,
+    private router: Router,
+    private auth: Auth,
+    private db: Database,
   ) {}
 
   async canActivate(
     _next: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot,
   ): Promise<boolean> {
-    // Attend que Firebase ait terminé de charger l'état d'auth (IndexedDB)
-    await this.authService.authStateReady();
+    const user = await firstValueFrom(
+      authState(this.auth).pipe(
+        filter(u => u !== undefined),
+        take(1),
+      )
+    );
 
-    const u = this.authService.currentUser;
-
-    if (!u) {
-      this.store.dispatch(new Go({ path: ['/auth/signin'] }));
+    if (!user) {
+      this.router.navigateByUrl('/auth/signin');
       return false;
     }
 
     try {
-      const snap = await firebase.database().ref(`admins/${u.uid}`).once('value');
+      const snap = await get(ref(this.db, `admins/${user.uid}`));
       if (snap.exists()) return true;
-      this.store.dispatch(new Go({ path: ['/home'] }));
+      this.router.navigateByUrl('/home');
       return false;
     } catch (e) {
       console.error('[AdminGuard] Erreur lecture DB:', e);
-      this.store.dispatch(new Go({ path: ['/home'] }));
+      this.router.navigateByUrl('/home');
       return false;
     }
   }

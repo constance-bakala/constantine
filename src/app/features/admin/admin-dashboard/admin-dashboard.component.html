@@ -1,75 +1,289 @@
 <div class="admin-container">
 
   <header class="admin-header">
-    <h1>Tableau de bord — Commandes</h1>
+    <h1>Tableau de bord</h1>
+    <div class="admin-tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Commandes</button>
+      <button class="tab-btn" [class.active]="activeTab === 'catalog'" (click)="activeTab = 'catalog'">Catalogue</button>
+      <button class="tab-btn" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Paramètres</button>
+    </div>
   </header>
 
-  <div *ngIf="error" class="error-banner">
-    {{ error }}
+  <!-- ===== ONGLET CATALOGUE ===== -->
+  <div *ngIf="activeTab === 'catalog'" class="catalog-tab-section">
+    <app-admin-catalog></app-admin-catalog>
   </div>
 
-  <div *ngIf="loading" class="loading">
-    Chargement des commandes…
+  <!-- ===== ONGLET PARAMÈTRES ===== -->
+  <div *ngIf="activeTab === 'settings'" class="catalog-tab-section">
+    <app-admin-settings></app-admin-settings>
   </div>
 
-  <div *ngIf="!loading && orders.length === 0" class="empty">
-    Aucune commande pour le moment.
-  </div>
+  <!-- ===== ONGLET COMMANDES ===== -->
+  <ng-container *ngIf="activeTab === 'orders'">
 
-  <div *ngIf="!loading && orders.length > 0" class="orders-list">
+    <div *ngIf="error" class="error-banner">{{ error }}</div>
+    <div *ngIf="loading" class="loading">Chargement des commandes…</div>
+    <div *ngIf="!loading && orders.length === 0" class="empty">Aucune commande pour le moment.</div>
 
-    <div *ngFor="let order of orders; trackBy: trackById" class="order-card">
+    <!-- ── TABLEAU ── -->
+    <ng-container *ngIf="!loading && orders.length > 0 && !selectedOrder">
 
-      <div class="order-header">
-        <div class="order-meta">
-          <span class="order-id">Commande #{{ order.id | slice:0:8 }}</span>
-          <span class="order-date">{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
-        </div>
-        <span class="status-badge" [style.background-color]="statusColors[order.status]">
-          {{ statusLabels[order.status] }}
+      <!-- Barre de filtre -->
+      <div class="orders-filter-bar">
+        <input type="search" class="orders-filter-input"
+               [(ngModel)]="ordersFilter"
+               (ngModelChange)="onOrdersFilterChange()"
+               placeholder="Filtrer par réf., nom ou email…" />
+        <span class="orders-filter-count">
+          {{ filteredOrders.length }} commande{{ filteredOrders.length > 1 ? 's' : '' }}
         </span>
       </div>
 
-      <div class="customer-info">
-        <span class="label">Client :</span>
-        <span>{{ order.customerName || order.customerEmail }}</span>
-        <a [href]="'mailto:' + order.customerEmail" class="email-link">{{ order.customerEmail }}</a>
-      </div>
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Réf.</th>
+            <th>Client</th>
+            <th class="text-center">Articles</th>
+            <th class="text-right">Total</th>
+            <th>Livraison</th>
+            <th class="text-center">Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of pagedOrders; trackBy: trackById"
+              class="order-row"
+              (click)="selectOrder(order)">
+            <td class="col-date">{{ order.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+            <td class="col-ref">#{{ order.id | slice:0:8 }}</td>
+            <td class="col-customer">
+              <span class="customer-name">{{ order.customerName || '—' }}</span>
+              <span class="customer-email">{{ order.customerEmail }}</span>
+            </td>
+            <td class="text-center col-qty">{{ itemCount(order) }}</td>
+            <td class="text-right col-total">{{ orderTotalTTC(order) }}</td>
+            <td class="col-delivery">
+              <span *ngIf="order.deliveryMode" class="delivery-badge"
+                    [class.pickup]="order.deliveryMode === 'pickup'"
+                    [class.shipping]="order.deliveryMode === 'shipping'">
+                {{ order.deliveryMode === 'pickup' ? '🏪 Retrait' : '✈️ Expédition' }}
+              </span>
+              <span *ngIf="!order.deliveryMode">—</span>
+            </td>
+            <td class="text-center col-status">
+              <span class="status-badge" [style.background-color]="statusColors[order.status]">
+                {{ statusLabels[order.status] }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-      <div class="items-list">
-        <div *ngFor="let item of order.items" class="item-row">
-          <span class="item-title">{{ item.title }}</span>
-          <span *ngIf="item.basketInfos?.selectedSize" class="item-detail">
-            Taille : {{ item.basketInfos?.selectedSize }}
+      <!-- Pagination -->
+      <nav *ngIf="ordersTotalPages > 1" class="orders-pagination">
+        <button class="page-btn" [disabled]="ordersPage === 1" (click)="goToOrdersPage(ordersPage - 1)">‹</button>
+        <button *ngFor="let p of ordersPages" class="page-btn"
+                [class.active]="p === ordersPage"
+                (click)="goToOrdersPage(p)">{{ p }}</button>
+        <button class="page-btn" [disabled]="ordersPage === ordersTotalPages" (click)="goToOrdersPage(ordersPage + 1)">›</button>
+        <span class="page-info">
+          {{ (ordersPage - 1) * ordersPageSize + 1 }}–{{ minVal(ordersPage * ordersPageSize, filteredOrders.length) }} / {{ filteredOrders.length }}
+        </span>
+      </nav>
+
+    </ng-container>
+
+    <!-- ── DÉTAIL COMMANDE ── -->
+    <ng-container *ngIf="selectedOrder">
+      <div class="order-detail-header">
+        <button class="btn-back-orders" (click)="backToOrders()">← Retour aux commandes</button>
+        <div class="order-detail-meta">
+          <div class="order-detail-title">
+            <span class="order-id">Commande #{{ selectedOrder.id | slice:0:8 }}</span>
+            <span class="order-date">{{ selectedOrder.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <span class="status-badge" [style.background-color]="statusColors[selectedOrder.status]">
+            {{ statusLabels[selectedOrder.status] }}
           </span>
-          <span *ngIf="item.basketInfos?.selectedModel" class="item-detail">
-            Modèle : {{ item.basketInfos?.selectedModel }}
-          </span>
-          <span class="item-qty">Qté : {{ item.basketInfos?.selectedQuantity ?? 1 }}</span>
         </div>
       </div>
 
-      <div class="order-actions">
-        <button
-          *ngIf="order.status === 'pending'"
-          class="btn btn-ready"
-          [disabled]="updatingOrderId === order.id"
-          (click)="setStatus(order, 'ready')">
-          <span *ngIf="updatingOrderId === order.id">…</span>
-          <span *ngIf="updatingOrderId !== order.id">Marquer comme prête</span>
-        </button>
-        <button
-          *ngIf="order.status === 'ready'"
-          class="btn btn-paid"
-          [disabled]="updatingOrderId === order.id"
-          (click)="setStatus(order, 'paid')">
-          <span *ngIf="updatingOrderId === order.id">…</span>
-          <span *ngIf="updatingOrderId !== order.id">Marquer comme payée</span>
-        </button>
-        <span *ngIf="order.status === 'paid'" class="paid-label">✓ Payée</span>
+      <div class="order-card">
+
+        <div class="customer-info">
+          <span class="label">Client :</span>
+          <span>{{ selectedOrder.customerName || selectedOrder.customerEmail }}</span>
+          <a [href]="'mailto:' + selectedOrder.customerEmail" class="email-link">{{ selectedOrder.customerEmail }}</a>
+        </div>
+
+        <div class="delivery-info" *ngIf="selectedOrder.deliveryMode">
+          <span class="label">Livraison :</span>
+          <span class="delivery-badge"
+                [class.pickup]="selectedOrder.deliveryMode === 'pickup'"
+                [class.shipping]="selectedOrder.deliveryMode === 'shipping'">
+            {{ deliveryModeLabels[selectedOrder.deliveryMode] || selectedOrder.deliveryMode }}
+          </span>
+          <span *ngIf="selectedOrder.trackingUrl" class="tracking-link-wrap">
+            — <a [href]="selectedOrder.trackingUrl" target="_blank" rel="noopener" class="tracking-link">
+              {{ selectedOrder.carrierName || 'Suivi' }} →
+            </a>
+          </span>
+        </div>
+
+        <div class="shipping-address-block" *ngIf="selectedOrder.shippingAddress">
+          <span class="label">Adresse :</span>
+          <address class="shipping-address-detail">
+            <strong>{{ selectedOrder.shippingAddress.firstName }} {{ selectedOrder.shippingAddress.lastName }}</strong><br>
+            {{ selectedOrder.shippingAddress.address1 }}<br>
+            <span *ngIf="selectedOrder.shippingAddress.address2">{{ selectedOrder.shippingAddress.address2 }}<br></span>
+            {{ selectedOrder.shippingAddress.postalCode }} {{ selectedOrder.shippingAddress.city }}<br>
+            {{ selectedOrder.shippingAddress.country }}<br>
+            Tél : {{ selectedOrder.shippingAddress.phone }}
+          </address>
+        </div>
+
+        <div class="items-list">
+          <div *ngFor="let item of selectedOrder.items; let i = index" class="item-row-wrapper">
+            <div class="item-row" (click)="toggleItem(selectedOrder.id, i)">
+              <span class="item-toggle">{{ isExpanded(selectedOrder.id, i) ? '▾' : '▸' }}</span>
+              <img *ngIf="item.path || item.coverUrl" [src]="item.path || item.coverUrl" [alt]="item.reference || item.title || ''"
+                   class="item-thumb-inline"
+                   (click)="openLightbox((item.path || item.coverUrl)!); $event.stopPropagation()" />
+              <span class="item-title">{{ item.title || item.reference || '—' }}</span>
+              <span *ngIf="item.title && item.reference" class="item-ref">REF: {{ item.reference }}</span>
+              <span *ngIf="item.price" class="item-price">
+                {{ pricing.format((item.price) * (item.basketInfos?.selectedQuantity ?? 1)) }}
+              </span>
+            </div>
+            <div *ngIf="isExpanded(selectedOrder.id, i)" class="item-detail-panel">
+              <div class="item-detail-info">
+                <div *ngIf="item.basketInfos?.selectedSize"><span class="detail-label">Taille :</span> {{ item.basketInfos?.selectedSize }}</div>
+                <div *ngIf="item.basketInfos?.selectedModel"><span class="detail-label">Modèle :</span> {{ item.basketInfos?.selectedModel }}</div>
+                <div><span class="detail-label">Quantité :</span> {{ item.basketInfos?.selectedQuantity ?? 1 }}</div>
+                <div *ngIf="item.price"><span class="detail-label">Prix unitaire :</span> {{ pricing.format(item.price) }}</div>
+                <div *ngIf="item.price"><span class="detail-label">Sous-total :</span> {{ pricing.format((item.price || 0) * (item.basketInfos?.selectedQuantity ?? 1)) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-total">
+          <span class="total-label">Sous-total HT :</span>
+          <span class="total-amount">{{ orderTotal(selectedOrder) }}</span>
+        </div>
+        <div class="order-total" *ngIf="orderTvaAmount(selectedOrder) as tva">
+          <span class="total-label">TVA (10%) :</span>
+          <span class="total-amount">{{ tva }}</span>
+        </div>
+        <div class="order-total" *ngIf="selectedOrder.deliveryMode === 'shipping'">
+          <span class="total-label">Frais de port :</span>
+          <span class="total-amount" *ngIf="selectedOrder.shippingCost != null">{{ formatXAF(selectedOrder.shippingCost) }}</span>
+          <span class="total-amount shipping-pending-label" *ngIf="selectedOrder.shippingCost == null">À renseigner</span>
+        </div>
+        <div class="order-total order-total--ttc">
+          <span class="total-label"><strong>Total TTC :</strong></span>
+          <span class="total-amount"><strong>{{ orderTotalTTC(selectedOrder) }}</strong></span>
+        </div>
+
+        <div class="order-actions">
+          <!-- Retrait en magasin : marquer prête directement -->
+          <button *ngIf="selectedOrder.status === 'pending' && selectedOrder.deliveryMode !== 'shipping'"
+                  class="btn btn-ready"
+                  [disabled]="updatingOrderId === selectedOrder.id"
+                  (click)="setStatus(selectedOrder, 'ready')">
+            {{ updatingOrderId === selectedOrder.id ? '…' : 'Marquer comme prête' }}
+          </button>
+
+          <!-- Expédition internationale : ouvrir formulaire frais de port -->
+          <button *ngIf="selectedOrder.status === 'pending' && selectedOrder.deliveryMode === 'shipping' && readyFormOrderId !== selectedOrder.id"
+                  class="btn btn-ready"
+                  [disabled]="updatingOrderId === selectedOrder.id"
+                  (click)="openReadyForm(selectedOrder.id)">
+            Marquer comme prête
+          </button>
+
+          <!-- Formulaire frais de port -->
+          <div *ngIf="selectedOrder.status === 'pending' && readyFormOrderId === selectedOrder.id" class="shipping-form">
+            <p class="shipping-form-info">
+              ✈️ Expédition internationale — renseignez les frais de port (en €) avant de valider.
+            </p>
+            <div class="shipping-form-field">
+              <label class="shipping-label">Frais de port (FCFA) <span class="required">*</span></label>
+              <input type="number" min="0" step="1" [(ngModel)]="shippingCostInput"
+                     placeholder="ex : 15000" class="shipping-input"
+                     [class.input-error]="shippingCostError" />
+              <span *ngIf="shippingCostError" class="field-error">Veuillez saisir un montant valide (≥ 0).</span>
+            </div>
+            <div class="shipping-form-actions">
+              <button class="btn btn-ready" [disabled]="updatingOrderId === selectedOrder.id"
+                      (click)="confirmReady(selectedOrder)">
+                {{ updatingOrderId === selectedOrder.id ? '…' : '✓ Confirmer' }}
+              </button>
+              <button class="btn btn-cancel" (click)="cancelReadyForm()">Annuler</button>
+            </div>
+          </div>
+          <button *ngIf="selectedOrder.status === 'ready'" class="btn btn-paid"
+                  [disabled]="updatingOrderId === selectedOrder.id"
+                  (click)="setStatus(selectedOrder, 'paid')">
+            {{ updatingOrderId === selectedOrder.id ? '…' : 'Marquer comme payée' }}
+          </button>
+          <button *ngIf="selectedOrder.status === 'ready'" class="btn btn-resend"
+                  [disabled]="resendingEmailId === selectedOrder.id"
+                  (click)="resendPaymentEmail(selectedOrder)">
+            {{ resendingEmailId === selectedOrder.id ? 'Envoi…' : '✉ Renvoyer l\'email de paiement' }}
+          </button>
+          <button *ngIf="selectedOrder.status === 'paid' && shippingFormOrderId !== selectedOrder.id"
+                  class="btn btn-shipped" (click)="openShippingForm(selectedOrder.id)">
+            Marquer comme expédiée
+          </button>
+          <div *ngIf="selectedOrder.status === 'paid' && shippingFormOrderId === selectedOrder.id" class="shipping-form">
+            <div class="shipping-form-field">
+              <label class="shipping-label">Transporteur <span class="optional">(optionnel)</span></label>
+              <input type="text" [(ngModel)]="carrierName" placeholder="ex : DHL, FedEx…" class="shipping-input" />
+            </div>
+            <div class="shipping-form-field">
+              <label class="shipping-label">URL de suivi <span class="required">*</span></label>
+              <input type="url" [(ngModel)]="trackingUrl" placeholder="https://…" class="shipping-input"
+                     [class.input-error]="trackingUrlError" />
+              <span *ngIf="trackingUrlError" class="field-error">L'URL de suivi est obligatoire.</span>
+            </div>
+            <div class="shipping-form-actions">
+              <button class="btn btn-shipped" [disabled]="updatingOrderId === selectedOrder.id"
+                      (click)="confirmShipped(selectedOrder)">
+                {{ updatingOrderId === selectedOrder.id ? 'Envoi…' : '✓ Confirmer l\'expédition' }}
+              </button>
+              <button class="btn btn-cancel" (click)="cancelShippingForm()">Annuler</button>
+            </div>
+          </div>
+          <span *ngIf="selectedOrder.status === 'shipped'" class="shipped-label">✓ Expédiée</span>
+          <div *ngIf="selectedOrder.status === 'cancelled'" class="cancelled-actions">
+            <span class="cancelled-label">✗ Annulée</span>
+            <button class="btn btn-cancel-order"
+                    [disabled]="updatingOrderId === selectedOrder.id"
+                    (click)="deleteOrder(selectedOrder)">
+              {{ updatingOrderId === selectedOrder.id ? '…' : 'Supprimer définitivement' }}
+            </button>
+          </div>
+
+          <!-- Annulation d'une commande en attente ou prête -->
+          <button *ngIf="!selectedOrder.status || selectedOrder.status === 'pending' || selectedOrder.status === 'ready'"
+                  class="btn btn-cancel-order"
+                  [disabled]="updatingOrderId === selectedOrder.id"
+                  (click)="openCancelConfirm(selectedOrder)">
+            Annuler la commande
+          </button>
+        </div>
+
       </div>
+    </ng-container>
 
-    </div>
-  </div>
+  </ng-container><!-- /onglet commandes -->
 
+</div><!-- /admin-container -->
+
+<div *ngIf="lightboxSrc" class="lightbox-overlay" (click)="closeLightbox()">
+  <img [src]="lightboxSrc" class="lightbox-img" (click)="$event.stopPropagation()" />
+  <button class="lightbox-close" (click)="closeLightbox()">✕</button>
 </div>

@@ -9,6 +9,7 @@ import { ActionAuthLoggedIn, ActionAuthLogout } from '@app/auth/store/auth.actio
 import { initLoginPayload } from '@helpers/common.services.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DEFAULT_LOCALE_ID } from '@helpers/constants';
+import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
 
 import { User } from 'firebase/auth';
 
@@ -26,12 +27,16 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private destroyNavScroll?: () => void;
 
   user$: Observable<User | null>;
+  appTitle = '';
+  private appTitleFr = '';
+  private appTitleEn = '';
 
   constructor(
     private store: Store<any>,
     private ngZone: NgZone,
     private auth: Auth,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private configRepo: AppConfigRepository,
   ) {
     this.user$ = user(this.auth);
     this.translate.addLangs(['fr', 'en']);
@@ -56,6 +61,18 @@ export class NavigationComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.subs.add(
+      this.configRepo.watchAppTitle().subscribe(t => {
+        this.appTitleFr = t.fr ?? '';
+        this.appTitleEn = t.en ?? '';
+        this.updateAppTitle(this.translate.currentLang ?? 'fr');
+      })
+    );
+
+    this.subs.add(
+      this.translate.onLangChange.subscribe(({ lang }) => this.updateAppTitle(lang))
+    );
+
     this.destroyNavScroll = initNavScroll();
   }
 
@@ -64,12 +81,27 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.destroyNavScroll?.();
   }
 
+  private updateAppTitle(lang: string): void {
+    const title = lang === 'en' ? this.appTitleEn : this.appTitleFr;
+    this.appTitle = title || 'DÉLICE ÉTERNEL';
+  }
+
   switchLang(lang: string): void {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
   }
 
+  closeMenu(): void {
+    const navbar = document.getElementById('navbarResponsive');
+    if (navbar && navbar.classList.contains('show')) {
+      navbar.classList.remove('show');
+      const toggler = document.querySelector('.navbar-toggler');
+      if (toggler) toggler.setAttribute('aria-expanded', 'false');
+    }
+  }
+
   disconnect(): void {
+    this.closeMenu();
     this.ngZone.run(() => {
       signOut(this.auth).then(() => this.store.dispatch(new ActionAuthLogout()));
     });

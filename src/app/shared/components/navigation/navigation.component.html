@@ -5,7 +5,7 @@
     <div class="d-flex align-items-center">
       <a class="navbar-brand js-scroll-trigger" href="#page-top">
         <img src="assets/style-sauvage_only_logo-removebg.png" height="40px">
-        DÉLICE ÉTERNEL
+        {{ appTitle }}
       </a>
       <div class="ml-3">
         <select class="form-control form-control-sm nav-lang-select" #selectedLang
@@ -32,19 +32,19 @@
         <!-- ===== ANCRES (scrollspy OK) ===== -->
 
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger active" href="#portfolio">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger active" href="#portfolio" (click)="closeMenu()">
             <span>PORTFOLIO</span>
           </a>
         </li>
 
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about" (click)="closeMenu()">
             <span>{{ 'ABOUT' | translate }}</span>
           </a>
         </li>
 
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact" (click)="closeMenu()">
             <span class="ajust">CONTACT</span>
           </a>
         </li>
@@ -65,7 +65,7 @@
         </li>
         } @else {
         <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/auth/signin']">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/auth/signin']" (click)="closeMenu()">
             <mat-icon>account_circle</mat-icon>
             <span class="ajust">{{ 'CONNECT' | translate }}</span>
           </a>
@@ -74,10 +74,19 @@
 
         <!-- user non connecté -->
 
+        <!-- historique commandes: visible si connecté -->
+        @if (user$ | async) {
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/order-history']" aria-label="Historique commandes" (click)="closeMenu()">
+            <mat-icon>history</mat-icon>
+          </a>
+        </li>
+        }
+
         <!-- panier: visible tout le temps -->
         <li class="nav-item mx-0 mx-lg-1">
           <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/shopping-cart']"
-            aria-label="Toggle navigation">
+            aria-label="Toggle navigation" (click)="closeMenu()">
             <mat-icon>shopping_cart</mat-icon>
             <span class="badge badge-pill red">
               {{ nbSelectedItems$ | async }}

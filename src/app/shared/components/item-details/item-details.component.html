@@ -11,7 +11,8 @@
           <div class="col-md-7 col-lg-5 col-xl-5">
             <!-- Image principale -->
             <div class="view zoom overlay z-depth-1 rounded mb-2 position-relative">
-              <img class="img-fluid w-100" [src]="currentImage" [alt]="itemGroup.get('reference')?.value">
+              <img class="img-fluid w-100" [src]="currentImage" [alt]="itemGroup.get('reference')?.value"
+                   style="cursor:zoom-in" (click)="openLightbox()">
               @if (images.length > 1) {
                 <button class="gallery-nav gallery-nav--prev" type="button" (click)="prevImage()">&#8249;</button>
                 <button class="gallery-nav gallery-nav--next" type="button" (click)="nextImage()">&#8250;</button>
@@ -37,7 +38,7 @@
               <div class="d-flex justify-content-between">
                 <div>
                   <h5>{{itemGroup.get('reference')?.value}}</h5>
-                  <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
+                  <p *ngIf="itemGroup.get('category')?.value !== 'UNKNOWN'" class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
                       translate}}:</strong>&nbsp;
                     {{itemGroup.get('category')?.value}}
                   </p>
@@ -69,11 +70,16 @@
               </div>
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <a (click)="toogleSelect()" type="button"
-                    [class]="selected ? 'card-link-secondary small text-uppercase btn btn-remove-cart' : 'card-link-secondary small text-uppercase btn btn-add-cart'">
+                  <a (click)="(!isOutOfStock || selected) ? toogleSelect() : null" type="button"
+                    [class]="selected ? 'card-link-secondary small text-uppercase btn btn-remove-cart' : 'card-link-secondary small text-uppercase btn btn-add-cart'"
+                    [style.opacity]="isOutOfStock && !selected ? '0.4' : '1'"
+                    [style.cursor]="isOutOfStock && !selected ? 'not-allowed' : 'pointer'">
                     @if (selected) {
                       <i class="fas fa-trash-alt mr-1"></i>
                       <span>{{'REMOVE_FROM_CART' | translate}}</span>
+                    } @else if (isOutOfStock) {
+                      <i class="fas fa-ban mr-1"></i>
+                      <span>{{'OUT_OF_STOCK' | translate}}</span>
                     } @else {
                       <i class="fas fa-shopping-cart mr-1"></i>
                       <span>{{'ADD_TO_CART' | translate}}</span>
@@ -100,3 +106,10 @@
     </section>
   </div>
 </main>
+
+@if (lightboxSrc) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+    <img [src]="lightboxSrc" class="lightbox-img" (click)="$event.stopPropagation()">
+    <button class="lightbox-close" (click)="closeLightbox()">✕</button>
+  </div>
+}

@@ -1,5 +1,5 @@
 ﻿import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import { select, Store as NgRxStore } from '@ngrx/store';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { combineLatest, from, Observable, Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 
 
 import {
+  ActionClearBasket,
   ActionItemsRetrieve,
   ActionItemToogleSelect,
   ActionUpdateBasketItem,
@@ -37,6 +38,7 @@ import { selectorConnectedUser } from '@app/auth/store/auth.selectors';
 import { environment } from '@env/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { PricingService } from '@shared/services/pricing.service';
+import { StockService } from '@shared/services/stock.service';
 
 @Component({
   selector: 'app-cart-items',
@@ -50,9 +52,69 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   sizes = ITEM_SIZES;
 
   items: ItemInfos[] = [];
-  userId: string | undefined;
   commendAllreadySent = false;
+  deliveryMode: 'pickup' | 'shipping' | null = null;
+  shippingAddress = { firstName: '', lastName: '', address1: '', address2: '', postalCode: '', city: '', country: '', phone: '' };
+  orderStatuses: { id: string; status: string; createdAt: number; deliveryMode?: string; shippingAddress?: any; shippingCost?: number }[] = [];
+  stockByRef: Record<string, number> = {};
+  lightboxSrc: string | null = null;
+
+  get activeOrder(): { id: string; status: string; createdAt: number; deliveryMode?: string; shippingAddress?: any; shippingCost?: number } | null {
+    return this.orderStatuses.length > 0 ? this.orderStatuses[0] : null;
+  }
+
+  get hasOutOfStockItems(): boolean {
+    // Si l'utilisateur met à jour une commande existante, le stock a déjà été
+    // décrémenté par lui lors de sa commande initiale : ne pas le bloquer.
+    if (this.activeOrder) return false;
+    return this.items.some(item => (this.stockByRef[item.reference] ?? 1) <= 0);
+  }
+
+  isItemOutOfStock(reference: string): boolean {
+    // Même logique : pas "épuisé" pour le propriétaire de la commande active
+    if (this.activeOrder) return false;
+    return (this.stockByRef[reference] ?? 1) <= 0;
+  }
+
+  get isShippingAddressValid(): boolean {
+    const a = this.shippingAddress;
+    return !!(a.firstName.trim() && a.lastName.trim() && a.address1.trim() && a.postalCode.trim() && a.city.trim() && a.country.trim() && a.phone.trim());
+  }
+
+  get isBasketUnchanged(): boolean {
+    if (!this.activeOrder || !this.firebaseBasketSnapshot.length) return false;
+    if (this.firebaseBasketSnapshot.length !== this.items.length) return false;
+    return this.basketItemsArray.controls.every((group, i) => {
+      const ref = this.items[i]?.reference;
+      const snap = this.firebaseBasketSnapshot.find(s => s.reference === ref);
+      if (!snap) return false;
+      return snap.qty === (Number(group.get('quantity')?.value) || 1)
+        && snap.size === group.get('size')?.value
+        && snap.model === group.get('model')?.value;
+    });
+  }
+
+  get canSend(): boolean {
+    if (this.activeOrder && this.isBasketUnchanged) return false;
+    if (this.deliveryMode === 'shipping') return this.isShippingAddressValid;
+    return this.deliveryMode === 'pickup';
+  }
   private readonly snackDuration: number;
+  private orderStatusRef?: firebase.database.Reference;
+
+  readonly statusLabels: Record<string, string> = {
+    pending:  'En attente',
+    ready:    'Prête — consultez votre email',
+    paid:     'Payée',
+    shipped:  'Expédiée',
+  };
+
+  readonly statusColors: Record<string, string> = {
+    pending:  '#e67e22',
+    ready:    '#148f77',
+    paid:     '#2c3e50',
+    shipped:  '#6c3483',
+  };
 
   ItemsCategoriesEnum = ItemsCategoriesEnum;
 
@@ -62,6 +124,8 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   private subs = new Subscription();
   private formSubs = new Subscription();
   private commendsRef?: firebase.database.Reference;
+  private firebaseBasketSnapshot: { reference: string; qty: number; size: string; model: string }[] = [];
+  private snapshotOrderId: string | null = null;
 
   constructor(
     private store: NgRxStore<any>,
@@ -71,6 +135,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private translateService: TranslateService,
     public pricing: PricingService,
+    public stockService: StockService,
     @Inject(APP_CONFIG) appConfig: IAppConfig
   ) {
     this.snackDuration = appConfig.snackDuration;
@@ -80,6 +145,11 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
     this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
+
+    // Écoute le stock en temps réel via StockService (singleton partagé)
+    this.subs.add(
+      this.stockService.stockByRef$.subscribe(map => { this.stockByRef = map; })
+    );
 
     // Charge toutes les catégories si on arrive directement sur le panier (ex: refresh),
     // ce qui déclenche restoreBasket$ via RETRIEVE_ITEMS_SUCCESS.
@@ -112,31 +182,6 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Sauvegarde le panier dans Firebase basket quand l'utilisateur est connecté.
-    // debounceTime + distinctUntilChanged évitent la boucle : basket.on('value') → store → ici → set() → on('value')...
-    this.subs.add(
-      this.store.pipe(
-        select(selectChosenItems),
-        debounceTime(500),
-        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-        filter((items: ItemInfos[]) => !!this.userId && items.length > 0)
-      ).subscribe((items: ItemInfos[]) => {
-        const toSave = items.map(item => ({
-          reference: item.reference,
-          category: item.category,
-          index: item.index,
-          selected: true,
-          basketInfos: {
-            selectedQuantity: item.basketInfos?.selectedQuantity ?? 1,
-            selectedSize: item.basketInfos?.selectedSize ?? 'M',
-            selectedModel: item.basketInfos?.selectedModel ?? 'MODEL_UNIQUE',
-          },
-        }));
-        firebase.database().ref(`users/${this.userId}/basket`).set(toSave)
-          .catch((e: any) => console.error('[basket save]', e));
-      })
-    );
-
     // Connexion user (store) + authState (firebase)
     const authState$ = new Observable<firebase.User | null>((subscriber) => {
       const unsubscribe = firebase.auth().onAuthStateChanged(
@@ -166,23 +211,62 @@ export class CartItemsComponent implements OnInit, OnDestroy {
           map(([oldUser, newUser]) => {
             if (!newUser?.uid) return;
 
-            this.userId = newUser.uid;
+            // Écoute en temps réel le statut des commandes de l'utilisateur
+            if (this.orderStatusRef) this.orderStatusRef.off();
+            this.orderStatusRef = firebase.database().ref(`users/${newUser.uid}/orderStatus`);
+            this.orderStatusRef.on('value', (snap) => {
+              // Détecter la suppression d'un order actif AVANT le return anticipé :
+              // si snap est vide et qu'on avait des orders actifs, ils ont été supprimés.
+              const raw = snap.exists() ? (snap.val() as Record<string, any>) : {};
+              const prevActiveIds = this.orderStatuses.map(o => o.id);
+              const wasDeleted = prevActiveIds.some(id => !raw[id]);
+              if (wasDeleted) {
+                localStorage.removeItem('delice-basket');
+                localStorage.setItem('basketCleared', '1');
+                this.store.dispatch(new ActionClearBasket());
+                this.commendAllreadySent = false;
+              }
+              if (!snap.exists()) { this.orderStatuses = []; return; }
 
-            // À la connexion : lecture unique de Firebase basket pour mettre à jour localStorage.
-            // C'est localStorage qui reste la source principale du panier.
-            firebase.database().ref(`users/${newUser.uid}/basket`).once('value')
-              .then((snap: firebase.database.DataSnapshot) => {
-                const val = snap.val();
-                if (val) {
-                  const rawItems: any[] = Array.isArray(val) ? val : Object.values(val);
-                  const items = rawItems.filter(Boolean);
-                  if (items.length) {
-                    localStorage.setItem('delice-basket', JSON.stringify(items));
-                    items.forEach((item) => this.store.dispatch(new ActionUpdateBasketItem(item)));
-                  }
+              this.orderStatuses = Object.entries(raw)
+                .map(([id, data]) => ({
+                  id,
+                  status: data.status ?? 'pending',
+                  createdAt: data.createdAt ?? 0,
+                  deliveryMode: data.deliveryMode,
+                  shippingAddress: data.shippingAddress,
+                  shippingCost: typeof data.shippingCost === 'number' ? data.shippingCost : undefined,
+                }))
+                .filter(o => o.status !== 'shipped' && o.status !== 'cancelled')
+                .sort((a, b) => b.createdAt - a.createdAt);
+
+              // Pré-remplir le mode de livraison depuis la commande active (si pas encore choisi)
+              const active = this.orderStatuses[0];
+              if (!this.deliveryMode && active) {
+                // Fallback 'pickup' si le champ n'existe pas (anciennes commandes)
+                this.deliveryMode = (active.deliveryMode as 'pickup' | 'shipping') || 'pickup';
+                if (active.deliveryMode === 'shipping' && active.shippingAddress) {
+                  this.shippingAddress = { ...active.shippingAddress };
                 }
-              })
-              .catch((e: any) => console.error('[basket restore]', e));
+              }
+
+              // Capturer le snapshot depuis les items DE LA COMMANDE (orderStatus),
+              // pas depuis le panier — le panier peut déjà contenir de nouveaux articles
+              // non encore commandés, ce qui fausserait isBasketUnchanged.
+              if (active && active.id !== this.snapshotOrderId) {
+                this.snapshotOrderId = active.id;
+                const orderItems = raw[active.id]?.items;
+                const itemsArray: any[] = Array.isArray(orderItems)
+                  ? orderItems
+                  : (orderItems && typeof orderItems === 'object' ? Object.values(orderItems) : []);
+                this.firebaseBasketSnapshot = itemsArray.map((item: any) => ({
+                  reference: item.reference,
+                  qty: Math.max(1, item.basketInfos?.selectedQuantity ?? 1),
+                  size: item.basketInfos?.selectedSize ?? 'M',
+                  model: item.basketInfos?.selectedModel ?? 'MODEL_UNIQUE',
+                }));
+              }
+            });
 
             if (
               newUser.uid &&
@@ -208,6 +292,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
     this.formSubs.unsubscribe();
     this.detachCommendsListener();
+    if (this.orderStatusRef) { this.orderStatusRef.off(); this.orderStatusRef = undefined; }
   }
 
   private detachCommendsListener(): void {
@@ -291,33 +376,88 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   stepUp(index: number) {
-    const value: number = Number(this.getItemQuantity(index).value);
-    this.getItemQuantity(index).patchValue(Math.min(1000, value + 1));
+    const itemRef = this.items[index]?.reference;
+    this.stockService.fetchAvailable(itemRef).subscribe(available => {
+      const currentQty = Number(this.getItemQuantity(index).value) || 0;
+      if (available > currentQty) {
+        this.getItemQuantity(index).patchValue(currentQty + 1);
+      } else {
+        this.snackBar.openFromComponent(SnackAlertComponent, {
+          duration: 3000,
+          data: { message: 'Stock insuffisant — quantité maximale atteinte.', type: 'error' },
+          politeness: 'assertive',
+        });
+      }
+    });
   }
 
   getItemQuantity(index: number): UntypedFormControl {
     return this.basketItemsArray.controls[index].get('quantity') as UntypedFormControl;
   }
 
+  selectDeliveryMode(mode: 'pickup' | 'shipping'): void {
+    this.deliveryMode = mode;
+    if (mode !== 'shipping') return;
+
+    // Pré-remplir seulement si le formulaire est encore vierge
+    const a = this.shippingAddress;
+    if (a.firstName || a.lastName || a.phone) return;
+
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    const displayName = user.displayName?.trim() ?? '';
+    const spaceIdx = displayName.indexOf(' ');
+    if (spaceIdx > 0) {
+      a.firstName = displayName.slice(0, spaceIdx);
+      a.lastName  = displayName.slice(spaceIdx + 1);
+    } else {
+      a.firstName = displayName;
+    }
+
+    if (user.phoneNumber) {
+      a.phone = user.phoneNumber;
+    }
+  }
+
   getItemTotal(index: number): string {
-    const price = this.items[index]?.price ?? 0;
+    const item = this.items[index];
+    const price = this.pricing.getEffectiveEur(item.reference, item.price ?? 0);
     const qty = Number(this.getItemQuantity(index)?.value) || 1;
     return this.pricing.format(price * qty);
   }
 
   private get rawTotalHT(): number {
     return this.items.reduce((sum, item, i) => {
+      const price = this.pricing.getEffectiveEur(item.reference, item.price ?? 0);
       const qty = Number(this.getItemQuantity(i)?.value) || 1;
-      return sum + (item.price ?? 0) * qty;
+      return sum + price * qty;
     }, 0);
   }
 
+  /** Frais de port stockés en XAF, convertis en EUR pour pricing.format(). */
+  get shippingCostEur(): number | null {
+    if (this.deliveryMode !== 'shipping') return null;
+    const costXAF = this.activeOrder?.shippingCost;
+    if (typeof costXAF !== 'number') return null;
+    return costXAF / this.pricing.eurToXaf;
+  }
+
   get cartTva(): string {
-    return this.pricing.format(Math.round(this.rawTotalHT * this.pricing.tvaRate));
+    return this.pricing.format(this.rawTotalHT * this.pricing.tvaRate);
   }
 
   get cartTotal(): string {
-    return this.pricing.format(Math.round(this.rawTotalHT * (1 + this.pricing.tvaRate)));
+    // Sommer les montants affichés par item (après arrondi) pour éviter les
+    // écarts d'arrondi entre somme_format(items) et format(somme_items).
+    const itemsDisplay = this.items.reduce((sum, item, i) => {
+      const price = this.pricing.getEffectiveEur(item.reference, item.price ?? 0);
+      const qty   = Number(this.getItemQuantity(i)?.value) || 1;
+      return sum + this.pricing.formatRaw(price * qty);
+    }, 0);
+    const tvaDisplay      = this.pricing.formatRaw(this.rawTotalHT * this.pricing.tvaRate);
+    const shippingDisplay = this.pricing.formatRaw(this.shippingCostEur ?? 0);
+    return this.pricing.formatAmount(itemsDisplay + tvaDisplay + shippingDisplay);
   }
 
   sendCommand() {
@@ -338,6 +478,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
           // this.items peut encore avoir l'ancienne valeur (ActionUpdateBasketItem pas encore dispatché).
           const itemsToSend = this.basketItemsArray.controls.map((group, i) => ({
             ...this.items[i],
+            price: this.pricing.getEffectiveEur(this.items[i].reference, this.items[i].price ?? 0),
             basketInfos: {
               selectedQuantity: Number(group.get('quantity')?.value) || 1,
               selectedSize: group.get('size')?.value,
@@ -345,36 +486,133 @@ export class CartItemsComponent implements OnInit, OnDestroy {
             },
           }));
 
-          const existingCommands = this.getExistingItemsFromSnapShot(snap);
-
-          if (!itemsToSend || itemsToSend.length < 1 || (existingCommands && compareObjects(existingCommands, itemsToSend))) {
+          if (!itemsToSend || itemsToSend.length < 1) {
             this.alertCommandNotSent(this.translateService.instant('COMMAND_ALREADY_EXIST'));
             return;
           }
 
+          if (!this.deliveryMode) {
+            this.alertCommandNotSent('Veuillez choisir un mode de livraison avant d\'envoyer votre commande.');
+            return;
+          }
+
+          const existingOrderId = this.activeOrder?.id ?? null;
+
+          // Vérification "déjà envoyé" seulement pour une nouvelle commande
+          if (!existingOrderId) {
+            const existingCommands = this.getExistingItemsFromSnapShot(snap);
+            if (existingCommands && compareObjects(existingCommands, itemsToSend)) {
+              this.alertCommandNotSent(this.translateService.instant('COMMAND_ALREADY_EXIST'));
+              return;
+            }
+          }
+
           this.commendAllreadySent = true;
 
-          // Écriture atomique : on génère la clé push en avance et on fait un set() unique.
-          // Contrairement à set(null).then(push()), si l'écriture échoue, les données Firebase
-          // précédentes restent intactes et le panier sera correctement restauré au prochain chargement.
-          const pushKey = firebase.database().ref().push().key!;
+          const orderKey = existingOrderId ?? firebase.database().ref().push().key!;
           const payload: Record<string, any> = {};
-          payload[pushKey] = itemsToSend;
+          payload[orderKey] = itemsToSend;
 
           return ref.set(payload).then(() => {
             if (!currentUser.isAnonymous) {
-              // Double-write vers orders/ pour le tableau de bord admin
-              firebase.database().ref(`orders/${pushKey}`).set({
-                status: 'pending',
-                createdAt: Date.now(),
-                customerEmail: currentUser.email ?? '',
-                customerName: currentUser.displayName ?? currentUser.email ?? '',
-                items: itemsToSend,
-              }).catch((e: any) => console.error('[orders] double-write error', e));
+              const shippingAddress = this.deliveryMode === 'shipping' ? { ...this.shippingAddress } : null;
 
-              this.sendCommendNotificationMails(currentUser);
+              if (existingOrderId) {
+                // Mise à jour de la commande existante (status inchangé)
+                firebase.database().ref(`orders/${existingOrderId}`).update({
+                  items: itemsToSend,
+                  deliveryMode: this.deliveryMode,
+                  updatedAt: Date.now(),
+                  shippingAddress: shippingAddress ?? null,
+                }).catch((e: any) => console.error('[orders] update error', e));
+
+                firebase.database().ref(`users/${currentUser.uid}/orderStatus/${existingOrderId}`).update({
+                  items: itemsToSend,
+                  deliveryMode: this.deliveryMode,
+                  shippingAddress: shippingAddress ?? null,
+                }).catch((e: any) => console.error('[orderStatus] update error', e));
+
+                // Permet une nouvelle mise à jour ultérieure
+                this.commendAllreadySent = false;
+              } else {
+                // Nouvelle commande
+                const orderCreatedAt = Date.now();
+                firebase.database().ref(`orders/${orderKey}`).set({
+                  status: 'pending',
+                  uid: currentUser.uid,
+                  createdAt: orderCreatedAt,
+                  customerEmail: currentUser.email ?? '',
+                  customerName: currentUser.displayName ?? currentUser.email ?? '',
+                  items: itemsToSend,
+                  deliveryMode: this.deliveryMode,
+                  ...(shippingAddress ? { shippingAddress } : {}),
+                }).catch((e: any) => console.error('[orders] double-write error', e));
+
+                firebase.database().ref(`users/${currentUser.uid}/orderStatus/${orderKey}`).set({
+                  status: 'pending',
+                  createdAt: orderCreatedAt,
+                  items: itemsToSend,
+                  deliveryMode: this.deliveryMode,
+                  ...(shippingAddress ? { shippingAddress } : {}),
+                }).catch((e: any) => console.error('[orderStatus] write error', e));
+              }
+
+              // Mise à jour du stock pour chaque article (transaction atomique)
+              // Pour une modification de commande : delta = newQty - oldQty
+              // Pour une nouvelle commande : delta = newQty (décrémentation complète)
+              const oldItemsMap: Record<string, number> = {};
+              if (existingOrderId) {
+                const snapVal = snap.val() as Record<string, any> | null;
+                const rawOldItems = snapVal?.[existingOrderId];
+                // Firebase peut retourner un tableau ou un objet ({ "0": item, "1": item })
+                const oldItems: any[] = Array.isArray(rawOldItems)
+                  ? rawOldItems
+                  : (rawOldItems && typeof rawOldItems === 'object' ? Object.values(rawOldItems) : []);
+                oldItems.forEach((old: any) => {
+                  if (old?.reference) {
+                    oldItemsMap[old.reference] = old.basketInfos?.selectedQuantity ?? 1;
+                  }
+                });
+              }
+
+              // Articles toujours présents : appliquer le delta newQty - oldQty
+              itemsToSend.forEach(item => {
+                const newQty = item.basketInfos?.selectedQuantity ?? 1;
+                const oldQty = oldItemsMap[item.reference] ?? 0;
+                const delta = newQty - oldQty;
+                if (delta === 0) return;
+                const knownAvailable = this.stockByRef[item.reference] ?? 0;
+                firebase.database().ref(`stock/${item.reference}`).transaction((current) => {
+                  if (current === null) return { available: Math.max(0, knownAvailable - delta) };
+                  return { ...current, available: Math.max(0, (current.available ?? knownAvailable) - delta) };
+                }).catch((e: any) => console.error('[stock delta]', e));
+              });
+
+              // Articles supprimés de la commande : libérer intégralement leur stock
+              Object.entries(oldItemsMap).forEach(([reference, oldQty]) => {
+                if (itemsToSend.some(item => item.reference === reference)) return;
+                const knownAvailable = this.stockByRef[reference] ?? 0;
+                firebase.database().ref(`stock/${reference}`).transaction((current) => {
+                  if (current === null) return { available: knownAvailable + oldQty };
+                  return { ...current, available: (current.available ?? knownAvailable) + oldQty };
+                }).catch((e: any) => console.error('[stock release]', e));
+              });
+
+              if (!existingOrderId) {
+                this.sendCommendNotificationMails(currentUser);
+              }
+
+              // Mettre à jour le snapshot pour refléter le nouvel état Firebase
+              this.firebaseBasketSnapshot = this.basketItemsArray.controls.map((group, i) => ({
+                reference: this.items[i]?.reference,
+                qty: Number(group.get('quantity')?.value) || 1,
+                size: group.get('size')?.value,
+                model: group.get('model')?.value,
+              }));
+
               this.snackBar.openFromComponent(SnackAlertComponent, {
                 duration: this.snackDuration,
+                data: { message: 'COMMAND_SENT_MSG', type: 'success' },
                 politeness: 'polite',
               });
             } else {
@@ -421,7 +659,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private sendCommendNotificationMails(user: firebase.User) {
+  private sendCommendNotificationMails(user: firebase.User, isUpdate = false) {
     const protocol = window.location.protocol;
     let prefix = protocol + '//' + window.location.host;
     if (prefix.indexOf('github') > 0) {
@@ -457,10 +695,28 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     const rawTva = hasTva ? Math.round(rawTotalHT * tvaRate) : 0;
     const rawTotalTTC = rawTotalHT + rawTva;
 
+    const deliveryModeLabel = this.deliveryMode === 'pickup'
+      ? 'Retrait en magasin — Libreville'
+      : this.deliveryMode === 'shipping'
+        ? 'Expédition internationale'
+        : '';
+
+    const sa = this.shippingAddress;
+    const shippingAddressFormatted = this.deliveryMode === 'shipping' ? [
+      `${sa.firstName} ${sa.lastName}`,
+      sa.address1,
+      sa.address2 ? sa.address2 : null,
+      `${sa.postalCode} ${sa.city}`,
+      sa.country,
+      `Tél : ${sa.phone}`,
+    ].filter(Boolean).join('\n') : '';
+
     const data = {
       shoppingCardLink: prefix + '/#/shopping-cart',
       uid: user.uid,
-      subject: this.translateService.instant('NEW_ORDER_TITLE'),
+      subject: isUpdate
+        ? `[MODIFICATION] ${this.translateService.instant('NEW_ORDER_TITLE')}`
+        : this.translateService.instant('NEW_ORDER_TITLE'),
       items: emailData,
       displayName: user.displayName,
       currency,
@@ -469,6 +725,10 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       totalHT: rawTotalHT,
       tva: rawTva,
       totalTTC: rawTotalTTC,
+      deliveryMode: this.deliveryMode,
+      deliveryModeLabel,
+      shippingAddress: this.deliveryMode === 'shipping' ? { ...this.shippingAddress } : null,
+      shippingAddressFormatted,
     };
 
     console.log('Sending email with data', data);
@@ -479,6 +739,9 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       error: (error) => console.log(error),
     });
   }
+
+  openLightbox(src: string): void { this.lightboxSrc = src; }
+  closeLightbox(): void { this.lightboxSrc = null; }
 
   gotoTarget(name: string) {
     this.store.dispatch(new Go({ path: ['/' + name] }));

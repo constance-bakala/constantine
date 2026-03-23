@@ -1,25 +1,19 @@
 import { NgModule } from '@angular/core';
-import { ClothingModule } from '@app/features/clothing/clothing.module';
-import { JewelleryModule } from '@app/features/jewellery/jewellery.module';
-import { MasksModule } from '@app/features/masks/masks.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { ItemsEffects, itemsReducer } from '@app/features/store';
 import { ShoppingCartModule } from '@app/features/shopping-cart/shopping-cart.module';
+import { catalogReducer } from '@app/features/store/catalog/catalog.reducer';
+import { CatalogEffects } from '@app/features/store/catalog/catalog.effects';
 
 
 @NgModule({
   declarations: [],
   imports: [
-    ClothingModule,
-    JewelleryModule,
-    MasksModule,
     ShoppingCartModule,
-    StoreModule.forFeature(
-      'constantine',
-      itemsReducer
-    ),
-    EffectsModule.forFeature([ItemsEffects])
+    StoreModule.forFeature('constantine', itemsReducer),
+    StoreModule.forFeature('catalog', catalogReducer),
+    EffectsModule.forFeature([ItemsEffects, CatalogEffects]),
   ]
 })
 export class FeaturesModule { }

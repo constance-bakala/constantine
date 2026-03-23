@@ -4,7 +4,7 @@
       <div class="container text-center">
         <h3 class="mb-0">{{category.title | translate}}
         </h3>
-        <p class="mb-2 text-muted" style="text-align: left">{{category.summary | translate}}</p>
+        <p class="mb-2 text-muted" style="text-align: left" [innerHTML]="summary"></p>
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-2">
           <app-currency-selector></app-currency-selector>
           <app-category-buttons [categoryToAvoid]="category.name" [categoryInfos]="categoryInfos"
@@ -27,12 +27,17 @@
             @for (item of category.items; track item) {
             <div class="col-md-4 mb-4 col-sm-auto" [ngClass]="item.selected ? 'selected' : ''">
               <!-- Card -->
-              <div class="item-card" (click)="openChoices(item)">
+              <div class="item-card"
+                   [class.item-out-of-stock]="stock.isOutOfStock(item.reference) && !item.selected"
+                   (click)="openChoices(item)">
                 <div class="view zoom overlay z-depth-2 rounded image-wrapper">
                   <img class="img-fluid centered-img" [src]="item.path" [alt]="item.reference" loading="lazy">
                   <div class="mask rgba-black-slight"></div>
                   @if (item.selected) {
                     <div class="cart-badge"><i class="fas fa-shopping-cart"></i></div>
+                  }
+                  @if (stock.isOutOfStock(item.reference) && !item.selected) {
+                    <div class="out-of-stock-overlay">Épuisé</div>
                   }
                 </div>
                 <div class="text-center pt-2 pb-2">
@@ -52,3 +57,9 @@
   </main>
 </div>
 <!--Section: Block Content-->
+
+<!-- Lightbox article épuisé -->
+<div *ngIf="lightboxSrc" class="portfolio-lightbox-overlay" (click)="closeLightbox()">
+  <img [src]="lightboxSrc" class="portfolio-lightbox-img" (click)="$event.stopPropagation()" />
+  <button class="portfolio-lightbox-close" (click)="closeLightbox()">✕</button>
+</div>

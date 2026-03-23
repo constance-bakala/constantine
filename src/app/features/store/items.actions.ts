@@ -17,11 +17,22 @@ export enum ItemsActionTypes {
 
   TOOGLE_SELECT_ITEM_NOT_SELECTED = '[PORTFOLIO] Toogle not selected item from firebase',
 
-  UPDATE_BASKET_ITEM = '[BASKET] Changing basket item'
+  UPDATE_BASKET_ITEM = '[BASKET] Changing basket item',
+  RESTORE_BASKET_ITEM = '[BASKET] Restoring basket item from storage',
+  CLEAR_BASKET = '[BASKET] Clear basket'
 }
 
 export class ActionUpdateBasketItem implements Action {
   readonly type = ItemsActionTypes.UPDATE_BASKET_ITEM;
+
+  constructor(public payload: ItemInfos) {
+  }
+}
+
+/** Restaure un item depuis le localStorage vers le store NgRx.
+ *  N'est PAS écouté par saveBasket$ pour éviter d'écraser le localStorage pendant le restore. */
+export class ActionRestoreBasketItem implements Action {
+  readonly type = ItemsActionTypes.RESTORE_BASKET_ITEM;
 
   constructor(public payload: ItemInfos) {
   }
@@ -102,6 +113,10 @@ export class ActionItemAddleError implements Action {
   }
 }
 
+export class ActionClearBasket implements Action {
+  readonly type = ItemsActionTypes.CLEAR_BASKET;
+}
+
 export type ItemsActions =
   | ActionItemsRetrieve
   | ActionItemsRetrieveSuccess
@@ -110,6 +125,7 @@ export type ItemsActions =
   | ActionItemToogleNotSelected
   | ActionItemToogleSelectSuccess
   | ActionItemToogleSelectError
-  | ActionUpdateBasketItem;
+  | ActionUpdateBasketItem
+  | ActionRestoreBasketItem;
 
 

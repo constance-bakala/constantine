@@ -4,6 +4,9 @@ import { ITEM_SIZES, ItemInfos, ItemSizeEnum } from '@shared/interfaces';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PricingService } from '@shared/services/pricing.service';
+import { StockService } from '@shared/services/stock.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.component';
 
 @Component({
   selector: 'app-item-details',
@@ -16,9 +19,14 @@ export class ItemDetailsComponent {
   sizes = ITEM_SIZES;
   images: string[] = [];
   selectedImageIndex = 0;
+  lightboxSrc: string | null = null;
 
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
   selected = false;
+
+  get isOutOfStock(): boolean {
+    return this.stock.isOutOfStock(this.data.reference);
+  }
 
   get currentImage(): string {
     return this.images[this.selectedImageIndex];
@@ -32,7 +40,9 @@ export class ItemDetailsComponent {
   constructor(private fb: UntypedFormBuilder,
     private dialogRef: MatDialogRef<ItemDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ItemInfos,
-    public pricing: PricingService) {
+    public pricing: PricingService,
+    private stock: StockService,
+    private snackBar: MatSnackBar) {
     this.images = (data.images?.length ?? 0) > 0 ? data.images : [data.path];
     this.initForm(data);
   }
@@ -75,16 +85,24 @@ export class ItemDetailsComponent {
   }
 
   stepUp() {
-    let value = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
-    if (value < 999) {
-      this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(++value);
-    }
+    this.stock.fetchAvailable(this.data.reference).subscribe(available => {
+      const currentQty = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
+      if (available > currentQty) {
+        this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(currentQty + 1);
+      } else {
+        this.snackBar.openFromComponent(SnackAlertComponent, {
+          duration: 3000,
+          data: { message: 'Stock insuffisant — quantité maximale atteinte.', type: 'error' },
+          politeness: 'assertive',
+        });
+      }
+    });
   }
 
   stepDown() {
-    let value = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
+    const value = (this.itemGroup.get('basketInfos.selectedQuantity')?.value as number) || 0;
     if (value > 1) {
-      this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(--value)
+      this.itemGroup.get('basketInfos.selectedQuantity')!.setValue(value - 1);
     }
   }
 
@@ -101,6 +119,14 @@ export class ItemDetailsComponent {
         selected: false
       });
     }
+  }
+
+  openLightbox(): void {
+    this.lightboxSrc = this.currentImage;
+  }
+
+  closeLightbox(): void {
+    this.lightboxSrc = null;
   }
 
   close() {

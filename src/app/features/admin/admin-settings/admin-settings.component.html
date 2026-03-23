@@ -1,0 +1,129 @@
+<div class="settings-container">
+
+  <!-- ── Navigation sections ─────────────────────────────────────── -->
+  <div class="settings-nav">
+    <button class="settings-nav-btn" [class.active]="activeSection === 'carousel'"     (click)="activeSection = 'carousel'">🖼 Carrousel</button>
+    <button class="settings-nav-btn" [class.active]="activeSection === 'translations'" (click)="activeSection = 'translations'; translationRows.length === 0 && loadTranslations()">🌐 Libellés</button>
+    <button class="settings-nav-btn" [class.active]="activeSection === 'title'"        (click)="activeSection = 'title'">🏷 Titre</button>
+  </div>
+
+  <!-- ════════════════════ CARROUSEL ════════════════════════════════ -->
+  <section *ngIf="activeSection === 'carousel'" class="settings-section">
+    <h3 class="settings-title">Photos du carrousel</h3>
+    <p class="settings-hint">Glissez des images pour les ajouter. Utilisez ↑↓ pour réordonner.</p>
+
+    <!-- Zone d'upload -->
+    <div class="drop-zone"
+         [class.drag-over]="carouselDragOver"
+         (dragover)="onCarouselDragOver($event)"
+         (dragleave)="onCarouselDragLeave()"
+         (drop)="onCarouselDrop($event)"
+         (click)="carouselPicker.click()">
+      <input #carouselPicker type="file" multiple accept="image/*"
+             style="display:none" (change)="onCarouselFilePick($event)" />
+      <span *ngIf="!carouselUploading">🖼 Glissez des images ou cliquez</span>
+      <span *ngIf="carouselUploading">Envoi en cours…</span>
+    </div>
+
+    <p *ngIf="carouselError" class="settings-error">{{ carouselError }}</p>
+
+    <!-- Liste des slides -->
+    <div *ngIf="slides.length === 0" class="settings-empty">
+      Aucune image — les images par défaut du projet seront affichées.
+    </div>
+
+    <div class="slide-list">
+      <div *ngFor="let slide of slides; let i = index; trackBy: trackByIndex" class="slide-row">
+        <img [src]="slide.imageUrl" class="slide-thumb" [alt]="slide.alt || ''" />
+        <span class="slide-index">{{ i + 1 }}</span>
+        <div class="slide-actions">
+          <button class="btn-order" [disabled]="i === 0" (click)="moveSlide(i, -1)">↑</button>
+          <button class="btn-order" [disabled]="i === slides.length - 1" (click)="moveSlide(i, 1)">↓</button>
+          <button class="btn-delete-slide" [disabled]="carouselSaving" (click)="removeSlide(i)">✕</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ TRADUCTIONS ══════════════════════════════ -->
+  <section *ngIf="activeSection === 'translations'" class="settings-section">
+    <div class="translations-header">
+      <h3 class="settings-title">Libellés</h3>
+      <div class="translations-actions">
+        <button class="btn-reload" (click)="loadTranslations()" [disabled]="translationsLoading">
+          {{ translationsLoading ? 'Chargement…' : '↺ Recharger' }}
+        </button>
+        <button class="btn-save-translations"
+                [disabled]="translationsSaving || dirtyCount === 0"
+                (click)="saveTranslations()">
+          {{ translationsSaving ? 'Sauvegarde…' : 'Sauvegarder (' + dirtyCount + ')' }}
+        </button>
+      </div>
+    </div>
+
+    <p *ngIf="translationsError" class="settings-error">{{ translationsError }}</p>
+    <p *ngIf="translationsSuccess" class="settings-success">✓ Libellés sauvegardés</p>
+
+    <div *ngIf="translationRows.length > 0" class="translations-search">
+      <input type="search" [(ngModel)]="translationsFilter"
+             placeholder="Filtrer par clé ou valeur…"
+             class="translations-filter-input" />
+    </div>
+
+    <div *ngIf="translationsLoading" class="settings-empty">Chargement…</div>
+
+    <table *ngIf="!translationsLoading && translationRows.length > 0" class="translations-table">
+      <thead>
+        <tr>
+          <th class="col-key">Clé</th>
+          <th class="col-lang">🇫🇷 Français</th>
+          <th class="col-lang">🇬🇧 English</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredRows; trackBy: trackByKey" [class.dirty-row]="row.dirty">
+          <td class="col-key"><code>{{ row.key }}</code></td>
+          <td class="col-lang">
+            <textarea class="translation-input" [(ngModel)]="row.fr"
+                      (ngModelChange)="markDirty(row)" rows="2"></textarea>
+          </td>
+          <td class="col-lang">
+            <textarea class="translation-input" [(ngModel)]="row.en"
+                      (ngModelChange)="markDirty(row)" rows="2"></textarea>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!translationsLoading && translationRows.length === 0" class="settings-empty">
+      Cliquez sur ↺ Recharger pour charger les libellés.
+    </div>
+  </section>
+
+  <!-- ════════════════════ TITRE ════════════════════════════════════ -->
+  <section *ngIf="activeSection === 'title'" class="settings-section">
+    <h3 class="settings-title">Titre de l'application</h3>
+    <p class="settings-hint">S'affiche dans l'onglet du navigateur.</p>
+
+    <div class="title-fields">
+      <div class="title-field">
+        <label class="title-label">🇫🇷 Titre français</label>
+        <input type="text" [(ngModel)]="appTitleFr" class="title-input"
+               placeholder="ex : Délice Éternel" />
+      </div>
+      <div class="title-field">
+        <label class="title-label">🇬🇧 English title</label>
+        <input type="text" [(ngModel)]="appTitleEn" class="title-input"
+               placeholder="ex : Eternal Delight" />
+      </div>
+    </div>
+
+    <p *ngIf="titleError"   class="settings-error">{{ titleError }}</p>
+    <p *ngIf="titleSuccess" class="settings-success">✓ Titre mis à jour</p>
+
+    <button class="btn-save-title" [disabled]="titleSaving" (click)="saveTitle()">
+      {{ titleSaving ? '…' : 'Enregistrer' }}
+    </button>
+  </section>
+
+</div>

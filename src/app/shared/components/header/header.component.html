@@ -1,30 +1,18 @@
-<header [ngClass]="{'masthead': displayHtml, 'adjust': !displayHtml}"  class="bg-primary text-white text-center">
+<header [ngClass]="{'masthead': displayHtml, 'adjust': !displayHtml}" class="bg-primary text-white text-center">
   @if (displayHtml) {
     <div class="container d-flex align-items-center flex-column" id="headerId">
-      <!-- Masthead Avatar Image--><!--img class="masthead-avatar mb-5" src="assets/photo_maman2-removebg-preview.png" alt=""-->
-      <!-- Masthead Heading-->
-    <!--h1 class="masthead-heading mb-0">GAGNEZ DU TEMPS, COMMANDEZ!</h1-->
-    <!-- Icon Divider-->
-    <!-- Masthead Subheading-->
-    @if (displayHtml) {
-      <ngb-carousel
-        [interval]="4000"
-        [wrap]="true"
-        [animation]="true"
-        class="hero-carousel carousel-fade"
-        >
-        <ng-template ngbSlide>
-          <img class="hero-img" src="assets/presentation_robes.jpg" alt="First slide" />
-        </ng-template>
-        <ng-template ngbSlide>
-          <img class="hero-img" src="assets/presentation_masks.jpg" alt="Second slide" />
-        </ng-template>
-        <ng-template ngbSlide>
-          <img class="hero-img" src="assets/presentation_bijoux.jpg" alt="Third slide" />
-        </ng-template>
-      </ngb-carousel>
-    }
-    <p class="pre-wrap masthead-subheading font-weight-light mb-0">{{'PRESENTATION' | translate}} <br/> <span class="atelier">{{'BUILD_PLACE' | translate}}</span></p>
-  </div>
-}
+      @if (displayHtml) {
+        <ngb-carousel
+          [interval]="4000"
+          [wrap]="true"
+          [animation]="true"
+          class="hero-carousel carousel-fade">
+          <ng-template *ngFor="let slide of slides" ngbSlide>
+            <img class="hero-img" [src]="slide.imageUrl" [alt]="slide.alt || ''" />
+          </ng-template>
+        </ngb-carousel>
+      }
+      <p class="pre-wrap masthead-subheading font-weight-light mb-0">{{'PRESENTATION' | translate}} <br/> <span class="atelier">{{'BUILD_PLACE' | translate}}</span></p>
+    </div>
+  }
 </header>

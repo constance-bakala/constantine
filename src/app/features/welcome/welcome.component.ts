@@ -1,6 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {PortfolioData} from '@shared/interfaces/portfolio.interfaces';
-import {DRESS_GROUPS, EARING_GROUPS, MASK_GROUPS} from '@helpers/items-groups.const';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, combineLatest, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import { PortfolioData } from '@shared/interfaces/portfolio.interfaces';
+import {
+  selectPublishedCategories,
+  selectCatalogLoaded,
+  selectCatalogState,
+  CatalogLoadItemsForCategory,
+} from '../store/catalog';
+
+const DEFAULT_COVER = 'assets/style-sauvage_only_logo-removebg.png';
 
 @Component({
   selector: 'app-welcome',
@@ -8,46 +18,53 @@ import {DRESS_GROUPS, EARING_GROUPS, MASK_GROUPS} from '@helpers/items-groups.co
   styleUrls: ['./welcome.component.css'],
   standalone: false,
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent implements OnInit, OnDestroy {
 
   disposition = 'col-md-6 col-lg-4 mb-5';
-  //disposition = 'col-md-4 col-lg-3 mb-5';
-  dataDresses!: PortfolioData;
-  dataMasks!: PortfolioData;
-  dataEarings!: PortfolioData;
+  portfolioItems$!: Observable<PortfolioData[]>;
 
-  constructor() {
-  }
+  private subs = new Subscription();
+
+  constructor(private store: Store) {}
 
   ngOnInit() {
-    this.dataDresses = {
-      portfolioLink: '/dresses',
-      portfolioImagePrefix: 'dress',
-      portfolioName: 'PRODUCTS.DRESSES.TITLE',
-      portfolioImagesSize: DRESS_GROUPS.length,
-      portfolioDirectory: 'dresses',
-      portfolioGroupIds: DRESS_GROUPS.map(g => g.id),
-      coverFile: 'cover.jpeg',
-    };
-    this.dataMasks = {
-      portfolioLink: '/masks',
-      portfolioImagePrefix: 'mask',
-      portfolioName: 'PRODUCTS.MASKS.TITLE',
-      portfolioImagesSize: MASK_GROUPS.length,
-      portfolioDirectory: 'masks',
-      portfolioGroupIds: MASK_GROUPS.map(g => g.id),
-      coverFile: 'cover.webp',
-    };
+    // Déclencher le chargement des items pour chaque catégorie publiée (une seule fois par liste)
+    this.subs.add(
+      this.store.select(selectPublishedCategories).pipe(
+        filter(cats => cats.length > 0),
+        distinctUntilChanged((a, b) =>
+          a.map(c => c.prefix).join(',') === b.map(c => c.prefix).join(',')
+        )
+      ).subscribe(categories => {
+        categories.forEach(cat =>
+          this.store.dispatch(new CatalogLoadItemsForCategory({ categoryId: cat.prefix }))
+        );
+      })
+    );
 
-    this.dataEarings = {
-      portfolioLink: '/earings',
-      portfolioImagePrefix: 'earing',
-      portfolioName: 'PRODUCTS.EARRINGS.TITLE',
-      portfolioImagesSize: EARING_GROUPS.length,
-      portfolioDirectory: 'jewellery',
-      portfolioGroupIds: EARING_GROUPS.map(g => g.id),
-      coverFile: 'cover.webp',
-    }
+    // Construire les cartes portfolio à partir du catalog store
+    this.portfolioItems$ = combineLatest([
+      this.store.select(selectCatalogLoaded),
+      this.store.select(selectPublishedCategories),
+      this.store.select(selectCatalogState),
+    ]).pipe(
+      map(([loaded, categories, catalogState]) => {
+        if (!loaded) return [];
+        return categories.map(cat => {
+          const items = catalogState.itemsByCategory[cat.prefix] ?? [];
+          const imageUrls = items.map(i => i.coverUrl).filter(Boolean);
+          return {
+            portfolioLink: `/category/${cat.prefix}`,
+            coverImageUrl: imageUrls[0] ?? DEFAULT_COVER,
+            portfolioName: cat.title,
+            imageUrls: imageUrls.length > 0 ? imageUrls : [DEFAULT_COVER],
+          };
+        });
+      })
+    );
   }
 
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
 }

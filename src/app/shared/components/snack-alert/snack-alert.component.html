@@ -1,6 +1,4 @@
-<div role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false" class="modal-content">
-  <div class="toast-header">
-    <img _ngcontent-wtx-c240="" src="assets/style-sauvage_only_logo-removebg.png" height="40px">
-    <strong class="mr-auto">{{'COMMAND_SENT_MSG' | translate}}</strong>
-  </div>
+<div role="alert" aria-live="assertive" aria-atomic="true" class="snack-alert" [class.snack-alert--error]="type === 'error'">
+  <img src="assets/style-sauvage_only_logo-removebg.png" height="40px" alt="logo">
+  <strong>{{ type === 'success' ? (message | translate) : message }}</strong>
 </div>

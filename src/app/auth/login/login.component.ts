@@ -19,7 +19,6 @@ declare const firebaseui: any;
 })
 export class LoginComponent implements OnInit, OnDestroy {
   ui: any;
-  private fallbackTimer: any;
 
   signInOptions = [
     { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
@@ -41,36 +40,38 @@ export class LoginComponent implements OnInit, OnDestroy {
     firebase.auth().languageCode = DEFAULT_LOCALE_ID;
     await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-    firebase.auth().onAuthStateChanged((u) => {
-      if (u) {
-        this.clearFallback();
-        this.dispatchLoggedIn({ user: u });
-      }
-    });
+    this.centerOAuthPopup();
+    this.startFirebaseUi('popup');
+  }
 
-    this.startFirebaseUi(this.isLocalhost() ? 'popup' : 'redirect');
-    if (!this.isLocalhost()) {
-      this.scheduleRedirectFallbackToPopup();
-    }
+  /** Intercepte window.open pour centrer la fenêtre OAuth sur l'écran. */
+  private centerOAuthPopup(): void {
+    const original = window.open.bind(window);
+    (window as any).open = function(url?: string | URL, target?: string, _features?: string) {
+      const w = 500;
+      const h = 600;
+      const left = Math.round((screen.width  - w) / 2);
+      const top  = Math.round((screen.height - h) / 2);
+      const centered = `width=${w},height=${h},left=${left},top=${top},scrollbars=yes,resizable=yes`;
+      return original(url, target ?? '_blank', centered);
+    };
   }
 
   ngOnDestroy(): void {
-    this.clearFallback();
     if (this.ui?.delete) {
       this.ui.delete();
     }
-  }
-
-  private isLocalhost(): boolean {
-    return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '[::1]';
   }
 
   private startFirebaseUi(flow: 'popup' | 'redirect'): void {
     const uiConfig: any = {
       signInFlow: flow,
       signInOptions: this.signInOptions,
-      signInSuccessUrl: window.location.origin + window.location.pathname + '#/auth/signin',
       callbacks: {
+        signInSuccessWithAuthResult: (authResult: any) => {
+          this.dispatchLoggedIn(authResult);
+          return false; // navigation gérée par l'effet NgRx
+        },
         signInFailure: (error: any) => {
           console.error('[FirebaseUI] failure', error);
           return Promise.resolve();
@@ -85,23 +86,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.ui = new firebaseui.auth.AuthUI(firebase.auth());
     }
     this.ui.start('#firebaseui-auth-container', uiConfig);
-  }
-
-  private scheduleRedirectFallbackToPopup(): void {
-    this.clearFallback();
-    this.fallbackTimer = setTimeout(() => {
-      const current = firebase.auth().currentUser;
-      if (!current) {
-        this.startFirebaseUi('popup');
-      }
-    }, 2500);
-  }
-
-  private clearFallback(): void {
-    if (this.fallbackTimer) {
-      clearTimeout(this.fallbackTimer);
-      this.fallbackTimer = undefined;
-    }
   }
 
   private dispatchLoggedIn(resultLike: any): void {

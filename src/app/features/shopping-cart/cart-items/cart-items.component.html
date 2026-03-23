@@ -36,22 +36,24 @@
                   @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
                   <div class="row mb-4" [formGroupName]="i">
                     <div class="col-md-5 col-lg-3 col-xl-3">
-                      <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
+                      <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0 cart-img-wrapper"
+                           (click)="openLightbox(itemGroup.get('path')?.value)"
+                           style="cursor:zoom-in">
                         <img class="img-fluid w-100" src="{{itemGroup.get('path')?.value}}"
                           alt="{{itemGroup.get('reference')?.value}}">
-                        <a>
-                          <div class="mask">
-                            <img class="img-fluid w-100" src="{{itemGroup.get('path')?.value}}">
-                            <div class="mask rgba-black-slight"></div>
-                          </div>
-                        </a>
+                        <div class="mask rgba-black-slight cart-img-overlay">
+                          <span class="cart-img-zoom-icon">&#128269;</span>
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-7 col-lg-9 col-xl-9">
                       <div>
                         <div class="d-flex justify-content-between">
                           <div>
-                            <h5>{{itemGroup.get('reference')?.value}}</h5>
+                            <h5>
+                              {{itemGroup.get('reference')?.value}}
+                              <span *ngIf="isItemOutOfStock(itemGroup.get('reference')?.value)" class="badge-out-of-stock">Épuisé</span>
+                            </h5>
                             <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
                                 translate}}:</strong>&nbsp;
                               {{itemGroup.get('category')?.value}}
@@ -115,39 +117,123 @@
                 <h5 class="mb-4">{{'PRODUCTS.DELIVERY_TIME' | translate}}</h5>
 
                 <div class="mb-0">
-                  <ul>
-                    <li>
-                      {{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}
-                    </li>
-                    <li>
-                      {{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_ELSEWHERE' | translate}}
-                    </li>
-                  </ul>
+
+                  <!-- Retrait en magasin -->
+                  <label class="delivery-option" [class.selected]="deliveryMode === 'pickup'"
+                    (click)="selectDeliveryMode('pickup')">
+                    <input type="radio" name="deliveryMode" value="pickup"
+                      [checked]="deliveryMode === 'pickup'" class="delivery-radio">
+                    <div class="delivery-content">
+                      <p class="payment-block-title"><i class="fas fa-store mr-2"></i>{{'PRODUCTS.DELIVERY_PICKUP' | translate}}</p>
+                      <p class="payment-block-detail">{{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}</p>
+                    </div>
+                  </label>
+
+                  <!-- Expédition internationale -->
+                  <label class="delivery-option mt-2" [class.selected]="deliveryMode === 'shipping'"
+                    (click)="selectDeliveryMode('shipping')">
+                    <input type="radio" name="deliveryMode" value="shipping"
+                      [checked]="deliveryMode === 'shipping'" class="delivery-radio">
+                    <div class="delivery-content">
+                      <p class="payment-block-title"><i class="fas fa-shipping-fast mr-2"></i>{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</p>
+                      <p class="payment-block-detail">
+                        Votre commande sera expédiée <strong>dès réception de votre paiement</strong> via
+                        <strong>DHL</strong>, <strong>FedEx</strong> ou un autre transporteur.
+                        Vous recevrez un email avec le <strong>lien de suivi</strong> dès l'expédition.
+                      </p>
+                    </div>
+                  </label>
+
+                  <!-- Formulaire adresse d'expédition -->
+                  @if (deliveryMode === 'shipping') {
+                  <div class="shipping-address-form mt-3">
+                    <p class="shipping-address-title">
+                      <i class="fas fa-map-marker-alt mr-2"></i>Adresse de livraison
+                    </p>
+                    <div class="addr-row">
+                      <div class="addr-field">
+                        <label class="addr-label">Prénom <span class="required">*</span></label>
+                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.firstName"
+                          placeholder="Prénom" autocomplete="given-name">
+                      </div>
+                      <div class="addr-field">
+                        <label class="addr-label">Nom <span class="required">*</span></label>
+                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.lastName"
+                          placeholder="Nom de famille" autocomplete="family-name">
+                      </div>
+                    </div>
+                    <div class="addr-field">
+                      <label class="addr-label">Adresse <span class="required">*</span></label>
+                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address1"
+                        placeholder="Numéro et nom de rue" autocomplete="address-line1">
+                    </div>
+                    <div class="addr-field">
+                      <label class="addr-label">Complément d'adresse</label>
+                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address2"
+                        placeholder="Appartement, bâtiment, etc. (optionnel)" autocomplete="address-line2">
+                    </div>
+                    <div class="addr-row">
+                      <div class="addr-field addr-field--short">
+                        <label class="addr-label">Code postal <span class="required">*</span></label>
+                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.postalCode"
+                          placeholder="75001" autocomplete="postal-code">
+                      </div>
+                      <div class="addr-field">
+                        <label class="addr-label">Ville <span class="required">*</span></label>
+                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.city"
+                          placeholder="Paris" autocomplete="address-level2">
+                      </div>
+                    </div>
+                    <div class="addr-field">
+                      <label class="addr-label">Pays <span class="required">*</span></label>
+                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.country"
+                        placeholder="France" autocomplete="country-name">
+                    </div>
+                    <div class="addr-field">
+                      <label class="addr-label">Téléphone <span class="required">*</span></label>
+                      <input type="tel" class="addr-input" [(ngModel)]="shippingAddress.phone"
+                        placeholder="+33 6 12 34 56 78" autocomplete="tel">
+                    </div>
+                    <p class="addr-required-note"><span class="required">*</span> Champs obligatoires</p>
+                  </div>
+                  }
+
                 </div>
               </div>
             </div>
             <!-- Card -->
             <!-- Card -->
             <div class="card mb-4">
-              <div class="card-body text-center">
-                <p class="mb-4 redInfos">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}: </p>
-                <div class="d-flex justify-content-center align-items-center flex-wrap gap-2 mb-3">
-                  <img class="mr-2" width="45px"
-                    src="https://mdbootstrap.com/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                    alt="Visa">
-                  <img class="mr-2" width="45px"
-                    src="https://mdbootstrap.com/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                    alt="American Express">
-                  <img class="mr-2" width="45px"
-                    src="https://mdbootstrap.com/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                    alt="Mastercard">
-                  <img class="mr-2" width="45px"
-                    src="https://mdbootstrap.com/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.png"
-                    alt="PayPal acceptance mark">
+              <div class="card-body">
+                <p class="mb-3 redInfos text-center">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</p>
+
+                <!-- Paiement local -->
+                <div class="payment-block mb-3">
+                  <p class="payment-block-title"><i class="fas fa-mobile-alt mr-2"></i>Au Gabon — Mobile Money</p>
+                  <p class="payment-block-detail">
+                    Réglez via
+                    <a href="https://www.airtel.ga/airtelmoney/Offers" target="_blank" rel="noopener">Airtel Money</a>
+                    ou
+                    <a href="https://www.moov-africa.ga/particulier/mobile/Moov-Money/services/Pages/Transfert.aspx" target="_blank" rel="noopener">Moov Money</a>
+                    au numéro <strong>+241 77 60 10 44</strong>.<br>
+                    Indiquez votre nom en référence du transfert.
+                  </p>
                 </div>
-                <p class="mb-4">{{'PRODUCTS.PAYMENTS_MEANS_DETAILS' | translate}} <span
-                    class="greenInfos">{{'PRODUCTS.SEND_COMMAND' | translate}}</span>
-                  {{'PRODUCTS.WILL_CALL_YOU_BACK' | translate}}</p>
+
+                <!-- Paiement international -->
+                <div class="payment-block">
+                  <p class="payment-block-title"><i class="fas fa-globe mr-2"></i>Depuis l'étranger (ex : France)</p>
+                  <p class="payment-block-detail">
+                    Via <a href="https://www.remitly.com/fr/fr/gabon" target="_blank" rel="noopener"><strong>Remitly</strong></a>
+                    en envoyant directement vers le numéro <strong>Airtel Money +241 77 60 10 44</strong> — rapide et sans déplacement.<br>
+                    Ou via <a href="https://www.westernunion.com/fr/fr/home.html" target="_blank" rel="noopener"><strong>Western Union</strong></a> en ligne, sans déplacement, au nom du bénéficiaire communiqué par email.<br>
+                    Les frais de transfert sont à la charge de l'acheteur.
+                  </p>
+                </div>
+
+                <p class="mt-3 mb-0 text-center small text-muted">
+                  Envoyez votre commande — nous vous confirmons les détails de paiement par email.
+                </p>
               </div>
             </div>
             <!-- Card -->
@@ -181,7 +267,18 @@
                   }
                   <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                     {{'PRODUCTS.SHIPPING' | translate}}
-                    <span>{{'PRODUCTS.GRATIS' | translate}}</span>
+                    <span *ngIf="deliveryMode !== 'shipping'">{{'PRODUCTS.GRATIS' | translate}}</span>
+                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur !== null">{{ pricing.format(shippingCostEur!) }}</span>
+                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="shipping-pending-text">
+                      {{'SHIPPING_PENDING' | translate}}
+                    </span>
+                  </li>
+                  <li *ngIf="deliveryMode === 'shipping' && shippingCostEur === null"
+                      class="list-group-item border-0 px-0 pb-0">
+                    <small class="text-muted">
+                      <i class="fas fa-info-circle mr-1"></i>
+                      Les frais de port seront communiqués par email dès que votre commande sera prête.
+                    </small>
                   </li>
                   @if ((pricing.currency$ | async) !== 'XAF') {
                   <li class="list-group-item d-flex justify-content-between align-items-center px-0">
@@ -200,9 +297,42 @@
                   </li>
                 </ul>
                 <button (click)="sendCommand()"
-                  [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent" type="button"
-                  class="btn btn-primary btn-block waves-effect waves-light">{{'PRODUCTS.SEND_COMMAND' | translate}}
+                  [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent || !canSend" type="button"
+                  class="btn btn-primary btn-block waves-effect waves-light">
+                  {{ activeOrder ? 'Modifier la commande' : ('PRODUCTS.SEND_COMMAND' | translate) }}
                 </button>
+                <p *ngIf="hasOutOfStockItems" class="small text-danger text-center mt-2">
+                  Un ou plusieurs articles sont épuisés. Retirez-les pour pouvoir envoyer la commande.
+                </p>
+                <p *ngIf="((nbSelectedItems$ | async) ?? 0) >= 1 && !deliveryMode && !hasOutOfStockItems"
+                  class="small text-muted text-center mt-2">
+                  Choisissez un mode de livraison pour continuer.
+                </p>
+                <p *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid"
+                  class="small text-muted text-center mt-2">
+                  Remplissez tous les champs obligatoires de l'adresse de livraison.
+                </p>
+              </div>
+            </div>
+            <!-- Card -->
+
+            <!-- Card statuts commandes -->
+            <div class="card mb-4" *ngIf="orderStatuses.length > 0">
+              <div class="card-body">
+                <h6 class="mb-3">{{'MY_ORDERS' | translate}}</h6>
+                <div *ngFor="let orderStatus of orderStatuses" class="order-status-row">
+                  <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                    <div>
+                      <span class="small text-muted">#{{ orderStatus.id | slice:0:8 }}</span><br>
+                      <span class="small text-muted">{{ orderStatus.createdAt | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                    <span class="order-status-badge"
+                      [style.background-color]="statusColors[orderStatus.status] || '#7f8c8d'">
+                      {{ statusLabels[orderStatus.status] || orderStatus.status }}
+                    </span>
+                  </div>
+
+                </div>
               </div>
             </div>
             <!-- Card -->
@@ -235,4 +365,10 @@
       <!--Section: Block Content-->
     </div>
   </main>
+</div>
+
+<!-- Lightbox -->
+<div *ngIf="lightboxSrc" class="cart-lightbox-overlay" (click)="closeLightbox()">
+  <img [src]="lightboxSrc" class="cart-lightbox-img" (click)="$event.stopPropagation()" />
+  <button class="cart-lightbox-close" (click)="closeLightbox()">✕</button>
 </div>

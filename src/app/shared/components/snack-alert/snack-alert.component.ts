@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, Optional } from '@angular/core';
+import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
+
+export interface SnackAlertData {
+  message: string;
+  type: 'success' | 'error';
+}
 
 @Component({
   selector: 'app-snack-alert',
@@ -6,11 +12,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./snack-alert.component.css'],
   standalone: false,
 })
-export class SnackAlertComponent implements OnInit {
+export class SnackAlertComponent {
 
-  constructor() { }
+  message: string;
+  type: 'success' | 'error';
 
-  ngOnInit(): void {
+  constructor(@Optional() @Inject(MAT_SNACK_BAR_DATA) data: SnackAlertData | null) {
+    this.message = data?.message ?? 'COMMAND_SENT_MSG';
+    this.type = data?.type ?? 'success';
   }
-
 }

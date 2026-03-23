@@ -9,6 +9,7 @@ export const environment = {
   ...env,
   appName: `${env.appName} - DEV`,
   envName: ENV_TYPES.DEV,
+  useEmulators: false,
   redux: {
     log: true
   }

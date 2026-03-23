@@ -20,6 +20,7 @@ import { uiReducer } from './store/ui.reducer';
 import {functionalErrorsReducer} from '@app/auth/store/errors.reducer';
 import {CacheService} from "@shared/services";
 import {APP_CONFIG} from "@helpers/constants";
+import {FirebaseRepositoriesModule} from '@app/core/firebase/firebase-repositories.module';
 
 export const metaReducers: MetaReducer<any>[] = [initStateFromLocalStorage];
 
@@ -48,6 +49,7 @@ if (!environment.production) {
       },
     }),
     EffectsModule.forRoot([AuthEffects, RouterEffects]),
+    FirebaseRepositoriesModule,
     // Instrumentation must be imported after importing StoreModule
     StoreDevtoolsModule.instrument({
       maxAge: 25,

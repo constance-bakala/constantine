@@ -8,12 +8,16 @@ export function findItemByReference(items: ItemInfos[], reference: string): Item
 export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue: any): ItemsState {
   let itemsStateCopy = _.cloneDeep(state);
   let category = (itemsStateCopy as any)[itemToUpdateRawValue.category.toLowerCase()];
-  let foundItem: ItemInfos = category.items[itemToUpdateRawValue.index - 1];
-  if (!!foundItem && (foundItem.selected || !!itemToUpdateRawValue)) {
-    foundItem.basketInfos.selectedQuantity = itemToUpdateRawValue.basketInfos.selectedQuantity;
+  if (!category) return state;
+  let foundItem: ItemInfos = category.items.find(
+    (item: ItemInfos) => item.reference === itemToUpdateRawValue.reference
+  );
+  if (foundItem) {
+    foundItem.basketInfos.selectedQuantity = Math.max(1, itemToUpdateRawValue.basketInfos?.selectedQuantity ?? 1);
     foundItem.basketInfos.selectedModel = itemToUpdateRawValue.basketInfos.selectedModel;
-    foundItem.basketInfos.selectedSize = (ItemSizeEnum as any)[itemToUpdateRawValue.basketInfos.selectedSize];
-    foundItem.selected = itemToUpdateRawValue?.selected;
+    foundItem.basketInfos.selectedSize = (ItemSizeEnum as any)[itemToUpdateRawValue.basketInfos.selectedSize]
+      ?? itemToUpdateRawValue.basketInfos.selectedSize;
+    foundItem.selected = itemToUpdateRawValue?.selected ?? true;
   }
   return itemsStateCopy;
 }

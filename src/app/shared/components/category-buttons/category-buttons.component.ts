@@ -32,7 +32,8 @@ export class CategoryButtonsComponent implements OnInit {
   getOtherLinks(name: ItemsCategoriesEnum, categoryInfos: ExistingCategories): CategoryInfos[] {
     return Object.keys(categoryInfos)
       .filter(key => key !== name?.toLowerCase())
-      .map(targetKey => (categoryInfos as any)[targetKey]);
+      .map(targetKey => (categoryInfos as any)[targetKey])
+      .filter(Boolean);
   }
 
   gotoTarget(name: ItemsCategoriesEnum) {

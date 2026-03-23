@@ -5,5 +5,6 @@ export const environment = {
   ...env,
   envName: ENV_TYPES.PROD,
   production: true,
+  useEmulators: false,
   urls: URLS
 };

@@ -1,0 +1,14 @@
+.snack-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.snack-alert strong {
+  color: #fff;
+  font-size: 14px;
+}
+
+.snack-alert--error strong {
+  color: #ff6b6b;
+}

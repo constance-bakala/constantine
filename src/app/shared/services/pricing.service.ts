@@ -2,23 +2,21 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { ITEMS_PRICES, ItemsPrices } from '@helpers/items-prices.const';
-import { Currency, ItemsCategoriesEnum } from '@shared/interfaces';
+import { Currency } from '@shared/interfaces';
 import { ActionSetCurrency } from '@app/core/store/ui.actions';
 import { selectCurrency } from '@app/core/store/ui.selectors';
+import { CatalogRepository } from '@app/core/firebase/catalog.repository';
 
 /**
  * PricingService
  *
  * Responsabilités :
- *  - Fournir le prix d'un item à partir de la source de données actuelle.
- *  - Convertir et formater le prix selon la langue et la devise sélectionnées.
+ *  - Fournir la devise active et formater les prix selon la langue.
+ *  - Les prix des articles viennent directement des items Firebase (priceXAF / EUR).
  *
  * Devises supportées :
- *  - EUR (€)  : langue 'fr' ou 'en'
- *  - XAF (FCFA) : langue 'fr' uniquement, taux fixe 1 EUR = 655.957 FCFA, TVA = 0%
- *
- * Source de vérité : NgRx store (clé `ui.currency`), persisté dans localStorage.
+ *  - EUR (€)    : langue 'fr' ou 'en'
+ *  - XAF (FCFA) : langue 'fr' uniquement, taux fixe 1 EUR = 655.957 FCFA
  */
 @Injectable({ providedIn: 'root' })
 export class PricingService {
@@ -29,28 +27,54 @@ export class PricingService {
   /** Snapshot synchrone utilisé dans format() et tvaRate. */
   private _currency: Currency = 'XAF';
 
-  private readonly prices: ItemsPrices = ITEMS_PRICES;
+  /** Langue active (snapshot synchrone). */
+  private _lang = 'fr';
+
   private readonly EUR_TO_XAF = 655.96;
   private readonly RATES: Record<string, number> = { fr: 1, en: 1.08 };
   private readonly SYMBOLS: Record<string, string> = { fr: '€', en: '$' };
 
-  constructor(private translate: TranslateService, private store: Store<any>) {
-    this.currency$ = this.store.select(selectCurrency);
+  /** Surcharges de prix (nœud prices/ Firebase — conservé pour compatibilité ascendante). */
+  private priceOverridesXAF: Record<string, number> = {};
 
-    // Maintient le snapshot synchrone à jour
+  constructor(
+    private translate: TranslateService,
+    private store: Store<any>,
+    private catalogRepository: CatalogRepository,
+  ) {
+    this.currency$ = this.store.select(selectCurrency);
     this.currency$.subscribe(c => { this._currency = c; });
 
-    // Passage en anglais : toujours EUR, on efface le choix sauvegardé
+    this.catalogRepository.watchPriceOverrides().subscribe(overrides => {
+      this.priceOverridesXAF = overrides;
+    });
+
     this.translate.onLangChange.subscribe(({ lang }) => {
+      this._lang = lang;
       if (lang !== 'fr') {
         localStorage.removeItem('currency');
         this.setCurrency('EUR');
       }
-      // Passage en français : on conserve le choix de l'utilisateur
     });
   }
 
   get currency(): Currency { return this._currency; }
+  get eurToXaf(): number { return this.EUR_TO_XAF; }
+
+  /**
+   * Retourne le prix effectif en EUR.
+   * Si une surcharge Firebase existe (prices/ node), elle prend le dessus sur defaultEur.
+   */
+  getEffectiveEur(reference: string, defaultEur: number): number {
+    const xaf = this.priceOverridesXAF[reference];
+    return xaf != null ? Math.round((xaf / this.EUR_TO_XAF) * 100) / 100 : defaultEur;
+  }
+
+  /** Prix en FCFA effectif pour affichage. */
+  getEffectiveXAF(reference: string, defaultEur: number): number {
+    const xaf = this.priceOverridesXAF[reference];
+    return xaf != null ? xaf : Math.round(defaultEur * this.EUR_TO_XAF);
+  }
 
   /** TVA applicable : 0% en FCFA, 10% en EUR. */
   get tvaRate(): number { return this._currency === 'XAF' ? 0 : 0.10; }
@@ -61,33 +85,33 @@ export class PricingService {
     this.store.dispatch(new ActionSetCurrency({ currency }));
   }
 
-  /** Retourne le prix en EUR pour un item donné (0 si non trouvé). */
-  getPrice(category: ItemsCategoriesEnum, id: number): number {
-    const key = this.categoryKey(category);
-    return key ? (this.prices[key]?.[id] ?? 0) : 0;
-  }
-
   /** Formate un prix en EUR selon la langue et la devise actives. */
   format(priceEur: number): string {
-    if (this._currency === 'XAF') {
-      const value = Math.round(priceEur * this.EUR_TO_XAF / 100) * 100;
-      return `${value.toLocaleString('fr-FR')} FCFA`;
-    }
-
-    const lang   = this.translate.currentLang ?? 'fr';
-    const rate   = this.RATES[lang]   ?? 1;
-    const symbol = this.SYMBOLS[lang] ?? '€';
-    const value  = Math.round(priceEur * rate);
-
-    return lang === 'en' ? `${symbol}${value}` : `${value} ${symbol}`;
+    return this.formatAmount(this.formatRaw(priceEur));
   }
 
-  private categoryKey(category: ItemsCategoriesEnum): keyof ItemsPrices | null {
-    switch (category) {
-      case ItemsCategoriesEnum.MASKS:   return 'masks';
-      case ItemsCategoriesEnum.DRESSES: return 'dresses';
-      case ItemsCategoriesEnum.EARINGS: return 'earings';
-      default: return null;
+  /**
+   * Retourne la valeur numérique dans la devise d'affichage (arrondie),
+   * sans le suffixe. Utile pour sommer des montants item par item
+   * avant d'afficher le total, afin d'éviter les écarts d'arrondi.
+   */
+  formatRaw(priceEur: number): number {
+    if (this._currency === 'XAF') {
+      return Math.round(priceEur * this.EUR_TO_XAF / 100) * 100;
     }
+    const rate = this.RATES[this._lang] ?? 1;
+    const raw  = priceEur * rate;
+    return raw >= 1 ? Math.round(raw) : parseFloat(raw.toFixed(2));
+  }
+
+  /** Formate un montant déjà exprimé dans la devise d'affichage (sans conversion). */
+  formatAmount(amount: number): string {
+    if (this._currency === 'XAF') {
+      return `${amount.toLocaleString('fr-FR')} FCFA`;
+    }
+    const lang   = this._lang;
+    const symbol = this.SYMBOLS[lang] ?? '€';
+    const value  = amount >= 1 ? Math.round(amount).toString() : amount.toFixed(2);
+    return lang === 'en' ? `${symbol}${value}` : `${value} ${symbol}`;
   }
 }

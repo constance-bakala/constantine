@@ -12,23 +12,9 @@
     </div>
     <!-- Portfolio Grid Items-->
     <div class="row justify-content-center text-center">
-      <!-- Portfolio Items-->
-      <div class="{{disposition}}">
-        <app-portfolio-item [data]="dataMasks">
-        </app-portfolio-item>
-      </div>
-      <div class="{{disposition}}">
-        <app-portfolio-item [data]="dataEarings">
-        </app-portfolio-item>
-      </div>
-
-      <div class="{{disposition}}">
-        <app-portfolio-item [data]="dataDresses">
-        </app-portfolio-item>
+      <div *ngFor="let item of portfolioItems$ | async" class="{{disposition}}">
+        <app-portfolio-item [data]="item"></app-portfolio-item>
       </div>
     </div>
   </div>
 </section>
-<!--Section: Block Content-->
-
-

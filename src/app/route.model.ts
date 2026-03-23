@@ -27,30 +27,6 @@ export const routes: Routes = [
     component: NotFoundComponent,
   },
   {
-    path: 'earings',
-    loadChildren: () => import('./features/jewellery/jewellery.module').then(m => m.JewelleryModule),
-    data: {
-      seoTitle: 'Bijoux & Boucles d\'Oreilles Africaines Artisanales – Délice Éternel | Libreville Gabon',
-      seoDesc:  'Boucles d\'oreilles et bijoux africains artisanaux, faits main à Libreville, Gabon. Colliers, bracelets, créations uniques. Commandez en ligne.',
-    },
-  },
-  {
-    path: 'masks',
-    loadChildren: () => import('./features/masks/masks.module').then(m => m.MasksModule),
-    data: {
-      seoTitle: 'Masques Africains Artisanaux – Délice Éternel | Libreville Gabon',
-      seoDesc:  'Masques africains artisanaux conçus à Libreville, Gabon. Design unique, qualité supérieure, disponibles à la commande en ligne.',
-    },
-  },
-  {
-    path: 'dresses',
-    loadChildren: () => import('./features/clothing/clothing.module').then(m => m.ClothingModule),
-    data: {
-      seoTitle: 'Robes Africaines Sur Mesure, Pagnes Wax & Tenues – Délice Éternel | Libreville Gabon',
-      seoDesc:  'Robes africaines sur mesure en pagne wax, tenues de cérémonie et mariage, vêtements homme femme enfant. Couturière à Libreville, Gabon. Livraison mondiale.',
-    },
-  },
-  {
     path: 'shopping-cart',
     loadChildren: () => import('./features/shopping-cart/shopping-cart.module').then(m => m.ShoppingCartModule),
     data: {
@@ -61,6 +37,14 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('@app/auth/auth.module').then(m => m.AuthModule),
+  },
+  {
+    path: 'category',
+    loadChildren: () => import('./features/category/category.module').then(m => m.CategoryModule),
+  },
+  {
+    path: 'order-history',
+    loadChildren: () => import('./features/order-history/order-history.module').then(m => m.OrderHistoryModule),
   },
   {
     path: 'admin',

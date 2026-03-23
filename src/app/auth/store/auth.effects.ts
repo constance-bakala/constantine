@@ -2,7 +2,7 @@ import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
 import {Action, select, Store} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {from, of} from 'rxjs';
+import {BehaviorSubject, EMPTY, of} from 'rxjs';
 import {catchError, filter, map, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 
 import {LocalStorageService} from '../../core/local-storage/local-storage.service';
@@ -20,21 +20,45 @@ import {Go} from './router.actions';
 import {AuthService} from '@shared/services';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AUTH_KEY} from '@app/auth/store/auth.reducer';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import {ItemInfos} from '@shared/interfaces';
-import {ActionItemToogleNotSelected, ActionUpdateBasketItem} from '@app/features/store';
+import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {ActionItemToogleNotSelected, ActionUpdateBasketItem, ItemsActionTypes} from '@app/features/store';
+import {UsersRepository} from '@app/core/firebase/users.repository';
+
+const REQUIRED_CATEGORIES = [
+  ItemsCategoriesEnum.EARINGS,
+  ItemsCategoriesEnum.DRESSES,
+  ItemsCategoriesEnum.MASKS,
+];
 
 @Injectable()
 export class AuthEffects {
+
+  /**
+   * Set des catégories ayant reçu RETRIEVE_ITEMS_SUCCESS depuis le démarrage.
+   * Alimenté dès le constructeur pour ne manquer aucune émission.
+   */
+  private readonly loadedCategories = new Set<string>();
+  private readonly allCategoriesLoaded$ = new BehaviorSubject<boolean>(false);
+
   constructor(
     private actions$: Actions,
     private store$: Store<any>,
     private service: AuthService,
     private router: Router,
     private localStorageService: LocalStorageService,
-    private cache: CacheService
+    private cache: CacheService,
+    private usersRepository: UsersRepository,
   ) {
+    // Démarre l'écoute immédiatement (avant tout effet) pour ne pas rater
+    // les RETRIEVE_ITEMS_SUCCESS qui arrivent rapidement après le démarrage.
+    this.actions$.pipe(
+      ofType(ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS),
+    ).subscribe((action: any) => {
+      this.loadedCategories.add(action.payload.name);
+      if (REQUIRED_CATEGORIES.every(c => this.loadedCategories.has(c))) {
+        this.allCategoriesLoaded$.next(true);
+      }
+    });
   }
 
   logout$ = createEffect(() =>
@@ -43,6 +67,7 @@ export class AuthEffects {
       map((action: ActionAuthLogout) => {
         this.localStorageService.setItem(AUTH_KEY, undefined);
         this.localStorageService.clearAll();
+        localStorage.removeItem('delice-basket');
         // this.cache.clearAll();
         return new ActionAuthLoggedOut();
       }),
@@ -69,25 +94,13 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActionTypes.AUTH_REFRESH_USER_TOKEN),
-        tap(() => {
+        switchMap(() => {
           const currentUser = this.localStorageService.getItem(AUTH_KEY);
-
-          if (currentUser) {
-            this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
-
-            firebase
-              .database()
-              .ref(`users/${currentUser.uid}/commends`)
-              .on('value', (snap) => {
-                if (snap.val()) {
-                  (Object.values(snap.val())[0] as ItemInfos[]).forEach((item) => {
-                    this.store$.dispatch(new ActionItemToogleNotSelected(item));
-                  });
-                }
-              });
-          } else {
-            // this.store$.dispatch(new ActionAuthLogout());
-          }
+          if (!currentUser) return EMPTY;
+          this.store$.dispatch(new ActionAuthLoggedIn(currentUser));
+          return this.usersRepository.watchCommands(currentUser.uid).pipe(
+            tap(items => items.forEach(item => this.store$.dispatch(new ActionItemToogleNotSelected(item))))
+          );
         })
       ),
     {dispatch: false}
@@ -128,27 +141,26 @@ export class AuthEffects {
         switchMap((action: ActionAuthLoggedIn) => {
           const uid = action.payload?.additionalInfos?.uid;
           if (!uid) return of(null);
-          // Efface les données stale de localStorage avant la réponse Firebase
-          // pour que restoreBasket$ ne dispatche pas d'anciens items
-          localStorage.removeItem('delice-basket');
-          return from(firebase.database().ref(`users/${uid}/basket`).once('value')).pipe(
-            switchMap((snap) => {
-              const val = snap.val();
-              if (!val) return of(null);
-              const rawItems: any[] = Array.isArray(val) ? val : Object.values(val);
-              const items = rawItems.filter(Boolean);
-              if (!items.length) return of(null);
-              localStorage.setItem('delice-basket', JSON.stringify(items));
-              // Attend que les 3 catégories soient chargées dans le store avant de dispatcher
-              return this.store$.pipe(
-                select((state: any) =>
-                  (state.constantine?.earings?.items?.length ?? 0) > 0 &&
-                  (state.constantine?.dresses?.items?.length ?? 0) > 0 &&
-                  (state.constantine?.masks?.items?.length ?? 0) > 0
-                ),
-                filter((allLoaded) => !!allLoaded),
-                take(1),
-                tap(() => items.forEach((item) => this.store$.dispatch(new ActionUpdateBasketItem(item))))
+          // Ne pas restaurer seulement si TOUTES les commandes existantes sont expédiées
+          return this.usersRepository.getOrderStatus(uid).pipe(
+            switchMap((statusVal) => {
+              const orders = statusVal ? Object.values(statusVal) : [];
+              // Firebase est source de vérité UNIQUEMENT s'il y a une commande active (non expédiée).
+              // Pas de commande active → on garde le panier localStorage tel quel.
+              const hasActiveOrder = orders.some((o: any) => o?.status !== 'shipped');
+              if (!hasActiveOrder) return of(null);
+              return this.usersRepository.getBasket(uid).pipe(
+                switchMap((items) => {
+                  if (!items?.length) return of(null);
+                  // Attend que les 3 catégories soient chargées.
+                  // allCategoriesLoaded$ est un BehaviorSubject alimenté depuis le
+                  // constructeur → émet true immédiatement si déjà chargées, sinon attend.
+                  return this.allCategoriesLoaded$.pipe(
+                    filter(loaded => loaded),
+                    take(1),
+                    tap(() => items.forEach((item) => this.store$.dispatch(new ActionUpdateBasketItem(item))))
+                  );
+                })
               );
             }),
             catchError((e) => {
