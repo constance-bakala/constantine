@@ -15,6 +15,20 @@ export class CatalogRepository {
 
   constructor(private db: Database, private storage: Storage) {}
 
+  // ── config/ — Configuration globale ──────────────────────────────────────
+
+  /** Observe le taux de TVA stocké dans config/tvaRate (0 = pas de TVA). */
+  watchTvaRate(): Observable<number> {
+    return new Observable(observer => {
+      const configRef = dbRef(this.db, 'config/tvaRate');
+      const unsubscribe = onValue(configRef, (snap) => {
+        const val = snap.val();
+        observer.next(typeof val === 'number' ? val : 0);
+      }, () => observer.next(0));
+      return () => unsubscribe();
+    });
+  }
+
   // ── Legacy prices/ ────────────────────────────────────────────────────────
 
   watchPriceOverrides(): Observable<Record<string, number>> {

@@ -18,6 +18,7 @@
               "lodash",
               "firebase",
               "quill",
+              "quill-delta",
               "@angular/common/locales/fr",
               "lodash/dropRight",
               "@firebase/app",

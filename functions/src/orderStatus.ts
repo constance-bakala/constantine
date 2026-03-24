@@ -117,7 +117,7 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
     const customerName: string  = order.customerName ?? customerEmail ?? 'Client';
     const items: any[]          = Array.isArray(order.items) ? order.items : [];
     const deliveryModeLabels: Record<string, string> = {
-      pickup:   'Retrait en magasin — Libreville',
+      pickup:   'Retrait au Gabon',
       shipping: 'Expédition internationale',
     };
     const deliveryModeLabel: string = deliveryModeLabels[order.deliveryMode] ?? '';
@@ -127,10 +127,14 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
       return { success: true, emailSent: false };
     }
 
+    // Lire le taux TVA depuis Firebase config
+    const tvaRateSnap = await admin.database().ref('config/tvaRate').once('value');
+    const tvaRate = typeof tvaRateSnap.val() === 'number' ? tvaRateSnap.val() : 0;
+
     // Calcul du total en FCFA — arrondi à la centaine (même logique que l'admin)
     const EUR_TO_XAF = 655.957;
     const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
-    const hasTva = order.deliveryMode === 'shipping'; // TVA 10% pour expédition internationale
+    const hasTva = order.deliveryMode === 'shipping' && tvaRate > 0;
 
     const itemsWithPrice = items.map((item) => {
       const qty = item?.basketInfos?.selectedQuantity ?? 1;
@@ -141,7 +145,7 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
       const qty = item?.basketInfos?.selectedQuantity ?? 1;
       return sum + toXAF((item?.price ?? 0) * qty);
     }, 0);
-    const tvaXAF         = hasTva ? Math.round(itemsHtXAF * 0.1 / 100) * 100 : 0;
+    const tvaXAF         = hasTva ? Math.round(itemsHtXAF * tvaRate / 100) * 100 : 0;
     const shippingCostXAF = shippingCost ?? 0; // déjà en XAF, pas de conversion
     const totalXAF        = itemsHtXAF + tvaXAF + shippingCostXAF;
 
@@ -187,7 +191,7 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
     const customerName: string = order.customerName ?? order.customerEmail ?? 'Client';
     const items: any[] = Array.isArray(order.items) ? order.items : [];
     const deliveryModeLabels: Record<string, string> = {
-      pickup:   'Retrait en magasin — Libreville',
+      pickup:   'Retrait au Gabon',
       shipping: 'Expédition internationale',
     };
     const deliveryModeLabel: string = deliveryModeLabels[order.deliveryMode] ?? '';
@@ -195,7 +199,11 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
     if (customerEmail) {
       const EUR_TO_XAF = 655.957;
       const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
-      const hasTvaShipped = order.deliveryMode === 'shipping';
+
+      // Lire le taux TVA depuis Firebase config
+      const tvaRateShippedSnap = await admin.database().ref('config/tvaRate').once('value');
+      const tvaRateShipped = typeof tvaRateShippedSnap.val() === 'number' ? tvaRateShippedSnap.val() : 0;
+      const hasTvaShipped = order.deliveryMode === 'shipping' && tvaRateShipped > 0;
 
       const itemsWithPrice = items.map((item) => {
         const qty = item?.basketInfos?.selectedQuantity ?? 1;
@@ -206,7 +214,7 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
         const qty = item?.basketInfos?.selectedQuantity ?? 1;
         return sum + toXAF((item?.price ?? 0) * qty);
       }, 0);
-      const tvaShippedXAF          = hasTvaShipped ? Math.round(itemsOnlyXAF * 0.1 / 100) * 100 : 0;
+      const tvaShippedXAF          = hasTvaShipped ? Math.round(itemsOnlyXAF * tvaRateShipped / 100) * 100 : 0;
       const shippedShippingCostXAF = typeof order.shippingCost === 'number' ? order.shippingCost : 0;
       const totalXAF               = itemsOnlyXAF + tvaShippedXAF + shippedShippingCostXAF;
 
@@ -236,6 +244,9 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
             carrierName: carrierName ?? '',
             deliveryModeLabel,
             shippingAddress: order.shippingAddress ?? null,
+            customsNote: order.deliveryMode === 'shipping'
+              ? 'Des droits de douane peuvent être exigés à la réception selon votre pays. Ces frais ne sont pas inclus dans le montant de votre commande.'
+              : null,
           },
         });
         console.log(`[orderStatus] Email "commande expédiée" envoyé → ${customerEmail}`);

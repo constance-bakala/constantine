@@ -11,4 +11,3 @@ export { welcomeBrevoEmail, genericBrevoEmail } from './brevoMails';
 export { updateOrderStatus } from './orderStatus';
 export { resendPaymentEmail } from './resendPaymentEmail';
 export { processUploadedCatalogImage } from './processUploadedCatalogImage';
-export { tryonVirtual } from './tryonVirtual';

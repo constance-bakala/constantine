@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { select, Store as NgRxStore } from '@ngrx/store';
 import { UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { combineLatest, from, Observable, Subscription } from 'rxjs';
+import { combineLatest, from, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 
 
@@ -56,7 +56,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   pickupSubMode: 'courier' | 'store' | null = null;
   courierAgreementChecked = false;
   shippingAddress = { firstName: '', lastName: '', address1: '', address2: '', postalCode: '', city: '', country: '', phone: '' };
-  orderStatuses: { id: string; status: string; createdAt: number; deliveryMode?: string; pickupSubMode?: string; shippingAddress?: any; shippingCost?: number }[] = [];
+  orderStatuses: { id: string; status: string; createdAt: number; deliveryMode?: string; pickupSubMode?: string; shippingAddress?: any; shippingCost?: number; currency?: string }[] = [];
   stockByRef: Record<string, number> = {};
   lightboxSrc: string | null = null;
 
@@ -126,6 +126,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
 
   private subs = new Subscription();
   private formSubs = new Subscription();
+  private addressChange$ = new Subject<void>();
   private commendsRef?: firebase.database.Reference;
   private firebaseBasketSnapshot: { reference: string; qty: number; size: string; model: string }[] = [];
   private snapshotOrderId: string | null = null;
@@ -145,6 +146,21 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Restaurer le mode de livraison depuis localStorage (avant l'arrivée de Firebase)
+    try {
+      const saved = localStorage.getItem('deliveryState');
+      if (saved) {
+        const d = JSON.parse(saved);
+        if (d.deliveryMode) this.deliveryMode = d.deliveryMode;
+        if (d.pickupSubMode) this.pickupSubMode = d.pickupSubMode;
+        if (d.shippingAddress) this.shippingAddress = { ...this.shippingAddress, ...d.shippingAddress };
+      }
+    } catch {}
+
+    // Sauvegarder l'adresse 500ms après la dernière saisie
+    this.subs.add(
+      this.addressChange$.pipe(debounceTime(500)).subscribe(() => this.saveDeliveryState())
+    );
 
     this.nbSelectedItems$ = this.store.pipe(select(selectNbChosenItems));
     this.categoryInfos$ = this.store.pipe(select(selectExistingCategory));
@@ -219,9 +235,13 @@ export class CartItemsComponent implements OnInit, OnDestroy {
               const wasDeleted = prevActiveIds.some(id => !raw[id]);
               if (wasDeleted) {
                 localStorage.removeItem('delice-basket');
+                localStorage.removeItem('deliveryState');
                 localStorage.setItem('basketCleared', '1');
                 this.store.dispatch(new ActionClearBasket());
                 this.commendAllreadySent = false;
+                this.deliveryMode = null;
+                this.pickupSubMode = null;
+                this.shippingAddress = { firstName: '', lastName: '', address1: '', address2: '', postalCode: '', city: '', country: '', phone: '' };
               }
               if (!snap.exists()) { this.orderStatuses = []; return; }
 
@@ -234,22 +254,25 @@ export class CartItemsComponent implements OnInit, OnDestroy {
                   pickupSubMode: data.pickupSubMode,
                   shippingAddress: data.shippingAddress,
                   shippingCost: typeof data.shippingCost === 'number' ? data.shippingCost : undefined,
+                  currency: data.currency,
                 }))
                 .filter(o => o.status !== 'shipped' && o.status !== 'cancelled')
                 .sort((a, b) => b.createdAt - a.createdAt);
 
-              // Pré-remplir le mode de livraison depuis la commande active (si pas encore choisi)
+              // Pré-remplir le mode de livraison et la devise depuis la commande active
               const active = this.orderStatuses[0];
-              if (!this.deliveryMode && active) {
-                // Fallback 'pickup' si le champ n'existe pas (anciennes commandes)
-                this.deliveryMode = (active.deliveryMode as 'pickup' | 'shipping') || 'pickup';
-                if (active.deliveryMode === 'pickup' && active.pickupSubMode) {
-                  this.pickupSubMode = active.pickupSubMode as 'courier' | 'store';
-                  if (active.pickupSubMode === 'courier') this.courierAgreementChecked = true;
-                }
+              if (active?.currency) {
+                this.pricing.setCurrency(active.currency as 'EUR' | 'XAF');
+              }
+              if (active) {
+                // Commande Firebase active : source de vérité (écrase localStorage)
+                this.deliveryMode = (active.deliveryMode as 'pickup' | 'shipping') || null;
+                this.pickupSubMode = (active.pickupSubMode as 'courier' | 'store') || null;
+                if (active.pickupSubMode === 'courier') this.courierAgreementChecked = true;
                 if (active.deliveryMode === 'shipping' && active.shippingAddress) {
                   this.shippingAddress = { ...active.shippingAddress };
                 }
+                this.saveDeliveryState();
               }
 
               // Capturer le snapshot depuis les items DE LA COMMANDE (orderStatus),
@@ -397,12 +420,31 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return this.basketItemsArray.controls[index].get('quantity') as UntypedFormControl;
   }
 
+  private saveDeliveryState(): void {
+    localStorage.setItem('deliveryState', JSON.stringify({
+      deliveryMode: this.deliveryMode,
+      pickupSubMode: this.pickupSubMode,
+      shippingAddress: this.shippingAddress,
+    }));
+  }
+
+  setPickupSubMode(mode: 'courier' | 'store'): void {
+    this.pickupSubMode = mode;
+    this.courierAgreementChecked = false;
+    this.saveDeliveryState();
+  }
+
+  onShippingAddressChange(): void {
+    this.addressChange$.next();
+  }
+
   selectDeliveryMode(mode: 'pickup' | 'shipping'): void {
     if (this.deliveryMode !== mode) {
       this.pickupSubMode = null;
       this.courierAgreementChecked = false;
     }
     this.deliveryMode = mode;
+    this.saveDeliveryState();
     if (mode !== 'shipping') return;
 
     // Pré-remplir seulement si le formulaire est encore vierge
@@ -533,6 +575,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
                   pickupSubMode: pickupSubModeValue,
                   updatedAt: Date.now(),
                   shippingAddress: shippingAddress ?? null,
+                  currency: this.pricing.currency,
                 }).catch((e: any) => console.error('[orders] update error', e));
 
                 firebase.database().ref(`users/${currentUser.uid}/orderStatus/${existingOrderId}`).update({
@@ -540,6 +583,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
                   deliveryMode: this.deliveryMode,
                   pickupSubMode: pickupSubModeValue,
                   shippingAddress: shippingAddress ?? null,
+                  currency: this.pricing.currency,
                 }).catch((e: any) => console.error('[orderStatus] update error', e));
 
                 // Permet une nouvelle mise à jour ultérieure
@@ -555,6 +599,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
                   customerName: currentUser.displayName ?? currentUser.email ?? '',
                   items: itemsToSend,
                   deliveryMode: this.deliveryMode,
+                  currency: this.pricing.currency,
                   ...(pickupSubModeValue ? { pickupSubMode: pickupSubModeValue } : {}),
                   ...(shippingAddress ? { shippingAddress } : {}),
                 }).catch((e: any) => console.error('[orders] double-write error', e));
@@ -564,6 +609,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
                   createdAt: orderCreatedAt,
                   items: itemsToSend,
                   deliveryMode: this.deliveryMode,
+                  currency: this.pricing.currency,
                   ...(pickupSubModeValue ? { pickupSubMode: pickupSubModeValue } : {}),
                   ...(shippingAddress ? { shippingAddress } : {}),
                 }).catch((e: any) => console.error('[orderStatus] write error', e));
@@ -716,7 +762,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
           ? 'Payé à réception au livreur (2 000–5 000 FCFA)'
           : this.pickupSubMode === 'store'
             ? 'Récupération au magasin — Libreville'
-            : 'Retrait en magasin — Libreville')
+            : 'Retrait au Gabon')
       : this.deliveryMode === 'shipping'
         ? 'Expédition internationale'
         : '';

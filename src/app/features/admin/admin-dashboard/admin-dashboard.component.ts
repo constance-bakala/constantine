@@ -35,10 +35,11 @@ export interface Order {
   trackingUrl?: string;
   carrierName?: string;
   shippingCost?: number;
+  currency?: string;
 }
 
 export const DELIVERY_MODE_LABELS: Record<string, string> = {
-  pickup:          '🏪 Retrait en magasin — Libreville',
+  pickup:          '🏪 Retrait au Gabon',
   pickup_courier:  '🛵 Payé à réception au livreur',
   pickup_store:    '🏪 Récupération au magasin',
   shipping:        '✈️ Expédition internationale',
@@ -73,7 +74,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   shippingCostError = false;
 
 
-  activeTab: 'orders' | 'catalog' | 'settings' | 'tryon' = 'orders';
+  activeTab: 'orders' | 'catalog' | 'settings' = 'orders';
 
   // ── Filtre + pagination commandes
   ordersFilter = '';
@@ -140,7 +141,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
   ) {}
 
-  private readonly EUR_TO_XAF = 655.96;
+  readonly EUR_TO_XAF = 655.96;
 
   private orderRawHT(order: Order): number {
     return (order.items ?? []).reduce((sum, item) => {
@@ -157,21 +158,35 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return Math.round(xaf).toLocaleString('fr-FR') + ' FCFA';
   }
 
+  formatEUR(eur: number): string {
+    return `${eur >= 1 ? Math.round(eur) : eur.toFixed(2)} €`;
+  }
+
+  formatByOrderCurrency(amountEur: number, order: Order): string {
+    return order.currency === 'EUR'
+      ? this.formatEUR(amountEur)
+      : this.formatXAF(this.toXAF(amountEur));
+  }
+
   orderTotal(order: Order): string {
-    return this.formatXAF(this.toXAF(this.orderRawHT(order)));
+    return this.formatByOrderCurrency(this.orderRawHT(order), order);
   }
 
   /** TVA 10% uniquement pour expédition internationale. */
   orderTvaAmount(order: Order): string | null {
     if (order.deliveryMode !== 'shipping') return null;
-    return this.formatXAF(this.toXAF(this.orderRawHT(order) * 0.1));
+    return this.formatByOrderCurrency(this.orderRawHT(order) * 0.1, order);
   }
 
   orderTotalTTC(order: Order): string {
-    const htXAF = this.toXAF(this.orderRawHT(order));
-    const tvaXAF = order.deliveryMode === 'shipping' ? this.toXAF(this.orderRawHT(order) * 0.1) : 0;
+    const htEur = this.orderRawHT(order);
+    const tvaEur = order.deliveryMode === 'shipping' ? htEur * 0.1 : 0;
     const shippingXAF = order.shippingCost ?? 0;
-    return this.formatXAF(htXAF + tvaXAF + shippingXAF);
+    if (order.currency === 'EUR') {
+      const shippingEur = shippingXAF / this.EUR_TO_XAF;
+      return this.formatEUR(htEur + tvaEur + shippingEur);
+    }
+    return this.formatXAF(this.toXAF(htEur) + this.toXAF(tvaEur) + shippingXAF);
   }
 
   toggleItem(orderId: string, index: number): void {

@@ -37,6 +37,9 @@ export class PricingService {
   /** Surcharges de prix (nœud prices/ Firebase — conservé pour compatibilité ascendante). */
   private priceOverridesXAF: Record<string, number> = {};
 
+  /** Taux de TVA en EUR lu depuis config/tvaRate Firebase (0 par défaut). */
+  private _tvaRateEur = 0;
+
   constructor(
     private translate: TranslateService,
     private store: Store<any>,
@@ -47,6 +50,10 @@ export class PricingService {
 
     this.catalogRepository.watchPriceOverrides().subscribe(overrides => {
       this.priceOverridesXAF = overrides;
+    });
+
+    this.catalogRepository.watchTvaRate().subscribe(rate => {
+      this._tvaRateEur = rate;
     });
 
     this.translate.onLangChange.subscribe(({ lang }) => {
@@ -76,8 +83,8 @@ export class PricingService {
     return xaf != null ? xaf : Math.round(defaultEur * this.EUR_TO_XAF);
   }
 
-  /** TVA applicable : 0% en FCFA, 10% en EUR. */
-  get tvaRate(): number { return this._currency === 'XAF' ? 0 : 0.10; }
+  /** TVA applicable : 0% en FCFA, taux Firebase en EUR (configurable via config/tvaRate). */
+  get tvaRate(): number { return this._currency === 'XAF' ? 0 : this._tvaRateEur; }
 
   /** Change la devise : persiste en localStorage et dispatche une action NgRx. */
   setCurrency(currency: Currency): void {

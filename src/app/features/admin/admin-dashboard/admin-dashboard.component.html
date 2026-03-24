@@ -6,7 +6,6 @@
       <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Commandes</button>
       <button class="tab-btn" [class.active]="activeTab === 'catalog'" (click)="activeTab = 'catalog'">Catalogue</button>
       <button class="tab-btn" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Paramètres</button>
-      <button class="tab-btn tab-btn--test" [class.active]="activeTab === 'tryon'" (click)="activeTab = 'tryon'">Try-on IA ✨</button>
     </div>
   </header>
 
@@ -20,12 +19,7 @@
     <app-admin-settings></app-admin-settings>
   </div>
 
-  <!-- ===== ONGLET TRY-ON IA (test) ===== -->
-  <div *ngIf="activeTab === 'tryon'" class="catalog-tab-section">
-    <app-admin-tryon></app-admin-tryon>
-  </div>
-
-  <!-- ===== ONGLET COMMANDES ===== -->
+<!-- ===== ONGLET COMMANDES ===== -->
   <ng-container *ngIf="activeTab === 'orders'">
 
     <div *ngIf="error" class="error-banner">{{ error }}</div>
@@ -168,7 +162,7 @@
               <span class="item-title">{{ item.title || item.reference || '—' }}</span>
               <span *ngIf="item.title && item.reference" class="item-ref">REF: {{ item.reference }}</span>
               <span *ngIf="item.price" class="item-price">
-                {{ pricing.format((item.price) * (item.basketInfos?.selectedQuantity ?? 1)) }}
+                {{ formatByOrderCurrency((item.price) * (item.basketInfos?.selectedQuantity ?? 1), selectedOrder) }}
               </span>
             </div>
             <div *ngIf="isExpanded(selectedOrder.id, i)" class="item-detail-panel">
@@ -176,8 +170,8 @@
                 <div *ngIf="item.basketInfos?.selectedSize"><span class="detail-label">Taille :</span> {{ item.basketInfos?.selectedSize }}</div>
                 <div *ngIf="item.basketInfos?.selectedModel"><span class="detail-label">Modèle :</span> {{ item.basketInfos?.selectedModel }}</div>
                 <div><span class="detail-label">Quantité :</span> {{ item.basketInfos?.selectedQuantity ?? 1 }}</div>
-                <div *ngIf="item.price"><span class="detail-label">Prix unitaire :</span> {{ pricing.format(item.price) }}</div>
-                <div *ngIf="item.price"><span class="detail-label">Sous-total :</span> {{ pricing.format((item.price || 0) * (item.basketInfos?.selectedQuantity ?? 1)) }}</div>
+                <div *ngIf="item.price"><span class="detail-label">Prix unitaire :</span> {{ formatByOrderCurrency(item.price, selectedOrder) }}</div>
+                <div *ngIf="item.price"><span class="detail-label">Sous-total :</span> {{ formatByOrderCurrency((item.price || 0) * (item.basketInfos?.selectedQuantity ?? 1), selectedOrder) }}</div>
               </div>
             </div>
           </div>
@@ -193,7 +187,7 @@
         </div>
         <div class="order-total" *ngIf="selectedOrder.deliveryMode === 'shipping'">
           <span class="total-label">Frais de port :</span>
-          <span class="total-amount" *ngIf="selectedOrder.shippingCost != null">{{ formatXAF(selectedOrder.shippingCost) }}</span>
+          <span class="total-amount" *ngIf="selectedOrder.shippingCost != null">{{ selectedOrder.currency === 'EUR' ? formatEUR(selectedOrder.shippingCost / EUR_TO_XAF) : formatXAF(selectedOrder.shippingCost) }}</span>
           <span class="total-amount shipping-pending-label" *ngIf="selectedOrder.shippingCost == null">À renseigner</span>
         </div>
         <div class="order-total order-total--ttc">
