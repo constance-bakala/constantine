@@ -270,6 +270,24 @@
       <span class="items-count">({{ categoryItems.length }})</span>
     </h3>
 
+    <!-- Mise à jour du prix en masse -->
+    <div *ngIf="categoryItems.length > 0" class="bulk-price-bar">
+      <span class="bulk-price-label">Appliquer un prix unique à toute la catégorie :</span>
+      <input type="number" min="1" step="100"
+             [(ngModel)]="bulkPriceInput"
+             placeholder="ex : 15000"
+             class="bulk-price-input"
+             [class.input-error]="bulkPriceError"
+             (keyup.enter)="applyBulkPrice()" />
+      <span class="bulk-price-unit">FCFA</span>
+      <button class="btn-bulk-price"
+              [disabled]="bulkPricing || !bulkPriceInput"
+              (click)="applyBulkPrice()">
+        {{ bulkPricing ? '…' : 'Appliquer à tous' }}
+      </button>
+      <span *ngIf="bulkPriceError" class="field-error">{{ bulkPriceError }}</span>
+    </div>
+
     <div *ngIf="categoryItems.length === 0" class="empty-state">
       Aucun article. Importez des images ci-dessus.
     </div>

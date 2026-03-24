@@ -7,11 +7,7 @@ import { StockService } from '@shared/services/stock.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-export interface ExistingCategories {
-  earings: CategoryInfos;
-  dresses: CategoryInfos;
-  masks: CategoryInfos;
-}
+export type ExistingCategories = Record<string, CategoryInfos>;
 
 @Component({
   selector: 'app-portfolio-list',

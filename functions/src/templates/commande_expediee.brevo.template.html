@@ -78,6 +78,11 @@
                 Votre paiement a bien été reçu et votre commande vient d'être expédiée.
                 Vous pouvez suivre votre colis en temps réel grâce au lien ci-dessous.
               </p>
+              {% if params.orderId %}
+              <p style="margin:0 0 14px; font-size:14px; color:#7f8c8d;">
+                Référence commande : <strong style="color:#2c3e50; font-size:15px;">#{{ params.orderId }}</strong>
+              </p>
+              {% endif %}
               {% if params.deliveryModeLabel %}
               <p style="margin:16px 0 4px; font-size:13px; color:#7f8c8d; text-transform:uppercase; letter-spacing:1px;">Mode de livraison</p>
               <p style="margin:0; font-size:15px; font-weight:700; color:#2c3e50;">{{ params.deliveryModeLabel }}</p>
@@ -149,7 +154,27 @@
                   </td>
                 </tr>
                 {% endfor %}
-                <tr>
+                {% if params.tvaFormatted %}
+                <tr style="border-bottom:1px solid #ecf0f1;">
+                  <td style="padding:10px 12px; font-family:'Work Sans',sans-serif; font-size:14px; color:#2c3e50;">
+                    TVA (10%)
+                  </td>
+                  <td style="padding:10px 12px; font-family:'Quicksand',sans-serif; font-weight:700; color:#6c3483; text-align:right; white-space:nowrap;">
+                    {{ params.tvaFormatted }}
+                  </td>
+                </tr>
+                {% endif %}
+                {% if params.shippingCostFormatted %}
+                <tr style="border-bottom:1px solid #ecf0f1;">
+                  <td style="padding:10px 12px; font-family:'Work Sans',sans-serif; font-size:14px; color:#2c3e50;">
+                    Frais de transport
+                  </td>
+                  <td style="padding:10px 12px; font-family:'Quicksand',sans-serif; font-weight:700; color:#6c3483; text-align:right; white-space:nowrap;">
+                    {{ params.shippingCostFormatted }}
+                  </td>
+                </tr>
+                {% endif %}
+                <tr style="background-color:#f9f4fc;">
                   <td style="padding:12px; font-family:'Work Sans',sans-serif; font-weight:700; color:#2c3e50; text-align:right;" colspan="2">
                     Total : <span style="font-family:'Quicksand',sans-serif; font-size:18px; color:#6c3483;">{{ params.totalAmountXAF }}</span>
                   </td>

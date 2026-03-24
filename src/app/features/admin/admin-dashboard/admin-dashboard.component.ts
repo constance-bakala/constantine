@@ -30,6 +30,7 @@ export interface Order {
   createdAt: number;
   updatedAt?: number;
   deliveryMode?: 'pickup' | 'shipping';
+  pickupSubMode?: 'courier' | 'store';
   shippingAddress?: { firstName: string; lastName: string; address1: string; address2?: string; postalCode: string; city: string; country: string; phone: string };
   trackingUrl?: string;
   carrierName?: string;
@@ -37,8 +38,10 @@ export interface Order {
 }
 
 export const DELIVERY_MODE_LABELS: Record<string, string> = {
-  pickup:   '🏪 Retrait en magasin — Libreville',
-  shipping: '✈️ Expédition internationale',
+  pickup:          '🏪 Retrait en magasin — Libreville',
+  pickup_courier:  '🛵 Payé à réception au livreur',
+  pickup_store:    '🏪 Récupération au magasin',
+  shipping:        '✈️ Expédition internationale',
 };
 
 @Component({
@@ -70,7 +73,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   shippingCostError = false;
 
 
-  activeTab: 'orders' | 'catalog' | 'settings' = 'orders';
+  activeTab: 'orders' | 'catalog' | 'settings' | 'tryon' = 'orders';
 
   // ── Filtre + pagination commandes
   ordersFilter = '';
@@ -110,6 +113,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   private ordersUnsubscribe: (() => void) | null = null;
+  private ordersRetryTimeout: ReturnType<typeof setTimeout> | null = null;
 
   readonly statusLabels: Record<OrderStatus, string> = {
     pending:   'En attente',
@@ -183,10 +187,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.subscribeToOrders();
+  }
+
+  private subscribeToOrders(): void {
+    this.ordersUnsubscribe?.();
     this.ordersUnsubscribe = onValue(
       ref(this.db, 'orders'),
       (snap) => {
         this.loading = false;
+        this.error = null;
         if (!snap.exists()) { this.orders = []; return; }
         const raw = snap.val() as Record<string, any>;
         this.orders = Object.entries(raw)
@@ -198,14 +208,16 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       },
       (err) => {
         this.loading = false;
-        this.error = 'Erreur de connexion à la base de données.';
-        console.error(err);
+        console.warn('[AdminDashboard] orders listener revoked, retrying in 3s…', err);
+        // Réabonnement automatique après un court délai (token refresh transitoire)
+        this.ordersRetryTimeout = setTimeout(() => this.subscribeToOrders(), 3000);
       }
     );
   }
 
   ngOnDestroy(): void {
     this.ordersUnsubscribe?.();
+    if (this.ordersRetryTimeout) clearTimeout(this.ordersRetryTimeout);
   }
 
   openShippingForm(orderId: string): void {

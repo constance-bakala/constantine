@@ -76,20 +76,18 @@ ngb-carousel.carousel-fade .carousel-item:not(.active) {
   width: 100%;
 }
 
-/* Hauteur plus généreuse */
+/* Hauteur carousel */
 .hero-carousel .carousel-inner {
-  height: 420px; // ⬅️ augmente ici si besoin
+  height: 320px;
 }
 
 /* Image non coupée */
 .hero-carousel .hero-img {
   width: 100%;
-  height: 420px;
+  height: 320px;
   object-fit: contain;
-  /* ⬅️ clé du problème */
   object-position: center;
-  background-color: #000;
-  /* ou bg-primary si tu préfères */
+  background-color: transparent;
   display: block;
 }
 
@@ -98,7 +96,7 @@ ngb-carousel.carousel-fade .carousel-item:not(.active) {
 
   .hero-carousel .carousel-inner,
   .hero-carousel .hero-img {
-    height: 260px;
+    height: 340px;
   }
 }
 
@@ -194,9 +192,12 @@ img {
 html,
 body {
   height: 100%;
+  color-scheme: light;
+  background-color: #fff;
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #fff;
 }

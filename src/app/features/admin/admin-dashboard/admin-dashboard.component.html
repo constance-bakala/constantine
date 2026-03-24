@@ -6,6 +6,7 @@
       <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Commandes</button>
       <button class="tab-btn" [class.active]="activeTab === 'catalog'" (click)="activeTab = 'catalog'">Catalogue</button>
       <button class="tab-btn" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Paramètres</button>
+      <button class="tab-btn tab-btn--test" [class.active]="activeTab === 'tryon'" (click)="activeTab = 'tryon'">Try-on IA ✨</button>
     </div>
   </header>
 
@@ -17,6 +18,11 @@
   <!-- ===== ONGLET PARAMÈTRES ===== -->
   <div *ngIf="activeTab === 'settings'" class="catalog-tab-section">
     <app-admin-settings></app-admin-settings>
+  </div>
+
+  <!-- ===== ONGLET TRY-ON IA (test) ===== -->
+  <div *ngIf="activeTab === 'tryon'" class="catalog-tab-section">
+    <app-admin-tryon></app-admin-tryon>
   </div>
 
   <!-- ===== ONGLET COMMANDES ===== -->
@@ -68,7 +74,10 @@
               <span *ngIf="order.deliveryMode" class="delivery-badge"
                     [class.pickup]="order.deliveryMode === 'pickup'"
                     [class.shipping]="order.deliveryMode === 'shipping'">
-                {{ order.deliveryMode === 'pickup' ? '🏪 Retrait' : '✈️ Expédition' }}
+                <ng-container *ngIf="order.deliveryMode === 'pickup'">
+                  {{ order.pickupSubMode === 'courier' ? '🛵 Coursier' : order.pickupSubMode === 'store' ? '🏪 Magasin' : '🏪 Retrait' }}
+                </ng-container>
+                <ng-container *ngIf="order.deliveryMode !== 'pickup'">✈️ Expédition</ng-container>
               </span>
               <span *ngIf="!order.deliveryMode">—</span>
             </td>
@@ -123,7 +132,12 @@
           <span class="delivery-badge"
                 [class.pickup]="selectedOrder.deliveryMode === 'pickup'"
                 [class.shipping]="selectedOrder.deliveryMode === 'shipping'">
-            {{ deliveryModeLabels[selectedOrder.deliveryMode] || selectedOrder.deliveryMode }}
+            <ng-container *ngIf="selectedOrder.deliveryMode === 'pickup'">
+              {{ selectedOrder.pickupSubMode === 'courier' ? deliveryModeLabels['pickup_courier'] : selectedOrder.pickupSubMode === 'store' ? deliveryModeLabels['pickup_store'] : deliveryModeLabels['pickup'] }}
+            </ng-container>
+            <ng-container *ngIf="selectedOrder.deliveryMode !== 'pickup'">
+              {{ deliveryModeLabels[selectedOrder.deliveryMode] || selectedOrder.deliveryMode }}
+            </ng-container>
           </span>
           <span *ngIf="selectedOrder.trackingUrl" class="tracking-link-wrap">
             — <a [href]="selectedOrder.trackingUrl" target="_blank" rel="noopener" class="tracking-link">
@@ -232,7 +246,7 @@
           <button *ngIf="selectedOrder.status === 'ready'" class="btn btn-resend"
                   [disabled]="resendingEmailId === selectedOrder.id"
                   (click)="resendPaymentEmail(selectedOrder)">
-            {{ resendingEmailId === selectedOrder.id ? 'Envoi…' : '✉ Renvoyer l\'email de paiement' }}
+            {{ resendingEmailId === selectedOrder.id ? 'Envoi…' : '✉ Renvoyer la demande de paiement' }}
           </button>
           <button *ngIf="selectedOrder.status === 'paid' && shippingFormOrderId !== selectedOrder.id"
                   class="btn btn-shipped" (click)="openShippingForm(selectedOrder.id)">

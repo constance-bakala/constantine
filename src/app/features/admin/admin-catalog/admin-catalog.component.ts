@@ -123,6 +123,11 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   editing: EditingCell | null = null;
   saving = false;
 
+  // ── Mise à jour prix en masse
+  bulkPriceInput: number | null = null;
+  bulkPricing = false;
+  bulkPriceError = '';
+
   // ── Lightbox
   lightboxSrc: string | null = null;
 
@@ -468,6 +473,31 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       console.error('[catalog] saveEdit', e);
     } finally {
       this.saving = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  async applyBulkPrice(): Promise<void> {
+    const price = Math.round(Number(this.bulkPriceInput));
+    if (!price || price <= 0) {
+      this.bulkPriceError = 'Veuillez saisir un montant valide (> 0).';
+      this.cdr.markForCheck();
+      return;
+    }
+    if (!confirm(`Appliquer le prix ${price.toLocaleString('fr-FR')} FCFA à tous les ${this.categoryItems.length} articles de cette catégorie ?`)) return;
+
+    this.bulkPricing = true;
+    this.bulkPriceError = '';
+    this.cdr.markForCheck();
+    try {
+      await Promise.all(this.categoryItems.map(item =>
+        this.repo.updateItemField(item.id, 'priceXAF', price)
+      ));
+      this.bulkPriceInput = null;
+    } catch (e: any) {
+      this.bulkPriceError = e?.message ?? 'Erreur lors de la mise à jour.';
+    } finally {
+      this.bulkPricing = false;
       this.cdr.markForCheck();
     }
   }

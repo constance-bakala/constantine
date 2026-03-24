@@ -1,39 +1,24 @@
-import {ItemsCategoriesEnum, ItemsState} from '@shared/interfaces';
-import {ItemsActions, ItemsActionTypes} from '@app/features/store/items.actions';
-import {toogleSelectItem, updateItemBasketInfos, updateItemState} from '@helpers/store.utils';
-import {AuthActionTypes} from '@app/auth/store/auth.actions';
+import { ItemsState } from '@shared/interfaces';
+import { ItemsActions, ItemsActionTypes } from '@app/features/store/items.actions';
+import { toogleSelectItem, updateItemBasketInfos, updateItemState } from '@helpers/store.utils';
+import { AuthActionTypes } from '@app/auth/store/auth.actions';
 
-const intialState: ItemsState = {
-  earings: {
-    name: ItemsCategoriesEnum.EARINGS,
-    title: 'Boucles d\'oreilles',
-    summary: 'Veuillez patienter ...',
-    items: []
-  },
-  dresses: {
-    name: ItemsCategoriesEnum.DRESSES,
-    title: 'Vêtements',
-    summary: 'Veuillez patienter ...',
-    items: []
-  },
-  masks: {
-    name: ItemsCategoriesEnum.MASKS,
-    title: 'Masques',
-    summary: 'Veuillez patienter ...',
-    items: []
-  }
+const initialState: ItemsState = {
+  categories: {}
 };
 
-export function itemsReducer(state: ItemsState = intialState,
+export function itemsReducer(state: ItemsState = initialState,
                              action: any): ItemsState {
   switch (action.type) {
     case AuthActionTypes.LOGOUT:
     case ItemsActionTypes.CLEAR_BASKET:
       return {
-        ...state,
-        earings: { ...state.earings, items: state.earings.items.map(i => ({ ...i, selected: false })) },
-        dresses: { ...state.dresses, items: state.dresses.items.map(i => ({ ...i, selected: false })) },
-        masks:   { ...state.masks,   items: state.masks.items.map(i => ({ ...i, selected: false })) },
+        categories: Object.fromEntries(
+          Object.entries(state.categories).map(([key, cat]) => [
+            key,
+            { ...cat, items: cat.items.map(i => ({ ...i, selected: false })) }
+          ])
+        )
       };
     case ItemsActionTypes.TOOGLE_SELECT_ITEM_NOT_SELECTED:
       return toogleSelectItem(state, action.payload, true);

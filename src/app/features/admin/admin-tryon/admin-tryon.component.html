@@ -1,0 +1,94 @@
+<div class="tryon-container">
+
+  <div class="tryon-header">
+    <h2 class="tryon-title">Try-on IA <span class="tryon-badge">test</span></h2>
+    <p class="tryon-desc">
+      Habiller automatiquement un mannequin avec une photo de vêtement via Hugging Face (CatVTON).
+      Cette fonctionnalité est en test — elle peut être supprimée si les résultats ne conviennent pas.
+    </p>
+  </div>
+
+  <!-- Sélecteur type de vêtement -->
+  <div class="cloth-type-bar">
+    <span class="cloth-type-label">Type de vêtement :</span>
+    <button *ngFor="let ct of clothTypes"
+            class="cloth-type-btn"
+            [class.active]="clothType === ct.value"
+            (click)="clothType = ct.value">
+      {{ ct.label }}
+    </button>
+  </div>
+
+  <!-- Zone images -->
+  <div class="tryon-images-grid">
+
+    <!-- Vêtement -->
+    <div class="image-zone">
+      <p class="zone-label">Photo du vêtement</p>
+      <div class="image-drop" (click)="garmentPicker.click()">
+        <img *ngIf="garmentPreview" [src]="garmentPreview" class="zone-preview" />
+        <div *ngIf="!garmentPreview" class="zone-placeholder">
+          <span class="zone-icon">👗</span>
+          <span>Cliquer pour choisir</span>
+        </div>
+        <input #garmentPicker type="file" accept="image/*" style="display:none"
+               (change)="onGarmentPick($event)" />
+      </div>
+      <button *ngIf="garmentPreview" class="btn-clear" (click)="garmentPreview = null; garmentB64 = null">✕ Retirer</button>
+    </div>
+
+    <!-- Mannequin -->
+    <div class="image-zone">
+      <p class="zone-label">Photo du mannequin / modèle</p>
+      <div class="image-drop" (click)="personPicker.click()">
+        <img *ngIf="personPreview" [src]="personPreview" class="zone-preview" />
+        <div *ngIf="!personPreview" class="zone-placeholder">
+          <span class="zone-icon">🧍</span>
+          <span>Cliquer pour choisir</span>
+        </div>
+        <input #personPicker type="file" accept="image/*" style="display:none"
+               (change)="onPersonPick($event)" />
+      </div>
+      <button *ngIf="personPreview" class="btn-clear" (click)="personPreview = null; personB64 = null">✕ Retirer</button>
+    </div>
+
+    <!-- Résultat -->
+    <div class="image-zone result-zone" [class.has-result]="resultPreview">
+      <p class="zone-label">Résultat</p>
+      <div class="image-drop result-drop">
+        <img *ngIf="resultPreview" [src]="resultPreview" class="zone-preview" />
+        <div *ngIf="!resultPreview && !loading" class="zone-placeholder">
+          <span class="zone-icon">✨</span>
+          <span>Résultat ici</span>
+        </div>
+        <div *ngIf="loading" class="zone-loading">
+          <span class="spinner"></span>
+          <span>Traitement en cours…<br/><small>(peut prendre 30–60s)</small></span>
+        </div>
+      </div>
+      <button *ngIf="resultPreview" class="btn-download" (click)="downloadResult()">⬇ Télécharger</button>
+    </div>
+
+  </div>
+
+  <!-- Erreur -->
+  <div *ngIf="error" class="tryon-error">
+    <strong>Erreur :</strong> {{ error }}
+  </div>
+
+  <!-- Actions -->
+  <div class="tryon-actions">
+    <button class="btn-run"
+            [disabled]="!canRun"
+            (click)="runTryon()">
+      {{ loading ? 'Traitement…' : '✨ Lancer le try-on' }}
+    </button>
+    <button class="btn-reset" (click)="reset()">Réinitialiser</button>
+  </div>
+
+  <p class="tryon-note">
+    ⚠️ Les images ne sont pas stockées. Le traitement passe par les serveurs Hugging Face.
+    Délai estimé : 30–90 secondes selon la charge du serveur.
+  </p>
+
+</div>

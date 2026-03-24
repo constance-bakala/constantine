@@ -20,23 +20,17 @@ import {Go} from './router.actions';
 import {AuthService} from '@shared/services';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {AUTH_KEY} from '@app/auth/store/auth.reducer';
-import {ItemInfos, ItemsCategoriesEnum} from '@shared/interfaces';
+import {ItemInfos} from '@shared/interfaces';
 import {ActionItemToogleNotSelected, ActionUpdateBasketItem, ItemsActionTypes} from '@app/features/store';
 import {UsersRepository} from '@app/core/firebase/users.repository';
-
-const REQUIRED_CATEGORIES = [
-  ItemsCategoriesEnum.EARINGS,
-  ItemsCategoriesEnum.DRESSES,
-  ItemsCategoriesEnum.MASKS,
-];
+import {CatalogActionTypes} from '@app/features/store/catalog/catalog.actions';
 
 @Injectable()
 export class AuthEffects {
 
-  /**
-   * Set des catégories ayant reçu RETRIEVE_ITEMS_SUCCESS depuis le démarrage.
-   * Alimenté dès le constructeur pour ne manquer aucune émission.
-   */
+  /** Prefixes publiés reçus via CatalogLoadCategoriesSuccess */
+  private readonly expectedCategories = new Set<string>();
+  /** Prefixes ayant reçu RETRIEVE_ITEMS_SUCCESS */
   private readonly loadedCategories = new Set<string>();
   private readonly allCategoriesLoaded$ = new BehaviorSubject<boolean>(false);
 
@@ -49,16 +43,32 @@ export class AuthEffects {
     private cache: CacheService,
     private usersRepository: UsersRepository,
   ) {
-    // Démarre l'écoute immédiatement (avant tout effet) pour ne pas rater
-    // les RETRIEVE_ITEMS_SUCCESS qui arrivent rapidement après le démarrage.
+    // Écoute les catégories publiées pour connaître le nombre attendu
+    this.actions$.pipe(
+      ofType(CatalogActionTypes.LOAD_CATEGORIES_SUCCESS),
+    ).subscribe((action: any) => {
+      action.payload
+        .filter((c: any) => c.published)
+        .forEach((c: any) => this.expectedCategories.add(c.prefix));
+      this.checkAllLoaded();
+    });
+
+    // Écoute les RETRIEVE_ITEMS_SUCCESS pour compter les catégories chargées
     this.actions$.pipe(
       ofType(ItemsActionTypes.RETRIEVE_ITEMS_SUCCESS),
     ).subscribe((action: any) => {
       this.loadedCategories.add(action.payload.name);
-      if (REQUIRED_CATEGORIES.every(c => this.loadedCategories.has(c))) {
-        this.allCategoriesLoaded$.next(true);
-      }
+      this.checkAllLoaded();
     });
+  }
+
+  private checkAllLoaded(): void {
+    if (
+      this.expectedCategories.size > 0 &&
+      [...this.expectedCategories].every(prefix => this.loadedCategories.has(prefix))
+    ) {
+      this.allCategoriesLoaded$.next(true);
+    }
   }
 
   logout$ = createEffect(() =>

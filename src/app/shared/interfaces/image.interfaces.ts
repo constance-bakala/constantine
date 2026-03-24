@@ -1,15 +1,16 @@
 export class Category {
-  name!: ItemsCategoriesEnum;
+  name!: string;
   title!: string;
   summary!: string;     // FR
   summaryEn?: string;   // EN
   items!: ItemInfos[]
 }
-export class CategoryInfos {
-  name!: ItemsCategoriesEnum;
-  title!: string;
 
+export class CategoryInfos {
+  name!: string;
+  title!: string;
 }
+
 export enum ItemSizeEnum {
   S = 'S',
   M = 'M',
@@ -36,7 +37,6 @@ export const ITEM_SIZES: {
 }];
 
 
-
 export interface IBasketInfos {
   selectedQuantity: number;
   selectedSize: ItemSizeEnum;
@@ -49,22 +49,13 @@ export class ItemInfos {
     public selected: boolean,
     public reference: string,
     public index: number,
-    public category: ItemsCategoriesEnum,
+    public category: string,
     public loading: boolean,
     public basketInfos: IBasketInfos,
     public images: string[] = [],
     public price: number = 0) { }
 }
 
-export enum ItemsCategoriesEnum {
-  EARINGS = 'EARINGS',
-  MASKS = 'MASKS',
-  DRESSES = 'DRESSES',
-  UNKNOWN = 'UNKNOWN',
-}
-
 export interface ItemsState {
-  earings: Category;
-  dresses: Category;
-  masks: Category;
+  categories: Record<string, Category>;
 }

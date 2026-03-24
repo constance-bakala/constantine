@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CategoryInfos, ItemsCategoriesEnum } from '@shared/interfaces';
+import { CategoryInfos } from '@shared/interfaces';
 import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-list.component';
 
 @Component({
@@ -12,7 +12,7 @@ import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-
 export class CategoryButtonsComponent implements OnInit {
 
   @Input()
-  categoryToAvoid!: ItemsCategoriesEnum;
+  categoryToAvoid!: string;
 
   @Output() navigateAway: EventEmitter<string> = new EventEmitter();
 
@@ -29,15 +29,15 @@ export class CategoryButtonsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getOtherLinks(name: ItemsCategoriesEnum, categoryInfos: ExistingCategories): CategoryInfos[] {
+  getOtherLinks(name: string, categoryInfos: ExistingCategories): CategoryInfos[] {
     return Object.keys(categoryInfos)
-      .filter(key => key !== name?.toLowerCase())
-      .map(targetKey => (categoryInfos as any)[targetKey])
+      .filter(key => key !== name)
+      .map(key => categoryInfos[key])
       .filter(Boolean);
   }
 
-  gotoTarget(name: ItemsCategoriesEnum) {
-    this.navigateAway.emit(name.toLowerCase());
+  gotoTarget(name: string) {
+    this.navigateAway.emit(name);
   }
 
   fbshareCurrentPage() {

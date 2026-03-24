@@ -3,10 +3,19 @@ p {
   margin-left: 121px;
 }
 
-
-
 .skin-light .badge-news {
   position: absolute;
   top: 10px;
   left: 10px;
+}
+
+/* Réduit le padding de la section portfolio */
+.page-section {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Réduit l'espace entre les cartes (remplace mb-5 = 3rem) */
+.row > [class*="col-"] {
+  margin-bottom: 1rem !important;
 }

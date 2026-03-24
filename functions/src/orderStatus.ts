@@ -127,23 +127,28 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
       return { success: true, emailSent: false };
     }
 
-    // Calcul du total en FCFA (prix stockés en EUR, taux fixe 655.957)
+    // Calcul du total en FCFA — arrondi à la centaine (même logique que l'admin)
     const EUR_TO_XAF = 655.957;
+    const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
+    const hasTva = order.deliveryMode === 'shipping'; // TVA 10% pour expédition internationale
+
     const itemsWithPrice = items.map((item) => {
       const qty = item?.basketInfos?.selectedQuantity ?? 1;
-      const lineXAF = Math.round((item?.price ?? 0) * qty * EUR_TO_XAF);
+      const lineXAF = toXAF((item?.price ?? 0) * qty);
       return { ...item, linePriceFormatted: lineXAF.toLocaleString('fr-FR') + ' FCFA' };
     });
-    const totalXAF = Math.round(
-      itemsWithPrice.reduce((sum, item) => {
-        const qty = item?.basketInfos?.selectedQuantity ?? 1;
-        return sum + (item?.price ?? 0) * qty;
-      }, 0) * EUR_TO_XAF
-    );
+    const itemsHtXAF = itemsWithPrice.reduce((sum, item) => {
+      const qty = item?.basketInfos?.selectedQuantity ?? 1;
+      return sum + toXAF((item?.price ?? 0) * qty);
+    }, 0);
+    const tvaXAF         = hasTva ? Math.round(itemsHtXAF * 0.1 / 100) * 100 : 0;
     const shippingCostXAF = shippingCost ?? 0; // déjà en XAF, pas de conversion
-    const totalWithShippingXAF = totalXAF + shippingCostXAF;
-    const paymentAmountXAF = totalWithShippingXAF.toLocaleString('fr-FR') + ' FCFA';
-    const shippingCostFormatted = shippingCost ? shippingCostXAF.toLocaleString('fr-FR') + ' FCFA' : null;
+    const totalXAF        = itemsHtXAF + tvaXAF + shippingCostXAF;
+
+    const paymentAmountXAF   = totalXAF.toLocaleString('fr-FR') + ' FCFA';
+    const itemsTotalFormatted = itemsHtXAF.toLocaleString('fr-FR') + ' FCFA';
+    const tvaFormatted        = hasTva ? tvaXAF.toLocaleString('fr-FR') + ' FCFA' : null;
+    const shippingCostFormatted = shippingCostXAF > 0 ? shippingCostXAF.toLocaleString('fr-FR') + ' FCFA' : null;
     const paymentPhone = process.env['PAYMENT_PHONE'] ?? '+24177601044';
 
     const templateId = parseInt(process.env['BREVO_TEMPLATE_ORDER_READY'] ?? '4', 10);
@@ -159,6 +164,9 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
           items: itemsWithPrice,
           paymentPhone,
           paymentAmountXAF,
+          itemsTotalFormatted,
+          tvaFormatted,
+          hasTva,
           shippingCostFormatted,
           deliveryModeLabel,
           shippingAddress: order.shippingAddress ?? null,
@@ -186,18 +194,28 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
 
     if (customerEmail) {
       const EUR_TO_XAF = 655.957;
+      const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
+      const hasTvaShipped = order.deliveryMode === 'shipping';
+
       const itemsWithPrice = items.map((item) => {
         const qty = item?.basketInfos?.selectedQuantity ?? 1;
-        const lineXAF = Math.round((item?.price ?? 0) * qty * EUR_TO_XAF);
+        const lineXAF = toXAF((item?.price ?? 0) * qty);
         return { ...item, linePriceFormatted: lineXAF.toLocaleString('fr-FR') + ' FCFA' };
       });
-      const totalXAF = Math.round(
-        items.reduce((sum, item) => {
-          const qty = item?.basketInfos?.selectedQuantity ?? 1;
-          return sum + (item?.price ?? 0) * qty;
-        }, 0) * EUR_TO_XAF
-      );
-      const totalAmountXAF = totalXAF.toLocaleString('fr-FR') + ' FCFA';
+      const itemsOnlyXAF = itemsWithPrice.reduce((sum, item) => {
+        const qty = item?.basketInfos?.selectedQuantity ?? 1;
+        return sum + toXAF((item?.price ?? 0) * qty);
+      }, 0);
+      const tvaShippedXAF          = hasTvaShipped ? Math.round(itemsOnlyXAF * 0.1 / 100) * 100 : 0;
+      const shippedShippingCostXAF = typeof order.shippingCost === 'number' ? order.shippingCost : 0;
+      const totalXAF               = itemsOnlyXAF + tvaShippedXAF + shippedShippingCostXAF;
+
+      const totalAmountXAF      = totalXAF.toLocaleString('fr-FR') + ' FCFA';
+      const itemsTotalFormatted = itemsOnlyXAF.toLocaleString('fr-FR') + ' FCFA';
+      const tvaShippedFormatted = hasTvaShipped ? tvaShippedXAF.toLocaleString('fr-FR') + ' FCFA' : null;
+      const shippingCostFormatted = shippedShippingCostXAF > 0
+        ? shippedShippingCostXAF.toLocaleString('fr-FR') + ' FCFA'
+        : null;
       const shippedTemplateId = parseInt(process.env['BREVO_TEMPLATE_ORDER_SHIPPED'] ?? '5', 10);
 
       try {
@@ -210,6 +228,10 @@ export const updateOrderStatus = functions.https.onCall(async (data, context) =>
             orderId,
             items: itemsWithPrice,
             totalAmountXAF,
+            itemsTotalFormatted,
+            tvaFormatted: tvaShippedFormatted,
+            hasTva: hasTvaShipped,
+            shippingCostFormatted,
             trackingUrl,
             carrierName: carrierName ?? '',
             deliveryModeLabel,

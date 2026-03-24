@@ -50,18 +50,26 @@ export const resendPaymentEmail = functions.https.onCall(async (data, context) =
   const items: any[] = Array.isArray(order.items) ? order.items : [];
 
   const EUR_TO_XAF = 655.957;
+  const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
+  const hasTva = order.deliveryMode === 'shipping';
+
   const itemsWithPrice = items.map((item) => {
     const qty = item?.basketInfos?.selectedQuantity ?? 1;
-    const lineXAF = Math.round((item?.price ?? 0) * qty * EUR_TO_XAF);
+    const lineXAF = toXAF((item?.price ?? 0) * qty);
     return { ...item, linePriceFormatted: lineXAF.toLocaleString('fr-FR') + ' FCFA' };
   });
-  const totalXAF = Math.round(
-    itemsWithPrice.reduce((sum, item) => {
-      const qty = item?.basketInfos?.selectedQuantity ?? 1;
-      return sum + (item?.price ?? 0) * qty;
-    }, 0) * EUR_TO_XAF
-  );
-  const paymentAmountXAF = totalXAF.toLocaleString('fr-FR') + ' FCFA';
+  const itemsOnlyXAF = itemsWithPrice.reduce((sum, item) => {
+    const qty = item?.basketInfos?.selectedQuantity ?? 1;
+    return sum + toXAF((item?.price ?? 0) * qty);
+  }, 0);
+  const tvaXAF          = hasTva ? Math.round(itemsOnlyXAF * 0.1 / 100) * 100 : 0;
+  const shippingCostXAF = typeof order.shippingCost === 'number' ? order.shippingCost : 0;
+  const totalXAF        = itemsOnlyXAF + tvaXAF + shippingCostXAF;
+
+  const paymentAmountXAF    = totalXAF.toLocaleString('fr-FR') + ' FCFA';
+  const itemsTotalFormatted = itemsOnlyXAF.toLocaleString('fr-FR') + ' FCFA';
+  const tvaFormatted        = hasTva ? tvaXAF.toLocaleString('fr-FR') + ' FCFA' : null;
+  const shippingCostFormatted = shippingCostXAF > 0 ? shippingCostXAF.toLocaleString('fr-FR') + ' FCFA' : null;
   const paymentPhone = process.env['PAYMENT_PHONE'] ?? '+24177601044';
 
   const templateId = parseInt(process.env['BREVO_TEMPLATE_ORDER_READY'] ?? '4', 10);
@@ -76,6 +84,10 @@ export const resendPaymentEmail = functions.https.onCall(async (data, context) =
       items: itemsWithPrice,
       paymentPhone,
       paymentAmountXAF,
+      itemsTotalFormatted,
+      tvaFormatted,
+      hasTva,
+      shippingCostFormatted,
     },
   });
 

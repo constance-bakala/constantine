@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions/v1';
+import * as admin from 'firebase-admin';
 
 // ---------------------------------------------------------------------------
 // Brevo Transactional Email API (templates)
@@ -62,17 +63,30 @@ export const welcomeBrevoEmail = functions.auth.user().onCreate(async (user) => 
 
   const templateId = parseInt(process.env['BREVO_TEMPLATE_WELCOME'] ?? '2', 10);
   const displayName = user.displayName ?? user.email;
+  const baseUrl = process.env['APP_BASE_URL'] ?? 'https://delice-eternel-gabon.web.app';
+
+  // Fetch published categories dynamically
+  let categories: { title: string; link: string }[] = [];
+  try {
+    const snap = await admin.database().ref('catalog/categories').once('value');
+    const raw = snap.val() as Record<string, any> | null;
+    if (raw) {
+      categories = Object.values(raw)
+        .filter((c: any) => c.published)
+        .map((c: any) => ({
+          title: c.title ?? c.prefix,
+          link: `${baseUrl}/category/${c.prefix}`,
+        }));
+    }
+  } catch (err) {
+    console.warn('[Brevo] welcomeBrevoEmail: could not fetch categories', err);
+  }
 
   try {
     await sendBrevoTemplate({
       to: { email: user.email, name: displayName },
       templateId,
-      templateParams: {
-        displayName,
-        masksLink:   'https://delice-eternel-gabon.web.app/masks',
-        dressesLink: 'https://delice-eternel-gabon.web.app/dresses',
-        earingsLink: 'https://delice-eternel-gabon.web.app/earings',
-      },
+      templateParams: { displayName, categories, catalogLink: baseUrl },
     });
     console.log('[Brevo] welcomeBrevoEmail OK →', user.email);
   } catch (err) {
@@ -103,14 +117,18 @@ export const genericBrevoEmail = functions.https.onCall(async (data, context) =>
   const totalHT        = typeof data?.totalHT === 'number' ? data.totalHT : 0;
   const tva            = typeof data?.tva      === 'number' ? data.tva     : 0;
   const totalTTC       = typeof data?.totalTTC === 'number' ? data.totalTTC : 0;
+  const orderId        = typeof data?.orderId  === 'string' ? data.orderId  : undefined;
+  const deliveryMode       = typeof data?.deliveryMode      === 'string' ? data.deliveryMode      : undefined;
+  const deliveryModeLabel  = typeof data?.deliveryModeLabel === 'string' ? data.deliveryModeLabel : undefined;
+  const shippingAddress    = data?.shippingAddress ?? null;
 
-  console.log('[Brevo] genericBrevoEmail →', { to, subject, itemsCount: items.length, currency, totalTTC });
+  console.log('[Brevo] genericBrevoEmail →', { to, subject, itemsCount: items.length, currency, totalTTC, orderId });
 
   try {
     await sendBrevoTemplate({
       to: { email: to, name: displayName },
       templateId,
-      templateParams: { displayName, items, subject, currency, currencySymbol, hasTva, totalHT, tva, totalTTC },
+      templateParams: { displayName, items, subject, currency, currencySymbol, hasTva, totalHT, tva, totalTTC, orderId, deliveryMode, deliveryModeLabel, shippingAddress },
       subject,
       bcc: true,
     });

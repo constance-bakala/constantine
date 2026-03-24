@@ -7,7 +7,7 @@ import {
   ActionItemToogleSelect,
   ActionUpdateBasketItem,
 } from '@app/features/store/items.actions';
-import { Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum, CategoryInfos } from '@shared/interfaces';
+import { Category, ItemInfos, ItemSizeEnum, CategoryInfos } from '@shared/interfaces';
 import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-list.component';
 import { Go } from '@app/auth/store';
 import {
@@ -68,7 +68,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
             if (!catMeta) return null;
             return {
               // name = préfixe courant → utilisé par CategoryButtonsComponent pour s'exclure
-              name:      prefix as unknown as ItemsCategoriesEnum,
+              name:      prefix,
               title:     catMeta.title,
               summary:   catMeta.description   ?? '',
               summaryEn: catMeta.descriptionEn ?? '',
@@ -77,7 +77,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 false,
                 item.reference,
                 index,
-                ItemsCategoriesEnum.UNKNOWN,
+                prefix,
                 false,
                 { selectedQuantity: 1, selectedSize: ItemSizeEnum.M, selectedModel: 'MODEL_UNIQUE' },
                 item.images?.length ? item.images : [item.coverUrl],

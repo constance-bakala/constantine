@@ -1,15 +1,26 @@
-import { Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum, ItemsState } from '@shared/interfaces';
-import * as _ from 'lodash'
+import { Category, ItemInfos, ItemSizeEnum, ItemsState } from '@shared/interfaces';
+import * as _ from 'lodash';
 
 export function findItemByReference(items: ItemInfos[], reference: string): ItemInfos | undefined {
   return items.find(e => e.reference === reference);
 }
 
 export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue: any): ItemsState {
-  let itemsStateCopy = _.cloneDeep(state);
-  let category = (itemsStateCopy as any)[itemToUpdateRawValue.category.toLowerCase()];
+  const stateCopy = _.cloneDeep(state);
+  const key = itemToUpdateRawValue.category?.toLowerCase?.() ?? '';
+  let category: Category | undefined = stateCopy.categories[key];
+
+  if (!category) {
+    // Catégorie non trouvée par clé : cherche l'item par référence dans toutes les catégories
+    for (const cat of Object.values(stateCopy.categories)) {
+      const found = cat.items.find((i: ItemInfos) => i.reference === itemToUpdateRawValue.reference);
+      if (found) { category = cat; break; }
+    }
+  }
+
   if (!category) return state;
-  let foundItem: ItemInfos = category.items.find(
+
+  const foundItem = category.items.find(
     (item: ItemInfos) => item.reference === itemToUpdateRawValue.reference
   );
   if (foundItem) {
@@ -19,82 +30,45 @@ export function updateItemBasketInfos(state: ItemsState, itemToUpdateRawValue: a
       ?? itemToUpdateRawValue.basketInfos.selectedSize;
     foundItem.selected = itemToUpdateRawValue?.selected ?? true;
   }
-  return itemsStateCopy;
-}
-
-export function getCategoryByName(state: any, categoryName: ItemsCategoriesEnum): Category | undefined {
-  let category: Category | undefined;
-  switch (categoryName) {
-    case ItemsCategoriesEnum.EARINGS:
-      category = _.cloneDeep(state.earings);
-      break;
-    case ItemsCategoriesEnum.DRESSES:
-      category = _.cloneDeep(state.dresses);
-      break;
-    case ItemsCategoriesEnum.MASKS:
-      category = _.cloneDeep(state.masks);
-      break;
-    default:
-      category = undefined;
-  }
-
-  return category;
+  return stateCopy;
 }
 
 export function toogleSelectItem(state: ItemsState, anItem: ItemInfos, forceSelect?: boolean): ItemsState {
-  let category = getCategoryByName(state, anItem.category);
-  if (!category) {
-    return state;
+  const key = anItem.category?.toLowerCase?.() ?? '';
+  let category: Category | undefined;
+
+  if (state.categories[key]) {
+    category = _.cloneDeep(state.categories[key]);
+  } else {
+    // Catégorie non trouvée : cherche par référence dans toutes les catégories
+    for (const [, cat] of Object.entries(state.categories)) {
+      if (cat.items.find(i => i.reference === anItem.reference)) {
+        category = _.cloneDeep(cat);
+        break;
+      }
+    }
   }
-  let foundItem: ItemInfos | undefined = findItemByReference(category.items || [], anItem.reference);
-  if (!!foundItem && !forceSelect) {
-    foundItem.selected = !foundItem.selected;
-  } else if (foundItem) {
-    foundItem.selected = true;
+
+  if (!category) return state;
+
+  const foundItem = findItemByReference(category.items || [], anItem.reference);
+  if (foundItem) {
+    foundItem.selected = forceSelect ? true : !foundItem.selected;
   }
-  return updateItemState(state, category)
+  return updateItemState(state, category);
 }
 
 export function updateItemState(state: ItemsState, category: Category | undefined, overrideExisting: boolean = true): ItemsState {
-  if (!category) {
+  if (!category) return state;
+  const key = category.name;
+  const existing = state.categories[key];
+  if (existing && existing.items.length > 0 && !overrideExisting) {
     return state;
   }
-  switch (category.name) {
-    case ItemsCategoriesEnum.EARINGS:
-      if (canOverride(state.earings.items, overrideExisting)) {
-        return {
-          ...state,
-          earings: category
-        };
-      } else {
-        return state;
-      }
-    case ItemsCategoriesEnum.MASKS:
-      if (canOverride(state.masks.items, overrideExisting)) {
-        return {
-          ...state,
-          masks: category
-        };
-      } else {
-        return state;
-      }
-    case ItemsCategoriesEnum.DRESSES:
-      if (canOverride(state.dresses.items, overrideExisting)) {
-        return {
-          ...state,
-          dresses: category
-        };
-      } else {
-        return state;
-      }
-    default:
-      return state;
-  }
-}
-
-export function canOverride(items: ItemInfos[], overrideExisting: boolean = true): boolean {
-  if (items.length == 0) {
-    return true;
-  }
-  return overrideExisting;
+  return {
+    categories: {
+      ...state.categories,
+      [key]: category
+    }
+  };
 }

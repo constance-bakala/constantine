@@ -8,10 +8,11 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AdminCatalogComponent } from './admin-catalog/admin-catalog.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { AdminTryonComponent } from './admin-tryon/admin-tryon.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
-  declarations: [AdminDashboardComponent, AdminCatalogComponent, AdminSettingsComponent, ConfirmDialogComponent],
+  declarations: [AdminDashboardComponent, AdminCatalogComponent, AdminSettingsComponent, AdminTryonComponent, ConfirmDialogComponent],
   imports: [
     CommonModule,
     FormsModule,

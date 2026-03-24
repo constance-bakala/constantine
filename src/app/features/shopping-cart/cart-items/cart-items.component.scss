@@ -172,6 +172,67 @@ h3 span i {
 
 
 
+// ── Sous-options retrait en magasin ───────────────────────────────────────────
+
+.pickup-sub-options {
+  background: #f0faf7;
+  border: 1px solid #b2dfdb;
+  border-radius: 6px;
+  padding: 14px;
+}
+
+.delivery-sub-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background-color: #fff;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s;
+  width: 100%;
+  margin-bottom: 0;
+
+  &.selected {
+    border-color: #148f77;
+    background-color: #f0faf7;
+  }
+
+  &:hover:not(.selected) {
+    border-color: #adb5bd;
+  }
+}
+
+.courier-agreement {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0;
+}
+
+.courier-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #5d4037;
+  margin-bottom: 0;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.courier-checkbox {
+  flex-shrink: 0;
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  accent-color: #e67e22;
+  cursor: pointer;
+}
+
 // ── Lightbox panier ───────────────────────────────────────────────────────────
 
 .cart-img-wrapper {

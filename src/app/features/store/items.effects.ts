@@ -13,29 +13,24 @@ import {
   ActionUpdateBasketItem,
   ItemsActionTypes,
 } from '@app/features/store/items.actions';
-import {Category, ItemInfos, ItemsCategoriesEnum, ItemSizeEnum} from '@shared/interfaces';
+import {Category, ItemInfos, ItemSizeEnum} from '@shared/interfaces';
 import {selectChosenItems} from '@app/features/store/items.selectors';
 import {selectorConnectedUser} from '@app/auth/store/auth.selectors';
 import {CatalogRepository} from '@app/core/firebase/catalog.repository';
 import {CatalogCategory, CatalogItem} from '@shared/interfaces/catalog.interfaces';
 import {UsersRepository} from '@app/core/firebase/users.repository';
 import {AuthActionTypes} from '@app/auth/store/auth.actions';
-
-const ENUM_TO_PREFIX: Partial<Record<ItemsCategoriesEnum, string>> = {
-  [ItemsCategoriesEnum.MASKS]:   'mask',
-  [ItemsCategoriesEnum.DRESSES]: 'dress',
-  [ItemsCategoriesEnum.EARINGS]: 'earing',
-};
+import {CatalogActionTypes, CatalogLoadCategoriesSuccess} from '@app/features/store/catalog/catalog.actions';
 
 const EUR_TO_XAF = 655.96;
 
 function catalogItemsToCategory(
   categoryMeta: CatalogCategory,
   items: CatalogItem[],
-  enumValue: ItemsCategoriesEnum
+  prefix: string
 ): Category {
   return {
-    name:      enumValue,
+    name:      prefix,
     title:     categoryMeta.title,
     summary:   categoryMeta.description   ?? '',
     summaryEn: categoryMeta.descriptionEn ?? '',
@@ -44,7 +39,7 @@ function catalogItemsToCategory(
       false,
       item.reference,
       index,
-      enumValue,
+      prefix,
       false,
       { selectedQuantity: 1, selectedSize: ItemSizeEnum.M, selectedModel: 'MODEL_UNIQUE' },
       item.images?.length ? item.images : [item.coverUrl],
@@ -65,8 +60,6 @@ interface BasketSavedEntry {
 
 @Injectable()
 export class ItemsEffects {
-  // Snapshot du panier localStorage au démarrage (ou après connexion).
-  // Réinitialisé à la déconnexion pour éviter la contamination inter-utilisateurs.
   private initialBasket: BasketSavedEntry[];
 
   constructor(
@@ -89,18 +82,23 @@ export class ItemsEffects {
     }
   }
 
+  // Quand le catalogue charge ses catégories, on dispatch ActionItemsRetrieve pour chacune.
+  loadAllCategories$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CatalogActionTypes.LOAD_CATEGORIES_SUCCESS),
+      mergeMap((action: CatalogLoadCategoriesSuccess) =>
+        action.payload
+          .filter(cat => cat.published)
+          .map(cat => new ActionItemsRetrieve({ category: cat.prefix }))
+      )
+    )
+  );
+
   retriveAll$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ItemsActionTypes.RETRIEVE_ITEMS),
       mergeMap((action: ActionItemsRetrieve) => {
-        const prefix    = ENUM_TO_PREFIX[action.payload.category];
-        const enumValue = action.payload.category;
-
-        if (!prefix) {
-          return of(new ActionItemsRetrieveSuccess({
-            name: enumValue, title: '', summary: '', items: [],
-          }));
-        }
+        const prefix = action.payload.category;
 
         return this.catalogRepository.watchPublishedItemsByCategory(prefix).pipe(
           take(1),
@@ -111,7 +109,7 @@ export class ItemsEffects {
                   prefix, title: prefix, published: true, createdAt: 0,
                 };
                 return new ActionItemsRetrieveSuccess(
-                  catalogItemsToCategory(meta, items, enumValue)
+                  catalogItemsToCategory(meta, items, prefix)
                 );
               }),
               catchError((error) => of(new ActionItemsRetrieveError({ error })))
@@ -181,7 +179,6 @@ export class ItemsEffects {
       this.actions$.pipe(
         ofType(AuthActionTypes.LOGOUT),
         tap(() => {
-          // Réinitialiser le snapshot pour que le prochain utilisateur ne récupère pas le panier précédent
           this.initialBasket = [];
         })
       ),

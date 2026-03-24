@@ -1,9 +1,8 @@
 .adjust {
-  margin-top: 100px ;
+  margin-top: 100px;
 }
 
 .bg-primary {
-/*  background-image: url('/assets/style-sauvage_only_logo-removebg.png'); */
   background-color: #17a2b8 !important;
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -17,3 +16,16 @@
   font-size: 15px;
   font-style: italic;
 }
+
+.masthead {
+  padding-top: calc(4rem + 74px) !important;
+  padding-bottom: 6rem !important;
+}
+
+@media (max-width: 768px) {
+  .masthead {
+    padding-top: calc(1rem + 56px) !important;
+    padding-bottom: 1rem !important;
+  }
+}
+

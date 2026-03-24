@@ -154,6 +154,11 @@
                     <p style="line-height: 24px; margin-bottom:15px;">
                       chèr(e) {{ params.displayName }},
                     </p>
+                    {% if params.orderId %}
+                    <p style="line-height: 24px; margin-bottom:12px;">
+                      Référence commande : <strong style="color:#2c3e50;">#{{ params.orderId }}</strong>
+                    </p>
+                    {% endif %}
                     <p style="line-height: 24px;margin-bottom:15px;">
                       Vous venez de faire une commande sur Délice Éternel et nous vous en félicitons! Votre commande est en cours de préparation. Vous pouvez la consulter à tout moment sur votre espace personnel tant que vous ne l'avez pas reçue.
                       Nous restons à votre disposition pour répondre à vos questions.
@@ -306,7 +311,9 @@
                 <tr>
                   <td align="left" width="260" style="color: #5caad2; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">Transport</td>
                   <td align="center" width="100"></td>
-                  <td align="right" width="200" style="color: #5caad2; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">Gratuit</td>
+                  <td align="right" width="200" style="color: #5caad2; font-size: 15px; font-family: 'Work Sans', Calibri, sans-serif; line-height: 24px; padding: 8px 0;">
+                    {% if params.deliveryMode == 'shipping' %}Prix à confirmer{% else %}Gratuit{% endif %}
+                  </td>
                 </tr>
               </table>
             </td>
@@ -332,7 +339,10 @@
             <td>
               <table border="0" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="left" width="260" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">{% if params.hasTva %}Total TTC{% else %}Total{% endif %}</td>
+                  <td align="left" width="260" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">
+                    {% if params.hasTva %}Total TTC{% else %}Total{% endif %}
+                    {% if params.deliveryMode == 'shipping' %}<br/><span style="font-size:12px; font-weight:400; color:#888888;">(hors frais de transport)</span>{% endif %}
+                  </td>
                   <td align="center" width="100"></td>
                   <td align="right" width="200" style="color: #343434; font-size: 18px; font-family: Quicksand, Calibri, sans-serif; font-weight:700; line-height: 30px; padding: 12px 0;">{{ params.totalTTC }} {{ params.currencySymbol }}</td>
                 </tr>
