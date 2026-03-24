@@ -290,93 +290,104 @@
           <hr class="mb-4">
           <!--Grid column-->
           <div class="col-lg-4">
-            <!-- Card -->
-            <div class="card mb-4">
-              <div class="card-body">
-                <h5 class="mb-3">{{'PRODUCTS.SUMMARY' | translate}}</h5>
-                <div class="mb-3">
+            <!-- Summary card -->
+            <div class="summary-card mb-4">
+
+              <div class="summary-header">
+                <h5 class="summary-title">{{'PRODUCTS.SUMMARY' | translate}}</h5>
+                <div class="summary-currency">
                   <app-currency-selector></app-currency-selector>
                 </div>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                    @if (((nbSelectedItems$ | async) ?? 0) <= 1) { <span>&nbsp;<h5 class="mb-3">Article</h5></span>
-                      }
-                      @if (((nbSelectedItems$ | async) ?? 0) > 1) {
-                      <span>&nbsp;<h5 class="mb-3">Articles</h5></span>
-                      }
-                      <span>{{'PRODUCTS.AMOUNT_WITHOUT_VAT' | translate}}</span>
-                  </li>
-                  @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
-                  <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                    <b>{{itemGroup.get('reference')?.value}}</b> × {{itemGroup.get('quantity')?.value}}
-                    <span>{{ getItemTotal(i) }}</span>
-                  </li>
+              </div>
+
+              <div class="summary-body">
+
+                <!-- Articles -->
+                <div class="summary-section-heading">
+                  @if (((nbSelectedItems$ | async) ?? 0) <= 1) {
+                    <span>Article</span>
                   }
-                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    {{'PRODUCTS.SHIPPING' | translate}}
-                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'" class="text-right"
-                      style="font-size:12px; color:#5d4037; font-weight:500;">🛵 Payé au livreur</span>
-                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'" class="text-right"
-                      style="font-size:12px; color:#148f77; font-weight:500;">🏪 Au magasin</span>
+                  @if (((nbSelectedItems$ | async) ?? 0) > 1) {
+                    <span>Articles</span>
+                  }
+                  <span class="summary-ht-label">{{'PRODUCTS.AMOUNT_WITHOUT_VAT' | translate}}</span>
+                </div>
+
+                @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
+                <div class="summary-line">
+                  <span class="summary-line-ref">
+                    <b>{{itemGroup.get('reference')?.value}}</b>
+                    <span class="summary-line-qty">× {{itemGroup.get('quantity')?.value}}</span>
+                  </span>
+                  <span class="summary-line-value">{{ getItemTotal(i) }}</span>
+                </div>
+                }
+
+                <!-- Livraison -->
+                <div class="summary-line summary-line--shipping">
+                  <span>{{'PRODUCTS.SHIPPING' | translate}}</span>
+                  <span>
+                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'" class="summary-shipping-tag summary-shipping-tag--courier">🛵 Payé au livreur</span>
+                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'" class="summary-shipping-tag summary-shipping-tag--store">🏪 Au magasin</span>
                     <span *ngIf="deliveryMode === 'pickup' && !pickupSubMode">{{'PRODUCTS.GRATIS' | translate}}</span>
                     <span *ngIf="!deliveryMode">{{'PRODUCTS.GRATIS' | translate}}</span>
-                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur !== null">{{
-                      pricing.format(shippingCostEur!) }}</span>
-                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="shipping-pending-text">
-                      {{'SHIPPING_PENDING' | translate}}
-                    </span>
-                  </li>
-                  <li *ngIf="deliveryMode === 'shipping' && shippingCostEur === null"
-                    class="list-group-item border-0 px-0 pb-0">
-                    <small class="text-muted">
-                      <i class="fas fa-info-circle mr-1"></i>
-                      Les frais de port seront communiqués dès que votre commande sera prête.
-                    </small>
-                  </li>
-                  @if ((pricing.currency$ | async) !== 'XAF' && pricing.tvaRate > 0) {
-                  <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                    TVA ({{ pricing.tvaRate * 100 }}%)
-                    <span>{{ cartTva }}</span>
-                  </li>
-                  }
-                  <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                    <div>
-                      <strong>{{'PRODUCTS.TOTAL_WITH_VAT' | translate}}</strong>
-                      <strong>
-                        <p class="mb-0">{{'PRODUCTS.WITH_VAT' | translate}}</p>
-                      </strong>
-                    </div>
-                    <span><strong>{{ cartTotal }}</strong></span>
-                  </li>
-                </ul>
+                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur !== null">{{ pricing.format(shippingCostEur!) }}</span>
+                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="shipping-pending-text">{{'SHIPPING_PENDING' | translate}}</span>
+                  </span>
+                </div>
+                <div *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="summary-shipping-note">
+                  <i class="fas fa-info-circle mr-1"></i>Les frais de port seront communiqués dès que votre commande sera prête.
+                </div>
+
+                <!-- TVA -->
+                @if ((pricing.currency$ | async) !== 'XAF' && pricing.tvaRate > 0) {
+                <div class="summary-line">
+                  <span>TVA ({{ pricing.tvaRate * 100 }}%)</span>
+                  <span>{{ cartTva }}</span>
+                </div>
+                }
+
+                <!-- Total -->
+                <div class="summary-total">
+                  <div>
+                    <span class="summary-total-label">{{'PRODUCTS.TOTAL_WITH_VAT' | translate}}</span>
+                    <div class="summary-total-sub">{{'PRODUCTS.WITH_VAT' | translate}}</div>
+                  </div>
+                  <span class="summary-total-amount">{{ cartTotal }}</span>
+                </div>
+
+              </div><!-- /summary-body -->
+
+              <!-- CTA -->
+              <div class="summary-footer">
                 <button (click)="sendCommand()"
-                  [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent || !canSend" type="button"
-                  class="btn btn-primary btn-block waves-effect waves-light">
+                  [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent || !canSend"
+                  type="button" class="summary-btn-send">
+                  <i class="fas fa-paper-plane mr-2"></i>
                   {{ activeOrder ? 'Modifier la commande' : ('PRODUCTS.SEND_COMMAND' | translate) }}
                 </button>
-                <p *ngIf="hasOutOfStockItems" class="small text-center mt-2" style="color: #e67e22; font-weight: 500;">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Un ou plusieurs articles sont épuisés. Retirez-les pour pouvoir envoyer la commande.
-                </p>
-                <p *ngIf="((nbSelectedItems$ | async) ?? 0) >= 1 && !deliveryMode && !hasOutOfStockItems"
-                  class="small text-center mt-2" style="color: #e67e22; font-weight: 500;">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir un mode de livraison pour continuer.
-                </p>
-                <p *ngIf="deliveryMode === 'pickup' && !pickupSubMode" class="small text-center mt-2"
-                  style="color: #e67e22; font-weight: 500;">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir entre livraison par coursier ou
-                  récupération au magasin.
-                </p>
-                <p *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier' && !courierAgreementChecked"
-                  class="small text-center mt-2" style="color: #e67e22; font-weight: 500;">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Veuillez cocher la case d'engagement avant de valider.
-                </p>
-                <p *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid"
-                  class="small text-center mt-2" style="color: #e67e22; font-weight: 500;">
-                  <i class="fas fa-exclamation-circle mr-1"></i>Remplissez tous les champs obligatoires de l'adresse de livraison.
-                </p>
+
+                <div class="summary-warnings">
+                  <p *ngIf="hasOutOfStockItems" class="summary-warning">
+                    <i class="fas fa-exclamation-circle mr-1"></i>Un ou plusieurs articles sont épuisés. Retirez-les pour pouvoir envoyer la commande.
+                  </p>
+                  <p *ngIf="((nbSelectedItems$ | async) ?? 0) >= 1 && !deliveryMode && !hasOutOfStockItems" class="summary-warning">
+                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir un mode de livraison pour continuer.
+                  </p>
+                  <p *ngIf="deliveryMode === 'pickup' && !pickupSubMode" class="summary-warning">
+                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir entre livraison par coursier ou récupération au magasin.
+                  </p>
+                  <p *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier' && !courierAgreementChecked" class="summary-warning">
+                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez cocher la case d'engagement avant de valider.
+                  </p>
+                  <p *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid" class="summary-warning">
+                    <i class="fas fa-exclamation-circle mr-1"></i>Remplissez tous les champs obligatoires de l'adresse de livraison.
+                  </p>
+                </div>
               </div>
+
             </div>
-            <!-- Card -->
+            <!-- /Summary card -->
 
             <!-- Card statuts commandes -->
             <div class="card mb-4" *ngIf="orderStatuses.length > 0">

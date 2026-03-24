@@ -35,60 +35,51 @@
           </div>
           <div class="col-md-5 col-lg-7 col-xl-7" formGroupName="basketInfos">
             <div>
-              <div class="d-flex justify-content-between">
-                <div>
-                  <h5>{{itemGroup.get('reference')?.value}}</h5>
-                  <p *ngIf="itemGroup.get('category')?.value !== 'UNKNOWN'" class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
-                      translate}}:</strong>&nbsp;
-                    {{itemGroup.get('category')?.value}}
-                  </p>
-                  <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' |
-                      translate}}:</strong>&nbsp;
-                    <select type="text" id="selectedModel" name="selectedModel" formControlName="selectedModel"
-                      class="form-control">
-                      <option value="MODEL_UNIQUE" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}</option>
-                    </select>
-                  </p>
-                  <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' |
-                      translate}}:</strong>&nbsp;
-                    <select id="selectedSize" name="selectedSize" formControlName="selectedSize" class="form-control"
-                      tabindex="2">
-                      <option disabled selected value="">{{'CHOOSE' | translate}}</option>
-                      @for (s of sizes; track s) {
-                      <option [value]="s.value">{{ s.label }}</option>
-                      }
-                    </select>
-                  </p>
-                </div>
-                <!-- div class="skin-light def-number-input number-input safari_only mb-0"-->
-                <div class="def-number-input number-input safari_only mb-0">
-                  <button (click)="stepDown()" class="minus"></button>
-                  <input class="quantity" name="selectedQuantity" value="1" type="number"
-                    formControlName="selectedQuantity">
-                  <button (click)="stepUp()" class="plus"></button>
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h5 class="mb-0">{{itemGroup.get('reference')?.value}}</h5>
+                <div class="item-detail-qty">
+                  <button type="button" (click)="stepDown()" class="item-detail-qty-btn">−</button>
+                  <input class="item-detail-qty-input" type="number" name="selectedQuantity" value="1" formControlName="selectedQuantity">
+                  <button type="button" (click)="stepUp()" class="item-detail-qty-btn">+</button>
                 </div>
               </div>
+              <p *ngIf="itemGroup.get('category')?.value !== 'UNKNOWN'" class="mb-3 text-muted text-uppercase small">
+                <strong>{{'PRODUCTS.CATEGORY' | translate}}:</strong>&nbsp;{{itemGroup.get('category')?.value}}
+              </p>
+              <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' | translate}}:</strong>&nbsp;
+                <select id="selectedModel" name="selectedModel" formControlName="selectedModel" class="item-detail-select">
+                  <option value="MODEL_UNIQUE" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}</option>
+                </select>
+              </p>
+              <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' | translate}}:</strong>&nbsp;
+                <select id="selectedSize" name="selectedSize" formControlName="selectedSize" class="item-detail-select" tabindex="2">
+                  <option disabled selected value="">{{'CHOOSE' | translate}}</option>
+                  @for (s of sizes; track s) {
+                    <option [value]="s.value">{{ s.label }}</option>
+                  }
+                </select>
+              </p>
               <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <a (click)="(!isOutOfStock || selected) ? toogleSelect() : null" type="button"
-                    [class]="selected ? 'card-link-secondary small text-uppercase btn btn-remove-cart' : 'card-link-secondary small text-uppercase btn btn-add-cart'"
-                    [style.opacity]="isOutOfStock && !selected ? '0.4' : '1'"
-                    [style.cursor]="isOutOfStock && !selected ? 'not-allowed' : 'pointer'">
+                <div class="item-detail-actions">
+                  <button type="button"
+                    (click)="(!isOutOfStock || selected) ? toogleSelect() : null"
+                    [class]="selected ? 'item-detail-btn item-detail-btn--remove' : (isOutOfStock ? 'item-detail-btn item-detail-btn--disabled' : 'item-detail-btn item-detail-btn--add')"
+                    [disabled]="isOutOfStock && !selected">
                     @if (selected) {
-                      <i class="fas fa-trash-alt mr-1"></i>
+                      <i class="fas fa-trash-alt"></i>
                       <span>{{'REMOVE_FROM_CART' | translate}}</span>
                     } @else if (isOutOfStock) {
-                      <i class="fas fa-ban mr-1"></i>
+                      <i class="fas fa-ban"></i>
                       <span>{{'OUT_OF_STOCK' | translate}}</span>
                     } @else {
-                      <i class="fas fa-shopping-cart mr-1"></i>
+                      <i class="fas fa-shopping-cart"></i>
                       <span>{{'ADD_TO_CART' | translate}}</span>
                     }
-                  </a>
-                  <!--a href="#!" type="button" class="card-link-secondary small text-uppercase">
-              <i class="fas fa-heart mr-1"></i> Move to wish list </a-->
-                  <a (click)="close()" type="button" class="card-link-secondary small text-uppercase btn btn-close-detail">
-                    <i class="fas fa-times-circle mr-1"></i> {{'CLOSE' | translate}} </a>
+                  </button>
+                  <button type="button" (click)="close()" class="item-detail-btn item-detail-btn--close">
+                    <i class="fas fa-times-circle"></i>
+                    <span>{{'CLOSE' | translate}}</span>
+                  </button>
                 </div>
                 <div class="text-right">
                   <p class="mb-0"><strong>{{ totalPrice }}</strong></p>

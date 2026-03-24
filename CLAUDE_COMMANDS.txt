@@ -1,0 +1,280 @@
+======================================================================
+  CLAUDE CODE — COMMANDES UTILES
+======================================================================
+
+
+----------------------------------------------------------------------
+  GESTION DU CONTEXTE / TOKENS
+----------------------------------------------------------------------
+
+/compact
+    Compacte l'historique en un résumé → réduit les tokens consommés
+    par chaque échange suivant. À utiliser en début de nouvelle tâche.
+
+/compact "garde X, résume Y"
+    Compacte en précisant ce qui est important à conserver.
+    Ex : /compact "garde la structure Firebase, résume les échanges UI"
+
+/clear
+    Efface tout l'historique et repart de zéro.
+
+/cost
+    Affiche la consommation de tokens de la session en cours.
+
+/context
+    Visualise l'occupation de la fenêtre de contexte sous forme
+    de grille colorée avec des suggestions d'optimisation.
+
+
+----------------------------------------------------------------------
+  RÉDUIRE LES REQUÊTES AUTOMATIQUES
+----------------------------------------------------------------------
+
+/plan
+    Claude analyse et planifie SANS exécuter d'outils automatiquement.
+    Utile pour valider une approche avant de lancer une tâche complexe.
+
+/effort low|medium|high|max|auto
+    Ajuste le niveau de raisonnement de Claude.
+    "low" = moins de tokens, réponses plus rapides.
+    "max" = raisonnement approfondi (nécessite Opus).
+
+/fast
+    Active le mode rapide : réponses plus rapides, moins coûteuses.
+    Retaper /fast pour désactiver.
+
+/batch <instruction>
+    Décompose une tâche volumineuse en 5 à 30 unités indépendantes,
+    puis lance un agent parallèle par unité — chacun dans son propre
+    dossier Git isolé (worktree). Chaque agent implémente sa partie,
+    lance les tests, et ouvre une Pull Request.
+
+    WORKFLOW :
+      1. Claude analyse le code pour comprendre le périmètre
+      2. Il présente un plan découpé en unités → tu valides
+      3. Les agents travaillent en parallèle (chacun dans son worktree)
+      4. Une PR est créée par unité, prête à relire et merger
+
+    QUAND L'UTILISER :
+      → Migrations à grande échelle (ex : passer de class à fonction)
+      → Refactorisation répétitive sur de nombreux fichiers
+      → Ajout de patterns uniformes (JSDoc, types, logs...)
+      → Remplacement global d'une librairie ou d'un pattern
+
+    À NE PAS UTILISER si les tâches sont séquentielles ou dépendantes
+    les unes des autres.
+
+    COÛT : plus élevé qu'une session normale (plusieurs agents,
+    chacun avec son propre contexte), mais beaucoup plus rapide
+    en temps réel grâce au parallélisme.
+
+    Exemples :
+      /batch migrer tous les composants Angular de class à standalone
+      /batch ajouter des commentaires JSDoc à tous les services
+      /batch remplacer toutes les chaînes .then() par async/await
+      /batch ajouter la gestion d'erreur manquante dans les services Firebase
+
+
+----------------------------------------------------------------------
+  NAVIGATION ET CONTRÔLE
+----------------------------------------------------------------------
+
+/btw <question>
+    Pose une question rapide SANS l'ajouter à l'historique.
+    Idéal pour les questions courtes qui ne doivent pas gonfler
+    le contexte.
+    Ex : /btw c'est quoi la commande pour lister les branches git ?
+
+!<commande shell>
+    Exécute une commande shell DIRECTEMENT, sans passer par Claude.
+    Aucun token consommé (pas d'overhead).
+    Ex : !git status
+    Ex : !npm run build
+    Ex : !ls src/app
+
+/model [nom]
+    Change le modèle en cours de session.
+    Sans argument : ouvre un sélecteur interactif.
+
+Alt+P (Windows/Linux) ou Option+P (Mac)
+    Change de modèle sans effacer le prompt en cours.
+
+/permissions
+    Affiche et modifie les permissions des outils (ce que Claude
+    peut exécuter automatiquement ou non).
+
+
+----------------------------------------------------------------------
+  MÉMOIRE ET INSTRUCTIONS
+----------------------------------------------------------------------
+
+/memory
+    Ouvre et édite les fichiers mémoire (CLAUDE.md, auto-memory).
+    Permet d'activer/désactiver la mémoire automatique.
+
+/init
+    Initialise un fichier CLAUDE.md dans le projet pour donner
+    des instructions permanentes à Claude.
+
+
+----------------------------------------------------------------------
+  RACCOURCIS CLAVIER UTILES
+----------------------------------------------------------------------
+
+Ctrl+C          Annule la génération en cours
+Ctrl+D          Quitte Claude Code
+Ctrl+L          Efface l'écran du terminal (conserve l'historique)
+Ctrl+O          Affiche le détail des outils utilisés (mode verbeux)
+Ctrl+T          Affiche/masque la liste des tâches en cours
+Ctrl+R          Recherche inversée dans l'historique des commandes
+Alt+P / Opt+P   Change de modèle sans effacer le prompt
+Alt+T / Opt+T   Active/désactive le mode "extended thinking"
+Shift+Tab       Cycle entre les modes de permission
+
+
+----------------------------------------------------------------------
+  DIVERS
+----------------------------------------------------------------------
+
+/help           Affiche l'aide et la liste des commandes disponibles
+/doctor         Diagnostique l'installation de Claude Code
+/theme          Change le thème (light/dark/colorblind/ANSI)
+/diff           Ouvre le visualiseur de diff pour les changements en cours
+/status         Affiche la version, le modèle, le compte, la connectivité
+/skills         Liste les skills disponibles
+
+
+----------------------------------------------------------------------
+  BONNES PRATIQUES
+----------------------------------------------------------------------
+
+1. COMPACTER EN DÉBUT DE NOUVELLE TÂCHE
+   ─────────────────────────────────────
+   Chaque message que tu envoies inclut TOUT l'historique de la session.
+   Plus l'historique est long, plus chaque échange coûte des tokens —
+   même pour une question simple.
+
+   → Quand tu termines une tâche (ex : tu viens de corriger un bug),
+     tape /compact avant de passer à la suivante.
+   → Claude résume ce qui a été fait et repart avec un contexte allégé.
+
+   Exemple :
+     Tu viens de refactoriser le PricingService. Avant d'attaquer
+     le composant AdminDashboard, tape :
+       /compact "garde les décisions sur PricingService, résume le reste"
+
+
+2. UTILISER /btw POUR LES QUESTIONS RAPIDES
+   ──────────────────────────────────────────
+   Une question posée normalement est ajoutée à l'historique et
+   augmente le contexte pour tous les échanges suivants.
+   /btw pose la question HORS contexte : la réponse n'est pas mémorisée.
+
+   → Idéal pour : vérifier une syntaxe, rappeler une commande,
+     poser une question de compréhension rapide.
+
+   Exemple :
+     /btw comment trier un tableau d'objets par date en TypeScript ?
+     /btw c'est quoi la différence entre == et === en JS ?
+
+   À éviter avec /btw : les questions dont la réponse devra être
+   réutilisée dans la suite de la conversation.
+
+
+3. UTILISER /plan AVANT UNE TÂCHE COMPLEXE
+   ──────────────────────────────────────────
+   Sans /plan, Claude commence souvent à lire des fichiers et exécuter
+   des outils dès le premier message → consomme beaucoup de tokens
+   avant même de savoir si l'approche est la bonne.
+
+   Avec /plan, Claude présente son plan d'action et attend ta validation
+   avant de toucher au code.
+
+   → Évite de consommer des tokens sur une mauvaise piste.
+   → Te permet de corriger l'approche avant l'exécution.
+
+   Exemple :
+     Entre en mode /plan, puis décris ta tâche :
+       "Je veux ajouter un système de notifications push Firebase
+        dans l'application Angular."
+     Claude listera les fichiers à modifier et les étapes prévues.
+     Tu valides (ou corriges) avant qu'il commence.
+
+
+4. UTILISER !commande POUR LES OPÉRATIONS SHELL
+   ────────────────────────────────────────────────
+   Quand tu veux juste exécuter une commande (git, npm, ls...),
+   passer par Claude coûte des tokens inutilement : il doit lire
+   ta demande, appeler l'outil, lire le résultat, formuler une réponse.
+
+   Avec le préfixe !, la commande s'exécute directement dans le terminal,
+   sans aucune intervention de Claude → zéro token consommé.
+
+   Exemples :
+     !git status
+     !git log --oneline -10
+     !npm run build
+     !ls src/app/features
+     !cat src/environments/environment.ts
+
+   → Réserver Claude pour les tâches qui nécessitent vraiment
+     de la compréhension ou de la génération de code.
+
+
+5. SURVEILLER SA CONSOMMATION AVEC /cost
+   ──────────────────────────────────────
+   /cost affiche en temps réel le nombre de tokens consommés
+   dans la session, et le coût estimé.
+
+   → Utile pour prendre conscience de ce qui coûte cher
+     (lire de gros fichiers, longues conversations, etc.).
+   → À consulter en cours de session pour décider si un /compact
+     s'impose.
+
+   Exemple de lecture :
+     Input tokens  : 45 230  (l'historique envoyé à chaque message)
+     Output tokens :  3 800  (les réponses de Claude)
+     → Si "input tokens" est très élevé, c'est le moment de /compact.
+
+
+6. AJUSTER LE NIVEAU D'EFFORT SELON LA TÂCHE
+   ─────────────────────────────────────────────
+   Claude raisonne plus ou moins profondément selon le niveau d'effort.
+   Un raisonnement profond coûte plus de tokens.
+
+   /effort low    → Tâches simples : questions courtes, corrections
+                    mineures, reformulations. Rapide et économique.
+
+   /effort medium → Tâches standard : ajout de fonctionnalité,
+                    débogage courant. Niveau par défaut.
+
+   /effort high   → Tâches complexes : architecture, refactorisation
+                    importante, analyse approfondie.
+
+   Exemples d'utilisation :
+     Avant de corriger une faute de frappe → /effort low
+     Avant de concevoir un nouveau module  → /effort high
+     Après la tâche → /effort auto  (remet le niveau par défaut)
+
+
+7. STRUCTURER SES DEMANDES POUR ÉVITER LES ALLERS-RETOURS
+   ──────────────────────────────────────────────────────────
+   Chaque aller-retour (message + réponse) consomme des tokens.
+   Une demande vague génère des questions de clarification → plus
+   d'échanges → plus de tokens.
+
+   Bonne pratique : inclure dans le message initial
+     - CE que tu veux faire
+     - POURQUOI (le contexte)
+     - LES CONTRAINTES éventuelles
+
+   Exemple à éviter :
+     "Modifie le composant cart."
+
+   Exemple optimal :
+     "Dans cart-items.component.ts, ajoute la persistance du champ
+      'deliveryMode' dans localStorage. Même pattern que 'currency'
+      dans PricingService. Ne touche pas aux autres champs."
+
+
+======================================================================

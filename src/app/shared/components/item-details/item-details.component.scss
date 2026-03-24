@@ -47,69 +47,141 @@
   &:hover { background: rgba(0, 0, 0, 0.7); }
 }
 
-.btn-add-cart {
-  background-color: #f5c400;
-  color: #000;
+// ── Listes déroulantes ────────────────────────────────────────────────────────
+
+.item-detail-select {
+  padding: 6px 10px;
+  border: 1px solid #dde3ea;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #fff;
+  color: #2c3e50;
+  cursor: pointer;
+  outline: none;
+  height: auto;
+  transition: border-color 0.15s;
+
+  &:focus { border-color: #148f77; }
+}
+
+// ── Stepper quantité ──────────────────────────────────────────────────────────
+
+.item-detail-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #dde3ea;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.item-detail-qty-btn {
+  background: none;
   border: none;
-  font-weight: 600;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  font-weight: 300;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background-color: #e0b300;
-    color: #000;
+    background: #148f77;
+    color: #fff;
   }
 }
 
-.btn-remove-cart {
-  background-color: #f8d7da;
-  color: #721c24;
+.item-detail-qty-input {
+  width: 40px;
+  text-align: center;
   border: none;
+  border-left: 1px solid #dde3ea;
+  border-right: 1px solid #dde3ea;
+  background: transparent;
+  font-size: 14px;
   font-weight: 600;
+  color: #2c3e50;
+  outline: none;
+  -moz-appearance: textfield;
 
-  &:hover {
-    background-color: #f1aeb5;
-    color: #721c24;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button { -webkit-appearance: none; }
+}
+
+// ── Prix ─────────────────────────────────────────────────────────────────────
+
+.text-right strong {
+  color: #148f77;
+}
+
+// ── Boutons d'action ──────────────────────────────────────────────────────────
+
+.item-detail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.item-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, color 0.15s, transform 0.1s;
+
+  &:active { transform: scale(0.97); }
+
+  i { font-size: 12px; }
+
+  &--add {
+    background: #f5c400;
+    color: #2c3e50;
+
+    &:hover { background: #e0b300; }
   }
-}
 
-.close {
-  font-size: 1.2rem;
-  color: #333;
-  opacity: 1;
+  &--remove {
+    background: #fff0f0;
+    color: #c0392b;
+    border: 1px solid #f5c6c6;
 
-  &:hover { color: #000; }
-}
-
-.btn-close-detail {
-  background-color: #fff !important;
-  color: #000 !important;
-  border: 1px solid #ccc !important;
-  font-weight: 500;
-
-  &:hover {
-    background-color: #f0f0f0 !important;
-    color: #000 !important;
+    &:hover { background: #fde8e8; }
   }
-}
 
-.number-input {
-  height: 35px!important;
+  &--close {
+    background: none;
+    border: 1px solid #e0e6ed;
+    color: #8a9ab0;
+
+    &:hover {
+      border-color: #adb5bd;
+      color: #555;
+      background: #f8f9fa;
+    }
+  }
+
+  &--disabled {
+    background: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
 }
 
 .container {
-  min-width: 320px
-}
-
-.btn {
-  font-size: 0.7rem;
+  min-width: 320px;
 }
 
 @media(max-width: 690px) {
-  .d-flex {
-    display: block !important;
-  }
-  .btn {
-    font-size: 0.7rem;
-  }
   .container {
     max-width: 520px;
     padding-left: 0;
@@ -125,6 +197,9 @@
     height: auto;
     display: block;
     object-fit: contain;
+  }
+  .item-detail-actions {
+    flex-direction: column;
   }
 }
 
