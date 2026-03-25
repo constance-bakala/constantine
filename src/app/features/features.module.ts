@@ -5,6 +5,8 @@ import { ItemsEffects, itemsReducer } from '@app/features/store';
 import { ShoppingCartModule } from '@app/features/shopping-cart/shopping-cart.module';
 import { catalogReducer } from '@app/features/store/catalog/catalog.reducer';
 import { CatalogEffects } from '@app/features/store/catalog/catalog.effects';
+import { promoReducer, promoStorageMetaReducer } from '@app/features/store/promo/promo.reducer';
+import { PromoEffects } from '@app/features/store/promo/promo.effects';
 
 
 @NgModule({
@@ -13,7 +15,8 @@ import { CatalogEffects } from '@app/features/store/catalog/catalog.effects';
     ShoppingCartModule,
     StoreModule.forFeature('constantine', itemsReducer),
     StoreModule.forFeature('catalog', catalogReducer),
-    EffectsModule.forFeature([ItemsEffects, CatalogEffects]),
+    StoreModule.forFeature('promo', promoReducer, { metaReducers: [promoStorageMetaReducer] }),
+    EffectsModule.forFeature([ItemsEffects, CatalogEffects, PromoEffects]),
   ]
 })
 export class FeaturesModule { }

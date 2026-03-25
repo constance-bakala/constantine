@@ -121,6 +121,10 @@ export const genericBrevoEmail = functions.https.onCall(async (data, context) =>
   const deliveryMode       = typeof data?.deliveryMode      === 'string' ? data.deliveryMode      : undefined;
   const deliveryModeLabel  = typeof data?.deliveryModeLabel === 'string' ? data.deliveryModeLabel : undefined;
   const shippingAddress    = data?.shippingAddress ?? null;
+  const promoCode           = typeof data?.promoCode           === 'string' ? data.promoCode           : null;
+  const promoDiscountPercent = typeof data?.promoDiscountPercent === 'number' ? data.promoDiscountPercent : null;
+  const promoDiscountAmount  = typeof data?.promoDiscountAmount  === 'number' ? data.promoDiscountAmount  : null;
+  const promoCategoryId      = typeof data?.promoCategoryId      === 'string' ? data.promoCategoryId      : null;
 
   console.log('[Brevo] genericBrevoEmail →', { to, subject, itemsCount: items.length, currency, totalTTC, orderId });
 
@@ -128,7 +132,7 @@ export const genericBrevoEmail = functions.https.onCall(async (data, context) =>
     await sendBrevoTemplate({
       to: { email: to, name: displayName },
       templateId,
-      templateParams: { displayName, items, subject, currency, currencySymbol, hasTva, totalHT, tva, totalTTC, orderId, deliveryMode, deliveryModeLabel, shippingAddress },
+      templateParams: { displayName, items, subject, currency, currencySymbol, hasTva, totalHT, tva, totalTTC, orderId, deliveryMode, deliveryModeLabel, shippingAddress, promoCode, promoDiscountPercent, promoDiscountAmount, promoCategoryId },
       subject,
       bcc: true,
     });

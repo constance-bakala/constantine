@@ -6,6 +6,7 @@ import { PricingService } from '@shared/services/pricing.service';
 import { StockService } from '@shared/services/stock.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { PromoCodeRepository } from '@app/core/firebase/promo-code.repository';
 
 export type ExistingCategories = Record<string, CategoryInfos>;
 
@@ -27,6 +28,7 @@ export class PortfolioListComponent implements OnInit, OnDestroy {
   currentEncodedUri = '';
   currentLang = 'fr';
   lightboxSrc: string | null = null;
+  hasActivePromo = false;
 
   private subs = new Subscription();
 
@@ -36,6 +38,7 @@ export class PortfolioListComponent implements OnInit, OnDestroy {
     public stock: StockService,
     private translate: TranslateService,
     private cdr: ChangeDetectorRef,
+    private promoRepo: PromoCodeRepository,
   ) {}
 
   ngOnInit() {
@@ -45,6 +48,10 @@ export class PortfolioListComponent implements OnInit, OnDestroy {
     this.subs.add(this.pricing.currency$.subscribe(() => this.cdr.markForCheck()));
     this.subs.add(this.translate.onLangChange.subscribe(({ lang }) => {
       this.currentLang = lang;
+      this.cdr.markForCheck();
+    }));
+    this.subs.add(this.promoRepo.hasAnyActivePromo().subscribe(has => {
+      this.hasActivePromo = has;
       this.cdr.markForCheck();
     }));
   }

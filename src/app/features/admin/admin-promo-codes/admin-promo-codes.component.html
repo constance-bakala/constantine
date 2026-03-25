@@ -1,0 +1,101 @@
+<div class="promo-section">
+
+  <h2 class="promo-title">{{ 'ADMIN_PROMO_TITLE' | translate }}</h2>
+
+  <!-- ── Formulaire création ── -->
+  <div class="promo-form-card">
+    <h3 class="promo-form-title">{{ 'ADMIN_PROMO_NEW_TITLE' | translate }}</h3>
+
+    <div class="promo-form-grid">
+      <div class="promo-field">
+        <label class="promo-label">{{ 'ADMIN_PROMO_CODE_LABEL' | translate }} <span class="req">*</span></label>
+        <input class="promo-input promo-input--upper" type="text" [(ngModel)]="newPromoForm.code"
+               [placeholder]="'ADMIN_PROMO_CODE_PLACEHOLDER' | translate" maxlength="20">
+      </div>
+
+      <div class="promo-field">
+        <label class="promo-label">{{ 'ADMIN_PROMO_DISCOUNT_LABEL' | translate }} <span class="req">*</span></label>
+        <input class="promo-input" type="number" [(ngModel)]="newPromoForm.discountPercent"
+               min="1" max="100" step="1">
+      </div>
+
+      <div class="promo-field promo-field--full">
+        <label class="promo-label">{{ 'ADMIN_PROMO_CATEGORY_LABEL' | translate }} <span class="req">*</span></label>
+        <select class="promo-select" [(ngModel)]="newPromoForm.categoryId">
+          <option value="" disabled>{{ 'ADMIN_PROMO_CATEGORY_PLACEHOLDER' | translate }}</option>
+          <option *ngFor="let cat of publishedCategories" [value]="cat.prefix">{{ cat.title }}</option>
+        </select>
+      </div>
+
+      <div class="promo-field">
+        <label class="promo-label">{{ 'ADMIN_PROMO_START_DATE_LABEL' | translate }} <span class="req">*</span></label>
+        <input class="promo-input" type="date" [(ngModel)]="newPromoForm.startDate">
+      </div>
+
+      <div class="promo-field">
+        <label class="promo-label">{{ 'ADMIN_PROMO_END_DATE_LABEL' | translate }} <span class="req">*</span></label>
+        <input class="promo-input" type="date" [(ngModel)]="newPromoForm.endDate">
+      </div>
+    </div>
+
+    <div class="promo-form-actions">
+      <button class="promo-btn promo-btn--save" [disabled]="!isFormValid || isSaving" (click)="saveNewPromo()">
+        <i class="fas fa-plus mr-1"></i>
+        {{ isSaving ? ('ADMIN_PROMO_SAVING' | translate) : ('ADMIN_PROMO_CREATE_BTN' | translate) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Liste des codes ── -->
+  <div class="promo-list-card">
+    <h3 class="promo-form-title">{{ 'ADMIN_PROMO_LIST_TITLE' | translate }}</h3>
+
+    @if (promoCodes.length === 0) {
+      <p class="promo-empty">{{ 'ADMIN_PROMO_EMPTY' | translate }}</p>
+    }
+
+    @for (promo of promoCodes; track promo.id) {
+      <div class="promo-row" [class.promo-row--active]="getPromoDisplayStatus(promo) === 'active'"
+                             [class.promo-row--expired]="getPromoDisplayStatus(promo) === 'expired'">
+        <div class="promo-row-main">
+          <span class="promo-code-badge">{{ promo.code }}</span>
+          <span class="promo-discount">−{{ promo.discountPercent }}%</span>
+          <span class="promo-cat">{{ getCategoryTitle(promo.categoryId) }}</span>
+          <span class="promo-dates">
+            {{ promo.startDate | date:'dd/MM/yy' }} → {{ promo.endDate | date:'dd/MM/yy' }}
+          </span>
+          <span class="promo-status-badge"
+                [class.promo-status--active]="getPromoDisplayStatus(promo) === 'active'"
+                [class.promo-status--upcoming]="getPromoDisplayStatus(promo) === 'upcoming'"
+                [class.promo-status--expired]="getPromoDisplayStatus(promo) === 'expired'">
+            @if (getPromoDisplayStatus(promo) === 'active') {
+              ● {{ 'ADMIN_PROMO_STATUS_ACTIVE' | translate }}
+            } @else if (getPromoDisplayStatus(promo) === 'upcoming') {
+              ◷ {{ 'ADMIN_PROMO_STATUS_UPCOMING' | translate }}
+            } @else {
+              ✕ {{ 'ADMIN_PROMO_STATUS_EXPIRED' | translate }}
+            }
+          </span>
+        </div>
+
+        @if (pendingDeleteId === promo.id) {
+          <div class="promo-confirm-delete">
+            <span>{{ 'ADMIN_PROMO_DELETE_CONFIRM' | translate }}</span>
+            <button class="promo-btn promo-btn--danger-sm" (click)="confirmDelete(promo.id)">
+              {{ 'ADMIN_PROMO_DELETE_YES' | translate }}
+            </button>
+            <button class="promo-btn promo-btn--neutral-sm" (click)="cancelDelete()">
+              {{ 'CANCEL' | translate }}
+            </button>
+          </div>
+        } @else {
+          <button class="promo-btn promo-btn--delete" (click)="requestDelete(promo.id)"
+                  [title]="'ADMIN_PROMO_DELETE_BTN' | translate">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+</div>

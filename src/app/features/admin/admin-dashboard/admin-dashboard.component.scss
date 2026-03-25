@@ -1,11 +1,13 @@
 // ── Onglets ─────────────────────────────────────────────
 .admin-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
 }
 
 .tab-btn {
+  flex: 1 1 auto;
   padding: 8px 20px;
   border: 2px solid #148f77;
   border-radius: 4px;
@@ -15,6 +17,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  text-align: center;
 
   &.active {
     background: #148f77;
@@ -680,6 +683,7 @@
 
 .order-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
 }
@@ -856,4 +860,74 @@
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 12px;
+}
+
+// ── Responsive mobile ──────────────────────────────────────
+@media (max-width: 599px) {
+
+  // Tableau → cartes empilées
+  .orders-table {
+    display: block;
+
+    thead { display: none; }
+
+    tbody { display: block; }
+
+    tr.order-row {
+      display: block;
+      border: 1px solid #ecf0f1;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      padding: 4px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+
+      &:hover td { background: transparent; }
+    }
+
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 14px;
+      border-bottom: 1px solid #f3f4f5;
+      font-size: 13px;
+
+      &:last-child { border-bottom: none; }
+
+      // Libellé de colonne affiché via data-label
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #7f8c8d;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        flex-shrink: 0;
+        margin-right: 8px;
+      }
+    }
+
+    // La colonne client empile nom + email naturellement
+    .col-customer {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 1px;
+
+      &::before { margin-bottom: 2px; }
+    }
+  }
+
+  // Filtre : input pleine largeur
+  .orders-filter-bar { flex-direction: column; align-items: stretch; }
+  .orders-filter-input { max-width: 100%; }
+
+  // Boutons d'action pleine largeur sur mobile
+  .order-actions {
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn { text-align: center; }
+  }
+
+  .shipping-form-actions { flex-direction: column; }
 }

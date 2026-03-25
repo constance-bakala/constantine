@@ -6,6 +6,7 @@
       <button class="tab-btn" [class.active]="activeTab === 'orders'" (click)="activeTab = 'orders'">Commandes</button>
       <button class="tab-btn" [class.active]="activeTab === 'catalog'" (click)="activeTab = 'catalog'">Catalogue</button>
       <button class="tab-btn" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Paramètres</button>
+      <button class="tab-btn" [class.active]="activeTab === 'promos'" (click)="activeTab = 'promos'">Promotions</button>
     </div>
   </header>
 
@@ -17,6 +18,11 @@
   <!-- ===== ONGLET PARAMÈTRES ===== -->
   <div *ngIf="activeTab === 'settings'" class="catalog-tab-section">
     <app-admin-settings></app-admin-settings>
+  </div>
+
+  <!-- ===== ONGLET PROMOTIONS ===== -->
+  <div *ngIf="activeTab === 'promos'" class="catalog-tab-section">
+    <app-admin-promo-codes></app-admin-promo-codes>
   </div>
 
 <!-- ===== ONGLET COMMANDES ===== -->
@@ -56,15 +62,15 @@
           <tr *ngFor="let order of pagedOrders; trackBy: trackById"
               class="order-row"
               (click)="selectOrder(order)">
-            <td class="col-date">{{ order.createdAt | date:'dd/MM/yy HH:mm' }}</td>
-            <td class="col-ref">#{{ order.id | slice:0:8 }}</td>
-            <td class="col-customer">
+            <td class="col-date" data-label="Date">{{ order.createdAt | date:'dd/MM/yy HH:mm' }}</td>
+            <td class="col-ref" data-label="Réf.">#{{ order.id | slice:0:8 }}</td>
+            <td class="col-customer" data-label="Client">
               <span class="customer-name">{{ order.customerName || '—' }}</span>
               <span class="customer-email">{{ order.customerEmail }}</span>
             </td>
-            <td class="text-center col-qty">{{ itemCount(order) }}</td>
-            <td class="text-right col-total">{{ orderTotalTTC(order) }}</td>
-            <td class="col-delivery">
+            <td class="text-center col-qty" data-label="Articles">{{ itemCount(order) }}</td>
+            <td class="text-right col-total" data-label="Total">{{ orderTotalTTC(order) }}</td>
+            <td class="col-delivery" data-label="Livraison">
               <span *ngIf="order.deliveryMode" class="delivery-badge"
                     [class.pickup]="order.deliveryMode === 'pickup'"
                     [class.shipping]="order.deliveryMode === 'shipping'">
@@ -75,7 +81,7 @@
               </span>
               <span *ngIf="!order.deliveryMode">—</span>
             </td>
-            <td class="text-center col-status">
+            <td class="text-center col-status" data-label="Statut">
               <span class="status-badge" [style.background-color]="statusColors[order.status]">
                 {{ statusLabels[order.status] }}
               </span>

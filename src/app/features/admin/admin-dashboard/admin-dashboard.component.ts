@@ -74,7 +74,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   shippingCostError = false;
 
 
-  activeTab: 'orders' | 'catalog' | 'settings' = 'orders';
+  activeTab: 'orders' | 'catalog' | 'settings' | 'promos' = 'orders';
 
   // ── Filtre + pagination commandes
   ordersFilter = '';

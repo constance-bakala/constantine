@@ -38,6 +38,14 @@ import { environment } from '@env/environment';
 import { TranslateService } from '@ngx-translate/core';
 import { PricingService } from '@shared/services/pricing.service';
 import { StockService } from '@shared/services/stock.service';
+import { PromoCodeService } from '@shared/services/promo-code.service';
+import { PromoCode } from '@shared/interfaces/promo-code.interfaces';
+import {
+  ActionValidatePromoCode,
+  ActionClearPromoCode,
+  selectAppliedPromo,
+  selectPromoValidationStatus,
+} from '@app/features/store/promo';
 
 @Component({
   selector: 'app-cart-items',
@@ -59,6 +67,14 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   orderStatuses: { id: string; status: string; createdAt: number; deliveryMode?: string; pickupSubMode?: string; shippingAddress?: any; shippingCost?: number; currency?: string }[] = [];
   stockByRef: Record<string, number> = {};
   lightboxSrc: string | null = null;
+
+  // ── Code promo (état UI local synced depuis le store NgRx) ───────────────────
+  /** Saisie brute de l'utilisateur — état UI pur, non persisté dans le store. */
+  promoCodeInput = '';
+  /** Copie locale du store : code appliqué ou null. Synced dans ngOnInit. */
+  appliedPromo: PromoCode | null = null;
+  /** Copie locale du statut de validation. Synced dans ngOnInit. */
+  promoValidationStatus: 'idle' | 'loading' | 'valid' | 'not_found' | 'expired' = 'idle';
 
   get activeOrder(): { id: string; status: string; createdAt: number; deliveryMode?: string; shippingAddress?: any; shippingCost?: number } | null {
     return this.orderStatuses.length > 0 ? this.orderStatuses[0] : null;
@@ -140,6 +156,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     private translateService: TranslateService,
     public pricing: PricingService,
     public stockService: StockService,
+    private promoCodeService: PromoCodeService,
     @Inject(APP_CONFIG) appConfig: IAppConfig
   ) {
     this.snackDuration = appConfig.snackDuration;
@@ -168,6 +185,16 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     // Écoute le stock en temps réel via StockService (singleton partagé)
     this.subs.add(
       this.stockService.stockByRef$.subscribe(map => { this.stockByRef = map; })
+    );
+
+    // Synchronise les copies locales depuis le store NgRx (promo)
+    this.subs.add(
+      this.store.pipe(select(selectAppliedPromo))
+        .subscribe(promo => { this.appliedPromo = promo; })
+    );
+    this.subs.add(
+      this.store.pipe(select(selectPromoValidationStatus))
+        .subscribe(status => { this.promoValidationStatus = status as typeof this.promoValidationStatus; })
     );
 
     // Form init
@@ -483,6 +510,26 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  /**
+   * Montant brut de la réduction dans la devise active (via PricingService.formatRaw).
+   * Délègue le calcul au PromoCodeService pour garder le composant sans logique métier.
+   */
+  get promoDiscountRaw(): number {
+    if (!this.appliedPromo) return 0;
+    const discountEur = this.promoCodeService.calculateDiscountEur(
+      this.appliedPromo,
+      this.items,
+      (item) => this.pricing.getEffectiveEur(item.reference, item.price ?? 0),
+      (item) => Number(this.getItemQuantity(this.items.indexOf(item))?.value) || 1,
+    );
+    // formatRaw convertit en XAF si la devise active est XAF
+    return this.pricing.formatRaw(discountEur);
+  }
+
+  get promoDiscountFormatted(): string {
+    return this.promoDiscountRaw > 0 ? '−' + this.pricing.formatAmount(this.promoDiscountRaw) : '';
+  }
+
   /** Frais de port stockés en XAF, convertis en EUR pour pricing.format(). */
   get shippingCostEur(): number | null {
     if (this.deliveryMode !== 'shipping') return null;
@@ -505,7 +552,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     }, 0);
     const tvaDisplay      = this.pricing.formatRaw(this.rawTotalHT * this.pricing.tvaRate);
     const shippingDisplay = this.pricing.formatRaw(this.shippingCostEur ?? 0);
-    return this.pricing.formatAmount(itemsDisplay + tvaDisplay + shippingDisplay);
+    return this.pricing.formatAmount(itemsDisplay + tvaDisplay + shippingDisplay - this.promoDiscountRaw);
   }
 
   sendCommand() {
@@ -777,6 +824,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       `Tél : ${sa.phone}`,
     ].filter(Boolean).join('\n') : '';
 
+    const promoDiscountAmount = this.promoDiscountRaw;
     const data = {
       shoppingCardLink: prefix + '/#/shopping-cart',
       uid: user.uid,
@@ -791,11 +839,15 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       hasTva,
       totalHT: rawTotalHT,
       tva: rawTva,
-      totalTTC: rawTotalTTC,
+      totalTTC: rawTotalTTC - promoDiscountAmount,
       deliveryMode: this.deliveryMode,
       deliveryModeLabel,
       shippingAddress: this.deliveryMode === 'shipping' ? { ...this.shippingAddress } : null,
       shippingAddressFormatted,
+      promoCode: this.appliedPromo?.code ?? null,
+      promoDiscountPercent: this.appliedPromo?.discountPercent ?? null,
+      promoDiscountAmount: promoDiscountAmount > 0 ? promoDiscountAmount : null,
+      promoCategoryId: this.appliedPromo?.categoryId ?? null,
     };
 
     console.log('Sending email with data', data);
@@ -805,6 +857,19 @@ export class CartItemsComponent implements OnInit, OnDestroy {
       next: (result) => console.log(result),
       error: (error) => console.log(error),
     });
+  }
+
+  /** Dispatche l'action de validation — l'effect NgRx interroge Firebase via PromoCodeService. */
+  applyPromoCode(): void {
+    const rawCode = this.promoCodeInput.trim();
+    if (!rawCode) return;
+    this.store.dispatch(new ActionValidatePromoCode({ rawCode }));
+  }
+
+  /** Réinitialise le code promo (action + champ de saisie local). */
+  clearPromoCode(): void {
+    this.store.dispatch(new ActionClearPromoCode());
+    this.promoCodeInput = '';
   }
 
   openLightbox(src: string): void { this.lightboxSrc = src; }
