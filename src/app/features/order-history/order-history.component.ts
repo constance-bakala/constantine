@@ -35,7 +35,7 @@ export class OrderHistoryComponent implements OnInit, OnDestroy {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) { this.loading = false; return; }
       this.orderStatusRef = firebase.database().ref(`users/${user.uid}/orderStatus`);
-      this.orderStatusRef.on('value', (snap) => {
+      this.orderStatusRef.on('value', (snap: any) => {
         this.loading = false;
         if (!snap.exists()) { this.orders = []; return; }
         const raw = snap.val() as Record<string, any>;

@@ -55,7 +55,7 @@
     "bootstrap": "~5.3.8",
     "chart.js": "~3.3.0",
     "core-js": "~2.6.12",
-    "firebase": "^10.14.1",
+    "firebase": "^12.11.0",
     "firebaseui": "~4.8.0",
     "hammerjs": "~2.0.8",
     "intl-tel-input": "~17.0.12",

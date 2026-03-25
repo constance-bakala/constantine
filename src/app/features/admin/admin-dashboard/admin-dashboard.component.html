@@ -25,6 +25,26 @@
     <app-admin-promo-codes></app-admin-promo-codes>
   </div>
 
+  <!-- ===== TODO : RECOMMANDATIONS IA ===== -->
+  <!--
+    TODO — Recommandations produits par IA (Firebase AI Logic / Gemini)
+    ─────────────────────────────────────────────────────────────────────
+    Objectif : suggérer des articles complémentaires au client en fonction
+    du contenu de son panier ou de la catégorie qu'il consulte.
+
+    Exemple : "Vous avez ajouté cette robe wax → voici les bijoux assortis"
+
+    Implémentation prévue :
+    1. Créer un GeminiRecommendationService qui prend en entrée :
+       - les références des articles du panier (ou l'ID de la catégorie courante)
+       - le catalogue complet (ou un résumé) injecté dans le contexte Gemini
+    2. Appeler Gemini via function calling pour retourner une liste de references
+    3. Afficher les suggestions dans un bandeau sur la page catégorie / panier
+    4. Ajouter une section admin ici pour configurer le nombre de suggestions
+       et activer/désactiver la feature par catégorie.
+  -->
+
+
 <!-- ===== ONGLET COMMANDES ===== -->
   <ng-container *ngIf="activeTab === 'orders'">
 

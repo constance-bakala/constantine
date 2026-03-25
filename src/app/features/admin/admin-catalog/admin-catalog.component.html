@@ -360,14 +360,22 @@
             </button>
           </td>
 
-          <!-- Supprimer -->
+          <!-- Actions -->
           <td class="actions-cell">
+            <button class="btn-ai-desc"
+                    [disabled]="generatingDescriptionForId === item.id"
+                    [title]="item.descriptionFr ? 'Regénérer la description IA' : 'Générer une description IA'"
+                    (click)="generateDescription(item)">
+              {{ generatingDescriptionForId === item.id ? '…' : '✨' }}
+            </button>
             <button class="btn-delete-item" (click)="deleteItem(item)">✕</button>
           </td>
 
         </tr>
       </tbody>
     </table>
+
+    <p *ngIf="generateDescriptionError" class="import-error">{{ generateDescriptionError }}</p>
 
     <!-- Pagination -->
     <nav *ngIf="totalPages > 1" class="pagination-bar">

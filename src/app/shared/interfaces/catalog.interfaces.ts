@@ -28,6 +28,9 @@ export interface CatalogItem {
   coverUrl: string;
   /** URLs WebP optimisées (thumb, medium, full) */
   images?: string[];
+  /** Description commerciale générée par IA ou saisie manuellement */
+  descriptionFr?: string;
+  descriptionEn?: string;
 }
 
 export interface CatalogState {

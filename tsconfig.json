@@ -34,9 +34,37 @@
       ],
       "@assets/*": [
         "./src/assets/*"
+      ],
+      "firebase/compat/app": [
+        "./node_modules/firebase/compat/app"
+      ],
+      "firebase/compat/auth": [
+        "./node_modules/firebase/compat/auth"
+      ],
+      "firebase/compat/database": [
+        "./node_modules/firebase/compat/database"
+      ],
+      "firebase/compat/storage": [
+        "./node_modules/firebase/compat/storage"
+      ],
+      "firebase/auth": [
+        "./node_modules/firebase/auth"
+      ],
+      "firebase/database": [
+        "./node_modules/firebase/database"
+      ],
+      "firebase/storage": [
+        "./node_modules/firebase/storage"
+      ],
+      "firebase/functions": [
+        "./node_modules/firebase/functions"
+      ],
+      "firebase/app": [
+        "./node_modules/firebase/app"
       ]
     },
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

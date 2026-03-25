@@ -254,7 +254,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
             // Écoute en temps réel le statut des commandes de l'utilisateur
             if (this.orderStatusRef) this.orderStatusRef.off();
             this.orderStatusRef = firebase.database().ref(`users/${newUser.uid}/orderStatus`);
-            this.orderStatusRef.on('value', (snap) => {
+            this.orderStatusRef.on('value', (snap: any) => {
               // Détecter la suppression d'un order actif AVANT le return anticipé :
               // si snap est vide et qu'on avait des orders actifs, ils ont été supprimés.
               const raw = snap.exists() ? (snap.val() as Record<string, any>) : {};

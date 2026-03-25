@@ -12,7 +12,8 @@
   },
   "files": [
     "main.ts",
-    "polyfills.ts"
+    "polyfills.ts",
+    "firebase.d.ts"
   ],
   "include": [
     "src/**/*.d.ts"

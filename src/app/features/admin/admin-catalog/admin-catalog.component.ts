@@ -5,6 +5,7 @@ import { Database, ref, push, get, set, onValue, query, orderByChild, equalTo } 
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { CatalogRepository } from '@app/core/firebase/catalog.repository';
+import { GeminiAiService } from '@app/core/firebase/gemini-ai.service';
 import { selectAllCategories } from '@app/features/store/catalog/catalog.selectors';
 import { CatalogCategory, CatalogItem } from '@shared/interfaces/catalog.interfaces';
 
@@ -128,6 +129,11 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   bulkPricing = false;
   bulkPriceError = '';
 
+  // ── Génération description IA
+  /** ID de l'article dont la description est en cours de génération. */
+  generatingDescriptionForId: string | null = null;
+  generateDescriptionError: string | null = null;
+
   // ── Lightbox
   lightboxSrc: string | null = null;
 
@@ -141,6 +147,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<any>,
     private repo: CatalogRepository,
+    private gemini: GeminiAiService,
     private cdr: ChangeDetectorRef,
     private db: Database,
   ) {}
@@ -518,6 +525,31 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       await this.repo.deleteItemFromDb(item.id);
     } catch (e) {
       console.error('[catalog] deleteItem', e);
+    }
+  }
+
+  // ── Génération description IA ─────────────────────────────────────────────
+
+  /**
+   * Appelle Gemini Vision pour générer une description FR + EN à partir de
+   * la photo de couverture de l'article, puis sauvegarde en Firebase.
+   * Fonctionne sur un article déjà publié comme sur un brouillon.
+   */
+  async generateDescription(item: CatalogItem): Promise<void> {
+    if (this.generatingDescriptionForId) return;
+    this.generatingDescriptionForId = item.id;
+    this.generateDescriptionError = null;
+    this.cdr.markForCheck();
+    try {
+      const categoryTitle = this.selectedCategory?.title ?? item.categoryId;
+      const result = await this.gemini.generateItemDescription(item.coverUrl, categoryTitle);
+      await this.repo.updateItemField(item.id, 'descriptionFr', result.fr);
+      await this.repo.updateItemField(item.id, 'descriptionEn', result.en);
+    } catch (e: any) {
+      this.generateDescriptionError = e?.message ?? 'Erreur lors de la génération.';
+    } finally {
+      this.generatingDescriptionForId = null;
+      this.cdr.markForCheck();
     }
   }
 
