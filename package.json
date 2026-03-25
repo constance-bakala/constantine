@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "npx standard-version && ng build --configuration production --output-path docs --base-href .",
-    "build:firebase": "MSYS_NO_PATHCONV=1 ng build --configuration production --output-path docs --base-href /",
+    "build:firebase": "ng build --configuration production --output-path docs --base-href ./ && node -e \"const fs=require('fs');const p='docs/index.html';fs.writeFileSync(p,fs.readFileSync(p,'utf8').replace('<base href=\"./\"','<base href=\"/\"'))\"",
     "build:github": "ng build --configuration production --output-path docs --base-href ./",
     "test": "ng test",
     "lint": "ng lint",

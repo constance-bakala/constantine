@@ -48,10 +48,21 @@ export class GeminiAiService {
     const base64 = await this.urlToBase64(imageUrl);
     const mimeType = this.detectMimeType(imageUrl);
 
-    const prompt = `Tu es un copywriter pour "Délice Éternel", boutique de mode africaine à Libreville (Gabon).
-Génère une description commerciale courte (2-3 phrases, ton chaleureux et élégant) pour cet article de mode — catégorie : "${categoryTitle}".
+    const prompt = `Tu es un copywriter expert pour "Délice Éternel", boutique de mode africaine à Libreville (Gabon).
+
+Commence par analyser attentivement l'image et note les caractéristiques visuelles précises :
+- Couleurs dominantes et motifs (wax, tissu uni, imprimé, rayures…)
+- Longueur des manches (sans manches, manches courtes, manches ¾, longues manches)
+- Longueur du vêtement (court, mi-long, maxi)
+- Coupe et silhouette (ajustée, fluide, évasée, droite, portefeuille…)
+- Détails distinctifs visibles (col, décolleté, ceinture, broderie, volants, fentes…)
+
+Ensuite, rédige une description commerciale de 2-3 phrases qui mentionne UNIQUEMENT les détails que tu observes réellement dans cette image. Chaque description doit être unique et spécifique à cet article — évite les formulations génériques.
+
+Catégorie : "${categoryTitle}". Ton : chaleureux, élégant, commercial.
+
 Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans backticks :
-{"fr":"description en français","en":"description in English"}`;
+{"fr":"description spécifique en français","en":"specific description in English"}`;
 
     const result = await model.generateContent([
       prompt,

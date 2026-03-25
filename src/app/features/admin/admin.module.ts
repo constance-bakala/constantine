@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { QuillModule } from 'ngx-quill';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { AdminCatalogComponent } from './admin-catalog/admin-catalog.component';
@@ -22,6 +23,7 @@ import { AdminPromoCodesComponent } from './admin-promo-codes/admin-promo-codes.
     QuillModule.forRoot(),
     MatDialogModule,
     MatButtonModule,
+    MatTooltipModule,
   ],
 })
 export class AdminModule {}

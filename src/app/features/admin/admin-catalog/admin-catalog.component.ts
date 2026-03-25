@@ -4,10 +4,12 @@ import {
 import { Database, ref, push, get, set, onValue, query, orderByChild, equalTo } from '@angular/fire/database';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { CatalogRepository } from '@app/core/firebase/catalog.repository';
 import { GeminiAiService } from '@app/core/firebase/gemini-ai.service';
 import { selectAllCategories } from '@app/features/store/catalog/catalog.selectors';
 import { CatalogCategory, CatalogItem } from '@shared/interfaces/catalog.interfaces';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 // ── Types locaux ──────────────────────────────────────────────────────────────
 
@@ -129,10 +131,21 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   bulkPricing = false;
   bulkPriceError = '';
 
-  // ── Génération description IA
-  /** ID de l'article dont la description est en cours de génération. */
+  // ── Génération / édition description IA
   generatingDescriptionForId: string | null = null;
   generateDescriptionError: string | null = null;
+  /** Panneau d'édition ouvert pour un article (null = fermé). */
+  editingDescription: { itemId: string; fr: string; en: string } | null = null;
+  savingDescription = false;
+
+  // ── Génération en masse
+  bulkGenerating = false;
+  bulkGenerateProgress = { current: 0, total: 0 };
+  bulkGenerateError: string | null = null;
+
+  get itemsWithoutDescription(): CatalogItem[] {
+    return this.categoryItems.filter(item => !item.descriptionFr && !!item.coverUrl);
+  }
 
   // ── Lightbox
   lightboxSrc: string | null = null;
@@ -150,6 +163,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     private gemini: GeminiAiService,
     private cdr: ChangeDetectorRef,
     private db: Database,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -543,14 +557,111 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     try {
       const categoryTitle = this.selectedCategory?.title ?? item.categoryId;
       const result = await this.gemini.generateItemDescription(item.coverUrl, categoryTitle);
-      await this.repo.updateItemField(item.id, 'descriptionFr', result.fr);
-      await this.repo.updateItemField(item.id, 'descriptionEn', result.en);
+      this.editingDescription = { itemId: item.id, fr: result.fr, en: result.en };
+      this.generateDescriptionError = null;
     } catch (e: any) {
       this.generateDescriptionError = e?.message ?? 'Erreur lors de la génération.';
     } finally {
       this.generatingDescriptionForId = null;
       this.cdr.markForCheck();
     }
+  }
+
+  toggleDescriptionEdit(item: CatalogItem): void {
+    if (this.editingDescription?.itemId === item.id) {
+      this.cancelDescriptionEdit();
+    } else {
+      this.editingDescription = {
+        itemId: item.id,
+        fr: item.descriptionFr ?? '',
+        en: item.descriptionEn ?? '',
+      };
+      this.generateDescriptionError = null;
+      this.cdr.markForCheck();
+    }
+  }
+
+  async saveDescription(): Promise<void> {
+    if (!this.editingDescription || this.savingDescription) return;
+    this.savingDescription = true;
+    this.cdr.markForCheck();
+    try {
+      await this.repo.updateItemField(this.editingDescription.itemId, 'descriptionFr', this.editingDescription.fr.trim());
+      await this.repo.updateItemField(this.editingDescription.itemId, 'descriptionEn', this.editingDescription.en.trim());
+      this.editingDescription = null;
+      this.generateDescriptionError = null;
+    } catch (e: any) {
+      this.generateDescriptionError = e?.message ?? 'Erreur lors de la sauvegarde.';
+    } finally {
+      this.savingDescription = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  cancelDescriptionEdit(): void {
+    this.editingDescription = null;
+    this.generateDescriptionError = null;
+    this.cdr.markForCheck();
+  }
+
+  clearAllDescriptions(): void {
+    const total = this.categoryItems.filter(i => i.descriptionFr || i.descriptionEn).length;
+    if (total === 0) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: {
+        title: 'Effacer toutes les descriptions',
+        message: `⚠️ Confirmer la suppression des descriptions de ${total} article(s) de cette catégorie ? Cette action est irréversible.`,
+        confirmLabel: 'Effacer',
+        cancelLabel: 'Annuler',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
+      if (!confirmed) return;
+      await Promise.all(
+        this.categoryItems
+          .filter(i => i.descriptionFr || i.descriptionEn)
+          .map(i => Promise.all([
+            this.repo.updateItemField(i.id, 'descriptionFr', ''),
+            this.repo.updateItemField(i.id, 'descriptionEn', ''),
+          ]))
+      );
+      this.bulkGenerateProgress = { current: 0, total: 0 };
+      this.bulkGenerateError = null;
+      this.cdr.markForCheck();
+    });
+  }
+
+  async generateAllDescriptions(): Promise<void> {
+    if (this.bulkGenerating) return;
+    const items = this.itemsWithoutDescription;
+    if (items.length === 0) return;
+
+    this.bulkGenerating = true;
+    this.bulkGenerateProgress = { current: 0, total: items.length };
+    this.bulkGenerateError = null;
+    this.cdr.markForCheck();
+
+    const categoryTitle = this.selectedCategory?.title ?? '';
+
+    for (const item of items) {
+      try {
+        const result = await this.gemini.generateItemDescription(item.coverUrl, categoryTitle);
+        await this.repo.updateItemField(item.id, 'descriptionFr', result.fr);
+        await this.repo.updateItemField(item.id, 'descriptionEn', result.en);
+      } catch (e: any) {
+        this.bulkGenerateError = `Erreur sur ${item.reference} : ${e?.message ?? 'inconnue'}`;
+      }
+      this.bulkGenerateProgress = { ...this.bulkGenerateProgress, current: this.bulkGenerateProgress.current + 1 };
+      this.cdr.markForCheck();
+      // Délai entre requêtes pour respecter les rate limits Gemini
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    }
+
+    this.bulkGenerating = false;
+    this.cdr.markForCheck();
   }
 
   // ── Lightbox ──────────────────────────────────────────────────────────────

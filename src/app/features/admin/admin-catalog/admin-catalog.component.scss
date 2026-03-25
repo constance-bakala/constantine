@@ -9,6 +9,60 @@ $border: #ecf0f1;
 $red:    #e74c3c;
 
 // ── Prix en masse ─────────────────────────────────────────────────────────
+.bulk-ai-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: #faf5ff;
+  border: 1px solid #d4b8e0;
+  border-left: 3px solid #8e44ad;
+  border-radius: 5px;
+
+  .bulk-ai-count {
+    font-weight: 600;
+    color: #8e44ad;
+  }
+
+  .bulk-ai-done {
+    font-size: 13px;
+    color: #148f77;
+    font-weight: 600;
+  }
+}
+
+.btn-bulk-clear {
+  padding: 6px 14px;
+  border: 1px solid #c0392b;
+  border-radius: 5px;
+  background: transparent;
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover:not(:disabled) { background: #c0392b; color: #fff; }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.btn-bulk-ai {
+  padding: 6px 14px;
+  border: 1px solid #8e44ad;
+  border-radius: 5px;
+  background: #8e44ad;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) { background: #7d3c98; }
+  &:disabled { opacity: 0.6; cursor: default; }
+}
+
 .bulk-price-bar {
   display: flex;
   align-items: center;
@@ -652,6 +706,74 @@ $red:    #e74c3c;
 }
 
 .actions-cell { text-align: right; white-space: nowrap; }
+
+.desc-edit-row td {
+  padding: 0 !important;
+  border-top: none !important;
+}
+
+.desc-edit-panel {
+  background: #faf5ff;
+  border: 1px solid #8e44ad;
+  border-top: none;
+  padding: 12px 16px;
+
+  &__fields {
+    display: flex;
+    gap: 16px;
+
+    @media (max-width: 768px) { flex-direction: column; }
+  }
+
+  &__field {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #8e44ad;
+      text-transform: uppercase;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d4b8e0;
+      border-radius: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+      font-family: inherit;
+
+      &:focus { outline: none; border-color: #8e44ad; }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+}
+
+.btn-text-edit {
+  padding: 4px 8px;
+  border: 1px solid #8e44ad;
+  border-radius: 4px;
+  background: transparent;
+  color: #8e44ad;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover, &.active { background: #8e44ad; color: #fff; }
+}
 
 .btn-ai-desc {
   padding: 4px 9px;

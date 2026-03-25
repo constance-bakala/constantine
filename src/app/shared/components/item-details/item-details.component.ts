@@ -7,6 +7,7 @@ import { PricingService } from '@shared/services/pricing.service';
 import { StockService } from '@shared/services/stock.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-item-details',
@@ -37,12 +38,18 @@ export class ItemDetailsComponent {
     return this.pricing.format(this.data.price * qty);
   }
 
+  get description(): string {
+    const lang = this.translate.getCurrentLang();
+    return (lang === 'en' ? this.data.descriptionEn : this.data.descriptionFr) ?? '';
+  }
+
   constructor(private fb: UntypedFormBuilder,
     private dialogRef: MatDialogRef<ItemDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ItemInfos,
     public pricing: PricingService,
     private stock: StockService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private translate: TranslateService) {
     this.images = (data.images?.length ?? 0) > 0 ? data.images : [data.path];
     this.initForm(data);
   }

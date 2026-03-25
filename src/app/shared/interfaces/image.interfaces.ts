@@ -53,7 +53,9 @@ export class ItemInfos {
     public loading: boolean,
     public basketInfos: IBasketInfos,
     public images: string[] = [],
-    public price: number = 0) { }
+    public price: number = 0,
+    public descriptionFr?: string,
+    public descriptionEn?: string) { }
 }
 
 export interface ItemsState {

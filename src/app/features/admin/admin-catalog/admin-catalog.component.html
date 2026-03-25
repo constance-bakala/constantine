@@ -288,6 +288,33 @@
       <span *ngIf="bulkPriceError" class="field-error">{{ bulkPriceError }}</span>
     </div>
 
+    <!-- Génération descriptions IA en masse -->
+    <div *ngIf="categoryItems.length > 0" class="bulk-ai-bar">
+      <span class="bulk-price-label">
+        Descriptions IA :
+        <span class="bulk-ai-count">
+          {{ itemsWithoutDescription.length }} article{{ itemsWithoutDescription.length > 1 ? 's' : '' }} sans description
+        </span>
+      </span>
+      <button class="btn-bulk-ai"
+              [disabled]="bulkGenerating || itemsWithoutDescription.length === 0"
+              matTooltip="Génère les descriptions manquantes de cette catégorie, un article à la fois"
+              (click)="generateAllDescriptions()">
+        {{ bulkGenerating
+            ? '✨ ' + bulkGenerateProgress.current + ' / ' + bulkGenerateProgress.total + '…'
+            : '✨ Générer les descriptions manquantes' }}
+      </button>
+      <button class="btn-bulk-clear"
+              [disabled]="bulkGenerating || categoryItems.length === 0"
+              matTooltip="Efface toutes les descriptions de cette catégorie (confirmation requise)"
+              (click)="clearAllDescriptions()">
+        🗑 Effacer les descriptions
+      </button>
+      <span *ngIf="bulkGenerateError" class="field-error">{{ bulkGenerateError }}</span>
+      <span *ngIf="!bulkGenerating && bulkGenerateProgress.total > 0 && bulkGenerateProgress.current === bulkGenerateProgress.total"
+            class="bulk-ai-done">✓ Terminé</span>
+    </div>
+
     <div *ngIf="categoryItems.length === 0" class="empty-state">
       Aucun article. Importez des images ci-dessus.
     </div>
@@ -304,8 +331,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of pagedItems; trackBy: trackById"
-            [class.unpublished-row]="!item.published">
+        <ng-container *ngFor="let item of pagedItems; trackBy: trackById">
+        <tr [class.unpublished-row]="!item.published">
 
           <td class="img-cell">
             <img [src]="item.coverUrl" [alt]="item.reference"
@@ -321,16 +348,16 @@
                     [class.stock-zero]="(stockByRef[item.reference] ?? item.stock) === 0">
                 {{ stockByRef[item.reference] ?? item.stock }}
               </span>
-              <button class="btn-field-edit" (click)="startEdit(item, 'stock')">✎</button>
+              <button class="btn-field-edit" matTooltip="Modifier le stock" (click)="startEdit(item, 'stock')">✎</button>
             </ng-container>
             <ng-container *ngIf="editing?.itemId === item.id && editing?.field === 'stock'">
               <input type="number" min="0" [(ngModel)]="editing!.value"
                      class="field-input"
                      (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" />
-              <button class="btn-field-save" [disabled]="saving" (click)="saveEdit()">
+              <button class="btn-field-save" [disabled]="saving" matTooltip="Enregistrer" (click)="saveEdit()">
                 {{ saving ? '…' : 'OK' }}
               </button>
-              <button class="btn-field-cancel" (click)="cancelEdit()">✕</button>
+              <button class="btn-field-cancel" matTooltip="Annuler" (click)="cancelEdit()">✕</button>
             </ng-container>
           </td>
 
@@ -338,16 +365,16 @@
           <td class="text-center">
             <ng-container *ngIf="editing?.itemId !== item.id || editing?.field !== 'price'">
               <span class="field-value">{{ formatPrice(item.priceXAF) }}</span>
-              <button class="btn-field-edit btn-price-edit" (click)="startEdit(item, 'price')">✎</button>
+              <button class="btn-field-edit btn-price-edit" matTooltip="Modifier le prix" (click)="startEdit(item, 'price')">✎</button>
             </ng-container>
             <ng-container *ngIf="editing?.itemId === item.id && editing?.field === 'price'">
               <input type="number" min="0" [(ngModel)]="editing!.value"
                      class="field-input field-input-lg"
                      (keyup.enter)="saveEdit()" (keyup.escape)="cancelEdit()" />
-              <button class="btn-field-save" [disabled]="saving" (click)="saveEdit()">
+              <button class="btn-field-save" [disabled]="saving" matTooltip="Enregistrer" (click)="saveEdit()">
                 {{ saving ? '…' : 'OK' }}
               </button>
-              <button class="btn-field-cancel" (click)="cancelEdit()">✕</button>
+              <button class="btn-field-cancel" matTooltip="Annuler" (click)="cancelEdit()">✕</button>
             </ng-container>
           </td>
 
@@ -355,6 +382,7 @@
           <td class="text-center">
             <button class="btn-publish-item"
                     [class.published]="item.published"
+                    [matTooltip]="item.published ? 'Dépublier l\'article' : 'Publier l\'article'"
                     (click)="toggleItemPublished(item)">
               {{ item.published ? '✓ Publié' : 'Brouillon' }}
             </button>
@@ -362,20 +390,51 @@
 
           <!-- Actions -->
           <td class="actions-cell">
-            <button class="btn-ai-desc"
-                    [disabled]="generatingDescriptionForId === item.id"
-                    [title]="item.descriptionFr ? 'Regénérer la description IA' : 'Générer une description IA'"
-                    (click)="generateDescription(item)">
-              {{ generatingDescriptionForId === item.id ? '…' : '✨' }}
-            </button>
-            <button class="btn-delete-item" (click)="deleteItem(item)">✕</button>
+            <button class="btn-delete-item" matTooltip="Supprimer l'article" (click)="deleteItem(item)">✕</button>
+            <button class="btn-text-edit"
+                    [class.active]="editingDescription?.itemId === item.id"
+                    [matTooltip]="editingDescription?.itemId === item.id ? 'Fermer la description' : (item.descriptionFr ? 'Modifier la description' : 'Saisir une description')"
+                    (click)="toggleDescriptionEdit(item)">T</button>
           </td>
 
         </tr>
+
+        <!-- Panneau d'édition description (ligne expansible) -->
+        <tr *ngIf="editingDescription?.itemId === item.id" class="desc-edit-row">
+          <td colspan="6">
+            <div class="desc-edit-panel">
+              <div class="desc-edit-panel__fields">
+                <div class="desc-edit-panel__field">
+                  <label>FR</label>
+                  <textarea [(ngModel)]="editingDescription!.fr" rows="3" placeholder="Description en français…"></textarea>
+                </div>
+                <div class="desc-edit-panel__field">
+                  <label>EN</label>
+                  <textarea [(ngModel)]="editingDescription!.en" rows="3" placeholder="Description in English…"></textarea>
+                </div>
+              </div>
+              <div class="desc-edit-panel__actions">
+                <p *ngIf="generateDescriptionError" class="import-error mb-0">{{ generateDescriptionError }}</p>
+                <button class="btn-ai-desc"
+                        [disabled]="generatingDescriptionForId === item.id"
+                        [matTooltip]="item.descriptionFr ? 'Regénérer la description IA' : 'Générer une description IA'"
+                        (click)="generateDescription(item)">
+                  {{ generatingDescriptionForId === item.id ? '…' : '✨ Générer avec l\'IA' }}
+                </button>
+                <button class="btn-field-save" [disabled]="savingDescription" matTooltip="Sauvegarder la description" (click)="saveDescription()">
+                  {{ savingDescription ? '…' : 'Sauvegarder' }}
+                </button>
+                <button class="btn-field-cancel" matTooltip="Fermer sans sauvegarder" (click)="cancelDescriptionEdit()">Annuler</button>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        </ng-container>
       </tbody>
     </table>
 
-    <p *ngIf="generateDescriptionError" class="import-error">{{ generateDescriptionError }}</p>
+    <p *ngIf="generateDescriptionError && !editingDescription" class="import-error">{{ generateDescriptionError }}</p>
 
     <!-- Pagination -->
     <nav *ngIf="totalPages > 1" class="pagination-bar">

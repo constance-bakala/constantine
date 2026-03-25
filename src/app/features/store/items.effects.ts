@@ -43,7 +43,9 @@ function catalogItemsToCategory(
       false,
       { selectedQuantity: 1, selectedSize: ItemSizeEnum.M, selectedModel: 'MODEL_UNIQUE' },
       item.images?.length ? item.images : [item.coverUrl],
-      Math.round((item.priceXAF / EUR_TO_XAF) * 100) / 100
+      Math.round((item.priceXAF / EUR_TO_XAF) * 100) / 100,
+      item.descriptionFr,
+      item.descriptionEn,
     )),
   };
 }
