@@ -17,9 +17,14 @@
 
     <div class="chat-messages" #messagesContainer>
       @for (msg of messages; track $index) {
-        <div class="chat-bubble" [class.chat-bubble--user]="msg.role === 'user'"
-                                 [class.chat-bubble--model]="msg.role === 'model'">
-          {{ msg.text }}
+        <div class="chat-bubble"
+             [class.chat-bubble--user]="msg.role === 'user'"
+             [class.chat-bubble--model]="msg.role === 'model'">
+          @if (msg.role === 'model') {
+            <span [innerHTML]="msg.text | chatMarkdown"></span>
+          } @else {
+            {{ msg.text }}
+          }
         </div>
       }
 
@@ -31,6 +36,17 @@
         </div>
       }
     </div>
+
+    <!-- Suggestions rapides (visibles uniquement avant le 1er message utilisateur) -->
+    @if (showSuggestions && !isLoading) {
+      <div class="chat-suggestions">
+        @for (s of suggestions; track s.labelFr) {
+          <button class="chat-suggestion-chip" (click)="pickSuggestion(s)">
+            {{ suggestionLabel(s) }}
+          </button>
+        }
+      </div>
+    }
 
     <div class="chat-input-row">
       <textarea

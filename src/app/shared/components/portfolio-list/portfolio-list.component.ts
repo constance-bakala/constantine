@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Category, CategoryInfos, ItemInfos } from '@shared/interfaces/image.interfaces';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemDetailsComponent } from '@shared/components/item-details/item-details.component';
@@ -17,7 +17,7 @@ export type ExistingCategories = Record<string, CategoryInfos>;
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })
-export class PortfolioListComponent implements OnInit, OnDestroy {
+export class PortfolioListComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 
   @Input() category!: Category;
   @Input() categoryInfos!: ExistingCategories;
@@ -25,12 +25,16 @@ export class PortfolioListComponent implements OnInit, OnDestroy {
   @Output() onToogleSelect: EventEmitter<ItemInfos> = new EventEmitter();
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
 
+  @ViewChild('sentinel') private sentinelRef!: ElementRef<HTMLDivElement>;
+
   currentEncodedUri = '';
   currentLang = 'fr';
   lightboxSrc: string | null = null;
   hasActivePromo = false;
+  visibleCount = 10;
 
   private subs = new Subscription();
+  private observer: IntersectionObserver | null = null;
 
   constructor(
     private dialog: MatDialog,
@@ -56,7 +60,39 @@ export class PortfolioListComponent implements OnInit, OnDestroy {
     }));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['category']) {
+      this.visibleCount = 10;
+      this.cdr.markForCheck();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        this.loadMore();
+      }
+    }, { rootMargin: '200px' });
+    this.observer.observe(this.sentinelRef.nativeElement);
+  }
+
+  get visibleItems(): ItemInfos[] {
+    return this.category.items.slice(0, this.visibleCount);
+  }
+
+  get hasMore(): boolean {
+    return this.visibleCount < this.category.items.length;
+  }
+
+  loadMore(): void {
+    if (this.hasMore) {
+      this.visibleCount = Math.min(this.visibleCount + 10, this.category.items.length);
+      this.cdr.markForCheck();
+    }
+  }
+
   ngOnDestroy() {
+    this.observer?.disconnect();
     this.subs.unsubscribe();
   }
 

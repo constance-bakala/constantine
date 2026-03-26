@@ -31,6 +31,8 @@ export interface CatalogItem {
   /** Description commerciale générée par IA ou saisie manuellement */
   descriptionFr?: string;
   descriptionEn?: string;
+  /** URL photo générée par IA (virtual try-on) */
+  tryonUrl?: string;
 }
 
 export interface CatalogState {

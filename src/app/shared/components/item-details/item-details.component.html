@@ -76,6 +76,10 @@
                       <span>{{'ADD_TO_CART' | translate}}</span>
                     }
                   </button>
+                  <button type="button" (click)="shareOnWhatsApp()" class="item-detail-btn item-detail-btn--whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>{{'SHARE' | translate}}</span>
+                  </button>
                   <button type="button" (click)="close()" class="item-detail-btn item-detail-btn--close">
                     <i class="fas fa-times-circle"></i>
                     <span>{{'CLOSE' | translate}}</span>

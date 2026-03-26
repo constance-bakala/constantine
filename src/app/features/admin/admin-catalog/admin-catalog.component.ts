@@ -2,6 +2,7 @@ import {
   Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy,
 } from '@angular/core';
 import { Database, ref, push, get, set, onValue, query, orderByChild, equalTo } from '@angular/fire/database';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -147,6 +148,16 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     return this.categoryItems.filter(item => !item.descriptionFr && !!item.coverUrl);
   }
 
+  // ── Virtual try-on (sélection + batch Replicate)
+  tryonMode = false;
+  tryonSelectedIds = new Set<string>();
+  tryonGarmentType: 'upperbody' | 'lowerbody' | 'dresses' = 'dresses';
+  isTryonRunning = false;
+  tryonProgress = { current: 0, total: 0 };
+  tryonError: string | null = null;
+
+  get tryonSelectedCount(): number { return this.tryonSelectedIds.size; }
+
   // ── Lightbox
   lightboxSrc: string | null = null;
 
@@ -164,6 +175,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private db: Database,
     private dialog: MatDialog,
+    private fns: Functions,
   ) {}
 
   ngOnInit(): void {
@@ -772,6 +784,62 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     this._selectedImages.clear();
     this.pendingMerge = null;
     this.selectionMode = false;
+    this.cdr.markForCheck();
+  }
+
+  // ── Virtual try-on ────────────────────────────────────────────────────────
+
+  toggleTryonMode(): void {
+    this.tryonMode = !this.tryonMode;
+    this.tryonSelectedIds.clear();
+    this.tryonError = null;
+    this.cdr.detectChanges();
+  }
+
+  toggleTryonItem(itemId: string): void {
+    if (this.tryonSelectedIds.has(itemId)) {
+      this.tryonSelectedIds.delete(itemId);
+    } else {
+      this.tryonSelectedIds.add(itemId);
+    }
+    this.cdr.markForCheck();
+  }
+
+  selectAllTryonItems(): void {
+    this.categoryItems.forEach(i => this.tryonSelectedIds.add(i.id));
+    this.cdr.markForCheck();
+  }
+
+  async generateTryonBatch(): Promise<void> {
+    if (this.isTryonRunning || this.tryonSelectedIds.size === 0 || !this.selectedCategory) return;
+
+    const items = this.categoryItems.filter(i => this.tryonSelectedIds.has(i.id));
+    this.isTryonRunning = true;
+    this.tryonProgress  = { current: 0, total: items.length };
+    this.tryonError     = null;
+    this.cdr.markForCheck();
+
+    const callTryon = httpsCallable<object, { tryonUrl: string }>(this.fns, 'tryonVirtual');
+
+    for (const item of items) {
+      try {
+        await callTryon({
+          coverUrl:    item.coverUrl,
+          itemId:      item.id,
+          categoryId:  this.selectedCategory.prefix,
+          garmentType: this.tryonGarmentType,
+        });
+      } catch (err: any) {
+        this.tryonError = `Erreur sur ${item.reference} : ${err?.message ?? 'inconnue'}`;
+        this.cdr.markForCheck();
+      }
+      this.tryonProgress = { ...this.tryonProgress, current: this.tryonProgress.current + 1 };
+      this.cdr.markForCheck();
+    }
+
+    this.isTryonRunning = false;
+    this.tryonMode      = false;
+    this.tryonSelectedIds.clear();
     this.cdr.markForCheck();
   }
 

@@ -51,6 +51,7 @@ import { NumberOnlyDirective } from '@shared/directives/number-only/number-only.
 import { EnumToArrayPipe } from '@shared/pipes/enum-to-array/enum-to-array.pipe';
 import { PatternTransformPipe, TextTransformPipe } from '@shared/pipes';
 import { TruncatePipe } from '@shared/pipes/truncate-pipe/truncate.pipe';
+import { ChatMarkdownPipe } from '@shared/pipes/chat-markdown/chat-markdown.pipe';
 
 import { AdService } from './services/ad.service';
 
@@ -116,6 +117,7 @@ import { AdService } from './services/ad.service';
     PatternTransformPipe,
     TextTransformPipe,
     TruncatePipe,
+    ChatMarkdownPipe,
     NumberOnlyDirective,
   ],
   exports: [
@@ -177,6 +179,7 @@ import { AdService } from './services/ad.service';
     PatternTransformPipe,
     TextTransformPipe,
     TruncatePipe,
+    ChatMarkdownPipe,
     NumberOnlyDirective,
   ],
   providers: [AdService],

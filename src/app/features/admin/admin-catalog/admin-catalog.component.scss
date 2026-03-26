@@ -63,6 +63,91 @@ $red:    #e74c3c;
   &:disabled { opacity: 0.6; cursor: default; }
 }
 
+// ── Virtual try-on ─────────────────────────────────────────────────────────
+.bulk-tryon-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: #f0faf8;
+  border: 1px solid #a8d8d0;
+  border-left: 3px solid $green;
+  border-radius: 5px;
+}
+
+.tryon-type-select {
+  padding: 5px 8px;
+  border: 1px solid #b2bec3;
+  border-radius: 5px;
+  font-size: 13px;
+  background: #fff;
+  cursor: pointer;
+  &:disabled { opacity: 0.5; cursor: default; }
+}
+
+.btn-tryon-mode {
+  padding: 6px 14px;
+  border: 1px solid $green;
+  border-radius: 5px;
+  background: transparent;
+  color: $green;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &.active { background: #fdecea; border-color: $red; color: $red; }
+  &:hover:not(:disabled):not(.active) { background: $green; color: #fff; }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.btn-tryon-all {
+  padding: 6px 12px;
+  border: 1px solid #b2bec3;
+  border-radius: 5px;
+  background: #fff;
+  color: $dark;
+  font-size: 12px;
+  cursor: pointer;
+  &:hover:not(:disabled) { border-color: $green; color: $green; }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+
+.btn-bulk-tryon {
+  padding: 6px 14px;
+  border: 1px solid $green;
+  border-radius: 5px;
+  background: $green;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) { background: color.adjust($green, $lightness: -8%); }
+  &:disabled { opacity: 0.6; cursor: default; }
+}
+
+.check-cell {
+  width: 36px;
+  transition: opacity 0.15s;
+
+  &--hidden {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+    width: 0;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+}
+
+.tryon-selected { background: #f0faf8; }
+
+
+// ── Prix en masse ───────────────────────────────────────────────────────────
 .bulk-price-bar {
   display: flex;
   align-items: center;
@@ -613,7 +698,64 @@ $red:    #e74c3c;
   tr.unpublished-row td { background: #fafafa; color: $grey; }
 }
 
-.img-cell { padding: 6px 10px !important; }
+.img-cell {
+  padding: 6px 10px !important;
+  position: relative;
+}
+
+.thumb-wrapper {
+  position: relative;
+  display: inline-block;
+
+  // Coche de sélection — cachée par défaut
+  .tryon-check-mark {
+    display: none;
+  }
+
+  // Mode sélection actif : curseur pointer + bordure au survol
+  &.tryon-selectable {
+    cursor: pointer;
+    &:hover { outline: 2px solid $green; }
+  }
+
+  // Article sélectionné : fond vert + coche visible
+  &.tryon-checked {
+    outline: 3px solid $green !important;
+
+    .tryon-check-mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background: $green;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 3px;
+      z-index: 10;
+      pointer-events: none;
+    }
+  }
+
+  .tryon-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 10px;
+    background: rgba(20, 143, 119, 0.85);
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 3px;
+    line-height: 1.2;
+    pointer-events: none;
+  }
+
+  .has-tryon { outline: 2px solid $green; }
+}
 
 .item-thumb {
   width: 46px;

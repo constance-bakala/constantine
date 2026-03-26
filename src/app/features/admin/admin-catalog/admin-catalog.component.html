@@ -315,6 +315,38 @@
             class="bulk-ai-done">✓ Terminé</span>
     </div>
 
+    <!-- Génération photos try-on IA en masse -->
+    <div *ngIf="categoryItems.length > 0" class="bulk-tryon-bar">
+      <span class="bulk-price-label">Photos try-on IA :</span>
+
+      <select class="tryon-type-select" [(ngModel)]="tryonGarmentType" [disabled]="isTryonRunning">
+        <option value="dresses">Robe</option>
+        <option value="upperbody">Haut</option>
+        <option value="lowerbody">Bas</option>
+      </select>
+
+      <button class="btn-tryon-mode" [class.active]="tryonMode" [disabled]="isTryonRunning" (click)="toggleTryonMode()">
+        {{ tryonMode ? '✕ Annuler [mode actif]' : '👗 Sélectionner articles' }}
+      </button>
+
+      <ng-container *ngIf="tryonMode">
+        <button class="btn-tryon-all" [disabled]="isTryonRunning" (click)="selectAllTryonItems()">
+          Tout sélectionner
+        </button>
+        <button class="btn-bulk-tryon"
+                [disabled]="isTryonRunning || tryonSelectedCount === 0"
+                (click)="generateTryonBatch()">
+          {{ isTryonRunning
+              ? '✨ ' + tryonProgress.current + ' / ' + tryonProgress.total + '…'
+              : '✨ Générer ' + tryonSelectedCount + ' photo(s)' }}
+        </button>
+      </ng-container>
+
+      <span *ngIf="tryonError" class="field-error">{{ tryonError }}</span>
+      <span *ngIf="!isTryonRunning && tryonProgress.total > 0 && tryonProgress.current === tryonProgress.total && !tryonMode"
+            class="bulk-ai-done">✓ Terminé</span>
+    </div>
+
     <div *ngIf="categoryItems.length === 0" class="empty-state">
       Aucun article. Importez des images ci-dessus.
     </div>
@@ -332,11 +364,18 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let item of pagedItems; trackBy: trackById">
-        <tr [class.unpublished-row]="!item.published">
+        <tr [class.unpublished-row]="!item.published" [class.tryon-selected]="tryonSelectedIds.has(item.id)">
 
           <td class="img-cell">
-            <img [src]="item.coverUrl" [alt]="item.reference"
-                 class="item-thumb" (click)="openLightbox(item.coverUrl)" />
+            <div class="thumb-wrapper"
+                 [class.tryon-selectable]="tryonMode"
+                 [class.tryon-checked]="tryonSelectedIds.has(item.id)"
+                 (click)="tryonMode ? toggleTryonItem(item.id) : openLightbox(item.tryonUrl || item.coverUrl)">
+              <span class="tryon-check-mark">✓</span>
+              <img [src]="item.tryonUrl || item.coverUrl" [alt]="item.reference"
+                   class="item-thumb" [class.has-tryon]="!!item.tryonUrl" />
+              <span *ngIf="item.tryonUrl && !tryonMode" class="tryon-badge" title="Photo try-on disponible">✨</span>
+            </div>
           </td>
 
           <td class="ref-cell">{{ item.reference }}</td>

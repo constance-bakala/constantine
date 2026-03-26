@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FirebaseApp } from '@angular/fire/app';
 import { TranslateService } from '@ngx-translate/core';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'firebase/ai';
+import { CatalogCategory, CatalogItem } from '@shared/interfaces/catalog.interfaces';
 
 /** Représente un message dans la conversation du chatbot. */
 export interface ChatMessage {
@@ -85,18 +86,44 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans backticks :
    * @param userMessage  Message saisi par l'utilisateur.
    * @param history      Historique de la conversation (pour reconstituer le contexte).
    */
-  async sendChatMessage(userMessage: string, history: ChatMessage[]): Promise<string> {
+  /**
+   * Construit un résumé textuel du catalogue à injecter dans le system prompt.
+   * Inclut les fourchettes de prix si les articles sont déjà chargés dans le store.
+   */
+  buildCatalogContext(
+    categories: CatalogCategory[],
+    itemsByCategory: Record<string, CatalogItem[]>,
+  ): string {
+    if (!categories.length) return '';
+    const lines = categories.map(cat => {
+      const items = itemsByCategory[cat.prefix] ?? [];
+      if (items.length) {
+        const prices = items.map(i => i.priceXAF);
+        const min = Math.min(...prices).toLocaleString('fr');
+        const max = Math.max(...prices).toLocaleString('fr');
+        return `- ${cat.title} (${cat.prefix}) : ${items.length} articles, ${min}–${max} FCFA`;
+      }
+      return `- ${cat.title} (${cat.prefix})`;
+    });
+    return `\nCatalogue disponible :\n${lines.join('\n')}\n`;
+  }
+
+  async sendChatMessage(
+    userMessage: string,
+    history: ChatMessage[],
+    catalogContext = '',
+  ): Promise<string> {
     const lang = this.currentLang;
 
     const systemInstruction = lang === 'fr'
       ? `Tu es l'assistant de Délice Éternel, une boutique de mode africaine à Libreville (Gabon).
 Tu réponds en français, de façon chaleureuse et concise (3 phrases max).
 Tu aides les clients sur : les produits (vêtements, bijoux, masques), les tailles, les paiements (Airtel Money, Moov Money, Remitly, Western Union), la livraison (coursier Libreville 2 000–5 000 FCFA, expédition internationale DHL/FedEx) et les codes promo.
-Si tu ne sais pas, dis-le honnêtement et invite le client à nous contacter par email.`
+Si tu ne sais pas, dis-le honnêtement et invite le client à nous contacter par email.${catalogContext}`
       : `You are the assistant for Délice Éternel, an African fashion boutique in Libreville (Gabon).
 You respond in English, warmly and concisely (3 sentences max).
 You help customers with: products (clothing, jewellery, masks), sizes, payments (Airtel Money, Moov Money, Remitly, Western Union), delivery (courier in Libreville 2,000–5,000 FCFA, international shipping DHL/FedEx) and promo codes.
-If you don't know, say so honestly and invite the customer to contact us by email.`;
+If you don't know, say so honestly and invite the customer to contact us by email.${catalogContext}`;
 
     // Reconstitue l'historique au format attendu par Gemini
     // On exclut le dernier message (l'utilisateur courant) et les messages

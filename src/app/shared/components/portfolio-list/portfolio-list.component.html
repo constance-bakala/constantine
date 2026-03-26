@@ -30,7 +30,7 @@
           <!-- Grid row -->
           <div class="row">
             <!-- Grid column -->
-            @for (item of category.items; track item) {
+            @for (item of visibleItems; track item) {
             <div class="col-md-4 mb-4 col-sm-auto" [ngClass]="item.selected ? 'selected' : ''">
               <!-- Card -->
               <div class="item-card"
@@ -58,6 +58,15 @@
           </div>
           <!-- Grid row -->
         </section>
+        <!-- Sentinel pour IntersectionObserver -->
+        <div #sentinel class="scroll-sentinel"></div>
+        @if (hasMore) {
+          <div class="scroll-loading">
+            <span class="scroll-loading-dot"></span>
+            <span class="scroll-loading-dot"></span>
+            <span class="scroll-loading-dot"></span>
+          </div>
+        }
       </div>
     </div>
   </main>

@@ -19,124 +19,151 @@
         <div class="row">
           <!--Grid column-->
           <div class="col-lg-8">
-            <!-- Card -->
-            <div class="card wish-list mb-4">
-              @if (basketFormGroup) {
-              <div [formGroup]="basketFormGroup" class="card-body">
-                <h5 class="mb-4">{{'PRODUCTS.CART' | translate}} (<span>{{nbSelectedItems$ | async }}</span>
-                  @if (((nbSelectedItems$ | async) ?? 0) === 1) {
-                  <span>&nbsp;article</span>
-                  }
-                  @if (((nbSelectedItems$ | async) ?? 0) > 1) {
-                  <span>&nbsp;articles</span>
-                  })
-                </h5>
-                <ng-container formArrayName="basketItems">
-                  @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
-                  <div class="row mb-4" [formGroupName]="i">
-                    <div class="col-md-5 col-lg-3 col-xl-3">
-                      <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0 cart-img-wrapper"
-                        (click)="openLightbox(itemGroup.get('path')?.value)" style="cursor:zoom-in">
-                        <img class="img-fluid w-100" src="{{itemGroup.get('path')?.value}}"
-                          alt="{{itemGroup.get('reference')?.value}}">
-                        <div class="mask rgba-black-slight cart-img-overlay">
-                          <span class="cart-img-zoom-icon">&#128269;</span>
+
+            <!-- ── Stepper bar ────────────────────────────────────────────── -->
+            <div id="checkout-top" class="checkout-stepper-bar">
+              <div class="csb-step" [class.csb-step--active]="checkoutStep === 1" [class.csb-step--done]="checkoutStep > 1" (click)="goToStep(1)">
+                <span class="csb-num">{{ checkoutStep > 1 ? '✓' : '1' }}</span>
+                <span class="csb-label">{{'PRODUCTS.CART' | translate}}</span>
+              </div>
+              <div class="csb-line" [class.csb-line--done]="checkoutStep > 1"></div>
+              <div class="csb-step" [class.csb-step--active]="checkoutStep === 2" [class.csb-step--done]="checkoutStep > 2" (click)="goToStep(2)">
+                <span class="csb-num">{{ checkoutStep > 2 ? '✓' : '2' }}</span>
+                <span class="csb-label">{{'PRODUCTS.DELIVERY_TIME' | translate}}</span>
+              </div>
+              <div class="csb-line" [class.csb-line--done]="checkoutStep > 2"></div>
+              <div class="csb-step" [class.csb-step--active]="checkoutStep === 3" (click)="goToStep(3)">
+                <span class="csb-num">3</span>
+                <span class="csb-label">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</span>
+              </div>
+            </div>
+
+            <!-- ── Étape 1 : Panier ───────────────────────────────────────── -->
+            <div id="checkout-step-1" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 1">
+              <div class="checkout-accordion__header" (click)="goToStep(1)">
+                <span class="ca-badge" [class.ca-badge--done]="checkoutStep > 1">{{ checkoutStep > 1 ? '✓' : '1' }}</span>
+                <span class="ca-title">{{'PRODUCTS.CART' | translate}}</span>
+                <span class="ca-summary" *ngIf="checkoutStep !== 1">
+                  {{ (nbSelectedItems$ | async) }} article(s) · {{ cartTotal }}
+                </span>
+                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 1" [class.fa-chevron-down]="checkoutStep !== 1"></i>
+              </div>
+              <div class="checkout-accordion__body" *ngIf="checkoutStep === 1">
+                @if (basketFormGroup) {
+                <div [formGroup]="basketFormGroup">
+                  <ng-container formArrayName="basketItems">
+                    @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
+                    <div class="row mb-4" [formGroupName]="i">
+                      <div class="col-md-5 col-lg-3 col-xl-3">
+                        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0 cart-img-wrapper"
+                          (click)="openLightbox(itemGroup.get('path')?.value)" style="cursor:zoom-in">
+                          <img class="img-fluid w-100" src="{{itemGroup.get('path')?.value}}"
+                            alt="{{itemGroup.get('reference')?.value}}">
+                          <div class="mask rgba-black-slight cart-img-overlay">
+                            <span class="cart-img-zoom-icon">&#128269;</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="col-md-7 col-lg-9 col-xl-9">
-                      <div>
-                        <div class="d-flex justify-content-between">
-                          <div>
-                            <h5>
-                              {{itemGroup.get('reference')?.value}}
-                              <span *ngIf="isItemOutOfStock(itemGroup.get('reference')?.value)"
-                                class="badge-out-of-stock">Épuisé</span>
-                            </h5>
-                            <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
-                                translate}}:</strong>&nbsp;
-                              {{itemGroup.get('category')?.value}}
-                            </p>
-                            <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' |
-                                translate}}:</strong>&nbsp;
-                              <select id="model{{i}}" name="model{{i}}" formControlName="model" class="form-control cart-item__select">
-                                <option [value]="'MODEL_UNIQUE'" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}
-                                </option>
-                              </select>
-                            </p>
-                            <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' |
-                                translate}}:</strong>&nbsp;
-                              <select id="size{{i}}" name="size{{i}}" formControlName="size" class="form-control cart-item__select"
-                                tabindex="2">
-                                <option disabled selected value="">{{'CHOOSE' | translate}}</option>
-                                @for (s of sizes; track s) {
-                                <option [value]="s.value">{{ s.label }}</option>
-                                }
-                              </select>
-                            </p>
-                          </div>
-                          <div>
-                            <div class="cart-item__qty">
-                              <button type="button" (click)="stepDown(i)" class="cart-item__qty-btn">−</button>
-                              <input class="cart-item__qty-input" type="number"
-                                formControlName="quantity" value="1">
-                              <button type="button" (click)="stepUp(i)" class="cart-item__qty-btn">+</button>
+                      <div class="col-md-7 col-lg-9 col-xl-9">
+                        <div>
+                          <div class="d-flex justify-content-between">
+                            <div>
+                              <h5>
+                                {{itemGroup.get('reference')?.value}}
+                                <span *ngIf="isItemOutOfStock(itemGroup.get('reference')?.value)"
+                                  class="badge-out-of-stock">Épuisé</span>
+                              </h5>
+                              <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
+                                  translate}}:</strong>&nbsp;
+                                {{itemGroup.get('category')?.value}}
+                              </p>
+                              <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' |
+                                  translate}}:</strong>&nbsp;
+                                <select id="model{{i}}" name="model{{i}}" formControlName="model" class="form-control cart-item__select">
+                                  <option [value]="'MODEL_UNIQUE'" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}
+                                  </option>
+                                </select>
+                              </p>
+                              <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' |
+                                  translate}}:</strong>&nbsp;
+                                <select id="size{{i}}" name="size{{i}}" formControlName="size" class="form-control cart-item__select"
+                                  tabindex="2">
+                                  <option disabled selected value="">{{'CHOOSE' | translate}}</option>
+                                  @for (s of sizes; track s) {
+                                  <option [value]="s.value">{{ s.label }}</option>
+                                  }
+                                </select>
+                              </p>
+                            </div>
+                            <div>
+                              <div class="cart-item__qty">
+                                <button type="button" (click)="stepDown(i)" class="cart-item__qty-btn">−</button>
+                                <input class="cart-item__qty-input" type="number"
+                                  formControlName="quantity" value="1">
+                                <button type="button" (click)="stepUp(i)" class="cart-item__qty-btn">+</button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                          <div>
-                            <button type="button" (click)="onToogleSelect(itemGroup.value)"
-                              class="cart-item__remove">
-                              <i class="fas fa-trash-alt"></i>
-                              <span>{{'PRODUCTS.REMOVE' | translate}}</span>
-                            </button>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                              <button type="button" (click)="onToogleSelect(itemGroup.value)"
+                                class="cart-item__remove">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>{{'PRODUCTS.REMOVE' | translate}}</span>
+                              </button>
+                            </div>
+                            <p class="mb-0"><strong>{{ getItemTotal(i) }}</strong></p>
                           </div>
-                          <p class="mb-0"><strong>{{ getItemTotal(i) }}</strong></p>
                         </div>
+                        <hr class="mb-4">
                       </div>
-                      <hr class="mb-4">
                     </div>
-                  </div>
+                    }
+                  </ng-container>
+                  @if (basketItemsArray['controls'].length == 0) {
+                  <p class="text-primary mb-0"><i class="fas fa-info-circle mr-1"></i>
+                    {{'DO_NOT_HESITATE' | translate}}
+                  </p>
                   }
-                </ng-container>
-                @if (basketItemsArray['controls'].length == 0) {
-                <p class="text-primary mb-0"><i class="fas fa-info-circle mr-1"></i>
-                  {{'DO_NOT_HESITATE' | translate}}
-                </p>
+                </div>
                 }
+                <!-- Bouton suivant -->
+                <div class="ca-next-bar">
+                  <button class="btn-step-next" (click)="goToStep(2)"
+                    [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || hasOutOfStockItems">
+                    {{'PRODUCTS.DELIVERY_TIME' | translate}} <i class="fas fa-arrow-right ml-2"></i>
+                  </button>
+                </div>
               </div>
-              }
             </div>
-            <!-- Card -->
-            <!-- Card -->
-            <div class="card mb-4">
-              <div class="card-body">
 
-                <h5 class="mb-4">{{'PRODUCTS.DELIVERY_TIME' | translate}}</h5>
-
+            <!-- ── Étape 2 : Livraison ────────────────────────────────────── -->
+            <div id="checkout-step-2" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 2">
+              <div class="checkout-accordion__header" (click)="goToStep(2)">
+                <span class="ca-badge" [class.ca-badge--done]="checkoutStep > 2">{{ checkoutStep > 2 ? '✓' : '2' }}</span>
+                <span class="ca-title">{{'PRODUCTS.DELIVERY_TIME' | translate}}</span>
+                <span class="ca-summary" *ngIf="checkoutStep !== 2 && deliveryMode">{{ deliveryModeSummary }}</span>
+                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 2" [class.fa-chevron-down]="checkoutStep !== 2"></i>
+              </div>
+              <div class="checkout-accordion__body" *ngIf="checkoutStep === 2">
                 <div class="mb-0">
-
                   <!-- Retrait en magasin -->
                   <label class="delivery-option" [class.selected]="deliveryMode === 'pickup'"
                     (click)="selectDeliveryMode('pickup')">
                     <input type="radio" name="deliveryMode" value="pickup" [checked]="deliveryMode === 'pickup'"
                       class="delivery-radio">
                     <div class="delivery-content">
-                      <p class="payment-block-title"><i class="fas fa-store mr-2"></i>{{'PRODUCTS.DELIVERY_PICKUP' |
-                        translate}}</p>
+                      <p class="payment-block-title"><i class="fas fa-store mr-2"></i>{{'PRODUCTS.DELIVERY_PICKUP' | translate}}</p>
                       <p class="payment-block-detail">{{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}</p>
                     </div>
                   </label>
 
-                  <!-- Sous-options retrait en magasin -->
                   @if (deliveryMode === 'pickup') {
                   <div class="pickup-sub-options mt-3" [class.pickup-sub-options--required]="!pickupSubMode">
                     <p class="pickup-sub-label">
                       <i class="fas fa-hand-point-right mr-1"></i>
                       Précisez votre mode de retrait <span class="required">*</span>
                     </p>
-
                     <label class="delivery-sub-option" [class.selected]="pickupSubMode === 'courier'"
                       (click)="setPickupSubMode('courier')">
                       <input type="radio" name="pickupSubMode" value="courier" [checked]="pickupSubMode === 'courier'"
@@ -157,17 +184,14 @@
                         </p>
                       </div>
                     </label>
-
                     @if (pickupSubMode === 'courier') {
                     <div class="courier-agreement" (click)="courierAgreementChecked = !courierAgreementChecked">
                       <div class="courier-checkbox-label">
                         <span class="courier-checkbox-icon">{{ courierAgreementChecked ? '☑' : '☐' }}</span>
-                        <span>Je m'engage à payer la somme réclamée par le livreur à la réception de ma commande (entre
-                          2 000 et 5 000 FCFA).</span>
+                        <span>Je m'engage à payer la somme réclamée par le livreur à la réception de ma commande (entre 2 000 et 5 000 FCFA).</span>
                       </div>
                     </div>
                     }
-
                     <label class="delivery-sub-option mt-2" [class.selected]="pickupSubMode === 'store'"
                       (click)="setPickupSubMode('store')">
                       <input type="radio" name="pickupSubMode" value="store" [checked]="pickupSubMode === 'store'"
@@ -179,31 +203,26 @@
                         </p>
                       </div>
                     </label>
-
                   </div>
                   }
 
-                  <!-- Expédition internationale -->
                   <label class="delivery-option mt-2" [class.selected]="deliveryMode === 'shipping'"
                     (click)="selectDeliveryMode('shipping')">
                     <input type="radio" name="deliveryMode" value="shipping" [checked]="deliveryMode === 'shipping'"
                       class="delivery-radio">
                     <div class="delivery-content">
-                      <p class="payment-block-title"><i
-                          class="fas fa-shipping-fast mr-2"></i>{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</p>
+                      <p class="payment-block-title"><i class="fas fa-shipping-fast mr-2"></i>{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</p>
                       <p class="payment-block-detail">
                         Votre commande sera expédiée <strong>dès réception de votre paiement</strong> via
                         <strong>DHL</strong>, <strong>FedEx</strong> ou un autre transporteur.
                         Vous recevrez un email avec le <strong>lien de suivi</strong> dès l'expédition.
                       </p>
-                      <p class="payment-block-detail" style="margin-bottom:0;">&nbsp;</p>
                       <p class="payment-block-detail" style="font-size:0.68rem; font-style:italic; color:#999; margin-bottom:0;">
                         <i class="fas fa-info-circle mr-1"></i>Pour les commandes dépassant 150 € (Union Européenne), des droits de douane peuvent être exigés à la réception selon votre pays. Ces frais ne sont pas inclus dans le montant de la commande.
                       </p>
                     </div>
                   </label>
 
-                  <!-- Formulaire adresse d'expédition -->
                   @if (deliveryMode === 'shipping') {
                   <div class="shipping-address-form mt-3">
                     <p class="shipping-address-title">
@@ -256,34 +275,38 @@
                     <p class="addr-required-note"><span class="required">*</span> Champs obligatoires</p>
                   </div>
                   }
-
+                </div>
+                <!-- Bouton suivant -->
+                <div class="ca-next-bar">
+                  <button class="btn-step-next" (click)="goToStep(3)" [disabled]="!canGoToPayment">
+                    {{'PRODUCTS.PAYMENTS_MEANS' | translate}} <i class="fas fa-arrow-right ml-2"></i>
+                  </button>
                 </div>
               </div>
             </div>
-            <!-- Card -->
-            <!-- Card -->
-            <div class="card mb-4">
-              <div class="card-body">
-                <p class="mb-3 redInfos text-center">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</p>
 
-                <!-- Paiement local -->
+            <!-- ── Étape 3 : Paiement ─────────────────────────────────────── -->
+            <div id="checkout-step-3" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 3">
+              <div class="checkout-accordion__header" (click)="goToStep(3)">
+                <span class="ca-badge">3</span>
+                <span class="ca-title">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</span>
+                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 3" [class.fa-chevron-down]="checkoutStep !== 3"></i>
+              </div>
+              <div class="checkout-accordion__body" *ngIf="checkoutStep === 3">
+                <p class="mb-3 redInfos text-center">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</p>
                 <div class="payment-block mb-3">
                   <p class="payment-block-title"><i class="fas fa-mobile-alt mr-2"></i>{{ 'PRODUCTS.PAYMENT_LOCAL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_LOCAL_DETAIL' | translate"></p>
                 </div>
-
-                <!-- Paiement international -->
                 <div class="payment-block">
                   <p class="payment-block-title"><i class="fas fa-globe mr-2"></i>{{ 'PRODUCTS.PAYMENT_INTL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_INTL_DETAIL' | translate"></p>
                 </div>
-
                 <p class="mt-3 mb-0 text-center small text-muted">
                   {{ 'PRODUCTS.PAYMENT_CONFIRM_NOTE' | translate }}
                 </p>
               </div>
             </div>
-            <!-- Card -->
 
           </div>
           <!--Grid column-->

@@ -157,6 +157,16 @@
     &:hover { background: #fde8e8; }
   }
 
+  &--whatsapp {
+    background: #25d366;
+    color: #fff;
+    border: none;
+
+    &:hover { background: #1ebe5d; }
+
+    i { font-size: 14px; }
+  }
+
   &--close {
     background: none;
     border: 1px solid #e0e6ed;

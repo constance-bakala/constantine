@@ -136,6 +136,20 @@ export class ItemDetailsComponent {
     this.lightboxSrc = null;
   }
 
+  shareOnWhatsApp(): void {
+    const lang = this.translate.getCurrentLang();
+    const reference = this.itemGroup.get('reference')?.value ?? '';
+    const price = this.pricing.format(this.data.price);
+    const desc = this.description;
+    const shopUrl = 'https://delice-eternel-gabon.web.app';
+
+    const text = lang === 'en'
+      ? `🛍️ *Délice Éternel* — African fashion, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Visit our shop: ${shopUrl}`
+      : `🛍️ *Délice Éternel* — Mode africaine, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Voir la boutique : ${shopUrl}`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  }
+
   close() {
     this.dialogRef.close();
   }

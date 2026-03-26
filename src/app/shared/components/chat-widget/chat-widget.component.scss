@@ -135,6 +135,47 @@ $radius: 12px;
   40%           { transform: scale(1.2); opacity: 1; }
 }
 
+// ── Suggestions rapides ───────────────────────────────────────────────────────
+.chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid #ecf0f1;
+  background: #f8fffe;
+}
+
+.chat-suggestion-chip {
+  background: #fff;
+  border: 1px solid #b2dfdb;
+  color: #148f77;
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+
+  &:hover {
+    background: $green;
+    color: #fff;
+    border-color: $green;
+  }
+}
+
+// ── Rendu Markdown dans les bulles ────────────────────────────────────────────
+.chat-bubble--model {
+  ul {
+    margin: 4px 0 0 0;
+    padding-left: 18px;
+  }
+
+  li {
+    margin-bottom: 2px;
+  }
+}
+
 // ── Zone saisie ───────────────────────────────────────────────────────────────
 .chat-input-row {
   display: flex;

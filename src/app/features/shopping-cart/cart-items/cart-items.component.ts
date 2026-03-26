@@ -120,6 +120,42 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     }
     return false;
   }
+
+  // ── Stepper ──────────────────────────────────────────────────────────────────
+  checkoutStep = 1;
+
+  get canGoToDelivery(): boolean {
+    return !this.hasOutOfStockItems;
+  }
+
+  get canGoToPayment(): boolean {
+    if (!this.deliveryMode) return false;
+    if (this.deliveryMode === 'pickup') {
+      if (!this.pickupSubMode) return false;
+      if (this.pickupSubMode === 'courier') return this.courierAgreementChecked;
+      return true;
+    }
+    if (this.deliveryMode === 'shipping') return this.isShippingAddressValid;
+    return false;
+  }
+
+  goToStep(n: number): void {
+    this.checkoutStep = n;
+    setTimeout(() => {
+      const el = document.getElementById('checkout-top');
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+  get deliveryModeSummary(): string {
+    if (!this.deliveryMode) return '';
+    if (this.deliveryMode === 'pickup') {
+      if (this.pickupSubMode === 'courier') return '🛵 Livraison à domicile';
+      if (this.pickupSubMode === 'store') return '🏪 Retrait en magasin';
+      return '🏠 Retrait';
+    }
+    return '✈️ Expédition internationale';
+  }
   private readonly snackDuration: number;
   private orderStatusRef?: firebase.database.Reference;
 
@@ -876,7 +912,7 @@ export class CartItemsComponent implements OnInit, OnDestroy {
   closeLightbox(): void { this.lightboxSrc = null; }
 
   gotoTarget(name: string) {
-    this.store.dispatch(new Go({ path: ['/' + name] }));
+    this.store.dispatch(new Go({ path: ['/category', name] }));
   }
 
   reload() {
