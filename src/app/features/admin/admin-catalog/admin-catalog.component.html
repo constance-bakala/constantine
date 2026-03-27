@@ -255,11 +255,54 @@
 
     <p *ngIf="importError" class="import-error">{{ importError }}</p>
 
+    <div class="import-tryon-option">
+      <button class="btn-tryon-toggle"
+              [class.btn-tryon-toggle--on]="importWithTryon"
+              [disabled]="importing"
+              (click)="importWithTryon = !importWithTryon">
+        <span class="btn-tryon-toggle__dot"></span>
+        {{ importWithTryon ? '✨ Try-on IA activé' : 'Try-on IA désactivé' }}
+      </button>
+      <ng-container *ngIf="importWithTryon">
+        <select class="tryon-type-select" [(ngModel)]="importTryonType" [disabled]="importing">
+          <option value="dresses">Robe</option>
+          <option value="upperbody">Haut</option>
+          <option value="lowerbody">Bas</option>
+        </select>
+
+        <!-- Aperçu mannequin -->
+        <ng-container *ngIf="tryonModelUrl || tryonModelUploading; else noModelWarning">
+          <div class="import-model-preview" matTooltip="Mannequin utilisé pour le try-on">
+            <div class="import-model-thumb">
+              <img *ngIf="tryonModelPreview || tryonModelUrl"
+                   [src]="tryonModelPreview || tryonModelUrl"
+                   alt="Mannequin" />
+            </div>
+            <label class="import-model-change" [class.uploading]="tryonModelUploading" title="Changer le mannequin">
+              <input type="file" accept="image/*" style="display:none"
+                     (change)="onTryonModelPick($event)" [disabled]="importing || tryonModelUploading" />
+              {{ tryonModelUploading ? '…' : '✎' }}
+            </label>
+          </div>
+        </ng-container>
+        <ng-template #noModelWarning>
+          <span class="import-no-model-warning">
+            ⚠ Aucun mannequin —
+            <a class="import-no-model-link" (click)="setAiTab('tryon')">configurer dans Photos try-on</a>
+          </span>
+        </ng-template>
+      </ng-container>
+    </div>
+
     <button *ngIf="importGroups.length > 0"
             class="btn-import"
             [disabled]="importing"
             (click)="importAll()">
-      {{ importing ? 'Import en cours…' : 'Importer ' + importGroups.length + ' article(s)' }}
+      <ng-container *ngIf="!importing">Importer {{ importGroups.length }} article(s)</ng-container>
+      <ng-container *ngIf="importing && importTryonProgress.total === 0">Import en cours…</ng-container>
+      <ng-container *ngIf="importing && importTryonProgress.total > 0">
+        ✨ Try-on {{ importTryonProgress.current }} / {{ importTryonProgress.total }}…
+      </ng-container>
     </button>
   </section>
 
@@ -270,81 +313,136 @@
       <span class="items-count">({{ categoryItems.length }})</span>
     </h3>
 
-    <!-- Mise à jour du prix en masse -->
-    <div *ngIf="categoryItems.length > 0" class="bulk-price-bar">
-      <span class="bulk-price-label">Appliquer un prix unique à toute la catégorie :</span>
-      <input type="number" min="1" step="100"
-             [(ngModel)]="bulkPriceInput"
-             placeholder="ex : 15000"
-             class="bulk-price-input"
-             [class.input-error]="bulkPriceError"
-             (keyup.enter)="applyBulkPrice()" />
-      <span class="bulk-price-unit">FCFA</span>
-      <button class="btn-bulk-price"
-              [disabled]="bulkPricing || !bulkPriceInput"
-              (click)="applyBulkPrice()">
-        {{ bulkPricing ? '…' : 'Appliquer à tous' }}
-      </button>
-      <span *ngIf="bulkPriceError" class="field-error">{{ bulkPriceError }}</span>
-    </div>
+    <!-- ── Onglets ────────────────────────────────────────────────────────── -->
+    <div *ngIf="categoryItems.length > 0" class="ai-tabs-container">
 
-    <!-- Génération descriptions IA en masse -->
-    <div *ngIf="categoryItems.length > 0" class="bulk-ai-bar">
-      <span class="bulk-price-label">
-        Descriptions IA :
-        <span class="bulk-ai-count">
-          {{ itemsWithoutDescription.length }} article{{ itemsWithoutDescription.length > 1 ? 's' : '' }} sans description
+      <!-- Barre d'onglets -->
+      <div class="ai-tabs-bar">
+        <a class="ai-tab" [class.ai-tab--active]="activeAiTab === 'pricing'" (click)="setAiTab('pricing')">
+          Tarifs de catégorie
+        </a>
+        <a class="ai-tab" [class.ai-tab--active]="activeAiTab === 'descriptions'" (click)="setAiTab('descriptions')">
+          Descriptions IA
+          <span *ngIf="itemsWithoutDescription.length > 0" class="ai-tab-badge">{{ itemsWithoutDescription.length }}</span>
+        </a>
+        <a class="ai-tab" [class.ai-tab--active]="activeAiTab === 'tryon'" (click)="setAiTab('tryon')">
+          Photos try-on
+        </a>
+      </div>
+
+      <!-- Panneau Tarifs de catégorie -->
+      <div *ngIf="activeAiTab === 'pricing'" class="ai-tab-panel bulk-price-bar">
+        <span class="bulk-price-label">Appliquer un prix unique à toute la catégorie :</span>
+        <input type="number" min="1" step="100"
+               [(ngModel)]="bulkPriceInput"
+               placeholder="ex : 15000"
+               class="bulk-price-input"
+               [class.input-error]="bulkPriceError"
+               (keyup.enter)="applyBulkPrice()" />
+        <span class="bulk-price-unit">FCFA</span>
+        <button class="btn-bulk-price"
+                [disabled]="bulkPricing || !bulkPriceInput"
+                (click)="applyBulkPrice()">
+          {{ bulkPricing ? '…' : 'Appliquer à tous' }}
+        </button>
+        <span *ngIf="bulkPriceError" class="field-error">{{ bulkPriceError }}</span>
+      </div>
+
+      <!-- Panneau Descriptions IA -->
+      <div *ngIf="activeAiTab === 'descriptions'" class="ai-tab-panel bulk-ai-bar">
+        <span class="bulk-price-label">
+          <span class="bulk-ai-count">
+            {{ itemsWithoutDescription.length }} article{{ itemsWithoutDescription.length > 1 ? 's' : '' }} sans description
+          </span>
         </span>
-      </span>
-      <button class="btn-bulk-ai"
-              [disabled]="bulkGenerating || itemsWithoutDescription.length === 0"
-              matTooltip="Génère les descriptions manquantes de cette catégorie, un article à la fois"
-              (click)="generateAllDescriptions()">
-        {{ bulkGenerating
-            ? '✨ ' + bulkGenerateProgress.current + ' / ' + bulkGenerateProgress.total + '…'
-            : '✨ Générer les descriptions manquantes' }}
-      </button>
-      <button class="btn-bulk-clear"
-              [disabled]="bulkGenerating || categoryItems.length === 0"
-              matTooltip="Efface toutes les descriptions de cette catégorie (confirmation requise)"
-              (click)="clearAllDescriptions()">
-        🗑 Effacer les descriptions
-      </button>
-      <span *ngIf="bulkGenerateError" class="field-error">{{ bulkGenerateError }}</span>
-      <span *ngIf="!bulkGenerating && bulkGenerateProgress.total > 0 && bulkGenerateProgress.current === bulkGenerateProgress.total"
-            class="bulk-ai-done">✓ Terminé</span>
-    </div>
-
-    <!-- Génération photos try-on IA en masse -->
-    <div *ngIf="categoryItems.length > 0" class="bulk-tryon-bar">
-      <span class="bulk-price-label">Photos try-on IA :</span>
-
-      <select class="tryon-type-select" [(ngModel)]="tryonGarmentType" [disabled]="isTryonRunning">
-        <option value="dresses">Robe</option>
-        <option value="upperbody">Haut</option>
-        <option value="lowerbody">Bas</option>
-      </select>
-
-      <button class="btn-tryon-mode" [class.active]="tryonMode" [disabled]="isTryonRunning" (click)="toggleTryonMode()">
-        {{ tryonMode ? '✕ Annuler [mode actif]' : '👗 Sélectionner articles' }}
-      </button>
-
-      <ng-container *ngIf="tryonMode">
-        <button class="btn-tryon-all" [disabled]="isTryonRunning" (click)="selectAllTryonItems()">
-          Tout sélectionner
+        <button class="btn-bulk-ai"
+                [disabled]="bulkGenerating || itemsWithoutDescription.length === 0"
+                matTooltip="Génère les descriptions manquantes de cette catégorie, un article à la fois"
+                (click)="generateAllDescriptions()">
+          {{ bulkGenerating
+              ? '✨ ' + bulkGenerateProgress.current + ' / ' + bulkGenerateProgress.total + '…'
+              : '✨ Générer les descriptions manquantes' }}
         </button>
-        <button class="btn-bulk-tryon"
-                [disabled]="isTryonRunning || tryonSelectedCount === 0"
-                (click)="generateTryonBatch()">
-          {{ isTryonRunning
-              ? '✨ ' + tryonProgress.current + ' / ' + tryonProgress.total + '…'
-              : '✨ Générer ' + tryonSelectedCount + ' photo(s)' }}
+        <button class="btn-bulk-clear"
+                [disabled]="bulkGenerating || categoryItems.length === 0"
+                matTooltip="Efface toutes les descriptions de cette catégorie (confirmation requise)"
+                (click)="clearAllDescriptions()">
+          🗑 Effacer les descriptions
         </button>
-      </ng-container>
+        <span *ngIf="bulkGenerateError" class="field-error">{{ bulkGenerateError }}</span>
+        <span *ngIf="!bulkGenerating && bulkGenerateProgress.total > 0 && bulkGenerateProgress.current === bulkGenerateProgress.total"
+              class="bulk-ai-done">✓ Terminé</span>
+      </div>
 
-      <span *ngIf="tryonError" class="field-error">{{ tryonError }}</span>
-      <span *ngIf="!isTryonRunning && tryonProgress.total > 0 && tryonProgress.current === tryonProgress.total && !tryonMode"
-            class="bulk-ai-done">✓ Terminé</span>
+      <!-- Panneau Photos try-on -->
+      <div *ngIf="activeAiTab === 'tryon'" class="ai-tab-panel tryon-panel">
+
+        <!-- Alerte mannequin manquant -->
+        <div *ngIf="!tryonModelUrl && !tryonModelUploading" class="tryon-no-model-alert">
+          <span class="tryon-no-model-icon">👤</span>
+          <div class="tryon-no-model-text">
+            <strong>Aucun mannequin configuré</strong>
+            <span>Importez une photo de mannequin ci-dessous pour activer la génération try-on.</span>
+          </div>
+          <label class="btn-tryon-avatar-change">
+            <input type="file" accept="image/*" style="display:none"
+                   (change)="onTryonModelPick($event)" [disabled]="isTryonRunning" />
+            + Importer un mannequin
+          </label>
+        </div>
+
+        <!-- Avatar mannequin -->
+        <div class="tryon-avatar-section" *ngIf="tryonModelUrl || tryonModelUploading">
+          <div class="tryon-avatar-wrap">
+            <img *ngIf="tryonModelPreview || tryonModelUrl"
+                 [src]="tryonModelPreview || tryonModelUrl"
+                 class="tryon-avatar-img" alt="Mannequin" />
+            <div *ngIf="!tryonModelPreview && !tryonModelUrl" class="tryon-avatar-empty">👤</div>
+            <div *ngIf="tryonModelUploading" class="tryon-avatar-overlay">…</div>
+          </div>
+          <div class="tryon-avatar-info">
+            <span class="tryon-avatar-label">Mannequin</span>
+            <span class="tryon-avatar-status">
+              <ng-container *ngIf="tryonModelUploading">Upload en cours…</ng-container>
+              <ng-container *ngIf="!tryonModelUploading && tryonModelUrl">✓ Enregistré</ng-container>
+              <ng-container *ngIf="!tryonModelUploading && !tryonModelUrl">Par défaut</ng-container>
+            </span>
+            <label class="btn-tryon-avatar-change" [class.uploading]="tryonModelUploading">
+              <input type="file" accept="image/*" style="display:none"
+                     (change)="onTryonModelPick($event)"
+                     [disabled]="isTryonRunning || tryonModelUploading" />
+              {{ tryonModelUploading ? '…' : (tryonModelUrl ? '✎ Changer' : '+ Ajouter') }}
+            </label>
+            <span *ngIf="tryonModelError" class="field-error mt-1">{{ tryonModelError }}</span>
+          </div>
+        </div>
+
+        <!-- Contrôles génération (désactivés sans mannequin) -->
+        <div class="tryon-controls">
+          <select class="tryon-type-select" [(ngModel)]="tryonGarmentType" [disabled]="isTryonRunning">
+            <option value="dresses">Robe</option>
+            <option value="upperbody">Haut</option>
+            <option value="lowerbody">Bas</option>
+          </select>
+
+          <button class="btn-tryon-all" [disabled]="isTryonRunning || !tryonModelUrl" (click)="toggleSelectAllTryonItems()">
+            {{ tryonSelectedCount === categoryItems.length ? 'Tout désélectionner' : 'Tout sélectionner' }}
+          </button>
+          <button class="btn-bulk-tryon"
+                  [disabled]="isTryonRunning || tryonSelectedCount === 0 || !tryonModelUrl"
+                  (click)="generateTryonBatch()">
+            {{ isTryonRunning
+                ? '✨ ' + tryonProgress.current + ' / ' + tryonProgress.total + '…'
+                : '✨ Générer ' + tryonSelectedCount + ' photo(s)' }}
+          </button>
+
+          <span *ngIf="tryonError" class="field-error">{{ tryonError }}</span>
+          <span *ngIf="!isTryonRunning && tryonProgress.total > 0 && tryonProgress.current === tryonProgress.total"
+                class="bulk-ai-done">✓ Terminé</span>
+        </div>
+
+      </div>
+
     </div>
 
     <div *ngIf="categoryItems.length === 0" class="empty-state">

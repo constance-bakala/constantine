@@ -55,7 +55,8 @@ export class ItemInfos {
     public images: string[] = [],
     public price: number = 0,
     public descriptionFr?: string,
-    public descriptionEn?: string) { }
+    public descriptionEn?: string,
+    public tryonUrl?: string) { }
 }
 
 export interface ItemsState {

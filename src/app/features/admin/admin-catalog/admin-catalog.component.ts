@@ -98,6 +98,9 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   importGroups: ImportGroup[] = [];
   importing = false;
   importError = '';
+  importWithTryon = false;
+  importTryonType: 'dresses' | 'upperbody' | 'lowerbody' = 'dresses';
+  importTryonProgress = { current: 0, total: 0 };
   dragOver = false;
 
   // ── Pagination articles
@@ -148,6 +151,18 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     return this.categoryItems.filter(item => !item.descriptionFr && !!item.coverUrl);
   }
 
+  // ── Onglet IA actif
+  activeAiTab: 'descriptions' | 'tryon' | 'pricing' = 'descriptions';
+
+  setAiTab(tab: 'descriptions' | 'tryon' | 'pricing'): void {
+    this.activeAiTab = tab;
+    this.tryonMode = tab === 'tryon';
+    if (tab !== 'tryon') { this.tryonSelectedIds.clear(); }
+    this.tryonSelectedIds.clear();
+    this.tryonError = null;
+    this.cdr.markForCheck();
+  }
+
   // ── Virtual try-on (sélection + batch Replicate)
   tryonMode = false;
   tryonSelectedIds = new Set<string>();
@@ -155,6 +170,12 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   isTryonRunning = false;
   tryonProgress = { current: 0, total: 0 };
   tryonError: string | null = null;
+
+  // ── Modèle mannequin try-on
+  tryonModelUrl: string | null = null;
+  tryonModelPreview: string | null = null;
+  tryonModelUploading = false;
+  tryonModelError: string | null = null;
 
   get tryonSelectedCount(): number { return this.tryonSelectedIds.size; }
 
@@ -189,6 +210,11 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       }
       this.stockByRef = map;
       this.cdr.markForCheck();
+    });
+
+    get(ref(this.db, 'config/tryonModelUrl')).then(snap => {
+      const url = snap.val() as string | null;
+      if (url) { this.tryonModelUrl = url; this.cdr.markForCheck(); }
     });
 
     this.subs.add(
@@ -428,6 +454,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
 
     try {
       let nextN = await this.repo.getNextReferenceNumber(categoryId);
+      const createdItemIds: { itemId: string; coverUrl: string }[] = [];
 
       for (const group of this.importGroups) {
         const itemRef = push(ref(this.db, 'catalog/items'));
@@ -459,11 +486,35 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
         });
         // Initialise le stock disponible réel
         await set(ref(this.db, `stock/${reference}/available`), group.stock);
+        createdItemIds.push({ itemId, coverUrl });
+      }
+
+      // Génération try-on IA optionnelle
+      if (this.importWithTryon) {
+        const callTryon = httpsCallable<object, { tryonUrl: string }>(this.fns, 'tryonVirtual');
+        const createdItems = createdItemIds;
+        this.importTryonProgress = { current: 0, total: createdItems.length };
+        this.cdr.markForCheck();
+
+        for (const { itemId, coverUrl } of createdItems) {
+          try {
+            await callTryon({
+              coverUrl,
+              itemId,
+              categoryId,
+              garmentType: this.importTryonType,
+              ...(this.tryonModelUrl ? { modelImageUrl: this.tryonModelUrl } : {}),
+            });
+          } catch { /* non bloquant */ }
+          this.importTryonProgress = { ...this.importTryonProgress, current: this.importTryonProgress.current + 1 };
+          this.cdr.markForCheck();
+        }
       }
 
       // Nettoyer les groupes importés
       this.importGroups.forEach(g => g.previews.forEach(p => URL.revokeObjectURL(p)));
       this.importGroups = [];
+      this.importTryonProgress = { current: 0, total: 0 };
     } catch (e: any) {
       this.importError = e?.message ?? 'Erreur lors de l\'import.';
     } finally {
@@ -810,6 +861,15 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  toggleSelectAllTryonItems(): void {
+    if (this.tryonSelectedCount === this.categoryItems.length) {
+      this.tryonSelectedIds.clear();
+    } else {
+      this.categoryItems.forEach(i => this.tryonSelectedIds.add(i.id));
+    }
+    this.cdr.markForCheck();
+  }
+
   async generateTryonBatch(): Promise<void> {
     if (this.isTryonRunning || this.tryonSelectedIds.size === 0 || !this.selectedCategory) return;
 
@@ -824,10 +884,11 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     for (const item of items) {
       try {
         await callTryon({
-          coverUrl:    item.coverUrl,
-          itemId:      item.id,
-          categoryId:  this.selectedCategory.prefix,
-          garmentType: this.tryonGarmentType,
+          coverUrl:      item.coverUrl,
+          itemId:        item.id,
+          categoryId:    this.selectedCategory.prefix,
+          garmentType:   this.tryonGarmentType,
+          ...(this.tryonModelUrl ? { modelImageUrl: this.tryonModelUrl } : {}),
         });
       } catch (err: any) {
         this.tryonError = `Erreur sur ${item.reference} : ${err?.message ?? 'inconnue'}`;
@@ -838,9 +899,40 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     }
 
     this.isTryonRunning = false;
-    this.tryonMode      = false;
     this.tryonSelectedIds.clear();
     this.cdr.markForCheck();
+  }
+
+  async onTryonModelPick(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    console.log('[tryonModel] Fichier sélectionné :', file.name, file.type, file.size, 'bytes');
+
+    if (this.tryonModelPreview) URL.revokeObjectURL(this.tryonModelPreview);
+    this.tryonModelPreview = URL.createObjectURL(file);
+    this.tryonModelUploading = true;
+    this.tryonModelError = null;
+    this.cdr.markForCheck();
+
+    try {
+      const storagePath = 'config/tryon-model.jpg';
+      console.log('[tryonModel] Upload Storage → path:', storagePath);
+      const url = await this.repo.uploadFile(storagePath, file);
+      console.log('[tryonModel] Upload OK → URL:', url);
+
+      console.log('[tryonModel] Écriture DB → config/tryonModelUrl');
+      await set(ref(this.db, 'config/tryonModelUrl'), url);
+      console.log('[tryonModel] DB OK');
+
+      this.tryonModelUrl = url;
+    } catch (err: any) {
+      console.error('[tryonModel] ERREUR :', err?.code, err?.message, err);
+      this.tryonModelError = `Erreur upload : ${err?.message ?? 'inconnue'}`;
+    } finally {
+      this.tryonModelUploading = false;
+      this.cdr.markForCheck();
+    }
   }
 
   // ── Helpers template ──────────────────────────────────────────────────────

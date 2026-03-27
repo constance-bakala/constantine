@@ -36,14 +36,20 @@
               <div class="item-card"
                    [class.item-out-of-stock]="stock.isOutOfStock(item.reference) && !item.selected"
                    (click)="openChoices(item)">
-                <div class="view zoom overlay z-depth-2 rounded image-wrapper">
-                  <img class="img-fluid centered-img" [src]="item.path" [alt]="item.reference" loading="lazy">
+                <div class="view zoom overlay z-depth-2 rounded image-wrapper" [class.has-tryon]="item.tryonUrl">
+                  <img class="img-fluid centered-img img-main" [src]="item.path" [alt]="item.reference" loading="lazy">
+                  @if (item.tryonUrl) {
+                    <img class="img-fluid centered-img img-tryon-hover" [src]="item.tryonUrl" [alt]="item.reference" loading="lazy">
+                  }
                   <div class="mask rgba-black-slight"></div>
                   @if (item.selected) {
                     <div class="cart-badge"><i class="fas fa-shopping-cart"></i></div>
                   }
                   @if (stock.isOutOfStock(item.reference) && !item.selected) {
                     <div class="out-of-stock-overlay">Épuisé</div>
+                  }
+                  @if (item.tryonUrl && !item.selected) {
+                    <div class="tryon-hint-badge" title="Voir avec mannequin IA">✨</div>
                   }
                 </div>
                 <div class="text-center pt-2 pb-2">

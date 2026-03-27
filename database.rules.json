@@ -28,8 +28,9 @@
       ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
     },
     "config": {
-      "carousel":  { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
-      "appTitle":  { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
+      "carousel":       { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
+      "appTitle":       { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
+      "tryonModelUrl":  { ".read": true,  ".write": "auth != null && root.child('admins').child(auth.uid).exists()" },
       "i18n": {
         ".read": true,
         "$lang": { ".write": "auth != null && root.child('admins').child(auth.uid).exists()" }

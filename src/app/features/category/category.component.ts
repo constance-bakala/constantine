@@ -84,6 +84,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 Math.round((item.priceXAF / EUR_TO_XAF) * 100) / 100,
                 item.descriptionFr,
                 item.descriptionEn,
+                item.tryonUrl,
               )),
             } as Category;
           })
