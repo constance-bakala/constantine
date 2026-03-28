@@ -1,5 +1,5 @@
 <!-- Bouton flottant -->
-<button class="chat-fab" (click)="toggle()" [attr.aria-label]="'Assistant'">
+<button class="chat-fab" [class.chat-fab--hidden-mobile]="isOpen" (click)="toggle()" [attr.aria-label]="'Assistant'">
   <i class="fas" [class.fa-comments]="!isOpen" [class.fa-times]="isOpen"></i>
 </button>
 
@@ -16,6 +16,7 @@
     </div>
 
     <div class="chat-messages" #messagesContainer>
+      <div class="chat-messages-spacer"></div>
       @for (msg of messages; track $index) {
         <div class="chat-bubble"
              [class.chat-bubble--user]="msg.role === 'user'"

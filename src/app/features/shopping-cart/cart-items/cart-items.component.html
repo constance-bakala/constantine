@@ -146,136 +146,166 @@
                 <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 2" [class.fa-chevron-down]="checkoutStep !== 2"></i>
               </div>
               <div class="checkout-accordion__body" *ngIf="checkoutStep === 2">
-                <div class="mb-0">
-                  <!-- Retrait en magasin -->
-                  <label class="delivery-option" [class.selected]="deliveryMode === 'pickup'"
-                    (click)="selectDeliveryMode('pickup')">
-                    <input type="radio" name="deliveryMode" value="pickup" [checked]="deliveryMode === 'pickup'"
-                      class="delivery-radio">
-                    <div class="delivery-content">
-                      <p class="payment-block-title"><i class="fas fa-store mr-2"></i>{{'PRODUCTS.DELIVERY_PICKUP' | translate}}</p>
-                      <p class="payment-block-detail">{{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}</p>
-                    </div>
-                  </label>
 
-                  @if (deliveryMode === 'pickup') {
-                  <div class="pickup-sub-options mt-3" [class.pickup-sub-options--required]="!pickupSubMode">
-                    <p class="pickup-sub-label">
-                      <i class="fas fa-hand-point-right mr-1"></i>
-                      Précisez votre mode de retrait <span class="required">*</span>
-                    </p>
-                    <label class="delivery-sub-option" [class.selected]="pickupSubMode === 'courier'"
-                      (click)="setPickupSubMode('courier')">
-                      <input type="radio" name="pickupSubMode" value="courier" [checked]="pickupSubMode === 'courier'"
-                        class="delivery-radio">
-                      <div class="delivery-content">
-                        <p class="payment-block-title">🛵 Livraison à domicile par coursier</p>
-                        <p class="payment-block-detail">
-                          Le vendeur vous envoie votre commande via un livreur indépendant.
-                          Vous payez directement le livreur à la réception.
-                          Cette somme ne transite pas par le site.
-                        </p>
-                        <p class="payment-block-detail courier-rates">
-                          <strong>Tarifs indicatifs :</strong>
-                          Libreville <strong>2 000 FCFA</strong> —
-                          Akanda, Owendo &amp; PK <strong>2 500 FCFA</strong> —
-                          Port-Gentil <strong>4 500 FCFA</strong> —
-                          Franceville <strong>5 000 FCFA</strong>
-                        </p>
+                <div class="dmode-list">
+
+                  <!-- ── Option 1 : Retrait / livraison locale ──────────────── -->
+                  <div class="dmode-card" [class.dmode-card--open]="deliveryMode === 'pickup'">
+                    <div class="dmode-header" (click)="toggleDeliveryMode('pickup')">
+                      <span class="dmode-icon">🏠</span>
+                      <div class="dmode-header-text">
+                        <span class="dmode-title">{{'PRODUCTS.DELIVERY_PICKUP' | translate}}</span>
+                        <span class="dmode-subtitle">
+                          <ng-container *ngIf="deliveryMode !== 'pickup'">{{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}</ng-container>
+                          <ng-container *ngIf="deliveryMode === 'pickup' && !pickupSubMode">Choisissez votre mode de retrait</ng-container>
+                          <ng-container *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'">🛵 Livraison par coursier</ng-container>
+                          <ng-container *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'">🏪 Récupération au magasin</ng-container>
+                        </span>
                       </div>
-                    </label>
-                    @if (pickupSubMode === 'courier') {
-                    <div class="courier-agreement" (click)="courierAgreementChecked = !courierAgreementChecked">
-                      <div class="courier-checkbox-label">
-                        <span class="courier-checkbox-icon">{{ courierAgreementChecked ? '☑' : '☐' }}</span>
-                        <span>Je m'engage à payer la somme réclamée par le livreur à la réception de ma commande (entre 2 000 et 5 000 FCFA).</span>
+                      <i class="fas dmode-chevron"
+                         [class.fa-chevron-down]="deliveryMode !== 'pickup'"
+                         [class.fa-chevron-up]="deliveryMode === 'pickup'"></i>
+                    </div>
+
+                    <div class="dmode-body" *ngIf="deliveryMode === 'pickup'" (click)="$event.stopPropagation()">
+                      <div class="dmode-sub-list">
+
+                        <!-- Sub-option : Coursier -->
+                        <div class="dmode-sub-card" [class.dmode-sub-card--open]="pickupSubMode === 'courier'">
+                          <div class="dmode-sub-header" (click)="togglePickupSubMode('courier')">
+                            <span class="dmode-sub-icon">🛵</span>
+                            <div class="dmode-sub-header-text">
+                              <span class="dmode-sub-title">Livraison à domicile par coursier</span>
+                              <span class="dmode-sub-subtitle" *ngIf="pickupSubMode !== 'courier'">Payé directement au livreur à la réception</span>
+                            </div>
+                            <i class="fas dmode-chevron-sm"
+                               [class.fa-chevron-down]="pickupSubMode !== 'courier'"
+                               [class.fa-chevron-up]="pickupSubMode === 'courier'"></i>
+                          </div>
+                          <div class="dmode-sub-body" *ngIf="pickupSubMode === 'courier'">
+                            <p class="dmode-sub-desc">
+                              Le vendeur vous envoie votre commande via un livreur indépendant.
+                              Vous payez directement le livreur à la réception.
+                              Cette somme ne transite pas par le site.
+                            </p>
+                            <p class="courier-rates">
+                              <strong>Tarifs indicatifs :</strong>
+                              Libreville <strong>2 000 FCFA</strong> —
+                              Akanda, Owendo &amp; PK <strong>2 500 FCFA</strong> —
+                              Port-Gentil <strong>4 500 FCFA</strong> —
+                              Franceville <strong>5 000 FCFA</strong>
+                            </p>
+                            <div class="courier-agreement" (click)="courierAgreementChecked = !courierAgreementChecked">
+                              <div class="courier-checkbox-label">
+                                <span class="courier-checkbox-icon">{{ courierAgreementChecked ? '☑' : '☐' }}</span>
+                                <span>Je m'engage à payer la somme réclamée par le livreur à la réception de ma commande (entre 2 000 et 5 000 FCFA).</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Sub-option : Magasin -->
+                        <div class="dmode-sub-card" [class.dmode-sub-card--open]="pickupSubMode === 'store'">
+                          <div class="dmode-sub-header" (click)="togglePickupSubMode('store')">
+                            <span class="dmode-sub-icon">🏪</span>
+                            <div class="dmode-sub-header-text">
+                              <span class="dmode-sub-title">Récupération au magasin</span>
+                              <span class="dmode-sub-subtitle" *ngIf="pickupSubMode !== 'store'">Venez chercher votre commande à Libreville</span>
+                            </div>
+                            <i class="fas dmode-chevron-sm"
+                               [class.fa-chevron-down]="pickupSubMode !== 'store'"
+                               [class.fa-chevron-up]="pickupSubMode === 'store'"></i>
+                          </div>
+                          <div class="dmode-sub-body" *ngIf="pickupSubMode === 'store'">
+                            <p class="dmode-sub-desc">Venez récupérer votre commande directement à notre boutique à Libreville.</p>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
-                    }
-                    <label class="delivery-sub-option mt-2" [class.selected]="pickupSubMode === 'store'"
-                      (click)="setPickupSubMode('store')">
-                      <input type="radio" name="pickupSubMode" value="store" [checked]="pickupSubMode === 'store'"
-                        class="delivery-radio">
-                      <div class="delivery-content">
-                        <p class="payment-block-title">🏪 Récupération au magasin</p>
-                        <p class="payment-block-detail">
-                          Venez récupérer votre commande directement à notre boutique à Libreville.
-                        </p>
-                      </div>
-                    </label>
                   </div>
-                  }
 
-                  <label class="delivery-option mt-2" [class.selected]="deliveryMode === 'shipping'"
-                    (click)="selectDeliveryMode('shipping')">
-                    <input type="radio" name="deliveryMode" value="shipping" [checked]="deliveryMode === 'shipping'"
-                      class="delivery-radio">
-                    <div class="delivery-content">
-                      <p class="payment-block-title"><i class="fas fa-shipping-fast mr-2"></i>{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</p>
-                      <p class="payment-block-detail">
+                  <!-- ── Option 2 : Expédition internationale ───────────────── -->
+                  <div class="dmode-card" [class.dmode-card--open]="deliveryMode === 'shipping'">
+                    <div class="dmode-header" (click)="toggleDeliveryMode('shipping')">
+                      <span class="dmode-icon">✈️</span>
+                      <div class="dmode-header-text">
+                        <span class="dmode-title">{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</span>
+                        <span class="dmode-subtitle">
+                          <ng-container *ngIf="deliveryMode !== 'shipping'">DHL, FedEx — avec lien de suivi</ng-container>
+                          <ng-container *ngIf="deliveryMode === 'shipping' && isShippingAddressValid">✓ Adresse renseignée</ng-container>
+                          <ng-container *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid">Renseignez votre adresse de livraison</ng-container>
+                        </span>
+                      </div>
+                      <i class="fas dmode-chevron"
+                         [class.fa-chevron-down]="deliveryMode !== 'shipping'"
+                         [class.fa-chevron-up]="deliveryMode === 'shipping'"></i>
+                    </div>
+
+                    <div class="dmode-body" *ngIf="deliveryMode === 'shipping'" (click)="$event.stopPropagation()">
+                      <p class="dmode-sub-desc">
                         Votre commande sera expédiée <strong>dès réception de votre paiement</strong> via
                         <strong>DHL</strong>, <strong>FedEx</strong> ou un autre transporteur.
                         Vous recevrez un email avec le <strong>lien de suivi</strong> dès l'expédition.
                       </p>
-                      <p class="payment-block-detail" style="font-size:0.68rem; font-style:italic; color:#999; margin-bottom:0;">
+                      <p class="dmode-note">
                         <i class="fas fa-info-circle mr-1"></i>Pour les commandes dépassant 150 € (Union Européenne), des droits de douane peuvent être exigés à la réception selon votre pays. Ces frais ne sont pas inclus dans le montant de la commande.
                       </p>
-                    </div>
-                  </label>
-
-                  @if (deliveryMode === 'shipping') {
-                  <div class="shipping-address-form mt-3">
-                    <p class="shipping-address-title">
-                      <i class="fas fa-map-marker-alt mr-2"></i>Adresse de livraison
-                    </p>
-                    <div class="addr-row">
-                      <div class="addr-field">
-                        <label class="addr-label">Prénom <span class="required">*</span></label>
-                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.firstName"
-                          placeholder="Prénom" autocomplete="given-name" (input)="onShippingAddressChange()">
+                      <div class="shipping-address-form">
+                        <p class="shipping-address-title">
+                          <i class="fas fa-map-marker-alt mr-2"></i>Adresse de livraison
+                        </p>
+                        <div class="addr-row">
+                          <div class="addr-field">
+                            <label class="addr-label">Prénom <span class="required">*</span></label>
+                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.firstName"
+                              placeholder="Prénom" autocomplete="given-name" (input)="onShippingAddressChange()">
+                          </div>
+                          <div class="addr-field">
+                            <label class="addr-label">Nom <span class="required">*</span></label>
+                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.lastName"
+                              placeholder="Nom de famille" autocomplete="family-name" (input)="onShippingAddressChange()">
+                          </div>
+                        </div>
+                        <div class="addr-field">
+                          <label class="addr-label">Adresse <span class="required">*</span></label>
+                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address1"
+                            placeholder="Numéro et nom de rue" autocomplete="address-line1" (input)="onShippingAddressChange()">
+                        </div>
+                        <div class="addr-field">
+                          <label class="addr-label">Complément d'adresse</label>
+                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address2"
+                            placeholder="Appartement, bâtiment, etc. (optionnel)" autocomplete="address-line2" (input)="onShippingAddressChange()">
+                        </div>
+                        <div class="addr-row">
+                          <div class="addr-field addr-field--short">
+                            <label class="addr-label">Code postal <span class="required">*</span></label>
+                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.postalCode"
+                              placeholder="75001" autocomplete="postal-code" (input)="onShippingAddressChange()">
+                          </div>
+                          <div class="addr-field">
+                            <label class="addr-label">Ville <span class="required">*</span></label>
+                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.city" placeholder="Paris"
+                              autocomplete="address-level2" (input)="onShippingAddressChange()">
+                          </div>
+                        </div>
+                        <div class="addr-field">
+                          <label class="addr-label">Pays <span class="required">*</span></label>
+                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.country" placeholder="France"
+                            autocomplete="country-name" (input)="onShippingAddressChange()">
+                        </div>
+                        <div class="addr-field">
+                          <label class="addr-label">Téléphone <span class="required">*</span></label>
+                          <input type="tel" class="addr-input" [(ngModel)]="shippingAddress.phone"
+                            placeholder="+33 6 12 34 56 78" autocomplete="tel" (input)="onShippingAddressChange()">
+                        </div>
+                        <p class="addr-required-note"><span class="required">*</span> Champs obligatoires</p>
                       </div>
-                      <div class="addr-field">
-                        <label class="addr-label">Nom <span class="required">*</span></label>
-                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.lastName"
-                          placeholder="Nom de famille" autocomplete="family-name" (input)="onShippingAddressChange()">
-                      </div>
                     </div>
-                    <div class="addr-field">
-                      <label class="addr-label">Adresse <span class="required">*</span></label>
-                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address1"
-                        placeholder="Numéro et nom de rue" autocomplete="address-line1" (input)="onShippingAddressChange()">
-                    </div>
-                    <div class="addr-field">
-                      <label class="addr-label">Complément d'adresse</label>
-                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address2"
-                        placeholder="Appartement, bâtiment, etc. (optionnel)" autocomplete="address-line2" (input)="onShippingAddressChange()">
-                    </div>
-                    <div class="addr-row">
-                      <div class="addr-field addr-field--short">
-                        <label class="addr-label">Code postal <span class="required">*</span></label>
-                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.postalCode"
-                          placeholder="75001" autocomplete="postal-code" (input)="onShippingAddressChange()">
-                      </div>
-                      <div class="addr-field">
-                        <label class="addr-label">Ville <span class="required">*</span></label>
-                        <input type="text" class="addr-input" [(ngModel)]="shippingAddress.city" placeholder="Paris"
-                          autocomplete="address-level2" (input)="onShippingAddressChange()">
-                      </div>
-                    </div>
-                    <div class="addr-field">
-                      <label class="addr-label">Pays <span class="required">*</span></label>
-                      <input type="text" class="addr-input" [(ngModel)]="shippingAddress.country" placeholder="France"
-                        autocomplete="country-name" (input)="onShippingAddressChange()">
-                    </div>
-                    <div class="addr-field">
-                      <label class="addr-label">Téléphone <span class="required">*</span></label>
-                      <input type="tel" class="addr-input" [(ngModel)]="shippingAddress.phone"
-                        placeholder="+33 6 12 34 56 78" autocomplete="tel" (input)="onShippingAddressChange()">
-                    </div>
-                    <p class="addr-required-note"><span class="required">*</span> Champs obligatoires</p>
                   </div>
-                  }
+
                 </div>
+
                 <!-- Bouton suivant -->
                 <div class="ca-next-bar">
                   <button class="btn-step-next" (click)="goToStep(3)" [disabled]="!canGoToPayment">
@@ -294,17 +324,25 @@
               </div>
               <div class="checkout-accordion__body" *ngIf="checkoutStep === 3">
                 <p class="mb-3 redInfos text-center">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</p>
-                <div class="payment-block mb-3">
+
+                <div class="payment-block mb-3" *ngIf="deliveryMode === 'pickup'">
                   <p class="payment-block-title"><i class="fas fa-mobile-alt mr-2"></i>{{ 'PRODUCTS.PAYMENT_LOCAL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_LOCAL_DETAIL' | translate"></p>
                 </div>
-                <div class="payment-block">
+
+                <div class="payment-block" *ngIf="deliveryMode === 'shipping'">
                   <p class="payment-block-title"><i class="fas fa-globe mr-2"></i>{{ 'PRODUCTS.PAYMENT_INTL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_INTL_DETAIL' | translate"></p>
                 </div>
+
                 <p class="mt-3 mb-0 text-center small text-muted">
                   {{ 'PRODUCTS.PAYMENT_CONFIRM_NOTE' | translate }}
                 </p>
+                <div class="ca-next-bar">
+                  <button class="btn-step-next" (click)="checkoutStep = 0">
+                    OK <i class="fas fa-check ml-2"></i>
+                  </button>
+                </div>
               </div>
             </div>
 

@@ -6,6 +6,15 @@
 @use 'globalStyles/body.scss';
 @use 'globalStyles/skin-btn';
 
+/* Cache le widget WhatsApp (getbutton.io) quand le chatbot est en plein écran mobile */
+@media (max-width: 599px) {
+  body.chat-open [class*="getbutton"],
+  body.chat-open [id*="getbutton"],
+  body.chat-open [class*="whwidget"] {
+    display: none !important;
+  }
+}
+
 .user-avatar {
   max-height: 55px;
   max-width: 55px;

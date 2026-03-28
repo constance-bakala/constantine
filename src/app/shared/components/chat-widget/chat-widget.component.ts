@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
-  OnDestroy, OnInit, ViewChild,
+  Inject, OnDestroy, OnInit, ViewChild,
 } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';
@@ -58,12 +59,14 @@ export class ChatWidgetComponent implements OnInit, OnDestroy {
 
   private catalogState: CatalogState | null = null;
   private subs = new Subscription();
+  private whatsappWidget: HTMLElement | null = null;
 
   constructor(
     private gemini: GeminiAiService,
     private translate: TranslateService,
     private store: Store<any>,
     private cdr: ChangeDetectorRef,
+    @Inject(DOCUMENT) private doc: Document,
   ) {}
 
   ngOnInit(): void {
@@ -107,11 +110,16 @@ export class ChatWidgetComponent implements OnInit, OnDestroy {
     if (this.isOpen && this.messages.length === 0) {
       this.addWelcomeMessage();
     }
+    this.doc.body.classList.toggle('chat-open', this.isOpen);
+    this.setWhatsappWidgetVisible(!this.isOpen);
+    if (this.isOpen) { this.scrollToBottom(); }
     this.cdr.markForCheck();
   }
 
   close(): void {
     this.isOpen = false;
+    this.doc.body.classList.remove('chat-open');
+    this.setWhatsappWidgetVisible(true);
     this.cdr.markForCheck();
   }
 
@@ -184,5 +192,19 @@ export class ChatWidgetComponent implements OnInit, OnDestroy {
       const el = this.messagesContainer?.nativeElement;
       if (el) el.scrollTop = el.scrollHeight;
     }, 50);
+  }
+
+  private setWhatsappWidgetVisible(show: boolean): void {
+    if (!this.whatsappWidget) {
+      const selectors = ['[class*="getbutton"]', '[id*="getbutton"]', '[class*="whwidget"]', '[class*="WhWidget"]'];
+      for (const sel of selectors) {
+        const el = this.doc.querySelector(sel) as HTMLElement | null;
+        if (el) { this.whatsappWidget = el; break; }
+      }
+    }
+    if (this.whatsappWidget) {
+      this.whatsappWidget.style.visibility = show ? '' : 'hidden';
+      this.whatsappWidget.style.pointerEvents = show ? '' : 'none';
+    }
   }
 }

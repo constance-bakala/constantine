@@ -12,24 +12,11 @@
   </url>
 
   <url>
-    <loc>https://delice-eternel-gabon.web.app/dresses</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://delice-eternel-gabon.web.app/category/dress</loc>
+    <lastmod>2026-03-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <url>
-    <loc>https://delice-eternel-gabon.web.app/earings</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://delice-eternel-gabon.web.app/masks</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
 
 </urlset>

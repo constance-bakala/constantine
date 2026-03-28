@@ -501,6 +501,22 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     this.addressChange$.next();
   }
 
+  toggleDeliveryMode(mode: 'pickup' | 'shipping'): void {
+    if (this.deliveryMode === mode) {
+      this.deliveryMode = null;
+    } else {
+      this.selectDeliveryMode(mode);
+    }
+  }
+
+  togglePickupSubMode(mode: 'courier' | 'store'): void {
+    if (this.pickupSubMode === mode) {
+      this.pickupSubMode = null;
+    } else {
+      this.setPickupSubMode(mode);
+    }
+  }
+
   selectDeliveryMode(mode: 'pickup' | 'shipping'): void {
     if (this.deliveryMode !== mode) {
       this.pickupSubMode = null;

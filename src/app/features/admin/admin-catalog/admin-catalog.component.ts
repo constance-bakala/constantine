@@ -727,6 +727,22 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  // ── Expand mobile rows ────────────────────────────────────────────────────
+
+  mobileExpandedIds = new Set<string>();
+
+  toggleMobileRow(id: string): void {
+    if (this.mobileExpandedIds.has(id)) {
+      this.mobileExpandedIds.delete(id);
+      if (this.editingDescription?.itemId === id) {
+        this.cancelDescriptionEdit();
+      }
+    } else {
+      this.mobileExpandedIds.add(id);
+    }
+    this.cdr.markForCheck();
+  }
+
   // ── Lightbox ──────────────────────────────────────────────────────────────
 
   openLightbox(src: string): void { this.lightboxSrc = src; }

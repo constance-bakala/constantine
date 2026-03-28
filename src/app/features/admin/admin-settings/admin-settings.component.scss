@@ -285,3 +285,92 @@
   &:hover:not(:disabled) { background: #7a3b10; }
   &:disabled { opacity: 0.5; cursor: default; }
 }
+
+// ── Responsive mobile ──────────────────────────────────────────────────────
+@media (max-width: 599px) {
+
+  .settings-nav {
+    flex-wrap: wrap;
+  }
+
+  .settings-section {
+    padding: 1rem;
+  }
+
+  // Tableau libellés → cartes empilées
+  .translations-table {
+    display: block;
+
+    thead { display: none; }
+    tbody { display: block; }
+
+    tr {
+      display: block;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+
+    tr.dirty-row { background: #fffbe6; }
+    tr:hover td  { background: transparent; }
+
+    td {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+
+      &:last-child { border-bottom: none; }
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #777;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 4px;
+      }
+    }
+
+    // Clé : fond légèrement gris, police mono
+    .col-key {
+      background: #f8f8f8;
+      code { font-size: 12px; word-break: break-all; }
+    }
+
+    // Largeurs fixes désactivées sur mobile
+    .col-key,
+    .col-lang { width: auto; }
+
+    .translation-input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  // Filtre pleine largeur
+  .translations-filter-input {
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  // Boutons d'action : wrap
+  .translations-actions {
+    flex-wrap: wrap;
+    width: 100%;
+
+    button { flex: 1 1 auto; text-align: center; }
+  }
+
+  // En-tête section libellés : empilé
+  .translations-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

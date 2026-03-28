@@ -462,7 +462,9 @@
       </thead>
       <tbody>
         <ng-container *ngFor="let item of pagedItems; trackBy: trackById">
-        <tr [class.unpublished-row]="!item.published" [class.tryon-selected]="tryonSelectedIds.has(item.id)">
+        <tr [class.unpublished-row]="!item.published"
+            [class.tryon-selected]="tryonSelectedIds.has(item.id)"
+            [class.mobile-expanded]="mobileExpandedIds.has(item.id)">
 
           <td class="img-cell">
             <div class="thumb-wrapper"
@@ -476,10 +478,10 @@
             </div>
           </td>
 
-          <td class="ref-cell">{{ item.reference }}</td>
+          <td class="ref-cell" data-label="Référence">{{ item.reference }}</td>
 
           <!-- Stock -->
-          <td class="text-center">
+          <td class="text-center" data-label="Stock">
             <ng-container *ngIf="editing?.itemId !== item.id || editing?.field !== 'stock'">
               <span class="field-value"
                     [class.stock-zero]="(stockByRef[item.reference] ?? item.stock) === 0">
@@ -499,7 +501,7 @@
           </td>
 
           <!-- Prix -->
-          <td class="text-center">
+          <td class="text-center" data-label="Prix">
             <ng-container *ngIf="editing?.itemId !== item.id || editing?.field !== 'price'">
               <span class="field-value">{{ formatPrice(item.priceXAF) }}</span>
               <button class="btn-field-edit btn-price-edit" matTooltip="Modifier le prix" (click)="startEdit(item, 'price')">✎</button>
@@ -516,7 +518,7 @@
           </td>
 
           <!-- Publié -->
-          <td class="text-center">
+          <td class="text-center" data-label="Statut">
             <button class="btn-publish-item"
                     [class.published]="item.published"
                     [matTooltip]="item.published ? 'Dépublier l\'article' : 'Publier l\'article'"
@@ -527,6 +529,11 @@
 
           <!-- Actions -->
           <td class="actions-cell">
+            <button class="btn-mobile-expand"
+                    (click)="toggleMobileRow(item.id); $event.stopPropagation()"
+                    [attr.aria-expanded]="mobileExpandedIds.has(item.id)">
+              {{ mobileExpandedIds.has(item.id) ? '⋯' : '⋮' }}
+            </button>
             <button class="btn-delete-item" matTooltip="Supprimer l'article" (click)="deleteItem(item)">✕</button>
             <button class="btn-text-edit"
                     [class.active]="editingDescription?.itemId === item.id"

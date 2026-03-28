@@ -82,12 +82,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let row of filteredRows; trackBy: trackByKey" [class.dirty-row]="row.dirty">
-          <td class="col-key"><code>{{ row.key }}</code></td>
-          <td class="col-lang">
+          <td class="col-key" data-label="Clé"><code>{{ row.key }}</code></td>
+          <td class="col-lang" data-label="🇫🇷 Français">
             <textarea class="translation-input" [(ngModel)]="row.fr"
                       (ngModelChange)="markDirty(row)" rows="2"></textarea>
           </td>
-          <td class="col-lang">
+          <td class="col-lang" data-label="🇬🇧 English">
             <textarea class="translation-input" [(ngModel)]="row.en"
                       (ngModelChange)="markDirty(row)" rows="2"></textarea>
           </td>
