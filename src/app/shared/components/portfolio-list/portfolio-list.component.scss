@@ -74,6 +74,29 @@ img.displayed{
   }
 }
 
+.tap-hint {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .tap-hint {
+    display: block;
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+  }
+}
+
 .tryon-hint-badge {
   position: absolute;
   bottom: 8px;

@@ -2,6 +2,28 @@ p {
   font-weight: bold;
 }
 
+.tap-hint {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .tap-hint {
+    display: block;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+}
+
 .displayed {
   text-align: center;
 }

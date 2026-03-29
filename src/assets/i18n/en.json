@@ -28,6 +28,7 @@
     "PROMO_CODE_INVALID": "Invalid or unknown promo code.",
     "PROMO_CODE_EXPIRED": "This promo code has expired or is not yet active.",
     "PROMO_DISCOUNT": "Discount ({{code}})",
+    "BACK_TO_CATEGORIES": "← Back to categories",
     "PROMO_NUDGE": "Have a promo code? Enter it in your cart and enjoy discounts on your order!",
     "AMOUNT_WITHOUT_VAT": "Temp amount",
     "SEND_COMMAND": "Send your command",

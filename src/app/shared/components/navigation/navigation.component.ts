@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -89,6 +89,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
   switchLang(lang: string): void {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const nav = document.getElementById('mainNav');
+    if (nav && !nav.contains(event.target as Node)) {
+      this.closeMenu();
+    }
   }
 
   closeMenu(): void {

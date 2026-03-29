@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12 mb-12">
       <div class="">
-        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0" style="cursor: pointer;">
+        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0" style="cursor: pointer; position: relative;">
           <img class="img-fluid w-100" style="cursor: pointer;"
                [src]="currentImageUrl" [alt]="data.portfolioName | translate" loading="lazy">
           <a [routerLink]="[data.portfolioLink]">
@@ -11,6 +11,7 @@
               <div class="mask rgba-black-slight"></div>
             </div>
           </a>
+          <div class="tap-hint">Voir →</div>
         </div>
         <div [routerLink]="[data.portfolioLink]" class="text-center pt-4 portfolio-item mx-auto" style="cursor: pointer;">
           <h5>{{data.portfolioName | translate}}</h5>

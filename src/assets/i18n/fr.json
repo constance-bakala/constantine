@@ -25,6 +25,7 @@
     "PROMO_CODE_INVALID": "Code promo invalide ou inexistant.",
     "PROMO_CODE_EXPIRED": "Ce code promo est expiré ou n'est pas encore actif.",
     "PROMO_DISCOUNT": "Réduction ({{code}})",
+    "BACK_TO_CATEGORIES": "← Retour aux catégories",
     "PROMO_NUDGE": "Vous avez un code promo ? Saisissez-le dans votre panier et bénéficiez de remises sur votre commande !",
     "AMOUNT_WITHOUT_VAT": "Montant HT",
     "SEND_COMMAND": "Transmettre la commande",
