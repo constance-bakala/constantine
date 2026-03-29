@@ -1,24 +1,20 @@
-<header>
-  <div class="jumbotron color-grey-light mt-70">
-    <div class="d-flex align-items-center h-100">
-      <div class="container text-center">
-        <h3 class="mb-0">{{category.title | translate}}
-        </h3>
-        <p class="mb-2 text-muted" style="text-align: left" [innerHTML]="summary"></p>
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mt-2">
-          <app-currency-selector></app-currency-selector>
-          <app-category-buttons [categoryToAvoid]="category.name" [categoryInfos]="categoryInfos"
-            (navigateAway)="gotoTarget($event)">
-          </app-category-buttons>
-        </div>
-        @if (hasActivePromo) {
-          <div class="promo-nudge mt-3">
-            <i class="fas fa-tag mr-2"></i>
-            {{'PRODUCTS.PROMO_NUDGE' | translate}}
-          </div>
-        }
-      </div>
+<header class="page-hero">
+  <div class="container page-hero__inner">
+    <div class="page-hero__accent"></div>
+    <h2 class="page-hero__title">{{category.title | translate}}</h2>
+    <p *ngIf="summary" class="page-hero__summary" [innerHTML]="summary"></p>
+    <div class="page-hero__toolbar">
+      <app-currency-selector></app-currency-selector>
+      <app-category-buttons [categoryToAvoid]="category.name" [categoryInfos]="categoryInfos"
+        (navigateAway)="gotoTarget($event)">
+      </app-category-buttons>
     </div>
+    @if (hasActivePromo) {
+      <div class="promo-nudge mt-2">
+        <i class="fas fa-tag mr-2"></i>
+        {{'PRODUCTS.PROMO_NUDGE' | translate}}
+      </div>
+    }
   </div>
 </header>
 <div class="container fixed-sn skin-light mdb-skin-custom">

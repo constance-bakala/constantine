@@ -7,6 +7,7 @@ import { PricingService } from '@shared/services/pricing.service';
 @Component({
   selector: 'app-currency-selector',
   templateUrl: './currency-selector.component.html',
+  styleUrls: ['./currency-selector.component.scss'],
   standalone: false,
 })
 export class CurrencySelectorComponent implements OnInit, OnDestroy {

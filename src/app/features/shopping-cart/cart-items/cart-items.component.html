@@ -1,14 +1,13 @@
 <!--Section: Block Content-->
 <div>
-  <header>
-    <div class="jumbotron color-grey-light mt-50">
-      <div class="d-flex align-items-center h-100">
-        <div class="container text-center">
-          <h3 class="mb-0">{{'PRODUCTS.BASKET' |translate}}</h3>
-          <app-category-buttons *ngIf="(categoryInfos$ | async) as categoryInfos" [categoryToAvoid]="''"
-            [categoryInfos]="categoryInfos" (navigateAway)="gotoTarget($event)">
-          </app-category-buttons>
-        </div>
+  <header class="page-hero">
+    <div class="container page-hero__inner">
+      <div class="page-hero__accent"></div>
+      <h2 class="page-hero__title">{{'PRODUCTS.BASKET' | translate}}</h2>
+      <div class="page-hero__toolbar" *ngIf="(categoryInfos$ | async) as categoryInfos">
+        <app-category-buttons [categoryToAvoid]="''" [categoryInfos]="categoryInfos"
+          (navigateAway)="gotoTarget($event)">
+        </app-category-buttons>
       </div>
     </div>
   </header>
