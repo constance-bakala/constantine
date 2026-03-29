@@ -1,8 +1,117 @@
-.btn {
-  font-size: 1.81rem;
+// ── Variables ─────────────────────────────────────────────────
+$gold : #c9a84c;
+
+// ── Footer ────────────────────────────────────────────────────
+.site-footer {
+  background: #2c3e50;
+  color: rgba(255, 255, 255, 0.70);
+  padding: 3rem 0 2.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.mb-lg-0, .my-lg-0 {
-  margin-bottom: 0 !important;
-  text-align: center;
+.footer-cols {
+  align-items: flex-start;
+}
+
+.footer-col {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+// ── Titles ────────────────────────────────────────────────────
+.footer-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.footer-accent {
+  width: 32px;
+  height: 2px;
+  background: $gold;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+}
+
+// ── Text ──────────────────────────────────────────────────────
+.footer-text {
+  font-size: 0.84rem;
+  line-height: 1.80;
+  color: rgba(255, 255, 255, 0.50);
+  margin-bottom: 1rem;
+}
+
+// ── Map ───────────────────────────────────────────────────────
+.map-wrapper {
+  margin-top: 0.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+// ── Social icons ──────────────────────────────────────────────
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: background 0.22s, border-color 0.22s, color 0.22s;
+
+  &:hover {
+    background: rgba(201, 168, 76, 0.18);
+    border-color: $gold;
+    color: $gold;
+  }
+}
+
+// ── Copyright ─────────────────────────────────────────────────
+.copyright-bar {
+  background: #243342;
+  color: rgba(255, 255, 255, 0.30);
+  padding: 0.85rem 0;
+  font-size: 0.78rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+// ── Scroll to top (mobile) ────────────────────────────────────
+.scroll-to-top {
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 999;
+}
+
+.scroll-top-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.85);
+  color: #fff;
+  font-size: 0.85rem;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  transition: background 0.2s;
+
+  &:hover {
+    background: $gold;
+  }
 }

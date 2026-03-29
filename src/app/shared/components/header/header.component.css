@@ -6,7 +6,7 @@
 .masthead {
   padding-top: 64px; /* hauteur de la nav */
   padding-bottom: 0 !important;
-  background: #0d0d14 !important;
+  background: #2c3e50 !important;
 }
 
 /* ── Wrapper ──────────────────────────────────────────────── */
@@ -38,7 +38,7 @@
   left: 0;
   right: 0;
   height: 140px;
-  background: linear-gradient(to bottom, transparent, #0d0d14);
+  background: linear-gradient(to bottom, transparent, #2c3e50);
   pointer-events: none;
   z-index: 10;
 }
@@ -78,12 +78,12 @@
 
 /* ── Bande texte ──────────────────────────────────────────── */
 .hero-text {
-  background: #0d0d14;
+  background: #2c3e50;
   padding: 1.75rem 0 2rem;
 }
 
 .hero-text-inner {
-  text-align: left;
+  text-align: center;
 }
 
 /* Trait doré */
@@ -91,7 +91,7 @@
   width: 44px;
   height: 2px;
   background: #c9a84c;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem;
   border-radius: 2px;
 }
 

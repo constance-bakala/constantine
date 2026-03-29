@@ -1,37 +1,39 @@
-<section class="page-section" id="contact">
+<section class="page-section contact-section" id="contact">
   <div class="container">
-    <!-- Contact Section Heading-->
-    <div class="text-center">
-      <h2 class="page-section-heading text-secondary d-inline-block mb-0">{{'CONTACT_US' | translate}}</h2>
+
+    <div class="text-center mb-2">
+      <h2 class="section-heading">{{'CONTACT_US' | translate}}</h2>
+      <div class="section-heading-line mx-auto"></div>
     </div>
-    <!-- Icon Divider-->
+
     <app-icone-divider></app-icone-divider>
-    <!-- Contact Section Content-->
-    <div class="row justify-content-center">
-      <div class="col-lg-4">
-        <div class="d-flex flex-column align-items-center">
-          <div class="icon-contact mb-3"><i class="fas fa-mobile-alt"></i></div>
-          <div class="text-muted">{{'TELEPHONE' | translate}}</div>
-          <div class="lead font-weight-bold">(+241)77601044</div>
+
+    <div class="row justify-content-center contact-cards">
+
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <div class="contact-card">
+          <div class="contact-icon-wrap"><i class="fas fa-mobile-alt"></i></div>
+          <div class="contact-label">{{'TELEPHONE' | translate}}</div>
+          <div class="contact-value">(+241) 77 60 10 44</div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="d-flex flex-column align-items-center">
-          <div class="icon-contact mb-3"><i class="far fa-envelope"></i></div>
-          <div class="text-muted">{{'EMAIL' | translate}}</div>
-          <a class="lead font-weight-bold"
-             href="mailto:delice.eternel.gabon@gmail.com">delice.eternel.gabon&#64;gmail.com</a>
+
+      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <div class="contact-card">
+          <div class="contact-icon-wrap"><i class="far fa-envelope"></i></div>
+          <div class="contact-label">{{'EMAIL' | translate}}</div>
+          <a class="contact-value contact-link"
+             href="mailto:delice.eternel.gabon@gmail.com">
+            delice.eternel.gabon&#64;gmail.com
+          </a>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="d-flex flex-column align-items-center social-share">
+
+      <div class="col-lg-4 col-md-12">
+        <div class="contact-card contact-share">
           <div class="sharethis-inline-share-buttons"></div>
         </div>
       </div>
-      <app-icone-divider></app-icone-divider>
-      <!-- div class="elfsight-app-bcedd20d-91a7-4bc2-a33e-2458d7544b5f"></div-->
-    </div>
-    <div class="smaller">
 
     </div>
   </div>

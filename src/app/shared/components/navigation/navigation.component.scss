@@ -1,5 +1,5 @@
 // ── Variables ────────────────────────────────────────────────
-$nav-bg     : rgba(12, 12, 20, 0.90);
+$nav-bg     : rgba(44, 62, 80, 0.95);
 $gold       : #c9a84c;
 $gold-light : #e2c46b;
 $nav-h      : 64px;
@@ -40,14 +40,9 @@ $nav-h      : 64px;
     font-size: 0.95rem;
     font-weight: 700;
     letter-spacing: 0.07em;
-    color: $gold;
+    color: #fff;
     text-transform: uppercase;
     white-space: nowrap;
-    transition: color 0.2s;
-  }
-
-  &:hover .brand-name {
-    color: $gold-light;
   }
 }
 
@@ -282,7 +277,7 @@ $nav-h      : 64px;
     top: $nav-h;
     left: 0;
     right: 0;
-    background: rgba(10, 10, 18, 0.97);
+    background: rgba(44, 62, 80, 0.99);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-top: 1px solid rgba(255, 255, 255, 0.06);

@@ -1,3 +1,98 @@
-.social-share {
-    padding: 4em;
+// ── Variables ─────────────────────────────────────────────────
+$gold : #c9a84c;
+// ── Section ───────────────────────────────────────────────────
+.contact-section {
+  background: #fff;
+  color: #1a1a2e;
+}
+
+// ── Heading ───────────────────────────────────────────────────
+.section-heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.section-heading-line {
+  width: 44px;
+  height: 2px;
+  background: $gold;
+  border-radius: 2px;
+  margin-top: 0.4rem;
+}
+
+// ── Cards ─────────────────────────────────────────────────────
+.contact-cards {
+  margin-top: 1.25rem;
+}
+
+.contact-card {
+  background: #f8f8fc;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 14px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  height: 100%;
+  transition: background 0.22s, border-color 0.22s, box-shadow 0.22s;
+
+  &:hover {
+    background: #fff;
+    border-color: rgba(201, 168, 76, 0.45);
+    box-shadow: 0 4px 20px rgba(201, 168, 76, 0.12);
+  }
+}
+
+// ── Icon circle ───────────────────────────────────────────────
+.contact-icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.10);
+  border: 1px solid rgba(201, 168, 76, 0.40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+
+  i {
+    font-size: 1.4rem;
+    color: $gold;
+  }
+}
+
+// ── Text ──────────────────────────────────────────────────────
+.contact-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.40);
+  margin-bottom: 0.4rem;
+}
+
+.contact-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  display: block;
+}
+
+.contact-link {
+  color: $gold !important;
+  text-decoration: none;
+
+  &:hover {
+    color: #e2c46b !important;
+    text-decoration: underline;
+  }
+}
+
+// ── ShareThis card ────────────────────────────────────────────
+.contact-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
 }
