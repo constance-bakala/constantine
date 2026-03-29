@@ -43,6 +43,13 @@ $radius: 12px;
 
 }
 
+/* Desktop : cacher le FAB quand le panneau est ouvert (le ✕ de l'en-tête suffit) */
+@media (min-width: 600px) {
+  .chat-fab--hidden-mobile {
+    display: none !important;
+  }
+}
+
 @media (max-width: 599px) {
   .chat-panel {
     top: 0;
@@ -55,12 +62,16 @@ $radius: 12px;
     border-radius: 0;
   }
 
-  .chat-input-row {
-    padding-bottom: 80px;
+  /* Mobile : toujours afficher le FAB (ouverture ET fermeture du panneau plein écran) */
+  .chat-fab,
+  .chat-fab--hidden-mobile {
+    display: flex !important;
   }
 
+  /* Quand le panneau est ouvert, positionner le FAB juste au-dessus de la zone de saisie */
   .chat-fab--hidden-mobile {
-    display: none !important;
+    bottom: 80px;
+    right: 16px;
   }
 }
 
