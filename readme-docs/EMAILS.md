@@ -2,14 +2,21 @@
 
 Les emails sont envoyés via **Brevo** (ex-Sendinblue) depuis les Firebase Functions.
 
+**Compte Brevo :** se connecter sur https://app.brevo.com avec le compte **`delice.eternel.gabon@gmail.com`**
+
 ---
 
 ## 1. Templates disponibles
 
-| Fichier source | Template Brevo | Usage |
+| Fichier source | Template Brevo | Déclencheur |
 |---|---|---|
-| `functions/src/templates/commande_envoyee.brevo.template.html` | Template #1 | Email envoyé au client après une commande |
-| `functions/src/templates/mail_bienvenu.brevo.template.html` | Template #2 | Email envoyé à l'inscription |
+| `commande_envoyee.brevo.template.html` | #1 | Clic "Envoyer la commande" dans le panier |
+| `mail_bienvenu.brevo.template.html` | #2 | Création de compte (Firebase Auth) |
+| `commande_prete.brevo.template.html` | #? | Commande prête — envoyé manuellement par l'admin |
+| `commande_expediee.brevo.template.html` | #? | Commande expédiée — envoyé manuellement par l'admin |
+
+> Les templates `commande_prete` et `commande_expediee` doivent être créés sur Brevo et leurs IDs
+> ajoutés dans `functions/.env`.
 
 ---
 
@@ -27,16 +34,50 @@ BREVO_TEMPLATE_WELCOME=2
 
 ---
 
-## 3. Mettre à jour un template
+## 3. Mettre à jour un template existant
+
+### Étapes
 
 1. Modifier le fichier HTML source dans `functions/src/templates/`
 2. Se connecter sur https://app.brevo.com
 3. Menu **Transactionnel** → **Templates**
-4. Cliquer sur le template à modifier (ex: "commande_envoyee" #1)
+4. Cliquer sur le template à modifier (voir tableau ci-dessous)
 5. Cliquer sur **Modifier**
-6. Passer en mode **Éditeur HTML** (icône `<>`)
-7. Sélectionner tout (`Ctrl+A`) et remplacer par le contenu du fichier source
+6. Passer en mode **Éditeur HTML** (icône `<>` en haut à droite)
+7. Sélectionner tout (`Ctrl+A`) et coller le contenu du fichier source
 8. Cliquer sur **Enregistrer & Quitter**
+
+### Correspondance fichiers ↔ templates Brevo
+
+| Fichier source | Nom sur Brevo | ID |
+|---|---|---|
+| `commande_envoyee.brevo.template.html` | commande_envoyee | #1 |
+| `mail_bienvenu.brevo.template.html` | mail_bienvenu | #2 |
+| `commande_prete.brevo.template.html` | commande_prete | à créer |
+| `commande_expediee.brevo.template.html` | commande_expediee | à créer |
+
+### Créer un nouveau template sur Brevo
+
+Pour `commande_prete` et `commande_expediee` qui n'existent pas encore sur Brevo :
+
+1. Se connecter sur https://app.brevo.com
+2. Menu **Transactionnel** → **Templates** → **Créer un template**
+3. Donner un nom (ex : `commande_prete`)
+4. Choisir **Éditeur HTML** → coller le contenu du fichier source
+5. Cliquer sur **Enregistrer & Quitter**
+6. Noter l'ID attribué par Brevo (visible dans la liste des templates)
+7. Ajouter l'ID dans `functions/.env` :
+   ```
+   BREVO_TEMPLATE_READY=<id>
+   BREVO_TEMPLATE_SHIPPED=<id>
+   ```
+8. Redéployer les functions : `npx firebase deploy --only functions`
+
+### Tester après mise à jour
+
+- Passer une commande de test depuis **https://delice-eternel-gabon.web.app** (pas localhost)
+- Vérifier la réception de l'email
+- En cas de problème, consulter les logs (voir section 6)
 
 ---
 
@@ -53,23 +94,57 @@ BREVO_TEMPLATE_WELCOME=2
 {% endfor %}
 ```
 
-### Variables disponibles — template commande (#1)
+### Template #1 — commande_envoyee
 
 ```
-{{ params.displayName }}   — nom du client
-{{ params.items }}         — liste des articles
-{{ params.totalHT }}       — total hors taxe
-{{ params.tva }}           — TVA (10%)
-{{ params.totalTTC }}      — total TTC
+{{ params.displayName }}        — nom du client
+{{ params.items }}              — liste des articles
+{{ params.totalHT }}            — total hors taxe
+{{ params.tva }}                — TVA (10%)
+{{ params.totalTTC }}           — total TTC
 ```
 
-### Variables disponibles — template bienvenue (#2)
+### Template #2 — mail_bienvenu
 
 ```
 {{ params.displayName }}
 {{ params.dressesLink }}
 {{ params.masksLink }}
 {{ params.earingsLink }}
+```
+
+### Template commande_prete
+
+```
+{{ params.customerName }}                      — nom du client
+{{ params.orderId }}                           — référence commande (optionnel)
+{{ params.deliveryModeLabel }}                 — mode de livraison (optionnel)
+{{ params.shippingAddress }}                   — adresse (optionnel)
+  .firstName / .lastName / .address1 / .address2
+  .postalCode / .city / .country / .phone
+{{ params.items }}                             — articles [{title, reference, basketInfos.selectedQuantity, linePriceFormatted}]
+{{ params.itemsTotalFormatted }}               — sous-total articles
+{{ params.tvaFormatted }}                      — TVA (optionnel)
+{{ params.shippingCostFormatted }}             — frais de transport (optionnel)
+{{ params.paymentAmountXAF }}                  — montant total à payer
+{{ params.paymentPhone }}                      — numéro Airtel Money pour le paiement
+```
+
+### Template commande_expediee
+
+```
+{{ params.customerName }}                      — nom du client
+{{ params.orderId }}                           — référence commande (optionnel)
+{{ params.deliveryModeLabel }}                 — mode de livraison (optionnel)
+{{ params.shippingAddress }}                   — adresse (optionnel)
+  .firstName / .lastName / .address1 / .address2
+  .postalCode / .city / .country / .phone
+{{ params.trackingUrl }}                       — lien de suivi colis
+{{ params.carrierName }}                       — nom du transporteur (optionnel)
+{{ params.items }}                             — articles [{title, reference, basketInfos.selectedQuantity, linePriceFormatted}]
+{{ params.tvaFormatted }}                      — TVA (optionnel)
+{{ params.shippingCostFormatted }}             — frais de transport (optionnel)
+{{ params.totalAmountXAF }}                    — total payé
 ```
 
 ---
