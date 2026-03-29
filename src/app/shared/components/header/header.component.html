@@ -1,18 +1,32 @@
-<header [ngClass]="{'masthead': displayHtml, 'adjust': !displayHtml}" class="bg-primary text-white text-center">
+<header [ngClass]="{'masthead': displayHtml, 'adjust': !displayHtml}">
   @if (displayHtml) {
-    <div class="container d-flex align-items-center flex-column" id="headerId">
-      @if (displayHtml) {
+    <div class="hero-wrapper">
+
+      <!-- Carousel -->
+      <div class="hero-carousel-wrap">
         <ngb-carousel
-          [interval]="4000"
+          [interval]="4200"
           [wrap]="true"
           [animation]="true"
-          class="hero-carousel carousel-fade">
+          [showNavigationArrows]="false"
+          [showNavigationIndicators]="false">
           <ng-template *ngFor="let slide of slides" ngbSlide>
             <img class="hero-img" [src]="slide.imageUrl" [alt]="slide.alt || ''" />
           </ng-template>
         </ngb-carousel>
-      }
-      <p class="pre-wrap masthead-subheading font-weight-light mb-0">{{'PRESENTATION' | translate}} <br/> <span class="atelier">{{'BUILD_PLACE' | translate}}</span></p>
+        <!-- gradient de fondu vers le bas -->
+        <div class="hero-fade"></div>
+      </div>
+
+      <!-- Bande texte sous le carousel -->
+      <div class="hero-text">
+        <div class="container hero-text-inner">
+          <div class="hero-accent"></div>
+          <p class="hero-tagline pre-wrap">{{'PRESENTATION' | translate}}</p>
+          <p class="hero-location">{{'BUILD_PLACE' | translate}}</p>
+        </div>
+      </div>
+
     </div>
   }
 </header>

@@ -1,31 +1,128 @@
+/* ── Base ─────────────────────────────────────────────────── */
 .adjust {
-  margin-top: 100px;
-}
-
-.bg-primary {
-  background-color: #17a2b8 !important;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-}
-
-.masthead .masthead-avatar {
-  width: 13rem;
-}
-
-.atelier {
-  font-size: 15px;
-  font-style: italic;
+  display: none;
 }
 
 .masthead {
-  padding-top: calc(4rem + 74px) !important;
-  padding-bottom: 6rem !important;
+  padding-top: 64px; /* hauteur de la nav */
+  padding-bottom: 0 !important;
+  background: #0d0d14 !important;
 }
 
+/* ── Wrapper ──────────────────────────────────────────────── */
+.hero-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Carousel ─────────────────────────────────────────────── */
+.hero-carousel-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0; /* supprime le gap sous l'img */
+}
+
+.hero-img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Dégradé fondu bas du carousel */
+.hero-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent, #0d0d14);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Indicateurs (dots) dorés */
+.hero-carousel-wrap :deep(.carousel-indicators [data-bs-target]),
+.hero-carousel-wrap ::ng-deep .carousel-indicators [data-bs-target] {
+  background-color: rgba(201, 168, 76, 0.55);
+  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  border: none;
+  transition: background-color 0.2s;
+}
+
+.hero-carousel-wrap :deep(.carousel-indicators .active),
+.hero-carousel-wrap ::ng-deep .carousel-indicators .active {
+  background-color: #c9a84c;
+}
+
+/* Flèches nav transparentes */
+.hero-carousel-wrap :deep(.carousel-control-prev),
+.hero-carousel-wrap :deep(.carousel-control-next),
+.hero-carousel-wrap ::ng-deep .carousel-control-prev,
+.hero-carousel-wrap ::ng-deep .carousel-control-next {
+  width: 48px;
+  opacity: 0.6;
+  z-index: 11;
+}
+
+.hero-carousel-wrap :deep(.carousel-control-prev:hover),
+.hero-carousel-wrap :deep(.carousel-control-next:hover),
+.hero-carousel-wrap ::ng-deep .carousel-control-prev:hover,
+.hero-carousel-wrap ::ng-deep .carousel-control-next:hover {
+  opacity: 1;
+}
+
+/* ── Bande texte ──────────────────────────────────────────── */
+.hero-text {
+  background: #0d0d14;
+  padding: 1.75rem 0 2rem;
+}
+
+.hero-text-inner {
+  text-align: left;
+}
+
+/* Trait doré */
+.hero-accent {
+  width: 44px;
+  height: 2px;
+  background: #c9a84c;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+
+.hero-tagline {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 400;
+  line-height: 1.75;
+  margin: 0 0 0.4rem;
+}
+
+.hero-location {
+  font-size: 0.88rem;
+  color: #c9a84c;
+  font-style: italic;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* ── Mobile ───────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .masthead {
-    padding-top: calc(1rem + 56px) !important;
-    padding-bottom: 1rem !important;
+  .hero-img {
+    height: 210px;
+  }
+
+  .hero-fade {
+    height: 80px;
+  }
+
+  .hero-text {
+    padding: 1.25rem 0 1.5rem;
   }
 }
-
