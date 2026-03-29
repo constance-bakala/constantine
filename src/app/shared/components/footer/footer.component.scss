@@ -18,6 +18,21 @@ $gold : #c9a84c;
   padding-right: 1.25rem;
 }
 
+@media (max-width: 991px) {
+  .footer-col {
+    text-align: center;
+  }
+
+  .footer-accent {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-text {
+    text-align: center;
+  }
+}
+
 // ── Titles ────────────────────────────────────────────────────
 .footer-title {
   font-size: 0.78rem;

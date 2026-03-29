@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, HostListener, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -38,6 +39,7 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
     private auth: Auth,
     public translate: TranslateService,
     private configRepo: AppConfigRepository,
+    private router: Router,
   ) {
     this.user$ = user(this.auth);
     this.translate.addLangs(['fr', 'en']);
@@ -97,6 +99,23 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   scrollTo(sectionId: string): void {
+    const onHome = this.router.url === '/home' || this.router.url.startsWith('/home#');
+    if (onHome) {
+      setActiveLink(sectionId);
+      scrollToSection(sectionId);
+      this.closeMenu();
+    } else {
+      this.router.navigate(['/home']).then(() => {
+        setTimeout(() => {
+          setActiveLink(sectionId);
+          scrollToSection(sectionId);
+        }, 200);
+      });
+      this.closeMenu();
+    }
+  }
+
+  scrollDirect(sectionId: string): void {
     setActiveLink(sectionId);
     scrollToSection(sectionId);
     this.closeMenu();

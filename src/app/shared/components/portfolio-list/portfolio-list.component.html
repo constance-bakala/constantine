@@ -51,7 +51,7 @@
                     <div class="tryon-hint-badge" title="Voir avec mannequin IA">✨</div>
                   }
                   @if (!item.tryonUrl && !item.selected && !stock.isOutOfStock(item.reference)) {
-                    <div class="tap-hint">Voir →</div>
+                    <div class="tap-hint">{{ 'PRODUCTS.TAP_HINT' | translate }}</div>
                   }
                 </div>
                 <div class="text-center pt-2 pb-2">
