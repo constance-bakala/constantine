@@ -51,22 +51,41 @@ C'est l'étape **la plus critique** et la moins documentée. Même avec Firebase
 
 ### 2.1 Activer l'API Firebase AI Logic
 
-**URL directe (remplacer le project ID)** :
+> **Contexte** : L'application utilise le backend **Google AI (Gemini API)**, pas Vertex AI.
+> Malgré cela, l'API à activer s'appelle `firebasevertexai.googleapis.com` — c'est le nom interne
+> de Firebase AI Logic dans Google Cloud, quelle que soit l'option de backend choisie.
+> Ne pas chercher "Vertex AI" : cette API n'est pas utilisée et ne doit pas être activée.
+
+#### Option A — URL directe (recommandée)
+
+Ouvrir directement ce lien dans le navigateur (remplacer `delice-eternel-gabon` par le project ID si nécessaire) :
+
 ```
-https://console.cloud.google.com/apis/enableflow?apiid=firebasevertexai.googleapis.com&project=TON_PROJECT_ID
+https://console.cloud.google.com/apis/enableflow?apiid=firebasevertexai.googleapis.com&project=delice-eternel-gabon
 ```
 
-**Ou manuellement** :
+1. La page affiche **"Firebase AI Logic API"** avec un bouton **Enable** / **Activer**
+2. Cliquer **Enable**
+3. Attendre 10–20 secondes que la page confirme : **"API enabled"** (bandeau vert en haut)
+4. Le statut passe de `DISABLED` à `ENABLED` dans le tableau de bord de l'API
+
+#### Option B — Via la bibliothèque d'APIs GCP (manuel)
 
 1. Aller sur https://console.cloud.google.com
-2. S'assurer que le bon projet est sélectionné (menu déroulant en haut à gauche)
-3. Menu hamburger → **APIs & Services** → **Library**
-4. Rechercher `Firebase AI Logic`
-5. Cliquer sur le résultat **Firebase AI Logic API**
-6. Cliquer **Enable** / **Activer**
-7. Attendre la confirmation : "You have successfully enabled Firebase AI Logic API"
+2. Vérifier que le bon projet est sélectionné : menu déroulant **en haut à gauche**, à côté du logo Google Cloud — le nom du projet doit être `delice-eternel-gabon`
+3. Cliquer sur l'icône **≡ Menu** (hamburger) en haut à gauche
+4. Aller dans **APIs & Services** → **Library** (Bibliothèque)
+5. Dans la barre de recherche, taper : `Firebase AI Logic`
+6. Cliquer sur la carte **"Firebase AI Logic API"** (éditeur : Firebase)
+   - ⚠️ Ne pas confondre avec "Vertex AI API" — ce n'est pas la même chose
+7. Cliquer **Enable** / **Activer**
+8. Attendre la confirmation : la page se recharge et affiche le tableau de bord de l'API avec le statut **"API enabled"**
 
-> **Note** : L'API s'appelle `firebasevertexai.googleapis.com` même quand on utilise le backend Google AI (Gemini). C'est contre-intuitif mais c'est ainsi — Firebase AI Logic route toujours par ce endpoint, quel que soit le backend choisi.
+#### Vérifier que l'API est bien activée
+
+1. Aller dans **APIs & Services** → **Enabled APIs & services**
+2. Chercher `Firebase AI Logic` dans la liste
+3. Elle doit apparaître avec le statut actif (pas de bandeau "disabled")
 
 ### 2.2 Ajouter l'API à la restriction de la clé API du navigateur
 

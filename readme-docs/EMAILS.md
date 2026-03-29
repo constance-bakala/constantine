@@ -12,8 +12,8 @@ Les emails sont envoyés via **Brevo** (ex-Sendinblue) depuis les Firebase Funct
 |---|---|---|
 | `commande_envoyee.brevo.template.html` | #1 | Clic "Envoyer la commande" dans le panier |
 | `mail_bienvenu.brevo.template.html` | #2 | Création de compte (Firebase Auth) |
-| `commande_prete.brevo.template.html` | #? | Commande prête — envoyé manuellement par l'admin |
-| `commande_expediee.brevo.template.html` | #? | Commande expédiée — envoyé manuellement par l'admin |
+| `commande_prete.brevo.template.html` | #4 | Commande prête — envoyé manuellement par l'admin |
+| `commande_expediee.brevo.template.html` | #5 | Commande expédiée — envoyé manuellement par l'admin |
 
 > Les templates `commande_prete` et `commande_expediee` doivent être créés sur Brevo et leurs IDs
 > ajoutés dans `functions/.env`.
@@ -53,8 +53,8 @@ BREVO_TEMPLATE_WELCOME=2
 |---|---|---|
 | `commande_envoyee.brevo.template.html` | commande_envoyee | #1 |
 | `mail_bienvenu.brevo.template.html` | mail_bienvenu | #2 |
-| `commande_prete.brevo.template.html` | commande_prete | à créer |
-| `commande_expediee.brevo.template.html` | commande_expediee | à créer |
+| `commande_prete.brevo.template.html` | commande_prete | #4 |
+| `commande_expediee.brevo.template.html` | commande_expediee | #5 |
 
 ### Créer un nouveau template sur Brevo
 
@@ -107,11 +107,22 @@ Pour `commande_prete` et `commande_expediee` qui n'existent pas encore sur Brevo
 ### Template #2 — mail_bienvenu
 
 ```
-{{ params.displayName }}
-{{ params.dressesLink }}
-{{ params.masksLink }}
-{{ params.earingsLink }}
+{{ params.displayName }}        — nom du client (ou email si pas de displayName)
+{{ params.catalogLink }}        — URL de base de l'app (https://delice-eternel-gabon.web.app)
+{{ params.categories }}         — liste des catégories publiées, récupérées dynamiquement depuis Firebase
+                                   chaque entrée : { title: string, link: string }
 ```
+
+Exemple de boucle Jinja2 dans le template :
+```html
+{% for cat in params.categories %}
+  <a href="{{ cat.link }}">{{ cat.title }}</a>
+{% endfor %}
+```
+
+> Les catégories sont chargées en temps réel depuis `catalog/categories` dans Firebase Realtime Database
+> (uniquement celles dont `published: true`). Le lien de chaque catégorie est construit automatiquement :
+> `https://delice-eternel-gabon.web.app/category/<prefix>`
 
 ### Template commande_prete
 

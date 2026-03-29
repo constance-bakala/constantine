@@ -22,12 +22,31 @@ Les deux utilisent le même dossier `docs/` comme output, mais avec un `--base-h
 
 ---
 
+### Note : MSYS_NO_PATHCONV=1 (Git Bash sur Windows)
+
+Sous **Git Bash sur Windows**, le shell convertit automatiquement les chemins Unix en chemins Windows.
+Ainsi, `--base-href /` devient `--base-href C:/Program Files/Git/`, ce qui casse tous les chemins
+d'assets dans le build Angular (images, scripts, styles introuvables).
+
+`MSYS_NO_PATHCONV=1` désactive cette conversion pour la durée de la commande, de sorte que le `/`
+reste un `/` tel quel.
+
+| Terminal | `MSYS_NO_PATHCONV=1` nécessaire ? |
+|---|---|
+| Git Bash | **Oui** |
+| PowerShell | Non |
+| CMD | Non |
+| Terminal VS Code (PowerShell) | Non |
+
+> Cette variable n'a aucun effet en dehors de Git Bash — elle est ignorée par les autres shells.
+
+---
+
 ### Build + déploiement Firebase Hosting
 
 ```bash
 # Build pour Firebase (base-href = /)
-# MSYS_NO_PATHCONV=1 est obligatoire sous Git Bash sur Windows :
-# sans lui, Git Bash convertit "/" en "C:/Program Files/Git/" et casse les assets.
+# MSYS_NO_PATHCONV=1 obligatoire sous Git Bash Windows (voir note ci-dessus)
 MSYS_NO_PATHCONV=1 ng build --configuration production --output-path docs --base-href /
 
 # Déployer
