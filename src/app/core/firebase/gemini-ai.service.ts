@@ -24,7 +24,7 @@ export class GeminiAiService {
   constructor(
     private app: FirebaseApp,
     private translate: TranslateService,
-  ) {}
+  ) { }
 
   /** Langue courante de l'application ('fr' | 'en'). */
   get currentLang(): 'fr' | 'en' {
@@ -118,11 +118,11 @@ Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans backticks :
     const systemInstruction = lang === 'fr'
       ? `Tu es l'assistant de Délice Éternel, une boutique de mode africaine à Libreville (Gabon).
 Tu réponds en français, de façon chaleureuse et concise (3 phrases max).
-Tu aides les clients sur : les produits (vêtements, bijoux, masques), les tailles, les paiements (Airtel Money, Moov Money, Remitly, Western Union), la livraison (coursier Libreville 2 000–5 000 FCFA, expédition internationale DHL/FedEx) et les codes promo.
+Tu aides les clients sur : les produits du catague, les tailles, les paiements (Airtel Money, Moov Money, Remitly, Western Union), la livraison (coursier Libreville 2 000–5 000 FCFA, expédition internationale DHL/FedEx) et les codes promo.
 Si tu ne sais pas, dis-le honnêtement et invite le client à nous contacter par email.${catalogContext}`
       : `You are the assistant for Délice Éternel, an African fashion boutique in Libreville (Gabon).
 You respond in English, warmly and concisely (3 sentences max).
-You help customers with: products (clothing, jewellery, masks), sizes, payments (Airtel Money, Moov Money, Remitly, Western Union), delivery (courier in Libreville 2,000–5,000 FCFA, international shipping DHL/FedEx) and promo codes.
+You help customers with: products category, sizes, payments (Airtel Money, Moov Money, Remitly, Western Union), delivery (courier in Libreville 2,000–5,000 FCFA, international shipping DHL/FedEx) and promo codes.
 If you don't know, say so honestly and invite the customer to contact us by email.${catalogContext}`;
 
     // Reconstitue l'historique au format attendu par Gemini
@@ -168,7 +168,7 @@ If you don't know, say so honestly and invite the customer to contact us by emai
   private detectMimeType(url: string): string {
     const lower = url.toLowerCase();
     if (lower.includes('.webp')) return 'image/webp';
-    if (lower.includes('.png'))  return 'image/png';
+    if (lower.includes('.png')) return 'image/png';
     return 'image/jpeg';
   }
 }
