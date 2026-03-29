@@ -727,6 +727,71 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  // ── Copie URL image (Pinterest) ───────────────────────────────────────────
+
+  copiedItemId: string | null = null;
+
+  copyImageUrl(item: CatalogItem): void {
+    const url = item.coverUrl;
+    if (!url) return;
+    navigator.clipboard.writeText(url).then(() => {
+      this.copiedItemId = item.id;
+      this.cdr.markForCheck();
+      setTimeout(() => { this.copiedItemId = null; this.cdr.markForCheck(); }, 2000);
+    });
+  }
+
+  exportPinterestCsv(): void {
+    if (!this.selectedCategory) return;
+    const items = this.categoryItems.filter(i => i.coverUrl);
+    const siteUrl = 'https://delice-eternel-gabon.web.app/';
+    const board = `Délice Éternel Constantine – ${this.selectedCategory.title}`;
+
+    // Convertit l'URL Firebase Storage en URL GCS publique se terminant par .jpg/.png
+    // firebasestorage.googleapis.com/v0/b/BUCKET/o/PATH%2FFILE.jpg?alt=media&token=...
+    // → storage.googleapis.com/BUCKET/PATH/FILE.jpg
+    const toPublicGcsUrl = (url: string): string => {
+      try {
+        const u = new URL(url);
+        const bucket = u.pathname.split('/b/')[1]?.split('/o/')[0];
+        const encodedPath = u.pathname.split('/o/')[1];
+        if (!bucket || !encodedPath) return url;
+        const path = decodeURIComponent(encodedPath);
+        return `https://storage.googleapis.com/${bucket}/${path}`;
+      } catch {
+        return url;
+      }
+    };
+
+    const rows = [
+      ['Title', 'Media URL', 'Pinterest board', 'Thumbnail', 'Description', 'Link', 'Publish date', 'Keywords'],
+      ...items.map(item => [
+        `${item.reference} – ${this.selectedCategory!.title} Gabon`,
+        toPublicGcsUrl(item.coverUrl),
+        board,
+        '',
+        `${item.reference} – Constantine, couturière mode africaine Libreville Gabon. Délice Éternel.`,
+        `${siteUrl}#${item.reference}`,
+        '',
+        'mode africaine Gabon, Constantine Libreville, couturière Gabon, vêtements africains',
+      ]),
+    ];
+
+    // En-tête sans guillemets, données avec guillemets et nettoyage des retours à la ligne
+    const header = rows[0].join(',');
+    const data = rows.slice(1).map(r =>
+      r.map(v => `"${(v ?? '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""')}"`).join(',')
+    );
+    const csv = [header, ...data].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `pinterest-${this.selectedCategory.prefix}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+
   // ── Expand mobile rows ────────────────────────────────────────────────────
 
   mobileExpandedIds = new Set<string>();

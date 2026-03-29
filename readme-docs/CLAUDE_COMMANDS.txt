@@ -12,10 +12,10 @@
     par chaque échange suivant. À utiliser en début de nouvelle tâche.
 
 /compact "garde X, résume Y"
-    Compacte en précisant ce qui est important à conserver.
+    Compacte en précisant ce quie est important à conserver.
     Ex : /compact "garde la structure Firebase, résume les échanges UI"
 
-/clear
+/Clear conversation
     Efface tout l'historique et repart de zéro.
 
 /cost
@@ -30,9 +30,6 @@
   RÉDUIRE LES REQUÊTES AUTOMATIQUES
 ----------------------------------------------------------------------
 
-/plan
-    Claude analyse et planifie SANS exécuter d'outils automatiquement.
-    Utile pour valider une approche avant de lancer une tâche complexe.
 
 /effort low|medium|high|max|auto
     Ajuste le niveau de raisonnement de Claude.
@@ -78,13 +75,6 @@
 ----------------------------------------------------------------------
   NAVIGATION ET CONTRÔLE
 ----------------------------------------------------------------------
-
-/btw <question>
-    Pose une question rapide SANS l'ajouter à l'historique.
-    Idéal pour les questions courtes qui ne doivent pas gonfler
-    le contexte.
-    Ex : /btw c'est quoi la commande pour lister les branches git ?
-
 !<commande shell>
     Exécute une commande shell DIRECTEMENT, sans passer par Claude.
     Aucun token consommé (pas d'overhead).
@@ -137,8 +127,6 @@ Shift+Tab       Cycle entre les modes de permission
 ----------------------------------------------------------------------
 
 /help           Affiche l'aide et la liste des commandes disponibles
-/doctor         Diagnostique l'installation de Claude Code
-/theme          Change le thème (light/dark/colorblind/ANSI)
 /diff           Ouvre le visualiseur de diff pour les changements en cours
 /status         Affiche la version, le modèle, le compte, la connectivité
 /skills         Liste les skills disponibles
@@ -164,44 +152,7 @@ Shift+Tab       Cycle entre les modes de permission
        /compact "garde les décisions sur PricingService, résume le reste"
 
 
-2. UTILISER /btw POUR LES QUESTIONS RAPIDES
-   ──────────────────────────────────────────
-   Une question posée normalement est ajoutée à l'historique et
-   augmente le contexte pour tous les échanges suivants.
-   /btw pose la question HORS contexte : la réponse n'est pas mémorisée.
-
-   → Idéal pour : vérifier une syntaxe, rappeler une commande,
-     poser une question de compréhension rapide.
-
-   Exemple :
-     /btw comment trier un tableau d'objets par date en TypeScript ?
-     /btw c'est quoi la différence entre == et === en JS ?
-
-   À éviter avec /btw : les questions dont la réponse devra être
-   réutilisée dans la suite de la conversation.
-
-
-3. UTILISER /plan AVANT UNE TÂCHE COMPLEXE
-   ──────────────────────────────────────────
-   Sans /plan, Claude commence souvent à lire des fichiers et exécuter
-   des outils dès le premier message → consomme beaucoup de tokens
-   avant même de savoir si l'approche est la bonne.
-
-   Avec /plan, Claude présente son plan d'action et attend ta validation
-   avant de toucher au code.
-
-   → Évite de consommer des tokens sur une mauvaise piste.
-   → Te permet de corriger l'approche avant l'exécution.
-
-   Exemple :
-     Entre en mode /plan, puis décris ta tâche :
-       "Je veux ajouter un système de notifications push Firebase
-        dans l'application Angular."
-     Claude listera les fichiers à modifier et les étapes prévues.
-     Tu valides (ou corriges) avant qu'il commence.
-
-
-4. UTILISER !commande POUR LES OPÉRATIONS SHELL
+2. UTILISER ! POUR LES OPÉRATIONS SHELL
    ────────────────────────────────────────────────
    Quand tu veux juste exécuter une commande (git, npm, ls...),
    passer par Claude coûte des tokens inutilement : il doit lire
@@ -221,7 +172,7 @@ Shift+Tab       Cycle entre les modes de permission
      de la compréhension ou de la génération de code.
 
 
-5. SURVEILLER SA CONSOMMATION AVEC /cost
+3. SURVEILLER SA CONSOMMATION AVEC /cost
    ──────────────────────────────────────
    /cost affiche en temps réel le nombre de tokens consommés
    dans la session, et le coût estimé.
@@ -237,7 +188,7 @@ Shift+Tab       Cycle entre les modes de permission
      → Si "input tokens" est très élevé, c'est le moment de /compact.
 
 
-6. AJUSTER LE NIVEAU D'EFFORT SELON LA TÂCHE
+4. AJUSTER LE NIVEAU D'EFFORT SELON LA TÂCHE
    ─────────────────────────────────────────────
    Claude raisonne plus ou moins profondément selon le niveau d'effort.
    Un raisonnement profond coûte plus de tokens.
@@ -257,7 +208,7 @@ Shift+Tab       Cycle entre les modes de permission
      Après la tâche → /effort auto  (remet le niveau par défaut)
 
 
-7. STRUCTURER SES DEMANDES POUR ÉVITER LES ALLERS-RETOURS
+5. STRUCTURER SES DEMANDES POUR ÉVITER LES ALLERS-RETOURS
    ──────────────────────────────────────────────────────────
    Chaque aller-retour (message + réponse) consomme des tokens.
    Une demande vague génère des questions de clarification → plus

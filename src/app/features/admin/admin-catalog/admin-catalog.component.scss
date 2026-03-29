@@ -992,6 +992,7 @@ $red:    #e74c3c;
   position: relative;
 }
 
+
 .thumb-wrapper {
   position: relative;
   display: inline-block;
@@ -1057,7 +1058,16 @@ $red:    #e74c3c;
   &:hover { transform: scale(1.08); }
 }
 
-.ref-cell { font-family: monospace; font-weight: 600; }
+.ref-cell {
+  font-family: monospace;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+
+  &:hover { color: $green; }
+  &.ref-copied { color: $green; }
+}
 
 .text-center { text-align: center; }
 
@@ -1222,6 +1232,22 @@ $red:    #e74c3c;
   &:hover:not(:disabled) { background: #8e44ad; color: #fff; }
   &:disabled { opacity: 0.5; cursor: default; }
 }
+
+.btn-pinterest-csv {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid #e60023;
+  border-radius: 6px;
+  background: transparent;
+  color: #e60023;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  &:hover { background: #e60023; color: #fff; }
+}
+
 
 .btn-delete-item {
   padding: 4px 9px;
