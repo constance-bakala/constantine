@@ -4,10 +4,13 @@
     <div class="container page-hero__inner">
       <div class="page-hero__accent"></div>
       <h2 class="page-hero__title">{{'PRODUCTS.BASKET' | translate}}</h2>
-      <div class="page-hero__toolbar" *ngIf="(categoryInfos$ | async) as categoryInfos">
-        <app-category-buttons [categoryToAvoid]="''" [categoryInfos]="categoryInfos"
-          (navigateAway)="gotoTarget($event)">
-        </app-category-buttons>
+      <div class="page-hero__toolbar">
+        <app-currency-selector></app-currency-selector>
+        <ng-container *ngIf="(categoryInfos$ | async) as categoryInfos">
+          <app-category-buttons [categoryToAvoid]="''" [categoryInfos]="categoryInfos"
+            (navigateAway)="gotoTarget($event)">
+          </app-category-buttons>
+        </ng-container>
       </div>
     </div>
   </header>
@@ -355,9 +358,6 @@
 
               <div class="summary-header">
                 <h5 class="summary-title">{{'PRODUCTS.SUMMARY' | translate}}</h5>
-                <div class="summary-currency">
-                  <app-currency-selector></app-currency-selector>
-                </div>
               </div>
 
               <div class="summary-body">
