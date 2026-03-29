@@ -1,4 +1,4 @@
-import { Component, HostListener, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 
@@ -13,7 +13,7 @@ import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
 
 import { User } from 'firebase/auth';
 
-import { initNavScroll } from '@helpers/nav-scroll.utils';
+import { initNavScroll, setActiveLink, scrollToSection } from '@helpers/nav-scroll.utils';
 
 @Component({
   selector: 'app-navigation',
@@ -21,13 +21,14 @@ import { initNavScroll } from '@helpers/nav-scroll.utils';
   styleUrls: ['./navigation.component.scss'],
   standalone: false,
 })
-export class NavigationComponent implements OnInit, OnDestroy {
+export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
   nbSelectedItems$!: Observable<number>;
   private readonly subs = new Subscription();
   private destroyNavScroll?: () => void;
 
   user$: Observable<User | null>;
   appTitle = '';
+  showEmail = false;
   private appTitleFr = '';
   private appTitleEn = '';
 
@@ -72,8 +73,12 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.translate.onLangChange.subscribe(({ lang }) => this.updateAppTitle(lang))
     );
+  }
 
-    this.destroyNavScroll = initNavScroll();
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.destroyNavScroll = initNavScroll();
+    }, 0);
   }
 
   ngOnDestroy(): void {
@@ -91,6 +96,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
     localStorage.setItem('lang', lang);
   }
 
+  scrollTo(sectionId: string): void {
+    setActiveLink(sectionId);
+    scrollToSection(sectionId);
+    this.closeMenu();
+  }
+
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    this.closeMenu();
+  }
+
+  toggleEmail(): void {
+    this.showEmail = !this.showEmail;
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const nav = document.getElementById('mainNav');
@@ -106,6 +126,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
       const toggler = document.querySelector('.navbar-toggler');
       if (toggler) toggler.setAttribute('aria-expanded', 'false');
     }
+    this.showEmail = false;
   }
 
   disconnect(): void {

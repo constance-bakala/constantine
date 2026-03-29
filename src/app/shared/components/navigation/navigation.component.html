@@ -1,110 +1,102 @@
-<nav class="navbar navbar-expand-lg bg-secondary fixed-top" id="mainNav">
-  <div class="container">
+<nav class="main-nav navbar navbar-expand-lg fixed-top" id="mainNav">
+  <div class="container nav-container">
 
-    <!-- Brand + language selector -->
-    <div class="d-flex align-items-center">
-      <a class="navbar-brand js-scroll-trigger" href="#page-top">
-        <img src="assets/style-sauvage_only_logo-removebg.png" height="40px">
-        {{ appTitle }}
-      </a>
-      <div class="ml-3">
-        <select class="form-control form-control-sm nav-lang-select" #selectedLang
-          (change)="switchLang(selectedLang.value)">
-          @for (language of translate.getLangs(); track language) {
-          <option [value]="language" [selected]="language === translate.currentLang">
-            {{ language }}
-          </option>
-          }
-        </select>
-      </div>
-    </div>
+    <!-- Brand -->
+    <a class="navbar-brand" href="/" (click)="$event.preventDefault(); scrollToTop()">
+      <img src="assets/style-sauvage_only_logo-removebg.png" class="brand-logo" alt="Logo">
+      <span class="brand-name">{{ appTitle }}</span>
+    </a>
 
-    <button class="navbar-toggler navbar-toggler-right font-weight-bold bg-primary text-white rounded" type="button"
-      data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+    <!-- Mobile toggler -->
+    <button class="nav-toggler navbar-toggler" type="button"
+      data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+      aria-controls="navbarResponsive" aria-expanded="false"
       aria-label="Toggle navigation">
-      Menu
-      <i class="fas fa-bars"></i>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarResponsive" (click)="closeMenu()">
-      <ul class="navbar-nav ml-auto smooth-scroll">
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarResponsive">
 
-        <!-- ===== ANCRES (scrollspy OK) ===== -->
-
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger active" href="#portfolio" (click)="closeMenu()">
-            <span>PORTFOLIO</span>
+      <!-- Scroll anchors (centre) -->
+      <ul class="navbar-nav nav-links-center">
+        <li class="nav-item">
+          <a class="nav-link" href="#portfolio"
+            (click)="$event.preventDefault(); scrollTo('#portfolio')">
+            PORTFOLIO
           </a>
         </li>
-
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about" (click)="closeMenu()">
-            <span>{{ 'ABOUT' | translate }}</span>
+        <li class="nav-item">
+          <a class="nav-link" href="#about"
+            (click)="$event.preventDefault(); scrollTo('#about')">
+            {{ 'ABOUT' | translate }}
           </a>
         </li>
-
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact" (click)="closeMenu()">
-            <span class="ajust">CONTACT</span>
+        <li class="nav-item">
+          <a class="nav-link" href="#contact"
+            (click)="$event.preventDefault(); scrollTo('#contact')">
+            CONTACT
           </a>
         </li>
+      </ul>
 
-        <!-- ===== ROUTING ANGULAR (PAS de js-scroll-trigger) ===== -->
+      <!-- Right actions -->
+      <div class="nav-actions">
 
-        <!-- On évite de répéter (user$ | async) partout -->
+        <!-- Language pills -->
+        <div class="lang-pills">
+          @for (language of translate.getLangs(); track language) {
+            <button class="lang-pill"
+              [class.active]="language === translate.currentLang"
+              (click)="switchLang(language)">
+              {{ language | uppercase }}
+            </button>
+          }
+        </div>
+
+        <!-- Cart -->
+        <a class="nav-icon-btn" [routerLink]="['/shopping-cart']"
+          (click)="closeMenu()" aria-label="Panier">
+          <mat-icon>shopping_cart</mat-icon>
+          <ng-container *ngIf="nbSelectedItems$ | async as nb">
+            <span class="cart-badge" *ngIf="nb > 0">{{ nb }}</span>
+          </ng-container>
+        </a>
+
+        <!-- Auth / user actions -->
         @if (user$ | async; as user) {
-        <!-- user connecté -->
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded d-flex flex-column align-items-start" (click)="disconnect()">
-            <div class="d-flex align-items-center">
-              <mat-icon>exit_to_app</mat-icon>
-              <span class="ml-2 ajust">{{ 'DISCONNECT' | translate }}</span>
-            </div>
-            <span class="small text-muted">{{ user.email }}</span>
-          </a>
-        </li>
-        } @else {
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/auth/signin']" (click)="closeMenu()">
-            <mat-icon>account_circle</mat-icon>
-            <span class="ajust">{{ 'CONNECT' | translate }}</span>
-          </a>
-        </li>
-        }
-
-        <!-- user non connecté -->
-
-        <!-- historique commandes: visible si connecté -->
-        @if (user$ | async) {
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/order-history']" aria-label="Historique commandes" (click)="closeMenu()">
+          <!-- History -->
+          <a class="nav-icon-btn" [routerLink]="['/order-history']"
+            (click)="closeMenu()" aria-label="Historique commandes">
             <mat-icon>history</mat-icon>
           </a>
-        </li>
+
+          <!-- Avatar with email popup -->
+          @if (user.photoURL) {
+            <div class="avatar-wrapper" (click)="$event.stopPropagation(); toggleEmail()">
+              <img class="user-avatar" [src]="user.photoURL" alt="avatar" loading="lazy">
+              <div class="avatar-email-popup" [class.visible]="showEmail">{{ user.email }}</div>
+            </div>
+          }
+
+          <!-- Disconnect -->
+          <button class="nav-icon-btn" (click)="disconnect()"
+            [title]="'DISCONNECT' | translate" aria-label="Déconnexion">
+            <mat-icon>logout</mat-icon>
+          </button>
+
+        } @else {
+          <!-- Connect -->
+          <a class="nav-icon-btn" [routerLink]="['/auth/signin']"
+            (click)="closeMenu()" aria-label="Connexion">
+            <mat-icon>account_circle</mat-icon>
+          </a>
         }
 
-        <!-- panier: visible tout le temps -->
-        <li class="nav-item mx-0 mx-lg-1">
-          <a class="nav-link py-3 px-0 px-lg-3 rounded" [routerLink]="['/shopping-cart']"
-            aria-label="Toggle navigation" (click)="closeMenu()">
-            <mat-icon>shopping_cart</mat-icon>
-            <span class="badge badge-pill red">
-              {{ nbSelectedItems$ | async }}
-            </span>
-          </a>
-        </li>
-
-        <!-- avatar -->
-        <ng-container *ngIf="user$ | async as user">
-          <li class="nav-item mx-0 mx-lg-1" *ngIf="user.photoURL">
-            <img class="user-avatar" [src]="user.photoURL" alt="User avatar" loading="lazy" />
-          </li>
-        </ng-container>
-
-      </ul>
+      </div>
     </div>
-
-    <div class="filler"></div>
 
   </div>
 </nav>
