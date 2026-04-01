@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Database, ref, onValue, get, set } from '@angular/fire/database';
+import { Database, ref, onValue, get, set, update } from '@angular/fire/database';
 import { ItemInfos } from '@shared/interfaces';
 
 /**
@@ -36,6 +36,16 @@ export class UsersRepository {
 
   saveBasket(uid: string, items: any[]): Promise<void> {
     return set(ref(this.db, `users/${uid}/basket`), items.length > 0 ? items : null);
+  }
+
+  savePreferences(uid: string, prefs: Partial<{ lang: string; currency: string }>): Promise<void> {
+    return update(ref(this.db, `users/${uid}/preferences`), prefs);
+  }
+
+  getPreferences(uid: string): Observable<{ lang?: string; currency?: string } | null> {
+    return from(get(ref(this.db, `users/${uid}/preferences`))).pipe(
+      map(snap => snap.val())
+    );
   }
 
   getBasket(uid: string): Observable<any[] | null> {

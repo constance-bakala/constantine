@@ -1,50 +1,129 @@
-<div class="rouded-form">
-  <form (ngSubmit)="signIn()" [formGroup]="logging">
-    <button type="button" class="close" (click)="close()">
-      <span aria-hidden="true" id="closeAlert"><i class="dsicon-close"></i></span>
-    </button>
-    <h3>Bienvenue</h3>
-    <h5>Veuillez vous identifier</h5>
-    <div class="form-group">
-      <label for="email">
-        Adresse e-mail
-      </label>
-      <input aria-describedby="emailHelp" class="form-control" formControlName="username" id="email" type="email">
-      <i class="bar"></i>
-    </div>
-    <div class="form-group">
-      <label for="password">
-        Mot de passe
-      </label>
-      <input autocomplete="email" formControlName="password" id="password" type="password" class="form-control">
-      <i class="bar"></i>
-      <div class="wrapper-mdp">
-        <a class="app-link" routerLink="/auth/forgot_password" tabindex="-1">
-          Mot de passe oublié ?
-        </a>
-      </div>
-    </div>
-    @if (!loading) {
-    <button id="connextionButton" [disabled]="!logging.valid" class="btn-connexion btn-primaire-h40 " type="submit">
+<div class="auth-card">
+
+  <!-- Logo -->
+  <div class="auth-logo">
+    <img src="assets/style-sauvage_only_logo-removebg.png" alt="Logo Délice Éternel">
+    <span class="auth-brand">Délice Éternel</span>
+  </div>
+
+  <!-- Onglets -->
+  <div class="auth-tabs">
+    <button class="auth-tab" [class.active]="mode === 'login'" (click)="setMode('login')">
       Connexion
     </button>
-    }
-
-    @if (loading) {
-    <button class="btn-spinner btn-primaire-h40" disabled type="button">
-      <i class="fa fa-spinner animate rotation"></i>
+    <button class="auth-tab" [class.active]="mode === 'register'" (click)="setMode('register')">
+      Créer un compte
     </button>
-    }
-    @if (error) {
-    <span class="app-auth-error">{{error.message || error}}</span>
-    }
-  </form>
-  <div class="app-auth-divider">
-    <span>ou</span>
   </div>
-  <!--button id="createAccountButton" routerLink="/auth/signup" class="btn-creercompte btn-secondaire-h40">Créer un
-  compte
-</button-->
-  <p>Utilisez les liens proposés. </p>
-  <social-login></social-login>
+
+  <!-- ── Formulaire connexion ── -->
+  @if (mode === 'login') {
+    <form (ngSubmit)="signIn()" [formGroup]="logging" class="auth-form">
+
+      <div class="form-field">
+        <label class="field-label">Adresse e-mail</label>
+        <input class="field-input" formControlName="username" type="email"
+               placeholder="votre@email.com" autocomplete="email">
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Mot de passe</label>
+        <input class="field-input" formControlName="password" type="password"
+               placeholder="••••••••" autocomplete="current-password">
+        <div class="forgot-link">
+          <a routerLink="/auth/forgot_password">Mot de passe oublié ?</a>
+        </div>
+      </div>
+
+      @if (error) {
+        <span class="auth-error">{{ error.message || error }}</span>
+      }
+
+      @if (!loading) {
+        <button class="auth-btn" [disabled]="!logging.valid" type="submit">
+          Se connecter
+        </button>
+      }
+      @if (loading) {
+        <button class="auth-btn auth-btn--loading" disabled type="button">
+          <i class="fa fa-spinner fa-spin"></i>&nbsp;Connexion…
+        </button>
+      }
+    </form>
+
+    <div class="auth-divider"><span>ou continuer avec</span></div>
+    <social-login></social-login>
+  }
+
+  <!-- ── Formulaire inscription ── -->
+  @if (mode === 'register') {
+    <form (ngSubmit)="signUp()" [formGroup]="registerForm" class="auth-form">
+
+      <div class="form-row-2">
+        <div class="form-field">
+          <label class="field-label">Prénom</label>
+          <input class="field-input" formControlName="prenom" type="text"
+                 placeholder="Votre prénom" autocomplete="given-name">
+          @if (registerForm.get('prenom')?.invalid && registerForm.get('prenom')?.touched) {
+            <span class="field-error">Prénom requis</span>
+          }
+        </div>
+        <div class="form-field">
+          <label class="field-label">Nom</label>
+          <input class="field-input" formControlName="nom" type="text"
+                 placeholder="VOTRE NOM" autocomplete="family-name">
+          @if (registerForm.get('nom')?.invalid && registerForm.get('nom')?.touched) {
+            <span class="field-error">Nom requis</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Adresse e-mail</label>
+        <input class="field-input" formControlName="email" type="email"
+               placeholder="votre@email.com" autocomplete="email">
+        @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+          <span class="field-error">Adresse e-mail invalide</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Mot de passe <small>(8 caractères minimum)</small></label>
+        <input class="field-input" formControlName="password" type="password"
+               placeholder="••••••••" autocomplete="new-password">
+        @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+          <span class="field-error">8 caractères minimum requis</span>
+        }
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Confirmer le mot de passe</label>
+        <input class="field-input" formControlName="confirmPassword" type="password"
+               placeholder="••••••••" autocomplete="new-password">
+        @if (registerForm.get('confirmPassword')?.touched &&
+             registerForm.get('confirmPassword')?.value !== registerForm.get('password')?.value) {
+          <span class="field-error">Les mots de passe ne correspondent pas</span>
+        }
+      </div>
+
+      @if (registerError) {
+        <span class="auth-error">{{ registerError }}</span>
+      }
+      @if (registerSuccess) {
+        <span class="auth-success">Compte créé avec succès ! Bienvenue 🎉</span>
+      }
+
+      @if (!registerLoading) {
+        <button class="auth-btn" [disabled]="!canSubmitRegister()" type="submit">
+          Créer mon compte
+        </button>
+      }
+      @if (registerLoading) {
+        <button class="auth-btn auth-btn--loading" disabled type="button">
+          <i class="fa fa-spinner fa-spin"></i>&nbsp;Création…
+        </button>
+      }
+    </form>
+  }
+
 </div>

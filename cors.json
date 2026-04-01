@@ -1,5 +1,15 @@
 [
   {
+    "origin": [
+      "https://delice-eternel-gabon.web.app",
+      "https://delice-eternel-gabon.firebaseapp.com",
+      "http://localhost:4200"
+    ],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"],
+    "maxAgeSeconds": 3600
+  },
+  {
     "origin": ["https://*.pinterest.com", "https://pinterest.com"],
     "method": ["GET"],
     "responseHeader": ["Content-Type"],

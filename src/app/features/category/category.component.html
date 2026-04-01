@@ -6,6 +6,22 @@
     (updateBasketItem)="updateBasketItem($event)"
     (navigateAway)="gotoTarget($event)">
   </app-portfolio-list>
+
+  <ng-container *ngIf="(complementaryItems$ | async) as compItems">
+    <section *ngIf="compItems.length > 0" class="complete-look-section">
+      <div class="container">
+        <div class="complete-look-header">
+          <div class="complete-look-accent"></div>
+          <h3 class="complete-look-title">{{ complementaryLookTitle }}</h3>
+        </div>
+        <div class="row justify-content-center">
+          <div *ngFor="let item of compItems" class="col-md-4 col-sm-6 mb-4">
+            <app-portfolio-item [data]="item"></app-portfolio-item>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
 </ng-container>
 
 <ng-template #notFound>

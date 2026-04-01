@@ -95,8 +95,48 @@
             </div>
             <hr class="mb-4">
             <p *ngIf="description" class="item-description">{{ description }}</p>
+
+            <!-- ── Vos suggestions ──────────────────────────────────────────── -->
+            <div *ngIf="complementaryItems.length > 0" class="complementary-look">
+              <div class="complementary-look__header">
+                <div class="complementary-look__accent"></div>
+                <h5 class="complementary-look__title">{{ complementaryLookTitle }}</h5>
+              </div>
+              <div class="complementary-look__grid">
+                <div *ngFor="let comp of complementaryItems"
+                     class="complementary-look__card"
+                     [class.complementary-look__card--in-cart]="isCompInCart(comp.reference)">
+                  <div class="complementary-look__img-wrap view zoom overlay z-depth-1 rounded"
+                       (click)="openLightbox(comp.coverUrl)">
+                    <img class="img-fluid w-100" [src]="comp.coverUrl" [alt]="comp.reference" loading="lazy">
+                    <div class="mask rgba-black-slight"></div>
+                    <span *ngIf="isCompInCart(comp.reference)" class="complementary-look__badge">
+                      <i class="fas fa-check"></i>
+                    </span>
+                  </div>
+                  <div class="complementary-look__info">
+                    <div class="complementary-look__info-row">
+                      <span class="complementary-look__ref" (click)="goToComplementaryCategory(comp)">{{ comp.reference }}</span>
+                      <button *ngIf="!isCompInCart(comp.reference)"
+                              class="complementary-look__cart-btn"
+                              [class.complementary-look__cart-btn--oos]="stock.isOutOfStock(comp.reference)"
+                              [disabled]="stock.isOutOfStock(comp.reference)"
+                              [title]="stock.isOutOfStock(comp.reference) ? 'Rupture de stock' : 'Ajouter au panier'"
+                              (click)="addCompToCart(comp, $event)">
+                        <i class="fas fa-cart-plus"></i>
+                      </button>
+                      <span *ngIf="isCompInCart(comp.reference)" class="complementary-look__cart-check" title="Dans votre panier">
+                        <i class="fas fa-check-circle"></i>
+                      </span>
+                    </div>
+                    <span class="complementary-look__price">{{ pricing.format(comp.priceXAF / 655.96) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
       }
     </section>

@@ -4,10 +4,11 @@ import {
 import { Database, ref, push, get, set, onValue, query, orderByChild, equalTo } from '@angular/fire/database';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CatalogRepository } from '@app/core/firebase/catalog.repository';
 import { GeminiAiService } from '@app/core/firebase/gemini-ai.service';
+import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
 import { selectAllCategories } from '@app/features/store/catalog/catalog.selectors';
 import { CatalogCategory, CatalogItem } from '@shared/interfaces/catalog.interfaces';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -81,11 +82,18 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   showCreateForm = false;
   newPrefix = '';
   newTitle = '';
+  newTitleEn = '';
   newDescription = '';
   newDescriptionEn = '';
   descLang: 'fr' | 'en' = 'fr';
   creating = false;
   createError = '';
+
+  // ── Édition titre catégorie
+  editingTitle = false;
+  editTitleFr = '';
+  editTitleEn = '';
+  savingTitle = false;
 
   // ── Édition description catégorie
   editingDesc = false;
@@ -151,6 +159,24 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     return this.categoryItems.filter(item => !item.descriptionFr && !!item.coverUrl);
   }
 
+  // ── IA catégorie (recommandations + vos suggestions + texte promo)
+  generatingRelated       = false;
+  generatingComplementary = false;
+  generatingPromo         = false;
+  aiCategoryError: string | null = null;
+  promoTextLang: 'fr' | 'en' = 'fr';
+
+  // ── Génération compléments par article (batch)
+  generatingItemComplements = false;
+  itemComplementsProgress = { current: 0, total: 0 };
+  itemComplementsError: string | null = null;
+
+  // ── Titre "Vos suggestions"
+  complementaryLookTitleFr = 'Vos suggestions';
+  complementaryLookTitleEn = 'Your suggestions';
+  editingLookTitle = false;
+  savingLookTitle = false;
+
   // ── Onglet IA actif
   activeAiTab: 'descriptions' | 'tryon' | 'pricing' = 'descriptions';
 
@@ -197,6 +223,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     private db: Database,
     private dialog: MatDialog,
     private fns: Functions,
+    private appConfig: AppConfigRepository,
   ) {}
 
   ngOnInit(): void {
@@ -229,6 +256,14 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
             this.categoryItems = [];
           }
         }
+        this.cdr.markForCheck();
+      })
+    );
+
+    this.subs.add(
+      this.appConfig.watchComplementaryLookTitle().subscribe(title => {
+        this.complementaryLookTitleFr = title.fr;
+        this.complementaryLookTitleEn = title.en;
         this.cdr.markForCheck();
       })
     );
@@ -326,12 +361,14 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       const relatedCategories = this.categories
         .filter(c => c.published)
         .map(c => c.prefix);
+      const titleEn       = (this.newTitleEn       ?? '').trim();
       const description   = (this.newDescription   ?? '').trim();
       const descriptionEn = (this.newDescriptionEn ?? '').trim();
-      await this.repo.createCategory(prefix, title, description, descriptionEn, relatedCategories);
+      await this.repo.createCategory(prefix, title, titleEn, description, descriptionEn, relatedCategories);
       this.showCreateForm = false;
       this.newPrefix = '';
       this.newTitle = '';
+      this.newTitleEn = '';
       this.newDescription = '';
     } catch (e: any) {
       this.createError = e?.message ?? 'Erreur lors de la création.';
@@ -351,6 +388,32 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   }
 
   cancelEditDesc(): void { this.editingDesc = false; }
+
+  openEditTitle(cat: CatalogCategory): void {
+    this.editTitleFr = cat.title ?? '';
+    this.editTitleEn = cat.titleEn ?? '';
+    this.editingTitle = true;
+    this.cdr.markForCheck();
+  }
+
+  cancelEditTitle(): void { this.editingTitle = false; }
+
+  async saveTitle(): Promise<void> {
+    if (!this.selectedCategory) return;
+    this.savingTitle = true;
+    this.cdr.markForCheck();
+    try {
+      await this.repo.updateCategoryField(this.selectedCategory.prefix, 'title',   this.editTitleFr.trim());
+      await this.repo.updateCategoryField(this.selectedCategory.prefix, 'titleEn', this.editTitleEn.trim());
+      this.selectedCategory = { ...this.selectedCategory, title: this.editTitleFr.trim(), titleEn: this.editTitleEn.trim() };
+      this.editingTitle = false;
+    } catch (e) {
+      console.error('[catalog] saveTitle', e);
+    } finally {
+      this.savingTitle = false;
+      this.cdr.markForCheck();
+    }
+  }
 
   onDescChanged(lang: 'fr' | 'en', event: { html: string | null }): void {
     if (lang === 'fr') this.editDescFr = event.html ?? '';
@@ -376,6 +439,131 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       console.error('[catalog] saveDesc', e);
     } finally {
       this.savingDesc = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  // ── IA catégorie ─────────────────────────────────────────────────────────
+
+  private async runCategoryAi(
+    fn: () => Promise<void>,
+    loadingProp: 'generatingRelated' | 'generatingComplementary' | 'generatingPromo',
+  ): Promise<void> {
+    (this as any)[loadingProp] = true;
+    this.aiCategoryError = null;
+    this.cdr.markForCheck();
+    try {
+      await fn();
+    } catch (e: any) {
+      this.aiCategoryError = e?.message ?? 'Erreur IA.';
+    } finally {
+      (this as any)[loadingProp] = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  generateRelatedCategories(): void {
+    if (!this.selectedCategory) return;
+    const cat = this.selectedCategory;
+    this.runCategoryAi(async () => {
+      const prefixes = await this.gemini.suggestRelatedCategories(cat, this.categories);
+      await this.repo.updateCategoryField(cat.prefix, 'relatedCategories', prefixes);
+      this.selectedCategory = { ...cat, relatedCategories: prefixes };
+    }, 'generatingRelated');
+  }
+
+  generateComplementaryCategories(): void {
+    if (!this.selectedCategory) return;
+    const cat = this.selectedCategory;
+    this.runCategoryAi(async () => {
+      const prefixes = await this.gemini.suggestComplementaryCategories(cat, this.categories);
+      await this.repo.updateCategoryField(cat.prefix, 'complementaryCategories', prefixes);
+      this.selectedCategory = { ...cat, complementaryCategories: prefixes };
+    }, 'generatingComplementary');
+  }
+
+  generateCategoryPromoText(): void {
+    if (!this.selectedCategory) return;
+    const cat = this.selectedCategory;
+    this.runCategoryAi(async () => {
+      const text = await this.gemini.generateCategoryPromoText(cat);
+      await this.repo.updateCategoryField(cat.prefix, 'promoTextFr', text.fr);
+      await this.repo.updateCategoryField(cat.prefix, 'promoTextEn', text.en);
+      this.selectedCategory = { ...cat, promoTextFr: text.fr, promoTextEn: text.en };
+    }, 'generatingPromo');
+  }
+
+  async saveLookTitle(): Promise<void> {
+    this.savingLookTitle = true;
+    this.cdr.markForCheck();
+    try {
+      await this.appConfig.saveComplementaryLookTitle(
+        this.complementaryLookTitleFr.trim() || 'Vos suggestions',
+        this.complementaryLookTitleEn.trim() || 'Your suggestions',
+      );
+      this.editingLookTitle = false;
+    } catch (e) {
+      console.error('[admin] saveLookTitle', e);
+    } finally {
+      this.savingLookTitle = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  async toggleComplementaryLookEnabled(): Promise<void> {
+    if (!this.selectedCategory) return;
+    const next = !this.selectedCategory.complementaryLookEnabled;
+    await this.repo.updateCategoryField(this.selectedCategory.prefix, 'complementaryLookEnabled', next);
+    this.selectedCategory = { ...this.selectedCategory, complementaryLookEnabled: next };
+    this.cdr.markForCheck();
+  }
+
+  /** Génère les suggestions d'articles complémentaires pour tous les articles de la catégorie. */
+  async generateItemComplements(): Promise<void> {
+    if (!this.selectedCategory) return;
+    const complementaryPrefixes = this.selectedCategory.complementaryCategories ?? [];
+    if (!complementaryPrefixes.length) {
+      this.itemComplementsError = 'Configurez d\'abord les catégories complémentaires (ligne "Vos suggestions" ci-dessus).';
+      this.cdr.markForCheck();
+      return;
+    }
+    const items = this.categoryItems.filter(i => i.published && i.descriptionFr);
+    if (!items.length) {
+      this.itemComplementsError = 'Aucun article publié avec description. Générez d\'abord les descriptions IA.';
+      this.cdr.markForCheck();
+      return;
+    }
+
+    this.generatingItemComplements = true;
+    this.itemComplementsError = null;
+    this.itemComplementsProgress = { current: 0, total: items.length };
+    this.cdr.markForCheck();
+
+    try {
+      // Charge tous les articles des catégories complémentaires (une fois)
+      const complementaryCatalogItems: CatalogItem[] = [];
+      for (const prefix of complementaryPrefixes) {
+        const catItems = await firstValueFrom(this.repo.watchAllItemsByCategory(prefix));
+        complementaryCatalogItems.push(...catItems);
+      }
+
+      for (const item of items) {
+        try {
+          const refs = await this.gemini.suggestComplementaryItems(item, complementaryCatalogItems);
+          await this.repo.updateItemField(item.id, 'complementaryItemRefs', refs);
+        } catch {
+          // On continue même si un article échoue
+        }
+        this.itemComplementsProgress = {
+          current: this.itemComplementsProgress.current + 1,
+          total: items.length,
+        };
+        this.cdr.markForCheck();
+      }
+    } catch (e: any) {
+      this.itemComplementsError = e?.message ?? 'Erreur lors de la génération.';
+    } finally {
+      this.generatingItemComplements = false;
       this.cdr.markForCheck();
     }
   }

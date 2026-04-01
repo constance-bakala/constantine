@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { Currency } from '@shared/interfaces';
 import { PricingService } from '@shared/services/pricing.service';
+import { Auth } from '@angular/fire/auth';
+import { UsersRepository } from '@app/core/firebase/users.repository';
 
 @Component({
   selector: 'app-currency-selector',
@@ -18,6 +20,8 @@ export class CurrencySelectorComponent implements OnInit, OnDestroy {
   constructor(
     private pricing: PricingService,
     private translate: TranslateService,
+    private auth: Auth,
+    private usersRepository: UsersRepository,
   ) {}
 
   ngOnInit(): void {
@@ -36,5 +40,9 @@ export class CurrencySelectorComponent implements OnInit, OnDestroy {
 
   onCurrencyChange(value: string): void {
     this.pricing.setCurrency(value as Currency);
+    const uid = this.auth.currentUser?.uid;
+    if (uid) {
+      this.usersRepository.savePreferences(uid, { currency: value });
+    }
   }
 }

@@ -5,6 +5,7 @@
   background: #e0e0e0;
   padding: 2rem 0 1.75rem;
   margin-top: 64px; /* hauteur nav */
+  margin-bottom: 2rem;
 }
 
 .page-hero__inner {
@@ -58,14 +59,14 @@ $grey-bg: #f8f9fa;
     flex-shrink: 0;
 
     .csb-num {
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 2px solid $grey-border;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       background: #fff;
       color: #aaa;

@@ -1,6 +1,10 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ITEM_SIZES, ItemInfos, ItemSizeEnum } from '@shared/interfaces';
+import { CatalogItem } from '@shared/interfaces/catalog.interfaces';
+import { Store } from '@ngrx/store';
+import { selectChosenItems } from '@app/features/store';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { PricingService } from '@shared/services/pricing.service';
@@ -8,6 +12,9 @@ import { StockService } from '@shared/services/stock.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.component';
 import { TranslateService } from '@ngx-translate/core';
+import { CatalogRepository } from '@app/core/firebase/catalog.repository';
+import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-item-details',
@@ -15,12 +22,18 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./item-details.component.scss'],
   standalone: false,
 })
-export class ItemDetailsComponent {
+export class ItemDetailsComponent implements OnInit, OnDestroy {
   itemGroup!: UntypedFormGroup;
   sizes = ITEM_SIZES;
   images: string[] = [];
   selectedImageIndex = 0;
   lightboxSrc: string | null = null;
+  complementaryItems: CatalogItem[] = [];
+  complementaryLookTitle = 'Vos suggestions';
+  cartRefs = new Set<string>();
+
+  private titleSub = new Subscription();
+  private cartSub = new Subscription();
 
   @Output() updateBasketItem: EventEmitter<ItemInfos> = new EventEmitter();
   selected = false;
@@ -43,15 +56,53 @@ export class ItemDetailsComponent {
     return (lang === 'en' ? this.data.descriptionEn : this.data.descriptionFr) ?? '';
   }
 
-  constructor(private fb: UntypedFormBuilder,
+  constructor(
+    private fb: UntypedFormBuilder,
     private dialogRef: MatDialogRef<ItemDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ItemInfos,
     public pricing: PricingService,
-    private stock: StockService,
+    public stock: StockService,
     private snackBar: MatSnackBar,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+    private catalogRepo: CatalogRepository,
+    private router: Router,
+    private appConfig: AppConfigRepository,
+    private store: Store<any>,
+  ) {
     this.images = (data.images?.length ?? 0) > 0 ? data.images : [data.path];
     this.initForm(data);
+  }
+
+  ngOnInit(): void {
+    const refs = this.data.complementaryItemRefs;
+    if (refs?.length) {
+      this.catalogRepo.getItemsById(refs).then(items => {
+        this.complementaryItems = items.filter(i => i.published);
+      });
+    }
+
+    const lang = this.translate.getCurrentLang() ?? 'fr';
+    this.titleSub = this.appConfig.watchComplementaryLookTitle().subscribe(title => {
+      this.complementaryLookTitle = (lang === 'en' && title.en) ? title.en : title.fr;
+    });
+
+    this.cartSub = this.store.select(selectChosenItems).subscribe(items => {
+      this.cartRefs = new Set(items.map(i => i.reference));
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.titleSub.unsubscribe();
+    this.cartSub.unsubscribe();
+  }
+
+  isCompInCart(ref: string): boolean {
+    return this.cartRefs.has(ref);
+  }
+
+  goToComplementaryCategory(item: CatalogItem): void {
+    this.dialogRef.close();
+    this.router.navigate(['/category', item.categoryId]);
   }
 
   selectImage(index: number): void {
@@ -128,8 +179,33 @@ export class ItemDetailsComponent {
     }
   }
 
-  openLightbox(): void {
-    this.lightboxSrc = this.currentImage;
+  addCompToCart(item: CatalogItem, event: MouseEvent): void {
+    event.stopPropagation();
+    const itemInfos = new ItemInfos(
+      item.coverUrl,
+      true,
+      item.reference,
+      0,
+      item.categoryId ?? '',
+      false,
+      { selectedQuantity: 1, selectedSize: ItemSizeEnum.M, selectedModel: 'MODEL_UNIQUE' },
+      item.images?.length ? item.images : [item.coverUrl],
+      Math.round((item.priceXAF / 655.96) * 100) / 100,
+      item.descriptionFr,
+      item.descriptionEn,
+      item.tryonUrl,
+      item.complementaryItemRefs,
+    );
+    this.updateBasketItem.emit(itemInfos);
+    this.snackBar.openFromComponent(SnackAlertComponent, {
+      duration: 2500,
+      data: { message: `${item.reference} ajouté au panier.`, type: 'success' },
+      politeness: 'polite',
+    });
+  }
+
+  openLightbox(src?: string): void {
+    this.lightboxSrc = src ?? this.currentImage;
   }
 
   closeLightbox(): void {

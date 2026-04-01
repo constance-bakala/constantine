@@ -20,9 +20,14 @@
              (input)="onPrefixInput($event)" />
     </div>
     <div class="form-field">
-      <label class="form-label">Titre <span class="required">*</span></label>
+      <label class="form-label">Titre FR <span class="required">*</span></label>
       <input type="text" [(ngModel)]="newTitle" class="form-input"
              placeholder="ex : Masques africains" />
+    </div>
+    <div class="form-field">
+      <label class="form-label">Titre EN <span class="optional">(optionnel)</span></label>
+      <input type="text" [(ngModel)]="newTitleEn" class="form-input"
+             placeholder="ex : African masks" />
     </div>
     <div class="form-field">
       <label class="form-label">Description <span class="optional">(optionnel)</span></label>
@@ -109,6 +114,34 @@
     </button>
   </div>
 
+  <!-- ── Titre ─────────────────────────────────────────────────────────── -->
+  <section class="desc-section">
+    <div class="desc-header">
+      <h3 class="section-title">Titre</h3>
+      <button *ngIf="!editingTitle" class="btn-field-edit" (click)="openEditTitle(selectedCategory!)">✎ Modifier</button>
+    </div>
+    <ng-container *ngIf="!editingTitle">
+      <p class="desc-preview"><strong>FR :</strong> {{ selectedCategory.title }}</p>
+      <p class="desc-preview desc-en"><strong>EN :</strong> {{ selectedCategory.titleEn || '—' }}</p>
+    </ng-container>
+    <ng-container *ngIf="editingTitle">
+      <div class="form-field" style="margin-bottom:8px">
+        <label class="form-label">🇫🇷 Titre FR</label>
+        <input type="text" [(ngModel)]="editTitleFr" class="form-input" />
+      </div>
+      <div class="form-field" style="margin-bottom:12px">
+        <label class="form-label">🇬🇧 Titre EN</label>
+        <input type="text" [(ngModel)]="editTitleEn" class="form-input" placeholder="English title…" />
+      </div>
+      <div class="form-actions">
+        <button class="btn-save" [disabled]="savingTitle" (click)="saveTitle()">
+          {{ savingTitle ? '…' : 'Enregistrer' }}
+        </button>
+        <button class="btn-cancel" (click)="cancelEditTitle()">Annuler</button>
+      </div>
+    </ng-container>
+  </section>
+
   <!-- ── Description ────────────────────────────────────────────────────── -->
   <section class="desc-section">
     <div class="desc-header">
@@ -164,6 +197,122 @@
         <button class="btn-cancel" (click)="cancelEditDesc()">Annuler</button>
       </div>
     </ng-container>
+  </section>
+
+  <!-- ── Suggestions IA catégorie ────────────────────────────────────────── -->
+  <section class="desc-section">
+    <div class="desc-header">
+      <h3 class="section-title">🤖 Suggestions IA</h3>
+    </div>
+
+    <p *ngIf="aiCategoryError" class="form-error">{{ aiCategoryError }}</p>
+
+    <!-- Voir aussi -->
+    <div class="ai-cat-row">
+      <div class="ai-cat-info">
+        <span class="ai-cat-label">Voir aussi (alternatives similaires)</span>
+        <span class="ai-cat-chips">
+          <span *ngFor="let p of selectedCategory!.relatedCategories" class="ai-chip">{{ p }}</span>
+          <span *ngIf="!selectedCategory!.relatedCategories?.length" class="ai-cat-empty">Non configuré</span>
+        </span>
+      </div>
+      <button class="btn-ai-gen" [disabled]="generatingRelated" (click)="generateRelatedCategories()">
+        {{ generatingRelated ? '⏳ Génération…' : '🤖 Générer' }}
+      </button>
+    </div>
+
+    <!-- Catégories complémentaires -->
+    <div class="ai-cat-row">
+      <div class="ai-cat-info">
+        <span class="ai-cat-label">Vos suggestions — catégories complémentaires</span>
+        <span class="ai-cat-chips">
+          <span *ngFor="let p of selectedCategory!.complementaryCategories" class="ai-chip ai-chip--purple">{{ p }}</span>
+          <span *ngIf="!selectedCategory!.complementaryCategories?.length" class="ai-cat-empty">Non configuré</span>
+        </span>
+      </div>
+      <button class="btn-ai-gen" [disabled]="generatingComplementary" (click)="generateComplementaryCategories()">
+        {{ generatingComplementary ? '⏳ Génération…' : '🤖 Générer' }}
+      </button>
+    </div>
+
+    <!-- Section "Vos suggestions" : titre + toggle + bouton -->
+    <div class="ai-cat-row ai-cat-row--suggestions">
+      <div class="ai-cat-info">
+        <span class="ai-cat-label">Section "Vos suggestions"</span>
+
+        <ng-container *ngIf="!editingLookTitle">
+          <span class="ai-cat-chips">
+            <span class="ai-chip">🇫🇷 {{ complementaryLookTitleFr }}</span>
+            <span class="ai-chip ai-chip--purple">🇬🇧 {{ complementaryLookTitleEn }}</span>
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="editingLookTitle">
+          <div class="form-field" style="margin: 6px 0 4px">
+            <label class="form-label">🇫🇷 FR</label>
+            <input type="text" [(ngModel)]="complementaryLookTitleFr" class="form-input" />
+          </div>
+          <div class="form-field" style="margin-bottom: 8px">
+            <label class="form-label">🇬🇧 EN</label>
+            <input type="text" [(ngModel)]="complementaryLookTitleEn" class="form-input" />
+          </div>
+          <div class="form-actions">
+            <button class="btn-save" [disabled]="savingLookTitle" (click)="saveLookTitle()">
+              {{ savingLookTitle ? '…' : 'Enregistrer' }}
+            </button>
+            <button class="btn-cancel" (click)="editingLookTitle = false">Annuler</button>
+          </div>
+        </ng-container>
+      </div>
+      <div *ngIf="!editingLookTitle" class="ai-cat-actions">
+        <label class="ai-toggle" title="Afficher sur la page catégorie">
+          <input type="checkbox"
+                 [checked]="selectedCategory!.complementaryLookEnabled"
+                 (change)="toggleComplementaryLookEnabled()">
+          <span class="ai-toggle-slider"></span>
+        </label>
+        <button class="btn-ai-gen" (click)="editingLookTitle = true">✎ Modifier</button>
+      </div>
+    </div>
+
+    <!-- Compléments par article (batch) -->
+    <div class="ai-cat-row">
+      <div class="ai-cat-info">
+        <span class="ai-cat-label">Suggestions par article (détail article)</span>
+        <span class="ai-cat-empty">Nécessite des descriptions IA générées + catégories complémentaires configurées</span>
+        <p *ngIf="itemComplementsError" class="form-error" style="margin:4px 0 0">{{ itemComplementsError }}</p>
+        <div *ngIf="generatingItemComplements" class="ai-batch-progress">
+          <div class="ai-batch-bar"
+               [style.width.%]="itemComplementsProgress.total ? (itemComplementsProgress.current / itemComplementsProgress.total * 100) : 0">
+          </div>
+          <span class="ai-batch-label">{{ itemComplementsProgress.current }} / {{ itemComplementsProgress.total }} articles</span>
+        </div>
+        <span *ngIf="!generatingItemComplements && itemComplementsProgress.total > 0 && !itemComplementsError" class="ai-cat-empty" style="color:#148f77">
+          ✓ {{ itemComplementsProgress.current }} articles traités
+        </span>
+      </div>
+      <button class="btn-ai-gen" [disabled]="generatingItemComplements" (click)="generateItemComplements()">
+        {{ generatingItemComplements ? '⏳ En cours…' : '🤖 Générer' }}
+      </button>
+    </div>
+
+    <!-- Texte promo -->
+    <div class="ai-cat-row">
+      <div class="ai-cat-info">
+        <span class="ai-cat-label">Texte promotionnel (Instagram / WhatsApp)</span>
+        <ng-container *ngIf="selectedCategory!.promoTextFr || selectedCategory!.promoTextEn">
+          <div class="lang-tabs" style="margin: 6px 0 4px">
+            <button type="button" class="lang-tab" [class.active]="promoTextLang === 'fr'" (click)="promoTextLang = 'fr'">🇫🇷 FR</button>
+            <button type="button" class="lang-tab" [class.active]="promoTextLang === 'en'" (click)="promoTextLang = 'en'">🇬🇧 EN</button>
+          </div>
+          <p class="ai-promo-preview">{{ promoTextLang === 'fr' ? selectedCategory!.promoTextFr : selectedCategory!.promoTextEn }}</p>
+        </ng-container>
+        <span *ngIf="!selectedCategory!.promoTextFr && !selectedCategory!.promoTextEn" class="ai-cat-empty">Non configuré</span>
+      </div>
+      <button class="btn-ai-gen" [disabled]="generatingPromo" (click)="generateCategoryPromoText()">
+        {{ generatingPromo ? '⏳ Génération…' : '🤖 Générer' }}
+      </button>
+    </div>
   </section>
 
   <!-- ── Zone d'import ──────────────────────────────────────────────────── -->

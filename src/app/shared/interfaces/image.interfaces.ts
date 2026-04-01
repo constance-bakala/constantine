@@ -56,7 +56,8 @@ export class ItemInfos {
     public price: number = 0,
     public descriptionFr?: string,
     public descriptionEn?: string,
-    public tryonUrl?: string) { }
+    public tryonUrl?: string,
+    public complementaryItemRefs?: string[]) { }
 }
 
 export interface ItemsState {

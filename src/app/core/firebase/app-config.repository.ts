@@ -148,4 +148,25 @@ export class AppConfigRepository {
   saveAppTitle(fr: string, en: string): Promise<void> {
     return set(ref(this.db, 'config/appTitle'), { fr, en });
   }
+
+  // ── Labels configurables ────────────────────────────────────────────────────
+
+  /** Observe le titre de la section "Vos suggestions" (défaut si absent dans Firebase). */
+  watchComplementaryLookTitle(): Observable<{ fr: string; en: string }> {
+    return new Observable(observer => {
+      const unsubscribe = onValue(
+        ref(this.db, 'config/labels/complementaryLookTitle'),
+        snap => {
+          const val = snap.val();
+          observer.next(val ?? { fr: 'Vos suggestions', en: 'Your suggestions' });
+        },
+        err => observer.error(err)
+      );
+      return () => unsubscribe();
+    });
+  }
+
+  saveComplementaryLookTitle(fr: string, en: string): Promise<void> {
+    return set(ref(this.db, 'config/labels/complementaryLookTitle'), { fr, en });
+  }
 }

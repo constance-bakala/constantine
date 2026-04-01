@@ -27,13 +27,14 @@
         <!--Section: Block Content-->
         <section>
           <!-- Grid row -->
-          <div class="row">
+          <div class="row products-grid">
             <!-- Grid column -->
             @for (item of visibleItems; track item) {
             <div class="col-md-4 mb-4 col-sm-auto" [ngClass]="item.selected ? 'selected' : ''">
               <!-- Card -->
               <div class="item-card"
                    [class.item-out-of-stock]="stock.isOutOfStock(item.reference) && !item.selected"
+                   [class.item-selected]="item.selected"
                    (click)="openChoices(item)">
                 <div class="view zoom overlay z-depth-2 rounded image-wrapper" [class.has-tryon]="item.tryonUrl">
                   <img class="img-fluid centered-img img-main" [src]="item.path" [alt]="item.reference" loading="lazy">
@@ -54,9 +55,9 @@
                     <div class="tap-hint">{{ 'PRODUCTS.TAP_HINT' | translate }}</div>
                   }
                 </div>
-                <div class="text-center pt-2 pb-2">
-                  <span class="item-ref">REF: {{item.reference}}</span>
+                <div class="item-card__info">
                   <span class="item-price">{{ pricing.format(item.price) }}</span>
+                  <span class="item-ref">REF: {{item.reference}}</span>
                 </div>
               </div>
               <!-- Card -->

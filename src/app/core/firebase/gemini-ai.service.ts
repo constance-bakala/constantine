@@ -146,6 +146,169 @@ If you don't know, say so honestly and invite the customer to contact us by emai
     return result.response.text();
   }
 
+  // ── Recommandations catégories ─────────────────────────────────────────────
+
+  /**
+   * Suggère des catégories similaires à proposer en "Voir aussi".
+   * Résultat stocké dans `relatedCategories` de la catégorie Firebase.
+   */
+  async suggestRelatedCategories(
+    current: CatalogCategory,
+    allCategories: CatalogCategory[],
+  ): Promise<string[]> {
+    const model = getGenerativeModel(this.ai, { model: 'gemini-2.5-flash-lite' });
+    const others = allCategories.filter(c => c.prefix !== current.prefix);
+    const catList = others.map(c =>
+      `- ${c.prefix}: "${c.title}"${c.description ? ' — ' + c.description.replace(/<[^>]+>/g, '').slice(0, 80) : ''}`
+    ).join('\n');
+
+    const prompt = `Tu es un expert en mode africaine pour "Délice Éternel", boutique à Libreville (Gabon).
+
+Catégorie actuelle : "${current.title}" (${current.prefix})${current.description ? '\nDescription : ' + current.description.replace(/<[^>]+>/g, '').slice(0, 150) : ''}
+
+Autres catégories disponibles :
+${catList}
+
+Sélectionne 2 à 3 catégories qui seraient les meilleures alternatives ou variantes similaires à proposer en "Voir aussi" à un client consultant "${current.title}".
+
+Réponds UNIQUEMENT avec un tableau JSON des préfixes, sans markdown, sans backticks :
+["prefix1","prefix2"]`;
+
+    const result = await model.generateContent(prompt);
+    const rawText = result.response.text().trim();
+    const match = rawText.match(/\[[\s\S]*?\]/);
+    if (!match) throw new Error('Réponse IA invalide : ' + rawText.slice(0, 100));
+    const returned = JSON.parse(match[0]) as string[];
+    return returned
+      .map(p => others.find(c => c.prefix.toLowerCase() === p.toLowerCase())?.prefix)
+      .filter((p): p is string => !!p);
+  }
+
+  /**
+   * Suggère des catégories complémentaires pour "Vos suggestions".
+   * Ex : robe → boucles d'oreilles, sac, ceinture.
+   * Résultat stocké dans `complementaryCategories` de la catégorie Firebase.
+   */
+  async suggestComplementaryCategories(
+    current: CatalogCategory,
+    allCategories: CatalogCategory[],
+  ): Promise<string[]> {
+    const model = getGenerativeModel(this.ai, { model: 'gemini-2.5-flash-lite' });
+    const others = allCategories.filter(c => c.prefix !== current.prefix);
+    if (!others.length) return [];
+
+    // Inclut prefix, titre FR et EN pour maximiser la compréhension de l'IA
+    const catList = others.map(c => {
+      const titleEn = c.titleEn ? ` / "${c.titleEn}"` : '';
+      return `- PREFIXE="${c.prefix}" TITRE="${c.title}"${titleEn}`;
+    }).join('\n');
+
+    const prompt = `Tu es un expert en mode et accessoires africains pour "Délice Éternel", boutique à Libreville (Gabon).
+
+CATÉGORIE QUE LE CLIENT CONSULTE :
+- Préfixe : "${current.prefix}"
+- Titre : "${current.title}"${current.titleEn ? ` / "${current.titleEn}"` : ''}
+
+AUTRES CATÉGORIES DISPONIBLES DANS LA BOUTIQUE :
+${catList}
+
+MISSION : Détermine quelles catégories de la liste ci-dessus compléteraient stylistiquement un article de la catégorie "${current.title}".
+Exemples d'associations naturelles en mode : robe/dress → bijoux/jewellery, boucles d'oreilles, sac ; haut → bas, ceinture ; chaussures → sac, bijoux.
+RÈGLE IMPORTANTE : même s'il n'y a qu'une seule catégorie disponible, tu dois l'inclure si elle est complémentaire.
+Inclus TOUTES les catégories de la liste qui ont une association stylistique logique avec "${current.title}".
+
+Réponds UNIQUEMENT avec un tableau JSON contenant les valeurs exactes des champs PREFIXE (respecte la casse exacte), sans markdown, sans backticks :
+["prefixe1","prefixe2"]`;
+
+    const result = await model.generateContent(prompt);
+    const rawText = result.response.text().trim();
+    const match = rawText.match(/\[[\s\S]*?\]/);
+    if (!match) throw new Error('Réponse IA invalide : ' + rawText.slice(0, 100));
+    const returned = JSON.parse(match[0]) as string[];
+    // Correspondance insensible à la casse pour éviter les erreurs de capitalisation de l'IA
+    return returned
+      .map(p => others.find(c => c.prefix.toLowerCase() === p.toLowerCase())?.prefix)
+      .filter((p): p is string => !!p);
+  }
+
+  /**
+   * Suggère jusqu'à 4 articles complémentaires à un article donné.
+   * Utilise les descriptions textuelles (couleurs, motifs, style).
+   * Résultat stocké dans `complementaryItemRefs` de l'article Firebase.
+   *
+   * @param item              Article pour lequel chercher des compléments.
+   * @param candidates        Articles issus des catégories complémentaires (publiés).
+   */
+  async suggestComplementaryItems(
+    item: CatalogItem,
+    candidates: CatalogItem[],
+  ): Promise<string[]> {
+    const eligible = candidates.filter(c => c.published && c.id !== item.id && c.descriptionFr);
+    if (!eligible.length) return [];
+
+    const model = getGenerativeModel(this.ai, { model: 'gemini-2.5-flash-lite' });
+
+    const itemContext = item.descriptionFr
+      ? item.descriptionFr.slice(0, 250)
+      : `Référence : ${item.reference}`;
+
+    const candList = eligible
+      .map(c => `- ID="${c.id}" REF="${c.reference}" DESC="${(c.descriptionFr ?? '').slice(0, 150)}"`)
+      .join('\n');
+
+    const prompt = `Tu es un expert styliste pour "Délice Éternel", boutique de mode africaine à Libreville (Gabon).
+
+ARTICLE CONSULTÉ PAR LE CLIENT :
+REF="${item.reference}"
+Description : ${itemContext}
+
+ARTICLES DISPONIBLES DANS LES CATÉGORIES COMPLÉMENTAIRES :
+${candList}
+
+MISSION : Sélectionne les 4 articles (ou moins s'il y en a moins de 4) qui compléteraient le mieux le look avec l'article ci-dessus.
+Critères par ordre de priorité : couleurs et motifs similaires ou harmonieux, style (wax, uni, imprimé…) cohérent, silhouette adaptée.
+Si l'article a des motifs rouges, priorise les articles avec des touches rouges. Si uni, sélectionne des compléments qui s'harmonisent.
+
+Réponds UNIQUEMENT avec un tableau JSON des valeurs exactes des champs ID (respecte la casse exacte), sans markdown, sans backticks :
+["id1","id2","id3","id4"]`;
+
+    const result = await model.generateContent(prompt);
+    const rawText = result.response.text().trim();
+    const match = rawText.match(/\[[\s\S]*?\]/);
+    if (!match) throw new Error('Réponse IA invalide');
+    const ids = JSON.parse(match[0]) as string[];
+    // Filtre insensible à la casse et limite à 4
+    return ids
+      .map(id => eligible.find(c => c.id.toLowerCase() === id.toLowerCase())?.id)
+      .filter((id): id is string => !!id)
+      .slice(0, 4);
+  }
+
+  /**
+   * Génère un texte promotionnel FR + EN pour Instagram/WhatsApp.
+   * Résultat stocké dans `promoTextFr` et `promoTextEn` de la catégorie Firebase.
+   */
+  async generateCategoryPromoText(
+    category: CatalogCategory,
+  ): Promise<{ fr: string; en: string }> {
+    const model = getGenerativeModel(this.ai, { model: 'gemini-2.5-flash-lite' });
+
+    const prompt = `Tu es un copywriter social media pour "Délice Éternel", boutique de mode africaine à Libreville (Gabon).
+
+Catégorie : "${category.title}"${category.description ? '\nDescription : ' + category.description.replace(/<[^>]+>/g, '').slice(0, 200) : ''}
+
+Rédige un post promotionnel accrocheur pour Instagram/WhatsApp (150–200 caractères max, emojis inclus). Ton chaleureux, féminin, élégant. Le post doit donner envie de découvrir la catégorie.
+
+Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans backticks :
+{"fr":"texte français avec emojis","en":"English text with emojis"}`;
+
+    const result = await model.generateContent(prompt);
+    const rawText = result.response.text().trim();
+    const match = rawText.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('Réponse IA invalide');
+    return JSON.parse(match[0]) as { fr: string; en: string };
+  }
+
   // ── Helpers privés ─────────────────────────────────────────────────────────
 
   /** Télécharge une image depuis son URL et la convertit en base64. */

@@ -107,12 +107,13 @@ export class CatalogRepository {
   async createCategory(
     prefix: string,
     title: string,
+    titleEn: string,
     description: string,
     descriptionEn: string,
     relatedCategories: string[]
   ): Promise<void> {
     await set(dbRef(this.db, `catalog/categories/${prefix}`), {
-      prefix, title, description, descriptionEn, published: false,
+      prefix, title, titleEn, description, descriptionEn, published: false,
       createdAt: Date.now(), relatedCategories,
     });
   }
@@ -156,6 +157,16 @@ export class CatalogRepository {
       }
     }
     if (writes.length) await Promise.all(writes);
+  }
+
+  /** Charge plusieurs articles par leur pushKey Firebase (au plus 4 appels en parallèle). */
+  async getItemsById(ids: string[]): Promise<CatalogItem[]> {
+    const snaps = await Promise.all(
+      ids.map(id => get(dbRef(this.db, `catalog/items/${id}`)))
+    );
+    return snaps
+      .filter(snap => snap.exists())
+      .map(snap => ({ id: snap.key!, ...snap.val() } as CatalogItem));
   }
 
   async getNextReferenceNumber(categoryId: string): Promise<number> {

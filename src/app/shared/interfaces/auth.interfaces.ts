@@ -9,7 +9,7 @@ export interface ILoginSuccess {
   userHabilitations?: number[];
   indexRole: number;
   isAnonymous: boolean;
-  credential: firebase.auth.AuthCredential;
+  credential?: firebase.auth.AuthCredential;
   actions?: {
     [name: string]: boolean;
   };

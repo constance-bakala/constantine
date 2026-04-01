@@ -4,7 +4,7 @@
       <div class="">
         <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0" style="cursor: pointer; position: relative;">
           <img class="img-fluid w-100" style="cursor: pointer;"
-               [src]="currentImageUrl" [alt]="data.portfolioName | translate" loading="lazy">
+               [src]="currentImageUrl" [alt]="displayName" loading="lazy">
           <a [routerLink]="[data.portfolioLink]">
             <div class="mask waves-effect waves-light">
               <img class="img-fluid w-100" [src]="currentImageUrl" loading="lazy">
@@ -14,7 +14,7 @@
           <div class="tap-hint">{{ 'PRODUCTS.TAP_HINT' | translate }}</div>
         </div>
         <div [routerLink]="[data.portfolioLink]" class="text-center pt-4 portfolio-item mx-auto" style="cursor: pointer;">
-          <h5>{{data.portfolioName | translate}}</h5>
+          <h5>{{displayName}}</h5>
           <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
             <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
           </div>

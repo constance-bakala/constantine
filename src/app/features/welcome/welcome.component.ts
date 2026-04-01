@@ -57,6 +57,7 @@ export class WelcomeComponent implements OnInit, OnDestroy {
             portfolioLink: `/category/${cat.prefix}`,
             coverImageUrl: imageUrls[0] ?? DEFAULT_COVER,
             portfolioName: cat.title,
+            portfolioNameEn: cat.titleEn,
             imageUrls: imageUrls.length > 0 ? imageUrls : [DEFAULT_COVER],
           };
         });

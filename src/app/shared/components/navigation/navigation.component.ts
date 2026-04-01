@@ -15,6 +15,7 @@ import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
 import { User } from 'firebase/auth';
 
 import { initNavScroll, setActiveLink, scrollToSection } from '@helpers/nav-scroll.utils';
+import { UsersRepository } from '@app/core/firebase/users.repository';
 
 @Component({
   selector: 'app-navigation',
@@ -40,6 +41,7 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
     public translate: TranslateService,
     private configRepo: AppConfigRepository,
     private router: Router,
+    private usersRepository: UsersRepository,
   ) {
     this.user$ = user(this.auth);
     this.translate.addLangs(['fr', 'en']);
@@ -96,6 +98,10 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
   switchLang(lang: string): void {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
+    const uid = this.auth.currentUser?.uid;
+    if (uid) {
+      this.usersRepository.savePreferences(uid, { lang });
+    }
   }
 
   scrollTo(sectionId: string): void {

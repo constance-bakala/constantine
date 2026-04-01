@@ -6,12 +6,20 @@
 
 export interface CatalogCategory {
   prefix: string;
-  title: string;
+  title: string;           // FR
+  titleEn?: string;        // EN
   description?: string;    // FR
   descriptionEn?: string;  // EN
   published: boolean;
   createdAt: number;
   relatedCategories?: string[];
+  /** Catégories qui complètent le look (générées par IA) */
+  complementaryCategories?: string[];
+  /** Afficher ou non la section "Vos suggestions" sur la page catégorie */
+  complementaryLookEnabled?: boolean;
+  /** Texte promotionnel IA pour Instagram/WhatsApp */
+  promoTextFr?: string;
+  promoTextEn?: string;
 }
 
 export interface CatalogItem {
@@ -33,6 +41,8 @@ export interface CatalogItem {
   descriptionEn?: string;
   /** URL photo générée par IA (virtual try-on) */
   tryonUrl?: string;
+  /** IDs des articles complémentaires suggérés par l'IA (max 4, depuis les catégories complémentaires) */
+  complementaryItemRefs?: string[];
 }
 
 export interface CatalogState {

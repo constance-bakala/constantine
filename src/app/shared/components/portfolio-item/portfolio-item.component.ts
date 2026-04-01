@@ -1,4 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { PortfolioData } from '@shared/interfaces';
 
 @Component({
@@ -11,12 +13,15 @@ export class PortfolioItemComponent implements OnInit, OnDestroy {
   @Input() data!: PortfolioData;
 
   currentImageUrl!: string;
+  displayName = '';
 
   private intervalId: any;
+  private langSub = new Subscription();
+
+  constructor(private translate: TranslateService) {}
 
   ngOnInit(): void {
     const urls = this.data.imageUrls?.length ? this.data.imageUrls : [this.data.coverImageUrl];
-    // Démarrer à un index aléatoire
     let index = Math.floor(Math.random() * urls.length);
     this.currentImageUrl = urls[index];
 
@@ -26,11 +31,20 @@ export class PortfolioItemComponent implements OnInit, OnDestroy {
         this.currentImageUrl = urls[index];
       }, 3000);
     }
+
+    this.updateDisplayName(this.translate.currentLang ?? 'fr');
+    this.langSub = this.translate.onLangChange.subscribe(({ lang }) => {
+      this.updateDisplayName(lang);
+    });
+  }
+
+  private updateDisplayName(lang: string): void {
+    const enName = this.data.portfolioNameEn?.trim();
+    this.displayName = (lang === 'en' && enName) ? enName : this.data.portfolioName;
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
+    if (this.intervalId) clearInterval(this.intervalId);
+    this.langSub.unsubscribe();
   }
 }

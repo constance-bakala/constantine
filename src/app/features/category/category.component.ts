@@ -8,15 +8,20 @@ import {
   ActionUpdateBasketItem,
 } from '@app/features/store/items.actions';
 import { Category, ItemInfos, ItemSizeEnum, CategoryInfos } from '@shared/interfaces';
+import { PortfolioData } from '@shared/interfaces/portfolio.interfaces';
 import { ExistingCategories } from '@shared/components/portfolio-list/portfolio-list.component';
 import { Go } from '@app/auth/store';
 import {
   CatalogLoadItemsForCategory,
   selectItemsByCategory,
   selectPublishedCategories,
+  selectCatalogState,
 } from '@app/features/store/catalog';
+import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
+import { TranslateService } from '@ngx-translate/core';
 
 const EUR_TO_XAF = 655.96;
+const DEFAULT_COVER = 'assets/style-sauvage_only_logo-removebg.png';
 
 @Component({
   selector: 'app-category',
@@ -27,29 +32,75 @@ const EUR_TO_XAF = 655.96;
 export class CategoryComponent implements OnInit, OnDestroy {
   category$!: Observable<Category | null>;
   categoryInfos$!: Observable<ExistingCategories>;
+  complementaryItems$!: Observable<PortfolioData[]>;
+  complementaryLookTitle = 'Vos suggestions';
 
   private subs = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
     private store: Store<any>,
+    private appConfig: AppConfigRepository,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
-    // "VOIR AUSSI" : toutes les catégories publiées Firebase sauf la courante
+    // "VOIR AUSSI" : catégories recommandées par l'IA (relatedCategories) si configurées,
+    // sinon toutes les catégories publiées sauf la courante.
     this.categoryInfos$ = combineLatest([
       this.store.select(selectPublishedCategories),
       this.route.params,
     ]).pipe(
       map(([published, params]) => {
         const currentPrefix: string = params['prefix'];
+        const currentCat = published.find(c => c.prefix === currentPrefix);
+        const related = currentCat?.relatedCategories;
         const result: Record<string, CategoryInfos> = {};
         published
           .filter(cat => cat.prefix !== currentPrefix)
+          .filter(cat => !related?.length || related.includes(cat.prefix))
           .forEach(cat => {
             result[cat.prefix] = { name: cat.prefix as any, title: cat.title };
           });
         return result as any;
+      })
+    );
+
+    // "COMPLÉTEZ LE LOOK" : catégories complémentaires définies par l'IA
+    this.complementaryItems$ = combineLatest([
+      this.store.select(selectPublishedCategories),
+      this.store.select(selectCatalogState),
+      this.route.params,
+    ]).pipe(
+      map(([published, catalogState, params]) => {
+        const currentPrefix: string = params['prefix'];
+        const currentCat = published.find(c => c.prefix === currentPrefix);
+        // Section cachée si le toggle est désactivé
+        if (!currentCat?.complementaryLookEnabled) return [];
+        const complementaryPrefixes = currentCat?.complementaryCategories ?? [];
+        if (!complementaryPrefixes.length) return [];
+
+        // Déclenche le chargement des items pour les catégories complémentaires si besoin
+        complementaryPrefixes.forEach(prefix => {
+          if (!catalogState.itemsByCategory[prefix]) {
+            this.store.dispatch(new CatalogLoadItemsForCategory({ categoryId: prefix }));
+          }
+        });
+
+        return complementaryPrefixes
+          .map(prefix => published.find(c => c.prefix === prefix))
+          .filter((cat): cat is typeof published[0] => !!cat)
+          .map(cat => {
+            const items = catalogState.itemsByCategory[cat.prefix] ?? [];
+            const imageUrls = items.map(i => i.coverUrl).filter(Boolean);
+            return {
+              portfolioLink: `/category/${cat.prefix}`,
+              coverImageUrl: imageUrls[0] ?? DEFAULT_COVER,
+              portfolioName: cat.title,
+              portfolioNameEn: cat.titleEn,
+              imageUrls: imageUrls.length > 0 ? imageUrls : [DEFAULT_COVER],
+            } as PortfolioData;
+          });
       })
     );
 
@@ -85,10 +136,19 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 item.descriptionFr,
                 item.descriptionEn,
                 item.tryonUrl,
+                item.complementaryItemRefs,
               )),
             } as Category;
           })
         );
+      })
+    );
+
+    // Titre "Vos suggestions" configurable dans Firebase
+    this.subs.add(
+      this.appConfig.watchComplementaryLookTitle().subscribe(title => {
+        const lang = this.translate.getCurrentLang() ?? 'fr';
+        this.complementaryLookTitle = (lang === 'en' && title.en) ? title.en : title.fr;
       })
     );
   }

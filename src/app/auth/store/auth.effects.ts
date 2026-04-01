@@ -4,6 +4,9 @@ import {Action, select, Store} from '@ngrx/store';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {BehaviorSubject, EMPTY, of} from 'rxjs';
 import {catchError, filter, map, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {Currency} from '@shared/interfaces';
+import {PricingService} from '@shared/services/pricing.service';
 
 import {LocalStorageService} from '../../core/local-storage/local-storage.service';
 import {CacheService} from '@shared/services/cache/cache.service';
@@ -42,6 +45,8 @@ export class AuthEffects {
     private localStorageService: LocalStorageService,
     private cache: CacheService,
     private usersRepository: UsersRepository,
+    private translate: TranslateService,
+    private pricing: PricingService,
   ) {
     // Écoute les catégories publiées pour connaître le nombre attendu
     this.actions$.pipe(
@@ -142,6 +147,31 @@ export class AuthEffects {
       // ✅ IMPORTANT: ne laisse passer que de vraies actions
       filter((a): a is NonNullable<typeof a> => a != null)
     )
+  );
+
+  restorePreferencesOnLogin$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActionTypes.LOGGED_IN),
+        switchMap((action: ActionAuthLoggedIn) => {
+          const uid = action.payload?.additionalInfos?.uid;
+          if (!uid) return of(null);
+          return this.usersRepository.getPreferences(uid).pipe(
+            tap((prefs) => {
+              if (!prefs) return;
+              if (prefs.lang && ['fr', 'en'].includes(prefs.lang)) {
+                this.translate.use(prefs.lang);
+                localStorage.setItem('lang', prefs.lang);
+              }
+              if (prefs.currency && ['EUR', 'XAF'].includes(prefs.currency)) {
+                this.pricing.setCurrency(prefs.currency as Currency);
+              }
+            }),
+            catchError(() => of(null))
+          );
+        })
+      ),
+    { dispatch: false }
   );
 
   restoreBasketOnLogin$ = createEffect(
