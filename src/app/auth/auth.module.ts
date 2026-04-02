@@ -15,6 +15,7 @@ import { SharedModule } from '@shared/shared.module';
 import { MainComponent } from '@app/auth/main/main.component';
 import { SignupComponent } from './signup/signup.component';
 import { LoginComponent } from '@app/auth/login/login.component';
+import { ForgotPasswordComponent } from '@app/auth/forgot-password/forgot-password.component';
 import { TextTransformPipe } from '@shared/pipes';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { TextTransformPipe } from '@shared/pipes';
         SigninComponent,
         SignupComponent,
         LoginComponent,
+        ForgotPasswordComponent,
     ],
     exports: [
         LoginComponent

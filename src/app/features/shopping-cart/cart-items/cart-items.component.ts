@@ -483,6 +483,10 @@ export class CartItemsComponent implements OnInit, OnDestroy {
     return this.basketItemsArray.controls[index].get('quantity') as UntypedFormControl;
   }
 
+  setSizeForItem(index: number, size: string): void {
+    (this.basketItemsArray.at(index) as UntypedFormGroup).get('size')!.setValue(size);
+  }
+
   private saveDeliveryState(): void {
     localStorage.setItem('deliveryState', JSON.stringify({
       deliveryMode: this.deliveryMode,

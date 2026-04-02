@@ -643,21 +643,67 @@ h3 span i {
   user-select: none;
 }
 
-// ── Listes déroulantes ────────────────────────────────────────────────────────
+// ── Modèle / Taille ───────────────────────────────────────────────────────────
 
-.cart-item__select {
-  padding: 5px 10px;
-  border: 1px solid #dde3ea;
-  border-radius: 6px;
-  font-size: 13px;
+.cart-item__field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.cart-item__field-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a9ab0;
+  flex-shrink: 0;
+  min-width: 52px;
+}
+
+.cart-item__model-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2c3e50;
+  background: #f0f4f8;
+  border-radius: 12px;
+  padding: 3px 10px;
+  letter-spacing: 0.03em;
+}
+
+.cart-item__size-pills {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.cart-item__size-pill {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid #dde3ea;
   background: #fff;
   color: #2c3e50;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
-  outline: none;
-  transition: border-color 0.15s;
-  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
 
-  &:focus { border-color: #148f77; }
+  &:hover:not(&--active) {
+    border-color: #c9a84c;
+    color: #c9a84c;
+  }
+
+  &--active {
+    background: #2c3e50;
+    border-color: #2c3e50;
+    color: #fff;
+  }
 }
 
 // ── Stepper quantité ──────────────────────────────────────────────────────────

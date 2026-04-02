@@ -46,19 +46,21 @@
               <p *ngIf="itemGroup.get('category')?.value !== 'UNKNOWN'" class="mb-3 text-muted text-uppercase small">
                 <strong>{{'PRODUCTS.CATEGORY' | translate}}:</strong>&nbsp;{{itemGroup.get('category')?.value}}
               </p>
-              <p class="mb-2 text-muted text-uppercase small"><strong>{{'PRODUCTS.MODEL' | translate}}:</strong>&nbsp;
-                <select id="selectedModel" name="selectedModel" formControlName="selectedModel" class="item-detail-select">
-                  <option value="MODEL_UNIQUE" selected>{{'PRODUCTS.UNIQUE_MODEL' | translate}}</option>
-                </select>
-              </p>
-              <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.SIZES' | translate}}:</strong>&nbsp;
-                <select id="selectedSize" name="selectedSize" formControlName="selectedSize" class="item-detail-select" tabindex="2">
-                  <option disabled selected value="">{{'CHOOSE' | translate}}</option>
+              <div class="item-detail-field">
+                <span class="item-detail-field-label">{{'PRODUCTS.MODEL' | translate}}</span>
+                <span class="item-detail-model-tag">{{'PRODUCTS.UNIQUE_MODEL' | translate}}</span>
+              </div>
+              <div class="item-detail-field mb-3">
+                <span class="item-detail-field-label">{{'PRODUCTS.SIZES' | translate}}</span>
+                <div class="item-detail-size-pills">
                   @for (s of sizes; track s) {
-                    <option [value]="s.value">{{ s.label }}</option>
+                    <button type="button"
+                            class="item-detail-size-pill"
+                            [class.item-detail-size-pill--active]="itemGroup.get('basketInfos.selectedSize')?.value === s.value"
+                            (click)="itemGroup.get('basketInfos.selectedSize')!.setValue(s.value)">{{ s.label }}</button>
                   }
-                </select>
-              </p>
+                </div>
+              </div>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="item-detail-actions">
                   <button type="button"
