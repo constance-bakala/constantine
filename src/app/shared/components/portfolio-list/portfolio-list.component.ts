@@ -1,7 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Category, CategoryInfos, ItemInfos } from '@shared/interfaces/image.interfaces';
-import { MatDialog } from '@angular/material/dialog';
-import { ItemDetailsComponent } from '@shared/components/item-details/item-details.component';
+import { Router } from '@angular/router';
 import { PricingService } from '@shared/services/pricing.service';
 import { StockService } from '@shared/services/stock.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,7 +36,7 @@ export class PortfolioListComponent implements OnInit, OnChanges, AfterViewInit,
   private observer: IntersectionObserver | null = null;
 
   constructor(
-    private dialog: MatDialog,
+    private router: Router,
     public pricing: PricingService,
     public stock: StockService,
     private translate: TranslateService,
@@ -112,17 +111,7 @@ export class PortfolioListComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   openChoices(item: ItemInfos) {
-    const dialogRef = this.dialog.open(ItemDetailsComponent, {
-      panelClass: 'signin-dialog',
-      maxHeight: '85vh',
-      disableClose: false,
-      autoFocus: true,
-      data: item,
-    });
-    dialogRef.componentInstance.updateBasketItem.subscribe(result => {
-      this.onToogleSelect.emit(result);
-      this.updateBasketItem.emit(result);
-    });
+    this.router.navigate(['/category', this.category.name, 'items', item.reference]);
   }
 
   closeLightbox(): void {
