@@ -1,0 +1,63 @@
+$green:       #148f77;
+$green-light: #e8f6f3;
+$grey-border: #dee2e6;
+
+.checkout-stepper-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .csb-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+    .csb-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid $grey-border;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      background: #fff;
+      color: #aaa;
+      transition: all .2s;
+    }
+
+    .csb-label {
+      font-size: 11px;
+      color: #aaa;
+      font-weight: 500;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    &.csb-step--active {
+      .csb-num  { border-color: $green; background: $green; color: #fff; }
+      .csb-label { color: $green; font-weight: 700; }
+    }
+
+    &.csb-step--done {
+      .csb-num  { border-color: $green; background: $green-light; color: $green; }
+      .csb-label { color: $green; }
+    }
+  }
+
+  .csb-line {
+    flex: 1;
+    height: 2px;
+    background: $grey-border;
+    margin: 0 8px;
+    margin-bottom: 18px;
+    transition: background .2s;
+
+    &.csb-line--done { background: $green; }
+  }
+}

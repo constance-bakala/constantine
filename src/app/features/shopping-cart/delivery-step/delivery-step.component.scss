@@ -1,0 +1,254 @@
+@use 'sass:color';
+
+$green:       #148f77;
+$green-light: #e8f6f3;
+$grey-border: #dee2e6;
+$grey-bg:     #f8f9fa;
+
+// ── Accordéon checkout ────────────────────────────────────────────────────────
+
+.checkout-accordion {
+  border: 1px solid $grey-border;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  transition: box-shadow .15s;
+
+  &.checkout-accordion--open {
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    border-color: $green;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+
+    &:hover { background: $grey-bg; }
+
+    .ca-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid $grey-border;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #aaa;
+      flex-shrink: 0;
+
+      &.ca-badge--done { border-color: $green; background: $green-light; color: $green; }
+    }
+
+    .checkout-accordion--open & .ca-badge { border-color: $green; background: $green; color: #fff; }
+
+    .ca-title   { font-weight: 600; font-size: 15px; flex: 1; }
+    .ca-summary { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+    .ca-chevron { color: #aaa; font-size: 13px; transition: transform .2s; }
+  }
+
+  &__body {
+    padding: 18px 20px 20px;
+    border-top: 1px solid $grey-border;
+  }
+}
+
+// ── Bouton "Étape suivante" ───────────────────────────────────────────────────
+
+.ca-next-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid $grey-border;
+}
+
+.btn-step-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: $green;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+
+  &:hover:not(:disabled) { background: color.adjust(#148f77, $lightness: -8%); }
+  &:disabled { opacity: .45; cursor: not-allowed; }
+}
+
+// ── Accordéon livraison progressif ────────────────────────────────────────────
+
+.dmode-list { display: flex; flex-direction: column; gap: 10px; }
+
+.dmode-card {
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color .18s, box-shadow .18s;
+
+  &--open { border-color: $green; box-shadow: 0 2px 10px rgba(20, 143, 119, .10); }
+}
+
+.dmode-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+
+  &:hover { background: #f8f9fa; }
+  .dmode-card--open & { background: #f2faf8; }
+}
+
+.dmode-icon       { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+.dmode-header-text { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.dmode-title      { font-size: 14px; font-weight: 700; color: #2c3e50; }
+.dmode-subtitle   { font-size: 12px; color: #7f8c8d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dmode-chevron    { color: #aaa; font-size: 12px; flex-shrink: 0; transition: transform .2s; }
+
+.dmode-body       { padding: 12px 16px 16px; border-top: 1px solid #f0f0f0; }
+.dmode-sub-desc   { font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 10px; }
+.dmode-note       { font-size: 11px; color: #999; font-style: italic; margin-bottom: 12px; line-height: 1.4; }
+.dmode-sub-list   { display: flex; flex-direction: column; gap: 8px; }
+
+.dmode-sub-card {
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color .15s;
+  &--open { border-color: $green; }
+}
+
+.dmode-sub-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+
+  &:hover { background: #f8f9fa; }
+  .dmode-sub-card--open & { background: #f2faf8; }
+}
+
+.dmode-sub-icon        { font-size: 16px; flex-shrink: 0; width: 22px; text-align: center; }
+.dmode-sub-header-text { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.dmode-sub-title       { font-size: 13px; font-weight: 600; color: #2c3e50; }
+.dmode-sub-subtitle    { font-size: 12px; color: #aaa; }
+.dmode-chevron-sm      { color: #bbb; font-size: 11px; flex-shrink: 0; transition: transform .2s; }
+
+.dmode-sub-body { padding: 10px 14px 14px; border-top: 1px solid #f0f0f0; background: #fafafa; }
+
+// ── Coursier ──────────────────────────────────────────────────────────────────
+
+.courier-rates {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #5d4037;
+  background: #fff8e1;
+  border-radius: 4px;
+  padding: 6px 8px;
+}
+
+.courier-agreement {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0;
+}
+
+.courier-checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #5d4037;
+  margin-bottom: 0;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.courier-checkbox-icon {
+  font-size: 20px;
+  line-height: 1;
+  color: #e67e22;
+  flex-shrink: 0;
+  margin-top: 1px;
+  user-select: none;
+}
+
+// ── Formulaire adresse de livraison ───────────────────────────────────────────
+
+.shipping-address-form {
+  background: #f8fffe;
+  border: 1px solid #b2dfdb;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.shipping-address-title {
+  font-weight: 700;
+  color: #148f77;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.addr-row {
+  display: flex;
+  gap: 12px;
+  @media (max-width: 480px) { flex-direction: column; gap: 0; }
+}
+
+.addr-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 10px;
+  &--short { flex: 0 0 120px; }
+}
+
+.addr-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
+  .required { color: #e74c3c; }
+}
+
+.addr-input {
+  padding: 8px 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s;
+  &:focus { border-color: #148f77; }
+}
+
+.addr-required-note {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin: 4px 0 0;
+  .required { color: #e74c3c; }
+}
+
+.required { color: #e74c3c; }

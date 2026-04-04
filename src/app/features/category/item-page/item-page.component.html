@@ -1,0 +1,160 @@
+<div class="item-page-header">
+  <button type="button" class="item-page-back" (click)="goBack()">
+    <i class="fas fa-arrow-left"></i>
+    <span>{{ 'PRODUCTS.BACK_TO_CATEGORY' | translate }}</span>
+  </button>
+</div>
+
+@if (!data) {
+  <div class="item-page-loading">
+    <span class="item-page-loading__dot"></span>
+    <span class="item-page-loading__dot"></span>
+    <span class="item-page-loading__dot"></span>
+  </div>
+}
+
+@if (data && itemGroup) {
+  <main>
+    <div class="container">
+      <section>
+        <div [formGroup]="itemGroup" class="card-body">
+          <div class="row mb-lg-12">
+            <div class="col-md-7 col-lg-5 col-xl-5">
+              <!-- Image principale -->
+              <div class="view zoom overlay z-depth-1 rounded mb-2 position-relative">
+                <img class="img-fluid w-100" [src]="currentImage" [alt]="itemGroup.get('reference')?.value"
+                     style="cursor:zoom-in" (click)="openLightbox()">
+                @if (images.length > 1) {
+                  <button class="gallery-nav gallery-nav--prev" type="button" (click)="prevImage()">&#8249;</button>
+                  <button class="gallery-nav gallery-nav--next" type="button" (click)="nextImage()">&#8250;</button>
+                }
+              </div>
+              <!-- Miniatures -->
+              @if (images.length > 1) {
+                <div class="gallery-thumbnails">
+                  @for (img of images; track img; let i = $index) {
+                    <img
+                      class="gallery-thumb"
+                      [class.gallery-thumb--active]="i === selectedImageIndex"
+                      [src]="img"
+                      [alt]="'Vue ' + (i + 1)"
+                      loading="lazy"
+                      (click)="selectImage(i)">
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="col-md-5 col-lg-7 col-xl-7" formGroupName="basketInfos">
+              <div>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h5 class="mb-0">{{itemGroup.get('reference')?.value}}</h5>
+                  <div class="item-detail-qty">
+                    <button type="button" (click)="stepDown()" class="item-detail-qty-btn">−</button>
+                    <input class="item-detail-qty-input" type="number" name="selectedQuantity" value="1" formControlName="selectedQuantity">
+                    <button type="button" (click)="stepUp()" class="item-detail-qty-btn">+</button>
+                  </div>
+                </div>
+                <p *ngIf="itemGroup.get('category')?.value !== 'UNKNOWN'" class="mb-3 text-muted text-uppercase small">
+                  <strong>{{'PRODUCTS.CATEGORY' | translate}}:</strong>&nbsp;{{itemGroup.get('category')?.value}}
+                </p>
+                <div class="item-detail-field">
+                  <span class="item-detail-field-label">{{'PRODUCTS.MODEL' | translate}}</span>
+                  <span class="item-detail-model-tag">{{'PRODUCTS.UNIQUE_MODEL' | translate}}</span>
+                </div>
+                <div class="item-detail-field mb-3">
+                  <span class="item-detail-field-label">{{'PRODUCTS.SIZES' | translate}}</span>
+                  <div class="item-detail-size-pills">
+                    @for (s of sizes; track s) {
+                      <button type="button"
+                              class="item-detail-size-pill"
+                              [class.item-detail-size-pill--active]="itemGroup.get('basketInfos.selectedSize')?.value === s.value"
+                              (click)="itemGroup.get('basketInfos.selectedSize')!.setValue(s.value)">{{ s.label }}</button>
+                    }
+                  </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="item-detail-actions">
+                    <button type="button"
+                      (click)="(!isOutOfStock || selected) ? toogleSelect() : null"
+                      [class]="selected ? 'item-detail-btn item-detail-btn--remove' : (isOutOfStock ? 'item-detail-btn item-detail-btn--disabled' : 'item-detail-btn item-detail-btn--add')"
+                      [disabled]="isOutOfStock && !selected">
+                      @if (selected) {
+                        <i class="fas fa-trash-alt"></i>
+                        <span>{{'REMOVE_FROM_CART' | translate}}</span>
+                      } @else if (isOutOfStock) {
+                        <i class="fas fa-ban"></i>
+                        <span>{{'OUT_OF_STOCK' | translate}}</span>
+                      } @else {
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>{{'ADD_TO_CART' | translate}}</span>
+                      }
+                    </button>
+                    <button type="button" (click)="shareOnWhatsApp()" class="item-detail-btn item-detail-btn--whatsapp">
+                      <i class="fab fa-whatsapp"></i>
+                      <span>{{'SHARE' | translate}}</span>
+                    </button>
+                  </div>
+                  <div class="text-right">
+                    <p class="mb-0"><strong>{{ totalPrice }}</strong></p>
+                    @if ((itemGroup.get('basketInfos.selectedQuantity')?.value || 1) > 1) {
+                      <small class="text-muted">{{ pricing.format(data.price) }} / unité</small>
+                    }
+                  </div>
+                </div>
+              </div>
+              <hr class="mb-4">
+              <p *ngIf="description" class="item-description">{{ description }}</p>
+
+              <!-- Vos suggestions -->
+              <div *ngIf="complementaryItems.length > 0" class="complementary-look">
+                <div class="complementary-look__header">
+                  <div class="complementary-look__accent"></div>
+                  <h5 class="complementary-look__title">{{ complementaryLookTitle }}</h5>
+                </div>
+                <div class="complementary-look__grid">
+                  <div *ngFor="let comp of complementaryItems"
+                       class="complementary-look__card"
+                       [class.complementary-look__card--in-cart]="isCompInCart(comp.reference)">
+                    <div class="complementary-look__img-wrap view zoom overlay z-depth-1 rounded"
+                         (click)="openLightbox(comp.coverUrl)">
+                      <img class="img-fluid w-100" [src]="comp.coverUrl" [alt]="comp.reference" loading="lazy">
+                      <div class="mask rgba-black-slight"></div>
+                      <span *ngIf="isCompInCart(comp.reference)" class="complementary-look__badge">
+                        <i class="fas fa-check"></i>
+                      </span>
+                    </div>
+                    <div class="complementary-look__info">
+                      <div class="complementary-look__info-row">
+                        <span class="complementary-look__ref" (click)="goToComplementaryCategory(comp)">{{ comp.reference }}</span>
+                        <button *ngIf="!isCompInCart(comp.reference)"
+                                class="complementary-look__cart-btn"
+                                [class.complementary-look__cart-btn--oos]="stock.isOutOfStock(comp.reference)"
+                                [disabled]="stock.isOutOfStock(comp.reference)"
+                                [title]="stock.isOutOfStock(comp.reference) ? 'Rupture de stock' : 'Ajouter au panier'"
+                                (click)="addCompToCart(comp, $event)">
+                          <i class="fas fa-cart-plus"></i>
+                        </button>
+                        <span *ngIf="isCompInCart(comp.reference)" class="complementary-look__cart-check" title="Dans votre panier">
+                          <i class="fas fa-check-circle"></i>
+                        </span>
+                      </div>
+                      <span class="complementary-look__price">{{ pricing.format(comp.priceXAF / 655.96) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+}
+
+@if (lightboxSrc) {
+  <div class="lightbox-overlay" (click)="closeLightbox()">
+    <img [src]="lightboxSrc" class="lightbox-img" (click)="$event.stopPropagation()">
+    <button class="lightbox-close" (click)="closeLightbox()">✕</button>
+  </div>
+}

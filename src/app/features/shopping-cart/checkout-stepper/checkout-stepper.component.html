@@ -1,0 +1,24 @@
+<div id="checkout-top" class="checkout-stepper-bar">
+  <div class="csb-step"
+       [class.csb-step--active]="currentStep === 1"
+       [class.csb-step--done]="currentStep > 1"
+       (click)="stepChange.emit(1)">
+    <span class="csb-num">{{ currentStep > 1 ? '✓' : '1' }}</span>
+    <span class="csb-label">{{'PRODUCTS.CART' | translate}}</span>
+  </div>
+  <div class="csb-line" [class.csb-line--done]="currentStep > 1"></div>
+  <div class="csb-step"
+       [class.csb-step--active]="currentStep === 2"
+       [class.csb-step--done]="currentStep > 2"
+       (click)="stepChange.emit(2)">
+    <span class="csb-num">{{ currentStep > 2 ? '✓' : '2' }}</span>
+    <span class="csb-label">{{'PRODUCTS.DELIVERY_TIME' | translate}}</span>
+  </div>
+  <div class="csb-line" [class.csb-line--done]="currentStep > 2"></div>
+  <div class="csb-step"
+       [class.csb-step--active]="currentStep === 3"
+       (click)="stepChange.emit(3)">
+    <span class="csb-num">3</span>
+    <span class="csb-label">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</span>
+  </div>
+</div>

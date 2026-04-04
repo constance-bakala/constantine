@@ -1,0 +1,244 @@
+@use 'sass:color';
+
+$green:  #148f77;
+$dark:   #2c3e50;
+$grey:   #7f8c8d;
+$border: #ecf0f1;
+$red:    #e74c3c;
+
+// ── Toolbar ───────────────────────────────────────────────────────────────
+.catalog-toolbar {
+  margin-bottom: 16px;
+}
+
+.btn-catalog-new {
+  padding: 9px 20px;
+  background: $green;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Work Sans', sans-serif;
+  &:hover { opacity: .85; }
+}
+
+// ── Formulaire création catégorie ─────────────────────────────────────────
+.create-form-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.07);
+}
+
+.form-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: $dark;
+  margin: 0 0 16px;
+}
+
+.form-field {
+  margin-bottom: 12px;
+}
+
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: $dark;
+  margin-bottom: 4px;
+
+  .required { color: $red; }
+  .hint, .optional { font-weight: 400; color: $grey; }
+}
+
+.form-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border: 1px solid #d0d7de;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'Work Sans', sans-serif;
+  outline: none;
+  &:focus { border-color: $green; }
+}
+
+// ── Quill rich text ────────────────────────────────────────────────────────
+.quill-desc {
+  display: block;
+
+  .ql-toolbar {
+    border-color: #d0d7de;
+    border-radius: 4px 4px 0 0;
+    background: #f8f9fa;
+    font-family: 'Work Sans', sans-serif;
+  }
+
+  .ql-container {
+    border-color: #d0d7de;
+    border-radius: 0 0 4px 4px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100px;
+  }
+}
+
+.form-error {
+  font-size: 13px;
+  color: $red;
+  margin: 8px 0 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn-save {
+  padding: 8px 20px;
+  background: $green;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+.btn-cancel {
+  padding: 8px 16px;
+  background: transparent;
+  color: $grey;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  &:hover { background: #f8f9fa; }
+}
+
+// ── Onglets langue ─────────────────────────────────────────────────────────
+.lang-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.lang-tab {
+  padding: 4px 14px;
+  border: 1px solid $border;
+  border-radius: 4px;
+  background: #fff;
+  color: $grey;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  &.active {
+    background: $green;
+    color: #fff;
+    border-color: $green;
+  }
+  &:hover:not(.active) { background: #f4f6f7; }
+}
+
+// ── Liste catégories ──────────────────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 32px;
+  color: $grey;
+  font-size: 14px;
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: 6px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+
+.category-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.category-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: $dark;
+}
+
+.category-prefix {
+  font-size: 12px;
+  color: $grey;
+  font-family: monospace;
+  background: #f0faf7;
+  padding: 1px 6px;
+  border-radius: 3px;
+  align-self: flex-start;
+}
+
+.category-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.btn-publish {
+  padding: 5px 12px;
+  border: 1px solid $green;
+  border-radius: 4px;
+  background: transparent;
+  color: $green;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+
+  &.published { background: $green; color: #fff; }
+  &:hover:not(.published) { background: #e8f8f5; }
+}
+
+.btn-view {
+  padding: 5px 12px;
+  border: 1px solid $dark;
+  border-radius: 4px;
+  background: transparent;
+  color: $dark;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { background: $dark; color: #fff; }
+}
+
+.btn-delete-cat {
+  padding: 5px 10px;
+  border: 1px solid $red;
+  border-radius: 4px;
+  background: transparent;
+  color: $red;
+  font-size: 13px;
+  cursor: pointer;
+  &:hover { background: $red; color: #fff; }
+}

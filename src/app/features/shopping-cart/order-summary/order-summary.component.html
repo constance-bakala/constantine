@@ -1,0 +1,161 @@
+<!-- Summary card -->
+<div class="summary-card mb-4">
+  <div class="summary-header">
+    <h5 class="summary-title">{{'PRODUCTS.SUMMARY' | translate}}</h5>
+  </div>
+
+  <div class="summary-body">
+    <div class="summary-section-heading">
+      <span>{{ ((nbSelectedItems$ | async) ?? 0) > 1 ? 'Articles' : 'Article' }}</span>
+      <span class="summary-ht-label">{{'PRODUCTS.AMOUNT_WITHOUT_VAT' | translate}}</span>
+    </div>
+
+    @for (line of itemLines; track line.ref) {
+      <div class="summary-line">
+        <span class="summary-line-ref">
+          <b>{{ line.ref }}</b>
+          <span class="summary-line-qty">× {{ line.qty }}</span>
+        </span>
+        <span class="summary-line-value">{{ line.total }}</span>
+      </div>
+    }
+
+    <!-- Livraison -->
+    <div class="summary-line summary-line--shipping">
+      <span>{{'PRODUCTS.SHIPPING' | translate}}</span>
+      <span>
+        <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'"
+              class="summary-shipping-tag summary-shipping-tag--courier">🛵 Payé au livreur</span>
+        <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'"
+              class="summary-shipping-tag summary-shipping-tag--store">🏪 Au magasin</span>
+        <span *ngIf="deliveryMode === 'pickup' && !pickupSubMode">{{'PRODUCTS.GRATIS' | translate}}</span>
+        <span *ngIf="!deliveryMode">{{'PRODUCTS.GRATIS' | translate}}</span>
+        <span *ngIf="deliveryMode === 'shipping' && shippingCostEur !== null">{{ pricing.format(shippingCostEur!) }}</span>
+        <span *ngIf="deliveryMode === 'shipping' && shippingCostEur === null"
+              class="shipping-pending-text">{{'SHIPPING_PENDING' | translate}}</span>
+      </span>
+    </div>
+    <div *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="summary-shipping-note">
+      <i class="fas fa-info-circle mr-1"></i>Les frais de port seront communiqués dès que votre commande sera prête.
+    </div>
+
+    <!-- TVA -->
+    @if ((pricing.currency$ | async) !== 'XAF' && pricing.tvaRate > 0) {
+      <div class="summary-line">
+        <span>TVA ({{ pricing.tvaRate * 100 }}%)</span>
+        <span>{{ cartTva }}</span>
+      </div>
+    }
+
+    <!-- Réduction code promo -->
+    @if (appliedPromo && promoDiscountFormatted) {
+      <div class="summary-line summary-line--promo">
+        <span>
+          <i class="fas fa-tag mr-1"></i>
+          {{'PRODUCTS.PROMO_DISCOUNT' | translate : {code: appliedPromo.code} }}
+        </span>
+        <span class="summary-promo-value">{{ promoDiscountFormatted }}</span>
+      </div>
+    }
+
+    <!-- Total -->
+    <div class="summary-total">
+      <div>
+        <span class="summary-total-label">{{'PRODUCTS.TOTAL_WITH_VAT' | translate}}</span>
+        <div class="summary-total-sub">{{'PRODUCTS.WITH_VAT' | translate}}</div>
+      </div>
+      <span class="summary-total-amount">{{ cartTotal }}</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="summary-footer">
+    <button (click)="sendCommand.emit()"
+            [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent || !canSend"
+            type="button" class="summary-btn-send">
+      <i class="fas fa-paper-plane mr-2"></i>
+      {{ activeOrder ? 'Modifier la commande' : ('PRODUCTS.SEND_COMMAND' | translate) }}
+    </button>
+
+    <div class="summary-warnings">
+      <p *ngIf="hasOutOfStockItems" class="summary-warning">
+        <i class="fas fa-exclamation-circle mr-1"></i>Un ou plusieurs articles sont épuisés. Retirez-les pour pouvoir envoyer la commande.
+      </p>
+      <p *ngIf="((nbSelectedItems$ | async) ?? 0) >= 1 && !deliveryMode && !hasOutOfStockItems" class="summary-warning">
+        <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir un mode de livraison pour continuer.
+      </p>
+      <p *ngIf="deliveryMode === 'pickup' && !pickupSubMode" class="summary-warning">
+        <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir entre livraison par coursier ou récupération au magasin.
+      </p>
+      <p *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier' && !courierAgreementChecked" class="summary-warning">
+        <i class="fas fa-exclamation-circle mr-1"></i>Veuillez cocher la case d'engagement avant de valider.
+      </p>
+      <p *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid" class="summary-warning">
+        <i class="fas fa-exclamation-circle mr-1"></i>Remplissez tous les champs obligatoires de l'adresse de livraison.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Card statuts commandes -->
+<div class="card mb-4" *ngIf="orderStatuses.length > 0">
+  <div class="card-body">
+    <h6 class="mb-3">{{'MY_ORDERS' | translate}}</h6>
+    <div *ngFor="let orderStatus of orderStatuses" class="order-status-row">
+      <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+        <div>
+          <span class="small text-muted">#{{ orderStatus.id | slice:0:8 }}</span><br>
+          <span class="small text-muted">{{ orderStatus.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
+        </div>
+        <span class="order-status-badge"
+              [style.background-color]="statusColors[orderStatus.status] || '#7f8c8d'">
+          {{ statusLabels[orderStatus.status] || orderStatus.status }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card code promo -->
+<div class="card mb-4">
+  <div class="card-body promo-card-body">
+    <p class="promo-card-label">{{'PRODUCTS.DISCOUNT_CODE' | translate}}</p>
+
+    @if (appliedPromo) {
+      <div class="promo-applied">
+        <div class="promo-applied-info">
+          <span class="promo-applied-badge">{{ appliedPromo.code }}</span>
+          <span class="promo-applied-detail">
+            −{{ appliedPromo.discountPercent }}% sur la catégorie <strong>{{ appliedPromo.categoryId }}</strong>
+            · du {{ appliedPromo.startDate | date:'dd/MM/yyyy' }} au {{ appliedPromo.endDate | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+        <button type="button" class="promo-remove-btn" (click)="clearPromoCode.emit()">
+          <i class="fas fa-times"></i> Retirer
+        </button>
+      </div>
+    } @else {
+      <div class="promo-input-row">
+        <input type="text"
+               class="promo-code-input"
+               [ngModel]="promoCodeInput"
+               (ngModelChange)="promoCodeInputChange.emit($event)"
+               placeholder="{{'PRODUCTS.PROMO_CODE_PLACEHOLDER' | translate}}"
+               (keyup.enter)="applyPromoCode.emit()"
+               [disabled]="promoValidationStatus === 'loading'">
+        <button type="button"
+                class="promo-apply-btn"
+                [disabled]="!promoCodeInput.trim() || promoValidationStatus === 'loading'"
+                (click)="applyPromoCode.emit()">
+          {{ promoValidationStatus === 'loading' ? '…' : ('PRODUCTS.PROMO_CODE_APPLY' | translate) }}
+        </button>
+      </div>
+      @if (promoValidationStatus === 'not_found') {
+        <p class="promo-error">{{'PRODUCTS.PROMO_CODE_INVALID' | translate}}</p>
+      }
+      @if (promoValidationStatus === 'expired') {
+        <p class="promo-error">{{'PRODUCTS.PROMO_CODE_EXPIRED' | translate}}</p>
+      }
+    }
+  </div>
+</div>
