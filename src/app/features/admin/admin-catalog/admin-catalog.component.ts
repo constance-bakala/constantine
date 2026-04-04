@@ -1,7 +1,7 @@
 import {
   Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy,
 } from '@angular/core';
-import { Database, ref, push, get, set, onValue, query, orderByChild, equalTo } from '@angular/fire/database';
+import { Database, ref, push, get, set, onValue } from '@angular/fire/database';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Store } from '@ngrx/store';
 import { firstValueFrom, Subscription } from 'rxjs';
@@ -68,7 +68,7 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   selectedCategory: CatalogCategory | null = null;
   categoryItems: CatalogItem[] = [];
 
-  // ── Quill config
+  // ── Quill config (vue détail : édition titre/description)
   quillModules = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -77,17 +77,6 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       ['clean'],
     ],
   };
-
-  // ── Création catégorie
-  showCreateForm = false;
-  newPrefix = '';
-  newTitle = '';
-  newTitleEn = '';
-  newDescription = '';
-  newDescriptionEn = '';
-  descLang: 'fr' | 'en' = 'fr';
-  creating = false;
-  createError = '';
 
   // ── Édition titre catégorie
   editingTitle = false;
@@ -299,85 +288,6 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
     this.itemsSub?.unsubscribe();
   }
 
-  // ── Création catégorie ────────────────────────────────────────────────────
-
-  openCreateForm(): void {
-    this.showCreateForm = true;
-    this.newPrefix = '';
-    this.newTitle = '';
-    this.newDescription = '';
-    this.newDescriptionEn = '';
-    this.descLang = 'fr';
-    this.createError = '';
-  }
-
-  cancelCreate(): void {
-    this.showCreateForm = false;
-  }
-
-  /** Caractères valides pour un segment d'URI : lettres ASCII minuscules, chiffres, tirets. */
-  private static readonly URI_PATTERN = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;
-
-  /** Normalise la valeur saisie vers un préfixe URI-safe. */
-  sanitizePrefix(value: string): string {
-    return value
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')  // supprime les accents (é→e, à→a…)
-      .toLowerCase()
-      .replace(/[^a-z0-9-]+/g, '-')                      // tout caractère invalide → tiret
-      .replace(/-{2,}/g, '-')                             // tirets consécutifs → un seul
-      .replace(/^-+|-+$/g, '');                           // supprime les tirets en début/fin
-  }
-
-  onPrefixInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const sanitized = this.sanitizePrefix(input.value);
-    if (input.value !== sanitized) {
-      this.newPrefix = sanitized;
-      input.value = sanitized;
-    }
-  }
-
-  async submitCreateCategory(): Promise<void> {
-    const prefix = this.sanitizePrefix(this.newPrefix.trim());
-    const title  = this.newTitle.trim();
-
-    if (!prefix) { this.createError = 'Le préfixe est obligatoire.'; this.cdr.markForCheck(); return; }
-    if (!title)  { this.createError = 'Le titre est obligatoire.'; this.cdr.markForCheck(); return; }
-    if (!AdminCatalogComponent.URI_PATTERN.test(prefix)) {
-      this.createError = 'Le préfixe doit contenir uniquement des lettres (a-z), chiffres (0-9) et tirets, sans commencer ni finir par un tiret.';
-      this.cdr.markForCheck();
-      return;
-    }
-    if (this.categories.find(c => c.prefix === prefix)) {
-      this.createError = `Le préfixe "${prefix}" existe déjà.`;
-      this.cdr.markForCheck();
-      return;
-    }
-
-    this.creating = true;
-    this.createError = '';
-    this.cdr.markForCheck();
-    try {
-      const relatedCategories = this.categories
-        .filter(c => c.published)
-        .map(c => c.prefix);
-      const titleEn       = (this.newTitleEn       ?? '').trim();
-      const description   = (this.newDescription   ?? '').trim();
-      const descriptionEn = (this.newDescriptionEn ?? '').trim();
-      await this.repo.createCategory(prefix, title, titleEn, description, descriptionEn, relatedCategories);
-      this.showCreateForm = false;
-      this.newPrefix = '';
-      this.newTitle = '';
-      this.newTitleEn = '';
-      this.newDescription = '';
-    } catch (e: any) {
-      this.createError = e?.message ?? 'Erreur lors de la création.';
-    } finally {
-      this.creating = false;
-      this.cdr.detectChanges();
-    }
-  }
-
   // ── Édition description catégorie ────────────────────────────────────────
 
   openEditDesc(cat: CatalogCategory): void {
@@ -418,12 +328,6 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
   onDescChanged(lang: 'fr' | 'en', event: { html: string | null }): void {
     if (lang === 'fr') this.editDescFr = event.html ?? '';
     else               this.editDescEn = event.html ?? '';
-    this.cdr.markForCheck();
-  }
-
-  onNewDescChanged(lang: 'fr' | 'en', event: { html: string | null }): void {
-    if (lang === 'fr') this.newDescription   = event.html ?? '';
-    else               this.newDescriptionEn = event.html ?? '';
     this.cdr.markForCheck();
   }
 
@@ -575,28 +479,6 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
       await this.repo.updateCategoryField(cat.prefix, 'published', !cat.published);
     } catch (e) {
       console.error('[catalog] toggleCategoryPublished', e);
-    }
-  }
-
-  // ── Supprimer catégorie ───────────────────────────────────────────────────
-
-  async deleteCategory(cat: CatalogCategory): Promise<void> {
-    if (!confirm(`Supprimer la catégorie "${cat.title}" et tous ses articles ?`)) return;
-    try {
-      // Supprimer tous les items DB + leur Storage
-      const snap = await get(query(ref(this.db, 'catalog/items'), orderByChild('categoryId'), equalTo(cat.prefix)));
-      const val = snap.val() as Record<string, any> | null;
-      if (val) {
-        for (const [id] of Object.entries(val)) {
-          await this.repo.deleteStorageFolder(`catalog/${cat.prefix}/${id}`);
-          await this.repo.deleteItemFromDb(id);
-        }
-      }
-      await this.repo.deleteStorageFolder(`catalog/${cat.prefix}`);
-      await this.repo.deleteCategory(cat.prefix);
-      if (this.selectedCategory?.prefix === cat.prefix) this.backToList();
-    } catch (e) {
-      console.error('[catalog] deleteCategory', e);
     }
   }
 
@@ -1212,7 +1094,6 @@ export class AdminCatalogComponent implements OnInit, OnDestroy {
 
   min(a: number, b: number): number { return Math.min(a, b); }
 
-  trackByPrefix(_: number, cat: CatalogCategory): string { return cat.prefix; }
   trackById(_: number, item: CatalogItem): string { return item.id; }
   trackByIndex(i: number): number { return i; }
 }

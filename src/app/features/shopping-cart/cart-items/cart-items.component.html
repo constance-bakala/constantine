@@ -14,332 +14,100 @@
       </div>
     </div>
   </header>
+
   <main>
     <div class="container">
       <section>
-        <!--Grid row-->
         <div class="row">
-          <!--Grid column-->
           <div class="col-lg-8">
 
-            <!-- ── Stepper bar ────────────────────────────────────────────── -->
-            <div id="checkout-top" class="checkout-stepper-bar">
-              <div class="csb-step" [class.csb-step--active]="checkoutStep === 1" [class.csb-step--done]="checkoutStep > 1" (click)="goToStep(1)">
-                <span class="csb-num">{{ checkoutStep > 1 ? '✓' : '1' }}</span>
-                <span class="csb-label">{{'PRODUCTS.CART' | translate}}</span>
-              </div>
-              <div class="csb-line" [class.csb-line--done]="checkoutStep > 1"></div>
-              <div class="csb-step" [class.csb-step--active]="checkoutStep === 2" [class.csb-step--done]="checkoutStep > 2" (click)="goToStep(2)">
-                <span class="csb-num">{{ checkoutStep > 2 ? '✓' : '2' }}</span>
-                <span class="csb-label">{{'PRODUCTS.DELIVERY_TIME' | translate}}</span>
-              </div>
-              <div class="csb-line" [class.csb-line--done]="checkoutStep > 2"></div>
-              <div class="csb-step" [class.csb-step--active]="checkoutStep === 3" (click)="goToStep(3)">
-                <span class="csb-num">3</span>
-                <span class="csb-label">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</span>
-              </div>
-            </div>
+            <!-- ── Barre de progression ──────────────────────────────────────── -->
+            <app-checkout-stepper [currentStep]="state.checkoutStep" (stepChange)="goToStep($event)">
+            </app-checkout-stepper>
 
-            <!-- ── Étape 1 : Panier ───────────────────────────────────────── -->
-            <div id="checkout-step-1" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 1">
+            <!-- ── Étape 1 : Panier ─────────────────────────────────────────── -->
+            <div id="checkout-step-1" class="checkout-accordion mb-3"
+                 [class.checkout-accordion--open]="state.checkoutStep === 1">
               <div class="checkout-accordion__header" (click)="goToStep(1)">
-                <span class="ca-badge" [class.ca-badge--done]="checkoutStep > 1">{{ checkoutStep > 1 ? '✓' : '1' }}</span>
+                <span class="ca-badge" [class.ca-badge--done]="state.checkoutStep > 1">{{ state.checkoutStep > 1 ? '✓' : '1' }}</span>
                 <span class="ca-title">{{'PRODUCTS.CART' | translate}}</span>
-                <span class="ca-summary" *ngIf="checkoutStep !== 1">
+                <span class="ca-summary" *ngIf="state.checkoutStep !== 1">
                   {{ (nbSelectedItems$ | async) }} article(s) · {{ cartTotal }}
                 </span>
-                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 1" [class.fa-chevron-down]="checkoutStep !== 1"></i>
+                <i class="fas ca-chevron"
+                   [class.fa-chevron-up]="state.checkoutStep === 1"
+                   [class.fa-chevron-down]="state.checkoutStep !== 1"></i>
               </div>
-              <div class="checkout-accordion__body" *ngIf="checkoutStep === 1">
+              <div class="checkout-accordion__body" *ngIf="state.checkoutStep === 1">
                 @if (basketFormGroup) {
-                <div [formGroup]="basketFormGroup">
-                  <ng-container formArrayName="basketItems">
-                    @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
-                    <div class="row mb-4" [formGroupName]="i">
-                      <div class="col-md-5 col-lg-3 col-xl-3">
-                        <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0 cart-img-wrapper"
-                          (click)="openLightbox(itemGroup.get('path')?.value)" style="cursor:zoom-in">
-                          <img class="img-fluid w-100" src="{{itemGroup.get('path')?.value}}"
-                            alt="{{itemGroup.get('reference')?.value}}">
-                          <div class="mask rgba-black-slight cart-img-overlay">
-                            <span class="cart-img-zoom-icon">&#128269;</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-7 col-lg-9 col-xl-9">
-                        <div>
-                          <div class="d-flex justify-content-between">
-                            <div>
-                              <h5>
-                                {{itemGroup.get('reference')?.value}}
-                                <span *ngIf="isItemOutOfStock(itemGroup.get('reference')?.value)"
-                                  class="badge-out-of-stock">Épuisé</span>
-                              </h5>
-                              <p class="mb-3 text-muted text-uppercase small"><strong>{{'PRODUCTS.CATEGORY' |
-                                  translate}}:</strong>&nbsp;
-                                {{itemGroup.get('category')?.value}}
-                              </p>
-                              <div class="cart-item__field">
-                                <span class="cart-item__field-label">{{'PRODUCTS.MODEL' | translate}}</span>
-                                <span class="cart-item__model-tag">{{'PRODUCTS.UNIQUE_MODEL' | translate}}</span>
-                              </div>
-                              <div class="cart-item__field">
-                                <span class="cart-item__field-label">{{'PRODUCTS.SIZES' | translate}}</span>
-                                <div class="cart-item__size-pills">
-                                  @for (s of sizes; track s) {
-                                    <button type="button"
-                                            class="cart-item__size-pill"
-                                            [class.cart-item__size-pill--active]="itemGroup.get('size')?.value === s.value"
-                                            (click)="setSizeForItem(i, s.value)">{{ s.label }}</button>
-                                  }
-                                </div>
-                              </div>
-                            </div>
-                            <div>
-                              <div class="cart-item__qty">
-                                <button type="button" (click)="stepDown(i)" class="cart-item__qty-btn">−</button>
-                                <input class="cart-item__qty-input" type="number"
-                                  formControlName="quantity" value="1">
-                                <button type="button" (click)="stepUp(i)" class="cart-item__qty-btn">+</button>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                              <button type="button" (click)="onToogleSelect(itemGroup.value)"
-                                class="cart-item__remove">
-                                <i class="fas fa-trash-alt"></i>
-                                <span>{{'PRODUCTS.REMOVE' | translate}}</span>
-                              </button>
-                            </div>
-                            <p class="mb-0"><strong>{{ getItemTotal(i) }}</strong></p>
-                          </div>
-                        </div>
-                        <hr class="mb-4">
-                      </div>
-                    </div>
+                  <div [formGroup]="basketFormGroup">
+                    <ng-container formArrayName="basketItems">
+                      @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
+                        <app-cart-item-row
+                          [itemGroup]="$any(itemGroup)"
+                          [item]="state.items[i]"
+                          [sizes]="sizes"
+                          [isOutOfStock]="isItemOutOfStock(itemGroup.get('reference')?.value)"
+                          (remove)="onToogleSelect(itemGroup.value)"
+                          (lightboxOpen)="openLightbox($event)">
+                        </app-cart-item-row>
+                      }
+                    </ng-container>
+                    @if (basketItemsArray['controls'].length === 0) {
+                      <p class="text-primary mb-0">
+                        <i class="fas fa-info-circle mr-1"></i>{{'DO_NOT_HESITATE' | translate}}
+                      </p>
                     }
-                  </ng-container>
-                  @if (basketItemsArray['controls'].length == 0) {
-                  <p class="text-primary mb-0"><i class="fas fa-info-circle mr-1"></i>
-                    {{'DO_NOT_HESITATE' | translate}}
-                  </p>
-                  }
-                </div>
+                  </div>
                 }
-                <!-- Bouton suivant -->
                 <div class="ca-next-bar">
                   <button class="btn-step-next" (click)="goToStep(2)"
-                    [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || hasOutOfStockItems">
+                          [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || hasOutOfStockItems">
                     {{'PRODUCTS.DELIVERY_TIME' | translate}} <i class="fas fa-arrow-right ml-2"></i>
                   </button>
                 </div>
               </div>
             </div>
 
-            <!-- ── Étape 2 : Livraison ────────────────────────────────────── -->
-            <div id="checkout-step-2" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 2">
-              <div class="checkout-accordion__header" (click)="goToStep(2)">
-                <span class="ca-badge" [class.ca-badge--done]="checkoutStep > 2">{{ checkoutStep > 2 ? '✓' : '2' }}</span>
-                <span class="ca-title">{{'PRODUCTS.DELIVERY_TIME' | translate}}</span>
-                <span class="ca-summary" *ngIf="checkoutStep !== 2 && deliveryMode">{{ deliveryModeSummary }}</span>
-                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 2" [class.fa-chevron-down]="checkoutStep !== 2"></i>
-              </div>
-              <div class="checkout-accordion__body" *ngIf="checkoutStep === 2">
+            <!-- ── Étape 2 : Livraison ──────────────────────────────────────── -->
+            <app-delivery-step
+              [checkoutStep]="state.checkoutStep"
+              [deliveryMode]="state.deliveryMode"
+              [pickupSubMode]="state.pickupSubMode"
+              [courierAgreementChecked]="state.courierAgreementChecked"
+              [shippingAddress]="state.shippingAddress"
+              [canGoToPayment]="canGoToPayment"
+              (headerClick)="goToStep(2)"
+              (deliveryModeToggle)="toggleDeliveryMode($event)"
+              (pickupSubModeToggle)="togglePickupSubMode($event)"
+              (courierAgreementChange)="state.courierAgreementChecked = $event"
+              (shippingAddressChange)="onShippingAddressChange()"
+              (next)="goToStep(3)">
+            </app-delivery-step>
 
-                <div class="dmode-list">
-
-                  <!-- ── Option 1 : Retrait / livraison locale ──────────────── -->
-                  <div class="dmode-card" [class.dmode-card--open]="deliveryMode === 'pickup'">
-                    <div class="dmode-header" (click)="toggleDeliveryMode('pickup')">
-                      <span class="dmode-icon">🏠</span>
-                      <div class="dmode-header-text">
-                        <span class="dmode-title">{{'PRODUCTS.DELIVERY_PICKUP' | translate}}</span>
-                        <span class="dmode-subtitle">
-                          <ng-container *ngIf="deliveryMode !== 'pickup'">{{'PRODUCTS.HOW_TO_GET_DELIVERED_FROM_LBV' | translate}}</ng-container>
-                          <ng-container *ngIf="deliveryMode === 'pickup' && !pickupSubMode">Choisissez votre mode de retrait</ng-container>
-                          <ng-container *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'">🛵 Livraison par coursier</ng-container>
-                          <ng-container *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'">🏪 Récupération au magasin</ng-container>
-                        </span>
-                      </div>
-                      <i class="fas dmode-chevron"
-                         [class.fa-chevron-down]="deliveryMode !== 'pickup'"
-                         [class.fa-chevron-up]="deliveryMode === 'pickup'"></i>
-                    </div>
-
-                    <div class="dmode-body" *ngIf="deliveryMode === 'pickup'" (click)="$event.stopPropagation()">
-                      <div class="dmode-sub-list">
-
-                        <!-- Sub-option : Coursier -->
-                        <div class="dmode-sub-card" [class.dmode-sub-card--open]="pickupSubMode === 'courier'">
-                          <div class="dmode-sub-header" (click)="togglePickupSubMode('courier')">
-                            <span class="dmode-sub-icon">🛵</span>
-                            <div class="dmode-sub-header-text">
-                              <span class="dmode-sub-title">Livraison à domicile par coursier</span>
-                              <span class="dmode-sub-subtitle" *ngIf="pickupSubMode !== 'courier'">Payé directement au livreur à la réception</span>
-                            </div>
-                            <i class="fas dmode-chevron-sm"
-                               [class.fa-chevron-down]="pickupSubMode !== 'courier'"
-                               [class.fa-chevron-up]="pickupSubMode === 'courier'"></i>
-                          </div>
-                          <div class="dmode-sub-body" *ngIf="pickupSubMode === 'courier'">
-                            <p class="dmode-sub-desc">
-                              Le vendeur vous envoie votre commande via un livreur indépendant.
-                              Vous payez directement le livreur à la réception.
-                              Cette somme ne transite pas par le site.
-                            </p>
-                            <p class="courier-rates">
-                              <strong>Tarifs indicatifs :</strong>
-                              Libreville <strong>2 000 FCFA</strong> —
-                              Akanda, Owendo &amp; PK <strong>2 500 FCFA</strong> —
-                              Port-Gentil <strong>4 500 FCFA</strong> —
-                              Franceville <strong>5 000 FCFA</strong>
-                            </p>
-                            <div class="courier-agreement" (click)="courierAgreementChecked = !courierAgreementChecked">
-                              <div class="courier-checkbox-label">
-                                <span class="courier-checkbox-icon">{{ courierAgreementChecked ? '☑' : '☐' }}</span>
-                                <span>Je m'engage à payer la somme réclamée par le livreur à la réception de ma commande (entre 2 000 et 5 000 FCFA).</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <!-- Sub-option : Magasin -->
-                        <div class="dmode-sub-card" [class.dmode-sub-card--open]="pickupSubMode === 'store'">
-                          <div class="dmode-sub-header" (click)="togglePickupSubMode('store')">
-                            <span class="dmode-sub-icon">🏪</span>
-                            <div class="dmode-sub-header-text">
-                              <span class="dmode-sub-title">Récupération au magasin</span>
-                              <span class="dmode-sub-subtitle" *ngIf="pickupSubMode !== 'store'">Venez chercher votre commande à Libreville</span>
-                            </div>
-                            <i class="fas dmode-chevron-sm"
-                               [class.fa-chevron-down]="pickupSubMode !== 'store'"
-                               [class.fa-chevron-up]="pickupSubMode === 'store'"></i>
-                          </div>
-                          <div class="dmode-sub-body" *ngIf="pickupSubMode === 'store'">
-                            <p class="dmode-sub-desc">Venez récupérer votre commande directement à notre boutique à Libreville.</p>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- ── Option 2 : Expédition internationale ───────────────── -->
-                  <div class="dmode-card" [class.dmode-card--open]="deliveryMode === 'shipping'">
-                    <div class="dmode-header" (click)="toggleDeliveryMode('shipping')">
-                      <span class="dmode-icon">✈️</span>
-                      <div class="dmode-header-text">
-                        <span class="dmode-title">{{'PRODUCTS.DELIVERY_SHIPPING' | translate}}</span>
-                        <span class="dmode-subtitle">
-                          <ng-container *ngIf="deliveryMode !== 'shipping'">DHL, FedEx — avec lien de suivi</ng-container>
-                          <ng-container *ngIf="deliveryMode === 'shipping' && isShippingAddressValid">✓ Adresse renseignée</ng-container>
-                          <ng-container *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid">Renseignez votre adresse de livraison</ng-container>
-                        </span>
-                      </div>
-                      <i class="fas dmode-chevron"
-                         [class.fa-chevron-down]="deliveryMode !== 'shipping'"
-                         [class.fa-chevron-up]="deliveryMode === 'shipping'"></i>
-                    </div>
-
-                    <div class="dmode-body" *ngIf="deliveryMode === 'shipping'" (click)="$event.stopPropagation()">
-                      <p class="dmode-sub-desc">
-                        Votre commande sera expédiée <strong>dès réception de votre paiement</strong> via
-                        <strong>DHL</strong>, <strong>FedEx</strong> ou un autre transporteur.
-                        Vous recevrez un email avec le <strong>lien de suivi</strong> dès l'expédition.
-                      </p>
-                      <p class="dmode-note">
-                        <i class="fas fa-info-circle mr-1"></i>Pour les commandes dépassant 150 € (Union Européenne), des droits de douane peuvent être exigés à la réception selon votre pays. Ces frais ne sont pas inclus dans le montant de la commande.
-                      </p>
-                      <div class="shipping-address-form">
-                        <p class="shipping-address-title">
-                          <i class="fas fa-map-marker-alt mr-2"></i>Adresse de livraison
-                        </p>
-                        <div class="addr-row">
-                          <div class="addr-field">
-                            <label class="addr-label">Prénom <span class="required">*</span></label>
-                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.firstName"
-                              placeholder="Prénom" autocomplete="given-name" (input)="onShippingAddressChange()">
-                          </div>
-                          <div class="addr-field">
-                            <label class="addr-label">Nom <span class="required">*</span></label>
-                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.lastName"
-                              placeholder="Nom de famille" autocomplete="family-name" (input)="onShippingAddressChange()">
-                          </div>
-                        </div>
-                        <div class="addr-field">
-                          <label class="addr-label">Adresse <span class="required">*</span></label>
-                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address1"
-                            placeholder="Numéro et nom de rue" autocomplete="address-line1" (input)="onShippingAddressChange()">
-                        </div>
-                        <div class="addr-field">
-                          <label class="addr-label">Complément d'adresse</label>
-                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.address2"
-                            placeholder="Appartement, bâtiment, etc. (optionnel)" autocomplete="address-line2" (input)="onShippingAddressChange()">
-                        </div>
-                        <div class="addr-row">
-                          <div class="addr-field addr-field--short">
-                            <label class="addr-label">Code postal <span class="required">*</span></label>
-                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.postalCode"
-                              placeholder="75001" autocomplete="postal-code" (input)="onShippingAddressChange()">
-                          </div>
-                          <div class="addr-field">
-                            <label class="addr-label">Ville <span class="required">*</span></label>
-                            <input type="text" class="addr-input" [(ngModel)]="shippingAddress.city" placeholder="Paris"
-                              autocomplete="address-level2" (input)="onShippingAddressChange()">
-                          </div>
-                        </div>
-                        <div class="addr-field">
-                          <label class="addr-label">Pays <span class="required">*</span></label>
-                          <input type="text" class="addr-input" [(ngModel)]="shippingAddress.country" placeholder="France"
-                            autocomplete="country-name" (input)="onShippingAddressChange()">
-                        </div>
-                        <div class="addr-field">
-                          <label class="addr-label">Téléphone <span class="required">*</span></label>
-                          <input type="tel" class="addr-input" [(ngModel)]="shippingAddress.phone"
-                            placeholder="+33 6 12 34 56 78" autocomplete="tel" (input)="onShippingAddressChange()">
-                        </div>
-                        <p class="addr-required-note"><span class="required">*</span> Champs obligatoires</p>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                <!-- Bouton suivant -->
-                <div class="ca-next-bar">
-                  <button class="btn-step-next" (click)="goToStep(3)" [disabled]="!canGoToPayment">
-                    {{'PRODUCTS.PAYMENTS_MEANS' | translate}} <i class="fas fa-arrow-right ml-2"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- ── Étape 3 : Paiement ─────────────────────────────────────── -->
-            <div id="checkout-step-3" class="checkout-accordion mb-3" [class.checkout-accordion--open]="checkoutStep === 3">
+            <!-- ── Étape 3 : Paiement ───────────────────────────────────────── -->
+            <div id="checkout-step-3" class="checkout-accordion mb-3"
+                 [class.checkout-accordion--open]="state.checkoutStep === 3">
               <div class="checkout-accordion__header" (click)="goToStep(3)">
                 <span class="ca-badge">3</span>
                 <span class="ca-title">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</span>
-                <i class="fas ca-chevron" [class.fa-chevron-up]="checkoutStep === 3" [class.fa-chevron-down]="checkoutStep !== 3"></i>
+                <i class="fas ca-chevron"
+                   [class.fa-chevron-up]="state.checkoutStep === 3"
+                   [class.fa-chevron-down]="state.checkoutStep !== 3"></i>
               </div>
-              <div class="checkout-accordion__body" *ngIf="checkoutStep === 3">
+              <div class="checkout-accordion__body" *ngIf="state.checkoutStep === 3">
                 <p class="mb-3 redInfos text-center">{{'PRODUCTS.PAYMENTS_MEANS' | translate}}</p>
-
-                <div class="payment-block mb-3" *ngIf="deliveryMode === 'pickup'">
+                <div class="payment-block mb-3" *ngIf="state.deliveryMode === 'pickup'">
                   <p class="payment-block-title"><i class="fas fa-mobile-alt mr-2"></i>{{ 'PRODUCTS.PAYMENT_LOCAL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_LOCAL_DETAIL' | translate"></p>
                 </div>
-
-                <div class="payment-block" *ngIf="deliveryMode === 'shipping'">
+                <div class="payment-block" *ngIf="state.deliveryMode === 'shipping'">
                   <p class="payment-block-title"><i class="fas fa-globe mr-2"></i>{{ 'PRODUCTS.PAYMENT_INTL_TITLE' | translate }}</p>
                   <p class="payment-block-detail" [innerHTML]="'PRODUCTS.PAYMENT_INTL_DETAIL' | translate"></p>
                 </div>
-
-                <p class="mt-3 mb-0 text-center small text-muted">
-                  {{ 'PRODUCTS.PAYMENT_CONFIRM_NOTE' | translate }}
-                </p>
+                <p class="mt-3 mb-0 text-center small text-muted">{{ 'PRODUCTS.PAYMENT_CONFIRM_NOTE' | translate }}</p>
                 <div class="ca-next-bar">
-                  <button class="btn-step-next" (click)="checkoutStep = 0">
+                  <button class="btn-step-next" (click)="state.checkoutStep = 0">
                     OK <i class="fas fa-check ml-2"></i>
                   </button>
                 </div>
@@ -351,194 +119,41 @@
           <hr class="mb-4">
           <!--Grid column-->
           <div class="col-lg-4">
-            <!-- Summary card -->
-            <div class="summary-card mb-4">
-
-              <div class="summary-header">
-                <h5 class="summary-title">{{'PRODUCTS.SUMMARY' | translate}}</h5>
-              </div>
-
-              <div class="summary-body">
-
-                <!-- Articles -->
-                <div class="summary-section-heading">
-                  @if (((nbSelectedItems$ | async) ?? 0) <= 1) {
-                    <span>Article</span>
-                  }
-                  @if (((nbSelectedItems$ | async) ?? 0) > 1) {
-                    <span>Articles</span>
-                  }
-                  <span class="summary-ht-label">{{'PRODUCTS.AMOUNT_WITHOUT_VAT' | translate}}</span>
-                </div>
-
-                @for (itemGroup of basketItemsArray['controls']; track itemGroup; let i = $index) {
-                <div class="summary-line">
-                  <span class="summary-line-ref">
-                    <b>{{itemGroup.get('reference')?.value}}</b>
-                    <span class="summary-line-qty">× {{itemGroup.get('quantity')?.value}}</span>
-                  </span>
-                  <span class="summary-line-value">{{ getItemTotal(i) }}</span>
-                </div>
-                }
-
-                <!-- Livraison -->
-                <div class="summary-line summary-line--shipping">
-                  <span>{{'PRODUCTS.SHIPPING' | translate}}</span>
-                  <span>
-                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier'" class="summary-shipping-tag summary-shipping-tag--courier">🛵 Payé au livreur</span>
-                    <span *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'store'" class="summary-shipping-tag summary-shipping-tag--store">🏪 Au magasin</span>
-                    <span *ngIf="deliveryMode === 'pickup' && !pickupSubMode">{{'PRODUCTS.GRATIS' | translate}}</span>
-                    <span *ngIf="!deliveryMode">{{'PRODUCTS.GRATIS' | translate}}</span>
-                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur !== null">{{ pricing.format(shippingCostEur!) }}</span>
-                    <span *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="shipping-pending-text">{{'SHIPPING_PENDING' | translate}}</span>
-                  </span>
-                </div>
-                <div *ngIf="deliveryMode === 'shipping' && shippingCostEur === null" class="summary-shipping-note">
-                  <i class="fas fa-info-circle mr-1"></i>Les frais de port seront communiqués dès que votre commande sera prête.
-                </div>
-
-                <!-- TVA -->
-                @if ((pricing.currency$ | async) !== 'XAF' && pricing.tvaRate > 0) {
-                <div class="summary-line">
-                  <span>TVA ({{ pricing.tvaRate * 100 }}%)</span>
-                  <span>{{ cartTva }}</span>
-                </div>
-                }
-
-                <!-- Réduction code promo -->
-                @if (appliedPromo && promoDiscountRaw > 0) {
-                <div class="summary-line summary-line--promo">
-                  <span>
-                    <i class="fas fa-tag mr-1"></i>
-                    {{'PRODUCTS.PROMO_DISCOUNT' | translate : {code: appliedPromo.code} }}
-                  </span>
-                  <span class="summary-promo-value">{{ promoDiscountFormatted }}</span>
-                </div>
-                }
-
-                <!-- Total -->
-                <div class="summary-total">
-                  <div>
-                    <span class="summary-total-label">{{'PRODUCTS.TOTAL_WITH_VAT' | translate}}</span>
-                    <div class="summary-total-sub">{{'PRODUCTS.WITH_VAT' | translate}}</div>
-                  </div>
-                  <span class="summary-total-amount">{{ cartTotal }}</span>
-                </div>
-
-              </div><!-- /summary-body -->
-
-              <!-- CTA -->
-              <div class="summary-footer">
-                <button (click)="sendCommand()"
-                  [disabled]="((nbSelectedItems$ | async) ?? 0) < 1 || commendAllreadySent || !canSend"
-                  type="button" class="summary-btn-send">
-                  <i class="fas fa-paper-plane mr-2"></i>
-                  {{ activeOrder ? 'Modifier la commande' : ('PRODUCTS.SEND_COMMAND' | translate) }}
-                </button>
-
-                <div class="summary-warnings">
-                  <p *ngIf="hasOutOfStockItems" class="summary-warning">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Un ou plusieurs articles sont épuisés. Retirez-les pour pouvoir envoyer la commande.
-                  </p>
-                  <p *ngIf="((nbSelectedItems$ | async) ?? 0) >= 1 && !deliveryMode && !hasOutOfStockItems" class="summary-warning">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir un mode de livraison pour continuer.
-                  </p>
-                  <p *ngIf="deliveryMode === 'pickup' && !pickupSubMode" class="summary-warning">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez choisir entre livraison par coursier ou récupération au magasin.
-                  </p>
-                  <p *ngIf="deliveryMode === 'pickup' && pickupSubMode === 'courier' && !courierAgreementChecked" class="summary-warning">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Veuillez cocher la case d'engagement avant de valider.
-                  </p>
-                  <p *ngIf="deliveryMode === 'shipping' && !isShippingAddressValid" class="summary-warning">
-                    <i class="fas fa-exclamation-circle mr-1"></i>Remplissez tous les champs obligatoires de l'adresse de livraison.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-            <!-- /Summary card -->
-
-            <!-- Card statuts commandes -->
-            <div class="card mb-4" *ngIf="orderStatuses.length > 0">
-              <div class="card-body">
-                <h6 class="mb-3">{{'MY_ORDERS' | translate}}</h6>
-                <div *ngFor="let orderStatus of orderStatuses" class="order-status-row">
-                  <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                    <div>
-                      <span class="small text-muted">#{{ orderStatus.id | slice:0:8 }}</span><br>
-                      <span class="small text-muted">{{ orderStatus.createdAt | date:'dd/MM/yyyy à HH:mm' }}</span>
-                    </div>
-                    <span class="order-status-badge"
-                      [style.background-color]="statusColors[orderStatus.status] || '#7f8c8d'">
-                      {{ statusLabels[orderStatus.status] || orderStatus.status }}
-                    </span>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-            <!-- Card -->
-
-            <!-- Card code promo -->
-            <div class="card mb-4">
-              <div class="card-body promo-card-body">
-                <p class="promo-card-label">{{'PRODUCTS.DISCOUNT_CODE' | translate}}</p>
-
-                @if (appliedPromo) {
-                  <!-- Code appliqué -->
-                  <div class="promo-applied">
-                    <div class="promo-applied-info">
-                      <span class="promo-applied-badge">{{ appliedPromo.code }}</span>
-                      <span class="promo-applied-detail">
-                        −{{ appliedPromo.discountPercent }}% sur la catégorie <strong>{{ appliedPromo.categoryId }}</strong>
-                        · du {{ appliedPromo.startDate | date:'dd/MM/yyyy' }} au {{ appliedPromo.endDate | date:'dd/MM/yyyy' }}
-                      </span>
-                    </div>
-                    <button type="button" class="promo-remove-btn" (click)="clearPromoCode()">
-                      <i class="fas fa-times"></i> Retirer
-                    </button>
-                  </div>
-                } @else {
-                  <!-- Saisie du code -->
-                  <div class="promo-input-row">
-                    <input
-                      type="text"
-                      class="promo-code-input"
-                      [(ngModel)]="promoCodeInput"
-                      placeholder="{{'PRODUCTS.PROMO_CODE_PLACEHOLDER' | translate}}"
-                      (keyup.enter)="applyPromoCode()"
-                      [disabled]="promoValidationStatus === 'loading'">
-                    <button
-                      type="button"
-                      class="promo-apply-btn"
-                      [disabled]="!promoCodeInput.trim() || promoValidationStatus === 'loading'"
-                      (click)="applyPromoCode()">
-                      {{ promoValidationStatus === 'loading' ? '…' : ('PRODUCTS.PROMO_CODE_APPLY' | translate) }}
-                    </button>
-                  </div>
-
-                  @if (promoValidationStatus === 'not_found') {
-                    <p class="promo-error">{{'PRODUCTS.PROMO_CODE_INVALID' | translate}}</p>
-                  }
-                  @if (promoValidationStatus === 'expired') {
-                    <p class="promo-error">{{'PRODUCTS.PROMO_CODE_EXPIRED' | translate}}</p>
-                  }
-                }
-              </div>
-            </div>
-            <!-- /Card code promo -->
+            <app-order-summary
+              [itemLines]="itemLines"
+              [nbSelectedItems$]="nbSelectedItems$"
+              [cartTotal]="cartTotal"
+              [cartTva]="cartTva"
+              [deliveryMode]="state.deliveryMode"
+              [pickupSubMode]="state.pickupSubMode"
+              [shippingCostEur]="shippingCostEur"
+              [appliedPromo]="state.appliedPromo"
+              [promoDiscountFormatted]="promoDiscountFormatted"
+              [promoCodeInput]="state.promoCodeInput"
+              [promoValidationStatus]="state.promoValidationStatus"
+              [orderStatuses]="state.orderStatuses"
+              [statusLabels]="statusLabels"
+              [statusColors]="statusColors"
+              [canSend]="canSend"
+              [hasOutOfStockItems]="hasOutOfStockItems"
+              [commendAllreadySent]="state.commendAllreadySent"
+              [activeOrder]="activeOrder"
+              [courierAgreementChecked]="state.courierAgreementChecked"
+              [isShippingAddressValid]="isShippingAddressValid"
+              (sendCommand)="sendCommand()"
+              (applyPromoCode)="applyPromoCode()"
+              (clearPromoCode)="clearPromoCode()"
+              (promoCodeInputChange)="state.promoCodeInput = $event">
+            </app-order-summary>
           </div>
-          <!--Grid column-->
         </div>
-        <!-- Grid row -->
       </section>
-      <!--Section: Block Content-->
     </div>
   </main>
 </div>
 
 <!-- Lightbox -->
-<div *ngIf="lightboxSrc" class="cart-lightbox-overlay" (click)="closeLightbox()">
-  <img [src]="lightboxSrc" class="cart-lightbox-img" (click)="$event.stopPropagation()" />
+<div *ngIf="state.lightboxSrc" class="cart-lightbox-overlay" (click)="closeLightbox()">
+  <img [src]="state.lightboxSrc" class="cart-lightbox-img" (click)="$event.stopPropagation()" />
   <button class="cart-lightbox-close" (click)="closeLightbox()">✕</button>
 </div>

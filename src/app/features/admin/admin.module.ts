@@ -12,9 +12,10 @@ import { AdminCatalogComponent } from './admin-catalog/admin-catalog.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { AdminPromoCodesComponent } from './admin-promo-codes/admin-promo-codes.component';
+import { AdminCategoryListComponent } from './admin-catalog/admin-category-list/admin-category-list.component';
 
 @NgModule({
-  declarations: [AdminDashboardComponent, AdminCatalogComponent, AdminSettingsComponent, ConfirmDialogComponent, AdminPromoCodesComponent],
+  declarations: [AdminDashboardComponent, AdminCatalogComponent, AdminSettingsComponent, ConfirmDialogComponent, AdminPromoCodesComponent, AdminCategoryListComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { AuthRepository } from './auth.repository';
 import { CatalogRepository } from './catalog.repository';
 import { OrdersRepository } from './orders.repository';
 import { UsersRepository } from './users.repository';
@@ -10,6 +11,7 @@ import { UsersRepository } from './users.repository';
  */
 @NgModule({
   providers: [
+    AuthRepository,
     CatalogRepository,
     OrdersRepository,
     UsersRepository,

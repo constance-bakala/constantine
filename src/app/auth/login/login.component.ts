@@ -1,10 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-
-import { environment } from '../../../environments/environment'; // <-- ajuste le chemin si besoin
+import { AuthRepository, AUTH_PROVIDERS, AUTH_PERSISTENCE } from '@app/core/firebase/auth.repository';
 import { ActionAuthLoggedIn } from '@app/auth/store/auth.actions';
 import { initLoginPayload } from '@helpers/common.services.utils';
 import { DEFAULT_LOCALE_ID } from '@helpers/constants';
@@ -21,25 +18,23 @@ export class LoginComponent implements OnInit, OnDestroy {
   ui: any;
 
   signInOptions = [
-    { provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
-    { provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
-    { provider: firebase.auth.EmailAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
-    { provider: firebase.auth.TwitterAuthProvider.PROVIDER_ID, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: AUTH_PROVIDERS.GOOGLE,   customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: AUTH_PROVIDERS.FACEBOOK, customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: AUTH_PROVIDERS.EMAIL,    customParameters: { locale: DEFAULT_LOCALE_ID } },
+    { provider: AUTH_PROVIDERS.TWITTER,  customParameters: { locale: DEFAULT_LOCALE_ID } },
   ];
 
-  constructor(private ngZone: NgZone, private store: Store<any>) {}
+  constructor(
+    private ngZone: NgZone,
+    private store: Store<any>,
+    private authRepository: AuthRepository,
+  ) {}
 
   async ngOnInit(): Promise<void> {
-    // ✅ IMPORTANT : init Firebase COMPAT (FirebaseUI dépend de compat)
-    if (!firebase.apps?.length) {
-      firebase.initializeApp(environment.firebaseConfig);
-    }
-
-    (window as any).firebase = firebase;
-
-    firebase.auth().languageCode = DEFAULT_LOCALE_ID;
-    await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
+    this.authRepository.ensureAppInitialized();
+    this.authRepository.exposeGlobally();
+    this.authRepository.setLanguageCode(DEFAULT_LOCALE_ID);
+    await this.authRepository.setPersistence(AUTH_PERSISTENCE.LOCAL);
     this.centerOAuthPopup();
     this.startFirebaseUi('popup');
   }
@@ -47,11 +42,11 @@ export class LoginComponent implements OnInit, OnDestroy {
   /** Intercepte window.open pour centrer la fenêtre OAuth sur l'écran. */
   private centerOAuthPopup(): void {
     const original = window.open.bind(window);
-    (window as any).open = function(url?: string | URL, target?: string, _features?: string) {
+    (window as any).open = function (url?: string | URL, target?: string, _features?: string) {
       const w = 500;
       const h = 600;
-      const left = Math.round((screen.width  - w) / 2);
-      const top  = Math.round((screen.height - h) / 2);
+      const left = Math.round((screen.width - w) / 2);
+      const top = Math.round((screen.height - h) / 2);
       const centered = `width=${w},height=${h},left=${left},top=${top},scrollbars=yes,resizable=yes`;
       return original(url, target ?? '_blank', centered);
     };
@@ -79,11 +74,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       },
     };
 
+    const auth = this.authRepository.getCompatAuth();
     try {
       const existing = firebaseui.auth.AuthUI.getInstance();
-      this.ui = existing ?? new firebaseui.auth.AuthUI(firebase.auth());
+      this.ui = existing ?? new firebaseui.auth.AuthUI(auth);
     } catch {
-      this.ui = new firebaseui.auth.AuthUI(firebase.auth());
+      this.ui = new firebaseui.auth.AuthUI(auth);
     }
     this.ui.start('#firebaseui-auth-container', uiConfig);
   }

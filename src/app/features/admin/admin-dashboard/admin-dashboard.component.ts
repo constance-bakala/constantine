@@ -1,49 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Database, ref, onValue, update, remove, runTransaction } from '@angular/fire/database';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { PricingService } from '@shared/services/pricing.service';
+import { OrdersRepository } from '@app/core/firebase/orders.repository';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
-export type OrderStatus = 'pending' | 'ready' | 'paid' | 'shipped' | 'cancelled';
-
-export interface OrderItem {
-  title?: string;
-  reference?: string;
-  price?: number;
-  path?: string;
-  coverUrl?: string;
-  basketInfos?: {
-    selectedQuantity: number;
-    selectedSize?: string;
-    selectedModel?: string;
-  };
-}
-
-export interface Order {
-  id: string;
-  uid?: string;
-  status: OrderStatus;
-  customerEmail: string;
-  customerName: string;
-  items: OrderItem[];
-  createdAt: number;
-  updatedAt?: number;
-  deliveryMode?: 'pickup' | 'shipping';
-  pickupSubMode?: 'courier' | 'store';
-  shippingAddress?: { firstName: string; lastName: string; address1: string; address2?: string; postalCode: string; city: string; country: string; phone: string };
-  trackingUrl?: string;
-  carrierName?: string;
-  shippingCost?: number;
-  currency?: string;
-}
-
-export const DELIVERY_MODE_LABELS: Record<string, string> = {
-  pickup:          '🏪 Retrait au Gabon',
-  pickup_courier:  '🛵 Payé à réception au livreur',
-  pickup_store:    '🏪 Récupération au magasin',
-  shipping:        '✈️ Expédition internationale',
-};
+import {
+  Order, OrderStatus,
+  DELIVERY_MODE_LABELS, ORDER_STATUS_COLORS, ORDER_STATUS_LABELS, EUR_TO_XAF,
+} from './admin-dashboard.types';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -73,13 +37,29 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   shippingCostInput: number | null = null;
   shippingCostError = false;
 
-
   activeTab: 'orders' | 'catalog' | 'settings' | 'promos' = 'orders';
 
-  // ── Filtre + pagination commandes
+  // ── Filtre + pagination commandes ─────────────────────────────────────────
   ordersFilter = '';
   readonly ordersPageSize = 10;
   ordersPage = 1;
+
+  readonly statusLabels       = ORDER_STATUS_LABELS;
+  readonly statusColors       = ORDER_STATUS_COLORS;
+  readonly deliveryModeLabels = DELIVERY_MODE_LABELS;
+  readonly EUR_TO_XAF         = EUR_TO_XAF;
+
+  // ── Privé ─────────────────────────────────────────────────────────────────
+  private ordersSubscription: Subscription | null = null;
+  private ordersRetryTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  constructor(
+    public pricing: PricingService,
+    private ordersRepository: OrdersRepository,
+    private dialog: MatDialog,
+  ) {}
+
+  // ── Getters ───────────────────────────────────────────────────────────────
 
   get filteredOrders(): Order[] {
     const q = this.ordersFilter.trim().toLowerCase();
@@ -104,55 +84,18 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     return Array.from({ length: this.ordersTotalPages }, (_, i) => i + 1);
   }
 
-  goToOrdersPage(page: number): void {
-    if (page < 1 || page > this.ordersTotalPages) return;
-    this.ordersPage = page;
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+  ngOnInit(): void {
+    this.subscribeToOrders();
   }
 
-  onOrdersFilterChange(): void {
-    this.ordersPage = 1;
+  ngOnDestroy(): void {
+    this.ordersSubscription?.unsubscribe();
+    if (this.ordersRetryTimeout) clearTimeout(this.ordersRetryTimeout);
   }
 
-  private ordersUnsubscribe: (() => void) | null = null;
-  private ordersRetryTimeout: ReturnType<typeof setTimeout> | null = null;
-
-  readonly statusLabels: Record<OrderStatus, string> = {
-    pending:   'En attente',
-    ready:     'Prête',
-    paid:      'Payée',
-    shipped:   'Expédiée',
-    cancelled: 'Annulée',
-  };
-
-  readonly statusColors: Record<OrderStatus, string> = {
-    pending:   '#e67e22',
-    ready:     '#148f77',
-    paid:      '#2c3e50',
-    shipped:   '#6c3483',
-    cancelled: '#95a5a6',
-  };
-
-  readonly deliveryModeLabels = DELIVERY_MODE_LABELS;
-
-  constructor(
-    public pricing: PricingService,
-    private db: Database,
-    private fns: Functions,
-    private dialog: MatDialog,
-  ) {}
-
-  readonly EUR_TO_XAF = 655.96;
-
-  private orderRawHT(order: Order): number {
-    return (order.items ?? []).reduce((sum, item) => {
-      const qty = item.basketInfos?.selectedQuantity ?? 1;
-      return sum + (item.price ?? 0) * qty;
-    }, 0);
-  }
-
-  private toXAF(eur: number): number {
-    return Math.round(eur * this.EUR_TO_XAF / 100) * 100;
-  }
+  // ── Formatage prix ────────────────────────────────────────────────────────
 
   formatXAF(xaf: number): string {
     return Math.round(xaf).toLocaleString('fr-FR') + ' FCFA';
@@ -165,14 +108,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   formatByOrderCurrency(amountEur: number, order: Order): string {
     return order.currency === 'EUR'
       ? this.formatEUR(amountEur)
-      : this.formatXAF(this.toXAF(amountEur));
+      : this.formatXAF(Math.round(amountEur * EUR_TO_XAF / 100) * 100);
   }
 
   orderTotal(order: Order): string {
     return this.formatByOrderCurrency(this.orderRawHT(order), order);
   }
 
-  /** TVA 10% uniquement pour expédition internationale. */
   orderTvaAmount(order: Order): string | null {
     if (order.deliveryMode !== 'shipping') return null;
     return this.formatByOrderCurrency(this.orderRawHT(order) * 0.1, order);
@@ -183,57 +125,36 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     const tvaEur = order.deliveryMode === 'shipping' ? htEur * 0.1 : 0;
     const shippingXAF = order.shippingCost ?? 0;
     if (order.currency === 'EUR') {
-      const shippingEur = shippingXAF / this.EUR_TO_XAF;
-      return this.formatEUR(htEur + tvaEur + shippingEur);
+      return this.formatEUR(htEur + tvaEur + shippingXAF / EUR_TO_XAF);
     }
-    return this.formatXAF(this.toXAF(htEur) + this.toXAF(tvaEur) + shippingXAF);
+    const toXAF = (eur: number) => Math.round(eur * EUR_TO_XAF / 100) * 100;
+    return this.formatXAF(toXAF(htEur) + toXAF(tvaEur) + shippingXAF);
   }
+
+  // ── Pagination / filtre ───────────────────────────────────────────────────
+
+  goToOrdersPage(page: number): void {
+    if (page < 1 || page > this.ordersTotalPages) return;
+    this.ordersPage = page;
+  }
+
+  onOrdersFilterChange(): void {
+    this.ordersPage = 1;
+  }
+
+  // ── UI ────────────────────────────────────────────────────────────────────
 
   toggleItem(orderId: string, index: number): void {
     const key = `${orderId}-${index}`;
     this.expandedItemKey = this.expandedItemKey === key ? null : key;
   }
 
-  openLightbox(src: string): void { this.lightboxSrc = src; }
-  closeLightbox(): void { this.lightboxSrc = null; }
-
   isExpanded(orderId: string, index: number): boolean {
     return this.expandedItemKey === `${orderId}-${index}`;
   }
 
-  ngOnInit(): void {
-    this.subscribeToOrders();
-  }
-
-  private subscribeToOrders(): void {
-    this.ordersUnsubscribe?.();
-    this.ordersUnsubscribe = onValue(
-      ref(this.db, 'orders'),
-      (snap) => {
-        this.loading = false;
-        this.error = null;
-        if (!snap.exists()) { this.orders = []; return; }
-        const raw = snap.val() as Record<string, any>;
-        this.orders = Object.entries(raw)
-          .map(([id, data]) => ({ id, ...data } as Order))
-          .sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
-        if (this.selectedOrder) {
-          this.selectedOrder = this.orders.find(o => o.id === this.selectedOrder!.id) ?? null;
-        }
-      },
-      (err) => {
-        this.loading = false;
-        console.warn('[AdminDashboard] orders listener revoked, retrying in 3s…', err);
-        // Réabonnement automatique après un court délai (token refresh transitoire)
-        this.ordersRetryTimeout = setTimeout(() => this.subscribeToOrders(), 3000);
-      }
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.ordersUnsubscribe?.();
-    if (this.ordersRetryTimeout) clearTimeout(this.ordersRetryTimeout);
-  }
+  openLightbox(src: string): void { this.lightboxSrc = src; }
+  closeLightbox(): void { this.lightboxSrc = null; }
 
   openShippingForm(orderId: string): void {
     this.shippingFormOrderId = orderId;
@@ -243,9 +164,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.error = null;
   }
 
-  cancelShippingForm(): void {
-    this.shippingFormOrderId = null;
-  }
+  cancelShippingForm(): void { this.shippingFormOrderId = null; }
 
   openReadyForm(orderId: string): void {
     this.readyFormOrderId = orderId;
@@ -254,162 +173,7 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.error = null;
   }
 
-  cancelReadyForm(): void {
-    this.readyFormOrderId = null;
-  }
-
-  openCancelConfirm(order: Order): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '420px',
-      data: {
-        title: 'Annuler la commande',
-        message: '⚠️ Confirmer l\'annulation ? Le stock sera restauré et le client ne verra plus cette commande.',
-        confirmLabel: 'Annuler la commande',
-        cancelLabel: 'Retour',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) this.doCancel(order);
-    });
-  }
-
-  private async doCancel(order: Order): Promise<void> {
-    if (this.updatingOrderId) return;
-    this.updatingOrderId = order.id;
-    this.error = null;
-    try {
-      // Suppression complète : orders + orderStatus + commends
-      const removes: Promise<void>[] = [
-        remove(ref(this.db, `orders/${order.id}`)),
-      ];
-      if (order.uid) {
-        removes.push(remove(ref(this.db, `users/${order.uid}/orderStatus/${order.id}`)));
-        removes.push(remove(ref(this.db, `users/${order.uid}/commends`)));
-      }
-      await Promise.all(removes);
-
-      // Restauration du stock
-      const items: OrderItem[] = Array.isArray(order.items) ? order.items : Object.values(order.items ?? {});
-      await Promise.all(items.map(item => {
-        if (!item.reference) return Promise.resolve();
-        const qty = item.basketInfos?.selectedQuantity ?? 1;
-        return runTransaction(ref(this.db, `stock/${item.reference}`), (current: any) => {
-          if (current === null) return { available: qty };
-          return { ...current, available: (current.available ?? 0) + qty };
-        });
-      }));
-
-      this.selectedOrder = null;
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors de l\'annulation.';
-      console.error(err);
-    } finally {
-      this.updatingOrderId = null;
-    }
-  }
-
-  async deleteOrder(order: Order): Promise<void> {
-    if (this.updatingOrderId) return;
-    this.updatingOrderId = order.id;
-    this.error = null;
-    try {
-      const removes: Promise<void>[] = [
-        remove(ref(this.db, `orders/${order.id}`)),
-      ];
-      if (order.uid) {
-        removes.push(remove(ref(this.db, `users/${order.uid}/orderStatus/${order.id}`)));
-      }
-      await Promise.all(removes);
-      this.selectedOrder = null;
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors de la suppression.';
-      console.error(err);
-    } finally {
-      this.updatingOrderId = null;
-    }
-  }
-
-  async confirmReady(order: Order): Promise<void> {
-    const cost = this.shippingCostInput;
-    if (cost === null || cost < 0) {
-      this.shippingCostError = true;
-      return;
-    }
-    if (this.updatingOrderId) return;
-    this.updatingOrderId = order.id;
-    this.shippingCostError = false;
-    this.error = null;
-    try {
-      await httpsCallable(this.fns, 'updateOrderStatus')({ orderId: order.id, status: 'ready', shippingCost: cost! });
-
-      // Écriture directe pour garantir la persistance de shippingCost
-      // indépendamment de la version déployée de la cloud function.
-      const writes: Record<string, any> = {
-        [`orders/${order.id}/shippingCost`]: cost!,
-      };
-      if (order.uid) {
-        writes[`users/${order.uid}/orderStatus/${order.id}/shippingCost`] = cost!;
-      }
-      await update(ref(this.db, '/'), writes);
-
-      this.readyFormOrderId = null;
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors de la mise à jour.';
-      console.error(err);
-    } finally {
-      this.updatingOrderId = null;
-    }
-  }
-
-  async confirmShipped(order: Order): Promise<void> {
-    if (!this.trackingUrl.trim()) {
-      this.trackingUrlError = true;
-      return;
-    }
-    if (this.updatingOrderId) return;
-    this.updatingOrderId = order.id;
-    this.trackingUrlError = false;
-    this.error = null;
-
-    try {
-      await httpsCallable(this.fns, 'updateOrderStatus')({ orderId: order.id, status: 'shipped', trackingUrl: this.trackingUrl.trim(), carrierName: this.carrierName.trim() });
-      this.shippingFormOrderId = null;
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors de l\'expédition.';
-      console.error(err);
-    } finally {
-      this.updatingOrderId = null;
-    }
-  }
-
-  async setStatus(order: Order, status: OrderStatus): Promise<void> {
-    if (this.updatingOrderId) return;
-    this.updatingOrderId = order.id;
-    this.error = null;
-
-    try {
-      await httpsCallable(this.fns, 'updateOrderStatus')({ orderId: order.id, status });
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors de la mise à jour.';
-      console.error(err);
-    } finally {
-      this.updatingOrderId = null;
-    }
-  }
-
-  async resendPaymentEmail(order: Order): Promise<void> {
-    if (this.resendingEmailId) return;
-    this.resendingEmailId = order.id;
-    this.error = null;
-    try {
-      await httpsCallable(this.fns, 'resendPaymentEmail')({ orderId: order.id });
-    } catch (err: any) {
-      this.error = err?.message ?? 'Erreur lors du renvoi de l\'email.';
-      console.error(err);
-    } finally {
-      this.resendingEmailId = null;
-    }
-  }
+  cancelReadyForm(): void { this.readyFormOrderId = null; }
 
   selectOrder(order: Order): void {
     this.selectedOrder = order;
@@ -428,7 +192,107 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   minVal(a: number, b: number): number { return Math.min(a, b); }
 
-  trackById(_: number, order: Order): string {
-    return order.id;
+  trackById(_: number, order: Order): string { return order.id; }
+
+  // ── Actions commandes ─────────────────────────────────────────────────────
+
+  openCancelConfirm(order: Order): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: {
+        title: 'Annuler la commande',
+        message: '⚠️ Confirmer l\'annulation ? Le stock sera restauré et le client ne verra plus cette commande.',
+        confirmLabel: 'Annuler la commande',
+        cancelLabel: 'Retour',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) this.doCancel(order);
+    });
+  }
+
+  private async doCancel(order: Order): Promise<void> {
+    await this.runOrderAction(order.id, () => this.ordersRepository.cancelOrder(order));
+    if (!this.error) this.selectedOrder = null;
+  }
+
+  async deleteOrder(order: Order): Promise<void> {
+    await this.runOrderAction(order.id, () => this.ordersRepository.deleteOrder(order));
+    if (!this.error) this.selectedOrder = null;
+  }
+
+  async confirmReady(order: Order): Promise<void> {
+    const cost = this.shippingCostInput;
+    if (cost === null || cost < 0) { this.shippingCostError = true; return; }
+    await this.runOrderAction(order.id, () => this.ordersRepository.markReady(order, cost));
+    if (!this.error) this.readyFormOrderId = null;
+  }
+
+  async confirmShipped(order: Order): Promise<void> {
+    if (!this.trackingUrl.trim()) { this.trackingUrlError = true; return; }
+    await this.runOrderAction(order.id, () =>
+      this.ordersRepository.markShipped(order, this.trackingUrl.trim(), this.carrierName.trim())
+    );
+    if (!this.error) this.shippingFormOrderId = null;
+  }
+
+  async setStatus(order: Order, status: OrderStatus): Promise<void> {
+    await this.runOrderAction(order.id, () => this.ordersRepository.setStatus(order.id, status));
+  }
+
+  async resendPaymentEmail(order: Order): Promise<void> {
+    if (this.resendingEmailId) return;
+    this.resendingEmailId = order.id;
+    this.error = null;
+    try {
+      await this.ordersRepository.resendPaymentEmail(order.id);
+    } catch (err: any) {
+      this.error = err?.message ?? 'Erreur lors du renvoi de l\'email.';
+      console.error(err);
+    } finally {
+      this.resendingEmailId = null;
+    }
+  }
+
+  // ── Privé ─────────────────────────────────────────────────────────────────
+
+  private subscribeToOrders(): void {
+    this.ordersSubscription?.unsubscribe();
+    this.ordersSubscription = this.ordersRepository.watchOrders().subscribe({
+      next: (orders) => {
+        this.loading = false;
+        this.error = null;
+        this.orders = orders;
+        if (this.selectedOrder) {
+          this.selectedOrder = orders.find(o => o.id === this.selectedOrder!.id) ?? null;
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        console.warn('[AdminDashboard] orders listener revoked, retrying in 3s…', err);
+        this.ordersRetryTimeout = setTimeout(() => this.subscribeToOrders(), 3000);
+      },
+    });
+  }
+
+  private orderRawHT(order: Order): number {
+    return (order.items ?? []).reduce((sum, item) => {
+      return sum + (item.price ?? 0) * (item.basketInfos?.selectedQuantity ?? 1);
+    }, 0);
+  }
+
+  /** Wrapper générique : gère updatingOrderId, error, finally. */
+  private async runOrderAction(orderId: string, action: () => Promise<void>): Promise<void> {
+    if (this.updatingOrderId) return;
+    this.updatingOrderId = orderId;
+    this.error = null;
+    try {
+      await action();
+    } catch (err: any) {
+      this.error = err?.message ?? 'Erreur lors de la mise à jour.';
+      console.error(err);
+    } finally {
+      this.updatingOrderId = null;
+    }
   }
 }
