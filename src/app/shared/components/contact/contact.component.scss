@@ -77,6 +77,16 @@ $gold : #c9a84c;
   font-weight: 600;
   color: #1a1a2e;
   display: block;
+
+  &.pre-wrap {
+    white-space: pre-wrap;
+    text-align: left;
+  }
+}
+
+.contact-value--muted {
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.35);
 }
 
 .contact-link {

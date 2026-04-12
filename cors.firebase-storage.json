@@ -1,0 +1,35 @@
+[
+  {
+    "origin": [
+      "https://REPLACE_WITH_PROJECT_ID.web.app",
+      "https://REPLACE_WITH_PROJECT_ID.firebaseapp.com",
+      "http://localhost:4200"
+    ],
+    "method": ["GET", "HEAD", "PUT", "POST", "DELETE"],
+    "responseHeader": [
+      "Authorization",
+      "Content-Type",
+      "Content-Length",
+      "Access-Control-Allow-Origin",
+      "x-goog-resumable",
+      "X-Goog-Upload-Protocol",
+      "X-Goog-Upload-Command",
+      "X-Goog-Upload-Header-Content-Length",
+      "X-Goog-Upload-Header-Content-Type",
+      "X-Goog-Upload-Offset",
+      "X-Goog-Upload-Status",
+      "X-Goog-Upload-Chunk-Granularity",
+      "X-Goog-Upload-URL",
+      "x-firebase-storage-version",
+      "X-Firebase-Storage-Version",
+      "x-goog-request-id"
+    ],
+    "maxAgeSeconds": 3600
+  },
+  {
+    "origin": ["https://*.pinterest.com", "https://pinterest.com"],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type", "Access-Control-Allow-Origin"],
+    "maxAgeSeconds": 3600
+  }
+]

@@ -10,7 +10,7 @@ import { ActionAuthLoggedIn, ActionAuthLogout } from '@app/auth/store/auth.actio
 import { initLoginPayload } from '@helpers/common.services.utils';
 import { TranslateService } from '@ngx-translate/core';
 import { DEFAULT_LOCALE_ID } from '@helpers/constants';
-import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
+import { ShopConfigService } from '@shared/services/shop-config.service';
 
 import { User } from 'firebase/auth';
 
@@ -30,16 +30,15 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
 
   user$: Observable<User | null>;
   appTitle = '';
+  logoUrl = '';
   showEmail = false;
-  private appTitleFr = '';
-  private appTitleEn = '';
 
   constructor(
     private store: Store<any>,
     private ngZone: NgZone,
     private auth: Auth,
     public translate: TranslateService,
-    private configRepo: AppConfigRepository,
+    private shopConfig: ShopConfigService,
     private router: Router,
     private usersRepository: UsersRepository,
   ) {
@@ -67,15 +66,10 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.subs.add(
-      this.configRepo.watchAppTitle().subscribe(t => {
-        this.appTitleFr = t.fr ?? '';
-        this.appTitleEn = t.en ?? '';
-        this.updateAppTitle(this.translate.currentLang ?? 'fr');
+      this.shopConfig.shop$.subscribe(shop => {
+        this.appTitle = shop.name || 'DÉLICE ÉTERNEL';
+        this.logoUrl  = shop.logoUrl || 'assets/style-sauvage_only_logo-removebg.png';
       })
-    );
-
-    this.subs.add(
-      this.translate.onLangChange.subscribe(({ lang }) => this.updateAppTitle(lang))
     );
   }
 
@@ -88,11 +82,6 @@ export class NavigationComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.subs.unsubscribe();
     this.destroyNavScroll?.();
-  }
-
-  private updateAppTitle(lang: string): void {
-    const title = lang === 'en' ? this.appTitleEn : this.appTitleFr;
-    this.appTitle = title || 'DÉLICE ÉTERNEL';
   }
 
   switchLang(lang: string): void {

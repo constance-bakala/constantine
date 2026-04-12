@@ -3,20 +3,72 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, from, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import {
-  Database, ref, onValue, get, set,
+  Database, ref, onValue, get, set, update,
 } from '@angular/fire/database';
 import {
   Storage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject,
 } from '@angular/fire/storage';
 import { firstValueFrom } from 'rxjs';
 
+// ── Types exports ─────────────────────────────────────────────────────────────
+
 export interface CarouselSlide {
   imageUrl: string;
   alt?: string;
-  storagePath?: string; // chemin Firebase Storage pour suppression
+  storagePath?: string;
 }
 
-// ── Deep merge (firebase values override static, missing keys kept from static)
+export interface ThemeConfig {
+  primaryColor: string;
+  primaryDark: string;
+  secondaryColor: string;
+  fontFamily: string;
+  heroImage?: string;
+}
+
+export interface ShopConfig {
+  name: string;
+  tagline: string;
+  whatsapp: string;
+  email: string;
+  address: string;
+  logoUrl: string;
+  faviconUrl: string;
+}
+
+export const THEME_DEFAULTS: ThemeConfig = {
+  primaryColor:   '#1abc9c',
+  primaryDark:    '#148f77',
+  secondaryColor: '#2c3e50',
+  fontFamily:     'Roboto, "Helvetica Neue", sans-serif',
+};
+
+/** `#rrggbb` pour `<input type="color">` et sauvegardes RTDB stables. */
+export function normalizeHexColor(value: string | undefined | null, fallback: string): string {
+  if (value == null || typeof value !== 'string') return fallback;
+  const raw = value.trim();
+  if (!raw.startsWith('#')) return fallback;
+  const body = raw.slice(1);
+  if (/^[0-9a-fA-F]{6}$/.test(body)) return `#${body.toLowerCase()}`;
+  if (/^[0-9a-fA-F]{3}$/.test(body)) {
+    const [r, g, b] = body.split('');
+    return `#${r}${r}${g}${g}${b}${b}`.toLowerCase();
+  }
+  return fallback;
+}
+
+export const SHOP_DEFAULTS: ShopConfig = {
+  name:       'Délice Éternel',
+  tagline:    'Prêt-à-porter africain',
+  whatsapp:   '+24177601044',
+  email:      '',
+  address:    '',
+  logoUrl:    'assets/style-sauvage_only_logo-removebg.png',
+  faviconUrl: '',
+};
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 export function mergeDeep(target: any, ...sources: any[]): any {
   for (const source of sources) {
     if (!source) continue;
@@ -32,7 +84,6 @@ export function mergeDeep(target: any, ...sources: any[]): any {
   return target;
 }
 
-// ── Flatten nested object to dot-notation keys
 export function flattenTranslations(obj: any, prefix = ''): Record<string, string> {
   const result: Record<string, string> = {};
   for (const [key, val] of Object.entries(obj)) {
@@ -46,7 +97,6 @@ export function flattenTranslations(obj: any, prefix = ''): Record<string, strin
   return result;
 }
 
-// ── Unflatten dot-notation keys back to nested object
 export function unflattenTranslations(flat: Record<string, string>): Record<string, any> {
   const result: Record<string, any> = {};
   for (const [key, val] of Object.entries(flat)) {
@@ -61,6 +111,8 @@ export function unflattenTranslations(flat: Record<string, string>): Record<stri
   return result;
 }
 
+// ── Repository ────────────────────────────────────────────────────────────────
+
 @Injectable({ providedIn: 'root' })
 export class AppConfigRepository {
 
@@ -70,7 +122,7 @@ export class AppConfigRepository {
     private http: HttpClient,
   ) {}
 
-  // ── Translations ───────────────────────────────────────────────────────────
+  // ── Translations ────────────────────────────────────────────────────────────
 
   getTranslationsOnce(lang: string): Promise<Record<string, any> | null> {
     return get(ref(this.db, `config/i18n/${lang}`)).then(snap => snap.val());
@@ -80,7 +132,6 @@ export class AppConfigRepository {
     return set(ref(this.db, `config/i18n/${lang}`), translations);
   }
 
-  /** Charge les traductions statiques JSON (source de vérité initiale). */
   loadStaticTranslations(lang: string): Promise<Record<string, any>> {
     return firstValueFrom(
       this.http.get<Record<string, any>>(`./assets/i18n/${lang}.json`).pipe(
@@ -89,7 +140,7 @@ export class AppConfigRepository {
     );
   }
 
-  // ── Carousel ──────────────────────────────────────────────────────────────
+  // ── Carousel ────────────────────────────────────────────────────────────────
 
   watchCarousel(): Observable<CarouselSlide[]> {
     return new Observable(observer => {
@@ -129,7 +180,7 @@ export class AppConfigRepository {
     }
   }
 
-  // ── App title ─────────────────────────────────────────────────────────────
+  // ── App title (legacy — conservé pour compatibilité) ───────────────────────
 
   watchAppTitle(): Observable<{ fr: string; en: string }> {
     return new Observable(observer => {
@@ -149,9 +200,8 @@ export class AppConfigRepository {
     return set(ref(this.db, 'config/appTitle'), { fr, en });
   }
 
-  // ── Labels configurables ────────────────────────────────────────────────────
+  // ── Labels configurables ─────────────────────────────────────────────────────
 
-  /** Observe le titre de la section "Vos suggestions" (défaut si absent dans Firebase). */
   watchComplementaryLookTitle(): Observable<{ fr: string; en: string }> {
     return new Observable(observer => {
       const unsubscribe = onValue(
@@ -168,5 +218,56 @@ export class AppConfigRepository {
 
   saveComplementaryLookTitle(fr: string, en: string): Promise<void> {
     return set(ref(this.db, 'config/labels/complementaryLookTitle'), { fr, en });
+  }
+
+  // ── Theme ────────────────────────────────────────────────────────────────────
+
+  watchTheme(): Observable<ThemeConfig> {
+    return new Observable(observer => {
+      const unsubscribe = onValue(
+        ref(this.db, 'config/theme'),
+        snap => observer.next({ ...THEME_DEFAULTS, ...(snap.val() ?? {}) }),
+        err => observer.error(err),
+      );
+      return () => unsubscribe();
+    });
+  }
+
+  saveTheme(theme: Partial<ThemeConfig>): Promise<void> {
+    return update(ref(this.db, 'config/theme'), theme as Record<string, any>);
+  }
+
+  // ── Shop ─────────────────────────────────────────────────────────────────────
+
+  watchShop(): Observable<ShopConfig> {
+    return new Observable(observer => {
+      const unsubscribe = onValue(
+        ref(this.db, 'config/shop'),
+        snap => observer.next({ ...SHOP_DEFAULTS, ...(snap.val() ?? {}) }),
+        err => observer.error(err),
+      );
+      return () => unsubscribe();
+    });
+  }
+
+  saveShop(shop: Partial<ShopConfig>): Promise<void> {
+    return update(ref(this.db, 'config/shop'), shop as Record<string, any>);
+  }
+
+  // ── Logo / Favicon (Firebase Storage) ────────────────────────────────────────
+  // Même flux que le template white-label (uploadBytes + getDownloadURL).
+  // Si le navigateur signale une erreur CORS sur firebasestorage.googleapis.com,
+  // configurer le bucket GCS : voir readme-docs/firebase-storage-cors.md et cors.firebase-storage.json à la racine du repo.
+
+  async uploadLogo(file: File): Promise<string> {
+    const sRef = storageRef(this.storage, 'config/branding/logo');
+    await uploadBytes(sRef, file);
+    return getDownloadURL(sRef);
+  }
+
+  async uploadFavicon(file: File): Promise<string> {
+    const sRef = storageRef(this.storage, 'config/branding/favicon');
+    await uploadBytes(sRef, file);
+    return getDownloadURL(sRef);
   }
 }

@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {GoogleMapConfig, GooglemapZoom} from '../../interfaces/map.interfaces';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ShopConfig } from '@app/core/firebase/app-config.repository';
+import { ShopConfigService } from '@shared/services/shop-config.service';
 
 @Component({
   selector: 'app-contact',
@@ -7,11 +9,21 @@ import {GoogleMapConfig, GooglemapZoom} from '../../interfaces/map.interfaces';
   styleUrls: ['./contact.component.scss'],
   standalone: false,
 })
-export class ContactComponent implements OnInit {
+export class ContactComponent {
 
-  constructor() {
-  }
-  ngOnInit() {
+  readonly shop$: Observable<ShopConfig>;
+
+  constructor(readonly shopConfig: ShopConfigService) {
+    this.shop$ = this.shopConfig.shop$;
   }
 
+  mailtoHref(email: string | undefined): string | null {
+    const e = (email ?? '').trim();
+    return e ? `mailto:${e}` : null;
+  }
+
+  displayWhatsapp(whatsapp: string | undefined, waDigits: string): string {
+    const t = (whatsapp ?? '').trim();
+    return t || (waDigits ? `+${waDigits}` : '');
+  }
 }

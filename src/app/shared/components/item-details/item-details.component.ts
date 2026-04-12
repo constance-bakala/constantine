@@ -14,6 +14,7 @@ import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.
 import { TranslateService } from '@ngx-translate/core';
 import { CatalogRepository } from '@app/core/firebase/catalog.repository';
 import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
+import { ShopConfigService } from '@shared/services/shop-config.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -67,6 +68,7 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
     private catalogRepo: CatalogRepository,
     private router: Router,
     private appConfig: AppConfigRepository,
+    private shopConfig: ShopConfigService,
     private store: Store<any>,
   ) {
     this.images = (data.images?.length ?? 0) > 0 ? data.images : [data.path];
@@ -217,13 +219,17 @@ export class ItemDetailsComponent implements OnInit, OnDestroy {
     const reference = this.itemGroup.get('reference')?.value ?? '';
     const price = this.pricing.format(this.data.price);
     const desc = this.description;
-    const shopUrl = 'https://delice-eternel-gabon.web.app';
+    const shopUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const brand = (this.shopConfig.current.name || 'Boutique').trim();
+    const wa = this.shopConfig.whatsappWaPath(this.shopConfig.current.whatsapp);
 
     const text = lang === 'en'
-      ? `🛍️ *Délice Éternel* — African fashion, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Visit our shop: ${shopUrl}`
-      : `🛍️ *Délice Éternel* — Mode africaine, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Voir la boutique : ${shopUrl}`;
+      ? `🛍️ *${brand}*\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 ${shopUrl}`
+      : `🛍️ *${brand}*\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 ${shopUrl}`;
 
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    const q = encodeURIComponent(text);
+    const url = wa ? `https://wa.me/${wa}?text=${q}` : `https://wa.me/?text=${q}`;
+    window.open(url, '_blank');
   }
 
   close() {

@@ -17,6 +17,11 @@
 
   <!-- ===== ONGLET PARAMÈTRES ===== -->
   <div *ngIf="activeTab === 'settings'" class="catalog-tab-section">
+    <div class="setup-wizard-link">
+      <a routerLink="/admin/setup" class="setup-wizard-btn">
+        ⚙️ Configurer la boutique (assistant)
+      </a>
+    </div>
     <app-admin-settings></app-admin-settings>
   </div>
 

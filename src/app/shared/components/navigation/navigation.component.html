@@ -3,7 +3,7 @@
 
     <!-- Brand -->
     <a class="navbar-brand" href="/" (click)="$event.preventDefault(); scrollToTop()">
-      <img src="assets/style-sauvage_only_logo-removebg.png" class="brand-logo" alt="Logo">
+      <img [src]="logoUrl || 'assets/style-sauvage_only_logo-removebg.png'" class="brand-logo" alt="Logo">
       <span class="brand-name">{{ appTitle }}</span>
     </a>
 

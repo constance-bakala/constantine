@@ -34,11 +34,11 @@
   transition: background 0.2s, color 0.2s;
 
   &.active {
-    background: #2c3e50;
+    background: var(--color-secondary);
     color: #fff;
   }
 
   &:hover:not(.active) {
-    color: #2c3e50;
+    color: var(--color-secondary);
   }
 }

@@ -8,33 +8,60 @@
 
     <app-icone-divider></app-icone-divider>
 
-    <div class="row justify-content-center contact-cards">
+    <ng-container *ngIf="shop$ | async as shop">
+      <div class="row justify-content-center contact-cards">
 
-      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-        <div class="contact-card">
-          <div class="contact-icon-wrap"><i class="fas fa-mobile-alt"></i></div>
-          <div class="contact-label">{{'TELEPHONE' | translate}}</div>
-          <div class="contact-value">(+241) 77 60 10 44</div>
+        <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+          <div class="contact-card">
+            <div class="contact-icon-wrap"><i class="fab fa-whatsapp"></i></div>
+            <div class="contact-label">{{'TELEPHONE' | translate}} / WhatsApp</div>
+            <ng-container *ngIf="shopConfig.whatsappWaPath(shop.whatsapp) as wa; else noPhone">
+              <a class="contact-value contact-link"
+                 [href]="'https://wa.me/' + wa"
+                 target="_blank" rel="noopener noreferrer">
+                {{ displayWhatsapp(shop.whatsapp, wa) }}
+              </a>
+            </ng-container>
+            <ng-template #noPhone>
+              <div class="contact-value contact-value--muted">—</div>
+            </ng-template>
+          </div>
         </div>
+
+        <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+          <div class="contact-card">
+            <div class="contact-icon-wrap"><i class="far fa-envelope"></i></div>
+            <div class="contact-label">{{'EMAIL' | translate}}</div>
+            <ng-container *ngIf="mailtoHref(shop.email) as mail; else noEmail">
+              <a class="contact-value contact-link" [href]="mail">{{ shop.email.trim() }}</a>
+            </ng-container>
+            <ng-template #noEmail>
+              <div class="contact-value contact-value--muted">—</div>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+          <div class="contact-card">
+            <div class="contact-icon-wrap"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="contact-label">{{'LOCALIZATION' | translate}}</div>
+            <div class="contact-value pre-wrap"
+                 *ngIf="shop.address && shop.address.trim(); else noAddr">{{ shop.address.trim() }}</div>
+            <ng-template #noAddr>
+              <div class="contact-value contact-value--muted">—</div>
+            </ng-template>
+          </div>
+        </div>
+
       </div>
 
-      <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
-        <div class="contact-card">
-          <div class="contact-icon-wrap"><i class="far fa-envelope"></i></div>
-          <div class="contact-label">{{'EMAIL' | translate}}</div>
-          <a class="contact-value contact-link"
-             href="mailto:delice.eternel.gabon@gmail.com">
-            delice.eternel.gabon&#64;gmail.com
-          </a>
+      <div class="row justify-content-center mt-3">
+        <div class="col-lg-8 col-md-10">
+          <div class="contact-card contact-share">
+            <div class="sharethis-inline-share-buttons"></div>
+          </div>
         </div>
       </div>
-
-      <div class="col-lg-4 col-md-12">
-        <div class="contact-card contact-share">
-          <div class="sharethis-inline-share-buttons"></div>
-        </div>
-      </div>
-
-    </div>
+    </ng-container>
   </div>
 </section>
