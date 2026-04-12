@@ -23,7 +23,7 @@
   &__title {
     font-size: 0.95rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: var(--color-secondary);
     margin: 0;
   }
 
@@ -45,10 +45,10 @@
 
     &--in-cart {
       .complementary-look__img-wrap {
-        outline: 2px solid #148f77;
+        outline: 2px solid var(--color-primary-dark);
         outline-offset: 1px;
       }
-      .complementary-look__price { color: #148f77; }
+      .complementary-look__price { color: var(--color-primary-dark); }
     }
   }
 
@@ -71,7 +71,7 @@
     position: absolute;
     top: 4px;
     right: 4px;
-    background: #148f77;
+    background: var(--color-primary-dark);
     color: #fff;
     border-radius: 50%;
     width: 18px;
@@ -132,7 +132,7 @@
   }
 
   &__cart-check {
-    color: #148f77;
+    color: var(--color-primary-dark);
     font-size: 14px;
     flex-shrink: 0;
   }
@@ -219,7 +219,7 @@
   display: inline-block;
   font-size: 11px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-secondary);
   background: #f0f4f8;
   border-radius: 12px;
   padding: 3px 10px;
@@ -238,7 +238,7 @@
   border-radius: 50%;
   border: 1.5px solid #dde3ea;
   background: #fff;
-  color: #2c3e50;
+  color: var(--color-secondary);
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
@@ -253,8 +253,8 @@
   }
 
   &--active {
-    background: #2c3e50;
-    border-color: #2c3e50;
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
     color: #fff;
   }
 }
@@ -277,7 +277,7 @@
   height: 32px;
   font-size: 18px;
   font-weight: 300;
-  color: #2c3e50;
+  color: var(--color-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -285,7 +285,7 @@
   transition: background 0.15s, color 0.15s;
 
   &:hover {
-    background: #148f77;
+    background: var(--color-primary-dark);
     color: #fff;
   }
 }
@@ -299,7 +299,7 @@
   background: transparent;
   font-size: 14px;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--color-secondary);
   outline: none;
   -moz-appearance: textfield;
 
@@ -310,7 +310,7 @@
 // ── Prix ─────────────────────────────────────────────────────────────────────
 
 .text-right strong {
-  color: #148f77;
+  color: var(--color-primary-dark);
 }
 
 // ── Boutons d'action ──────────────────────────────────────────────────────────
@@ -339,7 +339,7 @@
 
   &--add {
     background: #f5c400;
-    color: #2c3e50;
+    color: var(--color-secondary);
 
     &:hover { background: #e0b300; }
   }

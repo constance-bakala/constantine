@@ -6,6 +6,7 @@ import { AuthRefreshUserToken } from '@app/auth/store/auth.actions';
 import { Auth } from '@angular/fire/auth';
 import { TranslateService } from '@ngx-translate/core';
 import { SeoService } from '@shared/services/seo.service';
+import { ThemeService } from '@shared/services/theme.service';
 
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -29,8 +30,11 @@ export class AppComponent implements OnInit {
     private store: Store<any>,
     public translate: TranslateService,
     seo: SeoService,
+    themeService: ThemeService,
   ) {
     seo.init();
+    themeService.init();
+
     if (!firebase.apps.length) {
       firebase.initializeApp(environment.firebaseConfig);
     }

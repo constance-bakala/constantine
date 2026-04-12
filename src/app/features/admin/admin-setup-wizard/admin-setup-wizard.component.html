@@ -1,0 +1,350 @@
+<div class="wizard-container">
+
+  <div class="wizard-header">
+    <h1>Configuration de la boutique</h1>
+    <p class="wizard-subtitle">Suivez les étapes pour configurer votre boutique en ligne.</p>
+  </div>
+
+  <div class="wizard-error" *ngIf="error">⚠️ {{ error }}</div>
+
+  <mat-stepper #stepper linear orientation="vertical" class="wizard-stepper">
+
+    <!-- ── Étape 1 : Bienvenue ──────────────────────────────────────────────── -->
+    <mat-step label="Bienvenue">
+      <div class="step-content welcome-step">
+        <div class="welcome-icon">🛍️</div>
+        <h2>Bienvenue dans l'assistant de configuration</h2>
+        <p>En quelques étapes, vous allez :</p>
+        <ul class="welcome-list">
+          <li>✅ Définir l'identité de votre boutique (nom, logo)</li>
+          <li>✅ Choisir les couleurs et la police</li>
+          <li>✅ Renseigner vos coordonnées de contact</li>
+          <li>✅ Configurer un domaine personnalisé (optionnel)</li>
+          <li>✅ Rappels pour cloner le dépôt et travailler en local (fin de l’assistant)</li>
+        </ul>
+        <p class="welcome-note">
+          Les couleurs / police de l’étape «&nbsp;Apparence&nbsp;» s’affichent en aperçu tout de suite.
+          L’enregistrement dans Firebase se fait à chaque étape lorsque vous cliquez sur «&nbsp;Suivant&nbsp;» (sauvegarde).
+        </p>
+        <div class="step-actions">
+          <button mat-raised-button color="primary" matStepperNext>
+            Commencer →
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- ── Étape 2 : Identité ───────────────────────────────────────────────── -->
+    <mat-step label="Identité" [stepControl]="identityForm">
+      <form [formGroup]="identityForm" class="step-content">
+        <h2>Identité de la boutique</h2>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nom de la boutique</mat-label>
+          <input matInput formControlName="name" placeholder="Ex: Délice Éternel" required>
+          <mat-error *ngIf="identityForm.get('name')?.hasError('required')">Le nom est obligatoire.</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Slogan</mat-label>
+          <input matInput formControlName="tagline" placeholder="Ex: Prêt-à-porter africain">
+        </mat-form-field>
+
+        <!-- Logo -->
+        <div class="upload-row">
+          <div class="upload-block">
+            <label class="upload-label">Logo</label>
+            <div class="upload-preview" *ngIf="logoPreview">
+              <img [src]="logoPreview" alt="Logo" class="logo-preview">
+            </div>
+            <label class="upload-btn" [class.uploading]="uploadingLogo">
+              <input type="file" accept="image/*" (change)="onLogoFile($event)" hidden>
+              {{ uploadingLogo ? 'Envoi…' : 'Choisir une image' }}
+            </label>
+          </div>
+
+          <div class="upload-block">
+            <label class="upload-label">Favicon</label>
+            <div class="upload-preview favicon-preview" *ngIf="faviconPreview">
+              <img [src]="faviconPreview" alt="Favicon" class="favicon-img">
+            </div>
+            <label class="upload-btn" [class.uploading]="uploadingFavicon">
+              <input type="file" accept="image/*" (change)="onFaviconFile($event)" hidden>
+              {{ uploadingFavicon ? 'Envoi…' : 'Choisir une image' }}
+            </label>
+          </div>
+        </div>
+
+        <div class="upload-error" *ngIf="uploadError">{{ uploadError }}</div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="primary"
+                  [disabled]="identityForm.invalid || saving"
+                  (click)="saveIdentity()">
+            {{ saving ? 'Sauvegarde…' : 'Suivant' }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ── Étape 3 : Apparence ──────────────────────────────────────────────── -->
+    <mat-step label="Apparence" [stepControl]="appearanceForm">
+      <form [formGroup]="appearanceForm" class="step-content">
+        <h2>Apparence</h2>
+
+        <div class="color-row">
+          <div class="color-field">
+            <label class="field-label">Couleur principale</label>
+            <div class="color-picker-wrap">
+              <input type="color" formControlName="primaryColor" class="color-input">
+              <span class="color-hex">{{ appearanceForm.get('primaryColor')?.value }}</span>
+              <div class="color-swatch" [style.background]="appearanceForm.get('primaryColor')?.value"></div>
+            </div>
+          </div>
+
+          <div class="color-field">
+            <label class="field-label">Couleur secondaire</label>
+            <div class="color-picker-wrap">
+              <input type="color" formControlName="secondaryColor" class="color-input">
+              <span class="color-hex">{{ appearanceForm.get('secondaryColor')?.value }}</span>
+              <div class="color-swatch" [style.background]="appearanceForm.get('secondaryColor')?.value"></div>
+            </div>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Police</mat-label>
+          <mat-select formControlName="fontFamily">
+            <mat-option *ngFor="let font of fonts" [value]="font.value">
+              <span [style.font-family]="font.value">{{ font.label }}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="theme-preview"
+             [style.font-family]="appearanceForm.get('fontFamily')?.value"
+             [style.border-color]="appearanceForm.get('primaryColor')?.value">
+          <div class="theme-preview__bar"
+               [style.background]="appearanceForm.get('primaryColor')?.value">
+            <span>Ma Boutique</span>
+            <span class="theme-preview__nav">Accueil &nbsp; Boutique &nbsp; Contact</span>
+          </div>
+          <div class="theme-preview__body">
+            <div class="theme-preview__badge"
+                 [style.background]="appearanceForm.get('secondaryColor')?.value">
+              Nouveauté
+            </div>
+            <p class="theme-preview__title">Robe wax Kente</p>
+            <p class="theme-preview__price"
+               [style.color]="appearanceForm.get('primaryColor')?.value">
+              45 €
+            </p>
+            <div class="theme-preview__btn"
+                 [style.background]="appearanceForm.get('primaryColor')?.value">
+              Ajouter au panier
+            </div>
+          </div>
+          <p class="theme-preview__font-label">Police : {{ selectedFontLabel }}</p>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="primary"
+                  [disabled]="saving"
+                  (click)="saveAppearance()">
+            {{ saving ? 'Sauvegarde…' : 'Suivant' }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ── Étape 4 : Contact ────────────────────────────────────────────────── -->
+    <mat-step label="Contact" [stepControl]="contactForm">
+      <form [formGroup]="contactForm" class="step-content">
+        <h2>Coordonnées de contact</h2>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>WhatsApp</mat-label>
+          <input matInput formControlName="whatsapp" placeholder="+241 77 00 00 00">
+          <mat-hint>Numéro international avec indicatif pays</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="contact@maboutique.com">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Adresse</mat-label>
+          <textarea matInput formControlName="address" rows="2"
+                    placeholder="Face à Les Planches, Libreville"></textarea>
+        </mat-form-field>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="primary"
+                  [disabled]="saving"
+                  (click)="saveContact()">
+            {{ saving ? 'Sauvegarde…' : 'Suivant' }}
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- ── Étape 5 : Domaine ────────────────────────────────────────────────── -->
+    <mat-step label="Domaine (optionnel)">
+      <div class="step-content">
+        <h2>Domaine personnalisé</h2>
+        <p>Vous pouvez associer un nom de domaine personnalisé à votre boutique.</p>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Domaine</mat-label>
+          <input matInput [formControl]="domainControl" placeholder="www.ma-boutique.com">
+          <mat-hint>Sans "https://" — ex : www.mon-site.com</mat-hint>
+        </mat-form-field>
+
+        <div class="domain-info">
+          <mat-icon>info</mat-icon>
+          <span>La configuration du domaine Firebase Hosting nécessite un déploiement.
+                Notez votre domaine ici, puis suivez les instructions à l'étape suivante.</span>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-button (click)="skipDomain()">Passer cette étape</button>
+          <button mat-raised-button color="primary" (click)="configureDomain()"
+                  [disabled]="!domainForm.get('domain')?.value?.trim()">
+            Suivant →
+          </button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- ── Étape 6 : DNS ─────────────────────────────────────────────────────── -->
+    <mat-step label="Enregistrements DNS">
+      <div class="step-content">
+        <h2>DNS à configurer chez votre registrar</h2>
+
+        <p *ngIf="domainForm.get('domain')?.value">
+          Pour <strong>{{ domainForm.get('domain')?.value }}</strong>, ajoutez ces enregistrements :
+        </p>
+
+        <div class="dns-table" *ngIf="domainForm.get('domain')?.value">
+          <table>
+            <thead>
+              <tr><th>Type</th><th>Nom</th><th>Valeur</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A</td><td>@</td><td>151.101.1.195</td></tr>
+              <tr><td>A</td><td>@</td><td>151.101.65.195</td></tr>
+              <tr><td>TXT</td><td>@</td><td>{{ dnsHostingSiteTxt }}</td></tr>
+            </tbody>
+          </table>
+          <p class="dns-note">⏳ La propagation DNS peut prendre jusqu'à 48h.</p>
+        </div>
+
+        <div class="dns-skip-msg" *ngIf="!domainForm.get('domain')?.value">
+          <mat-icon>check_circle</mat-icon>
+          <span>Étape domaine ignorée. Le site sera accessible sur le domaine Firebase par défaut.</span>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="primary" matStepperNext>Suivant →</button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- ── Étape 7 : Développement local (rappels, pas de saisie Firebase) ───── -->
+    <mat-step label="Développement local">
+      <div class="step-content">
+        <h2>Travailler sur le code en local</h2>
+
+        <p class="dev-local-intro">
+          La boutique en ligne utilise déjà la configuration Firebase injectée au déploiement.
+          Pour cloner le dépôt et lancer l’app sur votre machine, vérifiez d’abord ces prérequis dans la
+          <strong>console Firebase</strong> du projet&nbsp;:
+        </p>
+
+        <ul class="dev-local-list">
+          <li><strong>Realtime Database</strong> créée (mode production) — URL utilisée par le template.</li>
+          <li><strong>Authentication</strong>&nbsp;: activer au minimum <strong>Google</strong> (connexion à <code>/admin</code>) ;
+            l’<strong>e-mail / mot de passe</strong> est recommandé selon votre usage.</li>
+          <li><strong>Cloud Storage</strong> activé — le plan <strong>Blaze</strong> est souvent requis pour Storage ;
+            sans bucket configuré, les envois logo / favicon depuis l’admin échouent. Le nom du bucket peut se terminer par
+            <code>.appspot.com</code> ou <code>.firebasestorage.app</code> selon les projets.</li>
+        </ul>
+
+        <p class="dev-local-note">
+          Remplacez <code>VOTRE_DEPOT</code> dans les commandes de l’étape suivante par le nom du dépôt GitHub fourni
+          (format <code>up2date-it/nom-du-depot</code>).
+        </p>
+
+        <p class="deploy-intro">Exemple de bloc <code>firebaseConfig</code> (valeurs de <strong>cette</strong> instance) — à coller dans
+          <code>src/environments/environment.common.ts</code> ou votre fichier d’environnement local&nbsp;:</p>
+        <div class="code-block">
+          <pre>{{ devLocalFirebaseConfigSnippet }}</pre>
+          <button mat-icon-button class="copy-btn" (click)="copyDevFirebaseConfig()" [title]="copyDevFirebaseDone ? 'Copié !' : 'Copier'">
+            <mat-icon>{{ copyDevFirebaseDone ? 'check' : 'content_copy' }}</mat-icon>
+          </button>
+        </div>
+
+        <p class="deploy-intro">Fichier <code>.firebaserc</code> à la racine du dépôt (même <code>projectId</code> que ci-dessus)&nbsp;:</p>
+        <div class="code-block">
+          <pre>{{ devLocalFirebasercSnippet }}</pre>
+          <button mat-icon-button class="copy-btn" (click)="copyDevFirebaserc()" [title]="copyDevFirebasercDone ? 'Copié !' : 'Copier'">
+            <mat-icon>{{ copyDevFirebasercDone ? 'check' : 'content_copy' }}</mat-icon>
+          </button>
+        </div>
+
+        <div class="step-actions">
+          <button mat-button matStepperPrevious>Retour</button>
+          <button mat-raised-button color="primary" matStepperNext>Suivant →</button>
+        </div>
+      </div>
+    </mat-step>
+
+    <!-- ── Étape 8 : Installation / déploiement ───────────────────────────────── -->
+    <mat-step label="Installation">
+      <div class="step-content">
+        <h2>🎉 Configuration terminée !</h2>
+
+        <div class="checklist">
+          <div class="check-item"><mat-icon>check_circle</mat-icon> Identité de la boutique enregistrée</div>
+          <div class="check-item"><mat-icon>check_circle</mat-icon> Thème et couleurs configurés</div>
+          <div class="check-item"><mat-icon>check_circle</mat-icon> Coordonnées de contact enregistrées</div>
+          <div class="check-item" [class.skipped]="!domainForm.get('domain')?.value">
+            <mat-icon>{{ domainForm.get('domain')?.value ? 'check_circle' : 'remove_circle_outline' }}</mat-icon>
+            Domaine {{ domainForm.get('domain')?.value ? 'configuré' : 'non configuré (défaut Firebase)' }}
+          </div>
+        </div>
+
+        <p class="deploy-intro">1. Clonez votre dépôt GitHub et installez les dépendances&nbsp;:</p>
+
+        <div class="code-block">
+          <pre>{{ cloneCommandsText }}</pre>
+          <button mat-icon-button class="copy-btn" (click)="copyClone()" [title]="copyCloneDone ? 'Copié !' : 'Copier'">
+            <mat-icon>{{ copyCloneDone ? 'check' : 'content_copy' }}</mat-icon>
+          </button>
+        </div>
+
+        <p class="deploy-intro">2. Puis construisez et publiez sur Firebase Hosting (même machine avec Firebase CLI connectée au projet)&nbsp;:</p>
+
+        <div class="code-block">
+          <pre>{{ deployCommandsText }}</pre>
+          <button mat-icon-button class="copy-btn" (click)="copyCommands()" [title]="copyDone ? 'Copié !' : 'Copier'">
+            <mat-icon>{{ copyDone ? 'check' : 'content_copy' }}</mat-icon>
+          </button>
+        </div>
+
+        <div class="final-actions">
+          <a mat-raised-button color="primary" routerLink="/admin">
+            Aller au tableau de bord
+          </a>
+        </div>
+      </div>
+    </mat-step>
+
+  </mat-stepper>
+</div>

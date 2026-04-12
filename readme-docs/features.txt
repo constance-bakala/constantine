@@ -1,0 +1,90 @@
+ oui il faut créer: ThemeService, modifier AppComponent et app.module.ts.
+
+voici ce qu'il faut faire:
+
+Firebase RTDB (depuis le navigateur, SDK client)
+  ✅ Créer toute la structure initiale (config/, catalog/, orders/, promo-codes/)
+  ✅ Écrire les security rules via Firebase REST API
+  ✅ Uploader logo/favicon vers Firebase Storage
+  ✅ Créer le compte admin initial (Firebase Auth)
+
+Firebase Hosting (via Hosting REST API)
+  ✅ Ajouter un domaine personnalisé
+  ✅ Récupérer les enregistrements DNS à configurer
+  ✅ Vérifier si le DNS est propagé (bouton "Vérifier")
+  ❌ Déclencher le build Angular (impossible depuis navigateur)
+  ❌ Déployer les fichiers (reste en CLI)
+Le flux complet réaliste
+
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 1 — Bienvenue                                │
+│  Cette boutique n'est pas encore configurée.        │
+│  Suivez le guide pour la mettre en ligne.           │
+│                          [ Commencer →  ]           │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 2 — Identité                                 │
+│  Nom de la boutique  [_____________________]        │
+│  Slogan              [_____________________]        │
+│  Logo                [  Uploader  ]                 │
+│  Favicon             [  Uploader  ]                 │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 3 — Apparence                                │
+│  Couleur principale  [  #c9a84c  🎨 ]               │
+│  Police              [  ▼ Choisir   ]               │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 4 — Contact                                  │
+│  WhatsApp  [___________]                            │
+│  Email     [___________]                            │
+│  Adresse   [___________]                            │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 5 — Domaine (optionnel)                      │
+│  Domaine personnalisé  [ www.ma-boutique.com ]      │
+│                                                     │
+│  → Nous allons configurer Firebase Hosting          │
+│    pour ce domaine.                                 │
+│                        [ Configurer →  ]            │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 6 — DNS à configurer chez votre registrar   │
+│                                                     │
+│  Ajoutez ces enregistrements DNS :                  │
+│  ┌──────┬──────────────┬─────────────────────┐     │
+│  │ Type │     Nom      │       Valeur         │     │
+│  ├──────┼──────────────┼─────────────────────┤     │
+│  │  A   │      @       │   151.101.1.195      │     │
+│  │ TXT  │      @       │   firebase=xxxxx     │     │
+│  └──────┴──────────────┴─────────────────────┘     │
+│                                                     │
+│  [ Copier ]        [ ✓ Vérifier la propagation ]   │
+└─────────────────────────────────────────────────────┘
+          │
+          ▼
+┌─────────────────────────────────────────────────────┐
+│  ÉTAPE 7 — Installation                             │
+│                                                     │
+│  ✅ Structure Firebase créée                        │
+│  ✅ Configuration enregistrée                       │
+│  ✅ Domaine configuré                               │
+│  ⏳ Propagation DNS en cours...                     │
+│                                                     │
+│  Dernière étape — déployez votre site :             │
+│  ┌─────────────────────────────────────────┐        │
+│  │ ng build --configuration production     │        │
+│  │ firebase deploy                         │        │
+│  └─────────────────────────────────────────┘        │
+│                    [ Copier les commandes ]         │
+└─────────────────────────────────────────────────────┘

@@ -23,6 +23,7 @@ import { SnackAlertComponent } from '@shared/components/snack-alert/snack-alert.
 import { TranslateService } from '@ngx-translate/core';
 import { CatalogRepository } from '@app/core/firebase/catalog.repository';
 import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
+import { ShopConfigService } from '@shared/services/shop-config.service';
 
 const EUR_TO_XAF = 655.96;
 
@@ -81,6 +82,7 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private catalogRepo: CatalogRepository,
     private appConfig: AppConfigRepository,
+    private shopConfig: ShopConfigService,
   ) {}
 
   ngOnInit(): void {
@@ -260,13 +262,17 @@ export class ItemPageComponent implements OnInit, OnDestroy {
     const reference = this.itemGroup.get('reference')?.value ?? '';
     const price = this.pricing.format(this.data!.price);
     const desc = this.description;
-    const shopUrl = 'https://delice-eternel-gabon.web.app';
+    const shopUrl = typeof window !== 'undefined' ? window.location.origin : '';
+    const brand = (this.shopConfig.current.name || 'Boutique').trim();
+    const wa = this.shopConfig.whatsappWaPath(this.shopConfig.current.whatsapp);
 
     const text = lang === 'en'
-      ? `🛍️ *Délice Éternel* — African fashion, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Visit our shop: ${shopUrl}`
-      : `🛍️ *Délice Éternel* — Mode africaine, Libreville (Gabon)\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 Voir la boutique : ${shopUrl}`;
+      ? `🛍️ *${brand}*\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 ${shopUrl}`
+      : `🛍️ *${brand}*\n\n*REF: ${reference}*\n💰 ${price}${desc ? '\n\n' + desc : ''}\n\n👉 ${shopUrl}`;
 
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    const q = encodeURIComponent(text);
+    const url = wa ? `https://wa.me/${wa}?text=${q}` : `https://wa.me/?text=${q}`;
+    window.open(url, '_blank');
   }
 
   goBack(): void {

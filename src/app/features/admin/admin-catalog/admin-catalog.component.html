@@ -202,7 +202,7 @@
           </div>
           <span class="ai-batch-label">{{ itemComplementsProgress.current }} / {{ itemComplementsProgress.total }} articles</span>
         </div>
-        <span *ngIf="!generatingItemComplements && itemComplementsProgress.total > 0 && !itemComplementsError" class="ai-cat-empty" style="color:#148f77">
+        <span *ngIf="!generatingItemComplements && itemComplementsProgress.total > 0 && !itemComplementsError" class="ai-cat-empty" style="color:var(--color-primary-dark)">
           ✓ {{ itemComplementsProgress.current }} articles traités
         </span>
       </div>

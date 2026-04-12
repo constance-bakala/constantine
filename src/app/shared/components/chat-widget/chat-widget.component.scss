@@ -1,6 +1,4 @@
-@use 'sass:color';
-
-$green: #148f77;
+$green: var(--color-primary-dark);
 $radius: 12px;
 
 // ── Bouton flottant ───────────────────────────────────────────────────────────
@@ -23,7 +21,7 @@ $radius: 12px;
   justify-content: center;
   transition: background 0.15s, transform 0.15s;
 
-  &:hover { background: color.adjust(#148f77, $lightness: -8%); transform: scale(1.05); }
+  &:hover { filter: brightness(0.9); transform: scale(1.05); }
 }
 
 // ── Panneau ───────────────────────────────────────────────────────────────────
@@ -137,7 +135,7 @@ $radius: 12px;
   &--model {
     align-self: flex-start;
     background: #fff;
-    color: #2c3e50;
+    color: var(--color-secondary);
     border: 1px solid #ecf0f1;
     border-bottom-left-radius: 4px;
   }
@@ -180,7 +178,7 @@ $radius: 12px;
 .chat-suggestion-chip {
   background: #fff;
   border: 1px solid #b2dfdb;
-  color: #148f77;
+  color: var(--color-primary-dark);
   border-radius: 16px;
   padding: 4px 10px;
   font-size: 12px;

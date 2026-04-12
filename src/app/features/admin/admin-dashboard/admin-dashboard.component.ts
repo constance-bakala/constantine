@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { PricingService } from '@shared/services/pricing.service';
 import { OrdersRepository } from '@app/core/firebase/orders.repository';
+import { AppConfigRepository } from '@app/core/firebase/app-config.repository';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import {
   Order, OrderStatus,
@@ -57,6 +60,8 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     public pricing: PricingService,
     private ordersRepository: OrdersRepository,
     private dialog: MatDialog,
+    private configRepo: AppConfigRepository,
+    private router: Router,
   ) {}
 
   // ── Getters ───────────────────────────────────────────────────────────────
@@ -87,7 +92,13 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   ngOnInit(): void {
-    this.subscribeToOrders();
+    this.configRepo.watchShop().pipe(take(1)).subscribe(shop => {
+      if (!shop.name?.trim()) {
+        this.router.navigate(['/admin/setup']);
+        return;
+      }
+      this.subscribeToOrders();
+    });
   }
 
   ngOnDestroy(): void {
