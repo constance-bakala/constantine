@@ -35,6 +35,7 @@ import { AdminSetupWizardComponent }   from './admin-setup-wizard/admin-setup-wi
   ],
   imports: [
     CommonModule,
+    /** Obligatoire pour `[(ngModel)]` (catalogue, paramètres, promos, assistant setup). */
     FormsModule,
     ReactiveFormsModule,
     RouterModule,

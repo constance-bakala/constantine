@@ -54,14 +54,18 @@
         </div>
 
       </div>
+    </ng-container>
 
-      <div class="row justify-content-center mt-3">
-        <div class="col-lg-8 col-md-10">
-          <div class="contact-card contact-share">
-            <div class="sharethis-inline-share-buttons"></div>
-          </div>
+    <!--
+      ShareThis (script en bas de index.html) ne voit que les nœuds déjà présents
+      au moment de son init. Hors *ngIf async, sinon le widget ne s’affiche pas.
+    -->
+    <div class="row justify-content-center mt-3">
+      <div class="col-lg-8 col-md-10">
+        <div class="contact-card contact-share">
+          <div class="sharethis-inline-share-buttons"></div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 </section>

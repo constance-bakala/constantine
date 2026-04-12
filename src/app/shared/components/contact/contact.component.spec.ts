@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { SHOP_DEFAULTS } from '@app/core/firebase/app-config.repository';
@@ -20,6 +21,7 @@ describe('ContactComponent', () => {
     };
     TestBed.configureTestingModule({
       declarations: [ ContactComponent ],
+      imports: [ RouterTestingModule ],
       providers: [{ provide: ShopConfigService, useValue: shopStub }],
     })
     .compileComponents();

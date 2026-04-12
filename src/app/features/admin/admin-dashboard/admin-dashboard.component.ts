@@ -153,6 +153,29 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
     this.ordersPage = 1;
   }
 
+  onOrdersFilterInput(event: Event): void {
+    this.ordersFilter = (event.target as HTMLInputElement).value;
+    this.onOrdersFilterChange();
+  }
+
+  onShippingCostInput(event: Event): void {
+    const raw = (event.target as HTMLInputElement).value;
+    if (raw === '') {
+      this.shippingCostInput = null;
+      return;
+    }
+    const n = Number(raw);
+    this.shippingCostInput = Number.isFinite(n) ? n : null;
+  }
+
+  onCarrierInput(event: Event): void {
+    this.carrierName = (event.target as HTMLInputElement).value;
+  }
+
+  onTrackingInput(event: Event): void {
+    this.trackingUrl = (event.target as HTMLInputElement).value;
+  }
+
   // ── UI ────────────────────────────────────────────────────────────────────
 
   toggleItem(orderId: string, index: number): void {

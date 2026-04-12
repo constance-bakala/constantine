@@ -63,8 +63,8 @@
       <!-- Barre de filtre -->
       <div class="orders-filter-bar">
         <input type="search" class="orders-filter-input"
-               [(ngModel)]="ordersFilter"
-               (ngModelChange)="onOrdersFilterChange()"
+               [value]="ordersFilter"
+               (input)="onOrdersFilterInput($event)"
                placeholder="Filtrer par réf., nom ou email…" />
         <span class="orders-filter-count">
           {{ filteredOrders.length }} commande{{ filteredOrders.length > 1 ? 's' : '' }}
@@ -250,7 +250,9 @@
             </p>
             <div class="shipping-form-field">
               <label class="shipping-label">Frais de port (FCFA) <span class="required">*</span></label>
-              <input type="number" min="0" step="1" [(ngModel)]="shippingCostInput"
+              <input type="number" min="0" step="1"
+                     [value]="shippingCostInput ?? ''"
+                     (input)="onShippingCostInput($event)"
                      placeholder="ex : 15000" class="shipping-input"
                      [class.input-error]="shippingCostError" />
               <span *ngIf="shippingCostError" class="field-error">Veuillez saisir un montant valide (≥ 0).</span>
@@ -280,11 +282,13 @@
           <div *ngIf="selectedOrder.status === 'paid' && shippingFormOrderId === selectedOrder.id" class="shipping-form">
             <div class="shipping-form-field">
               <label class="shipping-label">Transporteur <span class="optional">(optionnel)</span></label>
-              <input type="text" [(ngModel)]="carrierName" placeholder="ex : DHL, FedEx…" class="shipping-input" />
+              <input type="text" [value]="carrierName" (input)="onCarrierInput($event)"
+                     placeholder="ex : DHL, FedEx…" class="shipping-input" />
             </div>
             <div class="shipping-form-field">
               <label class="shipping-label">URL de suivi <span class="required">*</span></label>
-              <input type="url" [(ngModel)]="trackingUrl" placeholder="https://…" class="shipping-input"
+              <input type="url" [value]="trackingUrl" (input)="onTrackingInput($event)"
+                     placeholder="https://…" class="shipping-input"
                      [class.input-error]="trackingUrlError" />
               <span *ngIf="trackingUrlError" class="field-error">L'URL de suivi est obligatoire.</span>
             </div>
